@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.0.0" method="upgrade">
+    <name>Avatar Slide Skitter</name>
+    <author>Nam Chung Tran</author>
+    <version>1.1.1</version>
+	<creationDate>April 2012</creationDate>
+	<copyright>JoomAvatar.com</copyright>
+	<license>License GNU General Public License version 2 or later</license>
+	<authorEmail>chungtn@joomavatar.com</authorEmail>
+	<authorUrl>www.joomavatar.com</authorUrl>
+	<edition>Free</edition>
+    <description>AVATAR_SKITTER_DESC</description>
+    <files>
+        <filename module="mod_avatar_slide_skitter">mod_avatar_slide_skitter.php</filename>
+        <filename>index.html</filename>
+        <filename>mod_avatar_slide_skitter.xml</filename>
+        <filename>helper.php</filename>
+        <folder>tmpl</folder>
+        <folder>assets</folder>
+        <folder>fields</folder>
+        <folder>classes</folder>
+    </files>
+    <languages>
+		<language tag="en-GB">en-GB.mod_avatar_slide_skitter.ini</language>
+		<language tag="en-GB">en-GB.mod_avatar_slide_skitter.sys.ini</language>
+	</languages>
+    <config>
+    	<fields name="params">
+    		<fieldset name="basic" label="AVATAR_MODULE_SETTING" addfieldpath="/modules/mod_avatar_slide_skitter/fields">
+    			<field name="moduleclass_sfx" type="text"  default="" label="AVATAR_SUFFIX" description="" />
+    			<field name="jquery" type="text" default="latest" size="7" label="AVATAR_JQUERY" description="AVATAR_JQUERY_DESC"/>
+    			<field name="width" type="text" default="100%" label="AVATAR_SKITTER_WIDTH" size="4" description="AVATAR_SKITTER_WIDTH_DESC"/>
+    			<field name="height" type="text" default="300px" label="AVATAR_SKITTER_HEIGHT" size="4" description="AVATAR_SKITTER_HEIGHT_DESC"/>
+    			<field name="Source" type="list" default="folder" label="AVATAR_SKITTER_SOURCE" description="AVATAR_SKITTER_SOURCE_DESC">
+    				<option value="folder">folder</option>
+				</field>
+			</fieldset>
+						
+			<fieldset name="foldersetting" label="AVATAR_FOLDER_SETTING" addfieldpath="/modules/mod_avatar_slide_skitter/fields/">
+				<field name="folder" type="jantdropboximagefolder" default="" label="AVATAR_SELECT_FOLDER" description="AVATAR_SELECT_FOLDER_DESC" hide_none="true" hide_default="true" size="10" multiple="multiple"/>	
+				<field name="description" type="textarea" default="" label="AVATAR_SKITTER_DESCRIPTION" description="AVATAR_SKITTER_DESCRIPTION_DESC" rows="20" cols="40" />
+				<field name="link" type="textarea" default="" label="AVATAR_SKITTER_IMAGE_LINK" description="AVATAR_SKITTER_IMAGE_LINK_DESC" rows="20" cols="40" />
+			</fieldset>
+			
+			<fieldset name="slide" label="AVATAR_SKITTER_SETTING" addfieldpath="/modules/mod_avatar_slide_skitter/fields">
+    			<field name="autoplay" type="radio" default="true" label="AVATAR_SKITTER_AUTOPLAY" description="AVATAR_SKITTER_AUTOPLAY_DESC">	
+					<option value="true">AVATAR_SKITTER_YES</option>
+					<option value="false">AVATAR_SKITTER_NO</option>
+				</field>
+				<field name="slideTime" type="text" default="5000" label="AVATAR_SKITTER_SLIDING_TIME" description="AVATAR_SKITTER_SLIDING_TIME_DESC" />	
+				<field name="transition" type="list" default="random" label="AVATAR_SKITTER_IMAGE_TRANSITION" description="AVATAR_SKITTER_IMAGE_TRANSITION_DESC" multiple="multiple">
+					<option value="random">Random</option>
+					<option value="cube">Cube</option>
+					<option value="cubeRandom">Cube Random</option>
+					<option value="block">Block</option>			
+					<option value="cubeStop">Cube Stop</option>
+					<option value="cubeStopRandom">Cube Stop Random</option>
+					<option value="cubeHide">Cube Hide</option>
+					<option value="cubeSize">Cube Size</option>			
+					<option value="cubeSpread">Cube Spread</option>
+					<option value="cubeJelly">Cube Jelly</option>
+					<option value="cubeShow">Cube Show</option>
+					<option value="horizontal">Horizontal</option>		
+					<option value="showBarsRandom">Show Bars Random</option>
+					<option value="tube">Tube</option>
+					<option value="fade">Fade</option>			
+					<option value="fadeFour">Fade Four</option>
+					<option value="paralell">Paralell</option>
+					<option value="blind">Blind</option>			
+					<option value="blindHeight">Blind Height</option>
+					<option value="blindWidth">Blind Width</option>
+					<option value="directionTop">Direction Top</option>			
+					<option value="directionBottom">Direction Bottom</option>
+					<option value="directionRight">Direction Right</option>
+					<option value="directionLeft">Direction Left</option>
+					<option value="circles">Circles</option>
+					<option value="circlesInside">Circles Inside</option>
+					<option value="circlesRotate">Circles Rotate</option>
+					<option value="showBars">Show Bars</option>	
+					<option value="upBars">Up Bars</option>
+					<option value="downBars">Down Bars</option>
+					<option value="hideBars">Hide Bars</option>
+					<option value="swapBars">Swap Bars</option>
+					<option value="swapBarsBack">Swap Bars Back</option>
+					<option value="glassCube">Glass Cube</option>
+					<option value="glassBlock">Glass Block</option>
+					<option value="randomSmart">Random Smart</option>
+				</field>
+				<field name="navStyle" type="list" default="thumbs" label="AVATAR_SKITTER_NAV_STYLE" description="AVATAR_SKITTER_NAV_STYLE_DESC">
+					<option value="numbers">AVATAR_SKITTER_NUMBERS</option>
+					<option value="thumbs">AVATAR_SKITTER_THUMBS</option>
+					<option value="dots">AVATAR_SKITTER_DOTS</option>
+					<option value="preview">AVATAR_SKITTER_DOTS_WITH_PREVIEW</option>			
+				</field>
+				<field name="hideTools" type="radio" default="true" label="AVATAR_SKITTER_HIDE_TOOLS" description="AVATAR_SKITTER_HIDE_TOOLS_DESC">	
+					<option value="true">AVATAR_SKITTER_YES</option>
+					<option value="false">AVATAR_SKITTER_NO</option>
+				</field>
+				<field name="showRandomly" type="radio" default="false" label="AVATAR_SKITTER_SHOW_RANDOMLY" description="AVATAR_SKITTER_SHOW_RANDOMLY_DESC">	
+					<option value="true">AVATAR_SKITTER_YES</option>
+					<option value="false">AVATAR_SKITTER_NO</option>
+				</field>
+				<field name="controls" type="radio" default="true" label="AVATAR_SKITTER_CONTROLS" description="AVATAR_SKITTER_CONTROLS_DESC">	
+					<option value="true">AVATAR_SKITTER_YES</option>
+					<option value="false">AVATAR_SKITTER_NO</option>
+				</field>
+				<field name="responsive" type="radio" default="true" label="AVATAR_SKITTER_RESPONSIVE" description="AVATAR_SKITTER_RESPONSIVE_DESC">	
+					<option value="true">AVATAR_SKITTER_YES</option>
+					<option value="false">AVATAR_SKITTER_NO</option>
+				</field>
+				<field name="imageDes" type="radio" default="true" label="AVATAR_SKITTER_SHOW_IMAGE_DESCRIPTION" description="AVATAR_SKITTER_SHOW_IMAGE_DESCRIPTION_DESC">	
+					<option value="true">AVATAR_SKITTER_YES</option>
+					<option value="false">AVATAR_SKITTER_NO</option>
+				</field>
+				<field name="title" type="radio" default="true" label="AVATAR_SKITTER_SHOW_IMAGE_TITLE" description="AVATAR_SKITTER_SHOW_IMAGE_TITLE_DESC">	
+					<option value="true">AVATAR_SKITTER_YES</option>
+					<option value="false">AVATAR_SKITTER_NO</option>
+				</field>
+				<field name="controlsPosition" type="list" default="rightTop" label="AVATAR_SKITTER_CONTROLS_POSITION" description="AVATAR_SKITTER_CONTROLS_DESC">
+					<option value="center">AVATAR_SKITTER_CENTER</option>
+					<option value="leftTop">AVATAR_SKITTER_LEFT_TOP</option>
+					<option value="rightTop">AVATAR_SKITTER_RIGHT_TOP</option>
+					<option value="leftBottom">AVATAR_SKITTER_LEFT_BOTTOM</option>			
+					<option value="rightBottom">AVATAR_SKITTER_RIGHT_BOTTOM</option>
+				</field>
+				<field name="focus" type="radio" default="true" label="AVATAR_SKITTER_FOCUS" description="AVATAR_SKITTER_FOCUS_DESC">	
+					<option value="true">AVATAR_SKITTER_YES</option>
+					<option value="false">AVATAR_SKITTER_NO</option>
+				</field>
+				<field name="focusPosition" type="list" default="rightTop" label="AVATAR_SKITTER_FORCUS_POSITION" description="AVATAR_SKITTER_FOCUS_DESC">
+					<option value="center">AVATAR_SKITTER_CENTER</option>
+					<option value="leftTop">AVATAR_SKITTER_LEFT_TOP</option>
+					<option value="rightTop">AVATAR_SKITTER_RIGHT_TOP</option>
+					<option value="leftBottom">AVATAR_SKITTER_LEFT_BOTTOM</option>			
+					<option value="rightBottom">AVATAR_SKITTER_RIGHT_BOTTOM</option>
+				</field>
+				<field name="numbersAlign" type="list" default="center" label="AVATAR_SKITTER_NUMBERS_ALIGN" description="AVATAR_SKITTER_NUMBERS_ALIGN_DESC">
+					<option value="center">AVATAR_SKITTER_CENTER</option>
+					<option value="left">AVATAR_SKITTER_LEFT</option>
+					<option value="right">AVATAR_SKITTER_RIGHT</option>
+				</field>
+				<field name="progressBar" type="radio" default="false" label="AVATAR_SKITTER_PROGRESS_BAR" description="AVATAR_SKITTER_PROGRESS_BAR_DESC">	
+					<option value="true">AVATAR_SKITTER_YES</option>
+					<option value="false">AVATAR_SKITTER_NO</option>
+				</field>
+				<field name="bgNumberOut" type="colorpicker" default="#f7f7f9" label="AVATAR_SKITTER_BACKGROUND_NUMBER_OUT" description="AVATAR_SKITTER_BACKGROUND_NUMBER_OUT_DESC" />
+				<field name="bgNumberOver" type="colorpicker" default="#ffffff" label="AVATAR_SKITTER_BACKGROUND_NUMBER_OVER" description="AVATAR_SKITTER_BACKGROUND_NUMBER_OVER_DESC" />
+				<field name="bgNumberActive" type="colorpicker" default="#5f9fcb" label="AVATAR_SKITTER_BACKGROUND_NUMBER_ACTIVE" description="AVATAR_SKITTER_BACKGROUND_NUMBER_ACTIVE_DESC" />
+			</fieldset>
+    	</fields>	
+    </config>
+</extension>
