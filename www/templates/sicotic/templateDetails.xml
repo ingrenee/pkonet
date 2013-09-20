@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- <!DOCTYPE install PUBLIC "-//Joomla! 1.7//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/1.7/template-install.dtd">-->
+<!DOCTYPE install PUBLIC "-//Joomla! 2.5//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/2.5/template-install.dtd">
+<!-- <install version="1.7" type="template"> -->
+    <extension version="3.0" type="template" client="site">
+	<name>sicotic</name>
+	<creationDate>September 2011</creationDate>
+	<author>ClickFWD LLC</author>
+	<authorEmail>sales@reviewsforjoomla.com</authorEmail>
+	<authorUrl>www.reviewsforjoomla.com</authorUrl>
+	<copyright>Copyright (C) 2010-2011 ClickFWD LLC. All rights reserved.</copyright>
+	<license>Commercial</license>
+	<version>1.2</version>
+	<description><![CDATA[<strong>iReview is a very light and fast template for Joomla 1.6 and 1.7, built using latest css techniques.</strong><br /><br /><h2>Module styles</h2>The template comes with many different module styles which can be switched by changing class name in “Module Class Suffix” parameter. Available class names are:<br /><br /> <ul><li>_rounded</li><li>_rounded_light</li><li>_rounded_dark</li><li>_rounded_light_outside</li><li>_rounded_dark_outside</li><li>_shadowbox_light</li><li>_shadowbox_dark</li></ul><br /><h2>Documentation</h2>For more information, download the <a href="http://docs.reviewsforjoomla.com/downloads/ireview/iReviewManual.pdf">quick manual</a>]]></description>
+	<files>
+		<filename>index.php</filename>
+		<filename>parameters.php</filename>
+		<filename>templateDetails.xml</filename>
+		<filename>template_preview.png</filename>
+		<filename>template_thumbnail.png</filename>
+		<folder>css</folder>
+		<folder>language</folder>
+		<folder>images</folder>
+	</files>
+	<positions>
+		
+                <position>position-0</position>
+		<position>position-1</position>
+		<position>position-2</position>
+		<position>position-3</position>
+		<position>position-4</position>
+		<position>position-5</position>
+		<position>position-6</position>
+		<position>position-7</position>
+		<position>position-8</position>
+		<position>position-9</position>
+		<position>position-10</position>
+		<position>position-11</position>
+		<position>position-12</position>
+		<position>position-13</position>
+		<position>position-14</position>
+		<position>position-15</position>
+		<position>position-16</position>
+                <position>position-home</position>
+	</positions>
+	<config>
+		<fields name="params">
+			<fieldset name="advanced">
+			  <field 
+					name="style"
+					type="list"
+					default="gray"
+					label="Template Style"
+					description="Select the color theme">
+					<option	value="gray">Gray (default)</option>
+					<option	value="gray2">Gray 2</option>
+					<option	value="green">Green</option>
+					<option	value="green2">Green 2</option>
+					<option	value="blue">Blue</option>
+					<option	value="blue2">Blue 2</option>
+					<option	value="red">Red</option>
+					<option	value="red2">Red 2</option>
+					<option	value="orange">Orange</option>
+					<option	value="orange2">Orange 2</option>
+					<option	value="brown">Brown</option>
+					<option	value="brown2">Brown 2</option>
+				</field>
+				<field 
+					name="sidebarPosition"
+					type="list"
+					default="left"
+					label="Sidebar Position"
+					description="Choose the position of the sidebar.">
+					<option	value="left">Left</option>
+					<option	value="right">Right</option>
+				</field>
+				<field 
+					name="sidebarWidth"
+					type="list"
+					default="220"
+					label="Sidebar Width"
+					description="Choose the width of the sidebar.">
+					<option	value="140">140px</option>
+					<option	value="160">160px</option>
+					<option	value="220">220px</option>
+					<option	value="280">280px</option>
+					<option	value="300">300px</option>
+					<option	value="340">340px</option>
+					<option	value="380">380px</option>
+					<option	value="400">400px</option>
+					<option	value="460">460px</option>
+				</field>
+				<field type="spacer" label=""/>
+				<field 
+					name="logo" 
+					type="media"
+					label="Logo" 
+					description="Choose an image for the logo." />
+				<field 
+					name="copyright"
+					type="text"
+					default="© 2011"
+					label="Copyright Text"
+					description="Enter copyright text that will be displayed at the bottom of the page."
+					filter="string" />
+				<field type="spacer" label=""/>
+				<field 
+					name="jqueryCDN"
+					type="radio"
+					default="no"
+					label="Load jQuery from Google CDN"
+					description="If you enable this, make sure none of your extensions also load jQuery.">
+					<option	value="no">No</option>
+					<option	value="yes">Yes</option>					
+				</field>
+				<field 
+					name="jqueryVersion"
+					type="text"
+					default="1.6.2"
+					label="jQuery Version"
+					description="Enter version of jQuery that will be loaded if enabled above."
+					filter="string" />
+				<field 
+					name="jqueryUICDN"
+					type="radio"
+					default="no"
+					label="Load jQuery UI from Google CDN"
+					description="If you enable this, make sure none of your extensions also load jQuery UI.">
+					<option	value="no">No</option>
+					<option	value="yes">Yes</option>					
+				</field>
+				<field 
+					name="jqueryUIVersion"
+					type="text"
+					default="1.8.16"
+					label="jQuery UI Version"
+					description="Enter version of jQuery UI that will be loaded if enabled above."
+					filter="string" />
+			  <field 
+					name="jqueryUITheme"
+					type="list"
+					default="smoothness"
+					label="jQuery UI Theme"
+					description="Choose jQuery UI Theme to load from Google CDN.">
+					<option	value="black-tie">Black Tie</option>
+					<option	value="blitzer">Blitzer</option>
+					<option	value="cupertino">Cupertino</option>
+					<option	value="dark-hive">Dark Hive</option>
+					<option	value="dot-luv">Dot Luv</option>
+					<option	value="eggplant">Eggplant</option>
+					<option	value="excite-bike">Excite Bike</option>
+					<option	value="flick">Flick</option>
+					<option	value="hot-sneaks">Hot Sneaks</option>
+					<option	value="humanity">Humanity</option>
+					<option	value="le-frog">Le Frog</option>
+					<option	value="mint-choc">Mint Choc</option>
+					<option	value="overcast">Overcast</option>
+					<option	value="pepper-grinder">Pepper Grinder</option>
+					<option	value="redmond">Redmond</option>
+					<option	value="smoothness">Smoothness (default)</option>
+					<option	value="south-street">South Street</option>
+					<option	value="start">Start</option>
+					<option	value="sunny">Sunny</option>
+					<option	value="swanky-purse">Swanky Purse</option>
+					<option	value="trontastic">Trontastic</option>
+					<option	value="ui-darkness">UI Darkness</option>
+					<option	value="ui-lightness">UI Lightness</option>
+					<option	value="vader">Vader</option>
+				</field>
+				<field type="spacer" label=""/>
+				<field 
+					name="googleAnalytics"
+					type="radio"
+					default="no"
+					label="Enable Google Analytics"
+					description="If you enable this, Google Analitycs tracking code will be added at the bottom of the template using your ID entered below">
+					<option	value="no">No</option>
+					<option	value="yes">Yes</option>					
+				</field>
+				<field 
+					name="googleAnalyticsID"
+					type="text"
+					default=""
+					label="Analytics UA Code (format: UA-XXXXXX-X)"
+					description="You can find this code in your Google Analitycs account"
+					filter="string" />
+				<field type="spacer" label=""/>
+				<field 
+					name="twitterIcon"
+					type="radio"
+					default="no"
+					label="Display Twitter Icon"
+					description="If you enable this, small Twitter icon with a link to your Twitter profile will be displayed in the header">
+					<option	value="no">No</option>
+					<option	value="yes">Yes</option>					
+				</field>
+				<field 
+					name="twitterURL"
+					type="text"
+					default=""
+					label="Link to Twitter profile"
+					description=""
+					filter="string" />
+				<field 
+					name="twitterTitle"
+					type="text"
+					default="Follow us on Twitter"
+					label="Twitter Icon Title (Tooltip)"
+					description=""
+					filter="string" />
+				<field type="spacer" label=""/>	
+				<field 
+					name="facebookIcon"
+					type="radio"
+					default="no"
+					label="Display Facebook Icon"
+					description="If you enable this, small Facebook icon with a link to your Facebook profile will be displayed in the header">
+					<option	value="no">No</option>
+					<option	value="yes">Yes</option>					
+				</field>
+				<field 
+					name="facebookURL"
+					type="text"
+					default=""
+					label="Link to Facebook profile"
+					description=""
+					filter="string" />
+				<field 
+					name="facebookTitle"
+					type="text"
+					default="Became a Fan on Facebook"
+					label="Facebook Icon Title (Tooltip)"
+					description=""
+					filter="string" />
+				<field type="spacer" label=""/>	
+				<field 
+					name="rssIcon"
+					type="radio"
+					default="no"
+					label="Display RSS Icon"
+					description="If you enable this, small RSS icon will be displayed in the header">
+					<option	value="no">No</option>
+					<option	value="yes">Yes</option>					
+				</field>
+				<field 
+					name="rssURL"
+					type="text"
+					default=""
+					label="Link to the main RSS Feed"
+					description=""
+					filter="string" />
+				<field 
+					name="rssTitle"
+					type="text"
+					default="Get updates via RSS"
+					label="RSS Icon Title (Tooltip)"
+					description=""
+					filter="string" />	
+			</fieldset>
+		</fields>
+	</config>
+</extension>

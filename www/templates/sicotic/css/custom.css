@@ -1,0 +1,381 @@
+/* Add your custom styles here */
+@import url(http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic);
+
+body {
+  font-family: 'PT Sans', sans-serif;
+  background-color: #c7c7c7;
+}
+
+#greyWrapper {
+  width: 100%;
+  margin: 0;
+  background-color: #ccc;
+  padding: 5px 0;
+}
+   #breadcrumbs {
+      width: 980px;
+      margin: 0 auto;
+      clear: both;
+      font-size: 0.9em;
+      float: none;
+      padding: 10px 0;
+    }
+
+/* Home Layout */
+#full-screen-background-image {
+  z-index: -999;
+  min-height: 100%;
+  min-width: 1024px;
+  width: 100%;
+  height: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+#HomePage {
+  position: relative;
+ 
+
+}
+.pagenav {
+  display:none;
+}
+#HomePage h1, #HomePage h2 {
+  display: none;
+}
+#PresentationBlock {
+  text-align: center;
+  color: #666;
+  font-size: 20px;
+  margin: 0 0 20px 0;
+}
+#PresentationBlock h1, #PresentationBlock h2 {
+  display: block;
+  color:#fff;
+  text-shadow: 0px 2px 3px #000;
+}
+#HomePage #Logo {
+  width:100%;
+  text-align:center;
+  padding-top:45px;
+  font-size:24px;
+  color:#fff;
+  font-style:italic;
+}
+#HomePage #LoginForm {
+  width:530px;
+  padding-top:40px;
+  margin:0 auto;
+}
+#HomePage #LoginForm h3 {
+  display:none;
+}
+#HomePage #LoginForm input {
+  font-size:14px;
+  width:300px;
+  padding:10px;
+  border:2px solid black;
+  border-radius:5px;
+}
+#HomePage #LoginForm label,
+#HomePage #LoginForm #form-login-remember {
+  display:none;
+}
+#HomePage #LoginForm ul {
+  width:320px;
+  margin:0 auto;
+  list-style:none;
+  padding:0;
+}
+#HomePage #LoginForm ul li {
+  margin:0;
+  padding:0;
+}
+#login-form ul li a,
+#login-form .login-greeting {
+  color:#fff;
+}
+#HomeTextBlockTop {
+  margin: 20px 0 20px 0;
+  clear: both;
+  padding:0;
+}
+#HomeTextBlockBottom {
+  margin: 20px 0 20px 0;
+  clear: both;
+}
+#HomeTextBlockTop ul {
+  width:100%;
+  margin:0;
+  padding:0;
+  text-align:left;
+  font-size: 16px;
+}
+#HomeTextBlockTop ul li {
+  float: left;
+  border-radius: 20px;
+  margin: 0 10px 0 0;
+  list-style:none;
+  color: rgba(185,40,35,100);
+ 
+ /* for IE */
+  background: -webkit-gradient(linear, left top, left bottom, from(#FFF8DC), to(#ffffff));
+  
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF8DC', endColorstr='#ffffff'); 
+  
+  
+  
+   /* for webkit browsers */
+  background: -moz-linear-gradient(top,  #dddddd,  #ffffff); /* for firefox 3.6+ */
+  width: 232px;
+  height: 75px;
+  padding:20px 5px 15px 65px;
+  font-size:16px;
+  color:#333;
+}
+#HomeTextBlockTop ul li img {
+  float:left;
+  margin-left:-55px;
+}
+h1#HomeTitle {
+  display: block;
+}
+#HomeGrid {
+  width:960px;
+  margin:0 auto;
+  font-size:14px;
+  display:none;
+}
+.HomeGrid_Item {
+  width:296px;
+  float:left;
+  margin:5px;
+  min-height:200px;
+  border-radius:15px;
+  text-align: center;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dddddd', endColorstr='#ffffff'); /* for IE */
+  background: -webkit-gradient(linear, left top, left bottom, from(#dddddd), to(#ffffff)); /* for webkit browsers */
+  background: -moz-linear-gradient(top,  #dddddd,  #ffffff); /* for firefox 3.6+ */
+}
+.HomeGrid_Item p {
+  float:left;
+  display:block;
+  color: #fff;
+  padding: 5px;
+  text-transform:uppercase;
+  font-size:0.8em;
+  height: 20px;
+  position:relative;
+  z-index:9;
+}
+.HomeGrid_Item img {
+  position:relative;
+  top:0;
+  z-index:7;
+  border-radius:15px;
+  width:100%;
+}
+.HomeGrid_Item a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+.HomeGrid_Item p:hover {
+  background-color: #B81212;
+}
+.article-info, #main ul.actions {
+  display:none;
+}
+
+#footerWrapper {
+	padding: 20px 0;
+	color: #fff;
+	font-size: 1.2em;
+	background-image: url(../images/footer.jpg);
+	background-repeat: repeat-x;
+	background-position: left bottom;
+	border-top-style: none;
+}
+#footer {
+  font-size:1em;
+}
+
+#footer ul li {
+  list-style: none;
+}
+
+#footerWrapper a {
+  color:#fff;
+}
+#HomePage #LoginForm .menu {
+  padding:0;
+  padding-bottom:20px;
+  text-align:center;
+}
+#HomePage #LoginForm .menu li {
+}
+#HomePage #LoginForm .menu li a {
+  color:#fff;
+}
+#HomePage #LoginForm .menu li.item-123 a {
+  background-color:#c25741;
+  padding:5px 20px;
+  border:2px solid #c25741;
+  border-radius:17px;
+  color:#fff;
+  margin:10px auto 30px auto;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#c25741', endColorstr='#8C1A18'); /* for IE */
+  background: -webkit-gradient(linear, left top, left bottom, from(#c25741), to(#8C1A18)); /* for webkit browsers */
+  background: -moz-linear-gradient(top,  #c25741,  #8C1A18); /* for firefox 3.6+ */
+  font-size:1.6em;
+}
+#HomePage #LoginForm .menu li.item-123 a:hover {
+  text-decoration:none;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#8C1A18', endColorstr='#c25741'); /* for IE */
+  background: -webkit-gradient(linear, left top, left bottom, from(#8C1A18), to(#c25741)); /* for webkit browsers */
+  background: -moz-linear-gradient(top,  #8C1A18,  #c25741); /* for firefox 3.6+ */
+}
+#HomePage #LoginForm form {
+  clear:both;
+  margin-top:30px;
+  text-align:center;
+  padding-top:20px;
+}
+#HomePage #LoginForm .moduletable {
+  text-align: center;
+}
+#HomePage #LoginForm .moduletable select {
+  
+}
+
+/* Styles for the Plans page */
+.jrListingCreate {
+  color:#808000;/* antes estaba en 000*/
+}
+.jrGrid {
+  color:#808000;/* antes estaba en 000*/
+}
+.jr-form-categories-outer {
+  color:#daa520;
+}
+.jrNewPlans .jrPlanInfo  {
+  width:430px !important;
+}
+.jrNewPlans .jrPlanInfo  ol {
+  text-align:left;
+}
+.jrNewPlans .jrPlanInfo  ol li:last-child {
+  padding-top:10px;
+  font-style:italic;
+}
+.jrNewPlans .jrPlanInfo  .jrPlanAmount{
+  font-size:2em;
+}
+
+.jrNewPlans .jrPlanInfo .jrHighlightedPlan {
+  background-color:#ff6600 !important;
+}
+
+/* Listings */
+.jrListingColumn a {
+  color:#8C1A18 !important;
+}
+.jrListingColumn .jrListingContent {
+  padding:5px;
+}
+.jrListingColumn .row2 {
+  background-color:#f2e0e0 !important;
+}
+.jrListingColumn .img {
+  width:200px !important;
+}
+
+/* Home gallery */
+.da-thumbs {
+  list-style: none;
+  width: 984px;
+  height: 600px;
+  position: relative;
+  margin: 20px auto;
+  padding: 0;
+}
+.da-thumbs li {
+  float: left;
+  margin: 5px;
+  background: #fff;
+  padding: 8px;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-radius:15px;
+}
+.da-thumbs li a,
+.da-thumbs li a img {
+  display: block;
+  position: relative;
+  width:260px;
+}
+.da-thumbs li a {
+  overflow: hidden;
+}
+.da-thumbs li a div {
+  position: absolute;
+  background: #333;
+  background: rgba(75,75,75,0.7);
+  width: 100%;
+  height: 100%;
+}
+.da-thumbs li a div span {
+  display: block;
+  padding: 10px 0;
+  margin: 40px 20px 20px 20px;
+  text-transform: uppercase;
+  font-weight: normal;
+  color: rgba(255,255,255,0.9);
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.1), 0 -10px 0 rgba(255,255,255,0.3);
+}
+
+/* Page styles */
+.item-page h2 {
+  font-size:2em;
+  margin:20px 0;
+}
+.item-page p {
+  font-size:16px;
+  margin-bottom: 20px;
+  line-height:1.3em;
+}
+
+/* Top menu */
+#banner .menu {
+	list-style-type: none !important;
+	}
+
+        
+        #headerWrapper
+        {
+	background-image: url(../images/header.jpg);
+	background-repeat: repeat-x;
+	background-position: left bottom;
+	background-color: #333;
+        }
+		
+		#contentWrapper
+		{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+#main
+{
+	background-color: #FFF;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+#HomePage #main
+{
+	background-image: url(../images/bg_home.jpg);
+	background-repeat: repeat-x;
+	background-position: left bottom;
+}
