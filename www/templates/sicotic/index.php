@@ -124,7 +124,7 @@ if ($is_home) { ?>
     
         
         <?php if ($is_home && $this->countModules('position-home')): ?>
-      <div id="slider-home" class="grid_<?php echo $grid; ?>">        
+      <div id="slider-home" class="grid_<?php //echo $grid; ?>">        
         <jdoc:include type="modules" name="position-home" style="xhtml" />
       </div>
       <?php endif; ?>
