@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="content" method="upgrade">
+    <name>Avatar Slide Skitter Plugin</name>
+    <author>Nam Chung Tran</author>
+    <version>1.0.5</version>
+	<creationDate>April 2012</creationDate>
+	<copyright>JoomAvatar.com</copyright>
+	<license>License GNU General Public License version 2 or later</license>
+	<author>Tran Nam Chung</author>
+	<authorEmail>chungtn2910@gmail.com</authorEmail>
+	<authorUrl>www.joomavatar.com</authorUrl>
+	<edition>Free</edition>
+    <description>AVATAR_SLIDE_SKITTER_DESC</description>
+    <files>
+        <filename plugin="avatar_slide_skitter">avatar_slide_skitter.php</filename>
+        <filename>index.html</filename>
+        <filename>avatar_slide_skitter.xml</filename>
+        <folder>assets</folder>
+        <folder>classes</folder>
+        <folder>tmpl</folder>
+    </files>
+    <languages>
+		<language tag="en-GB">en-GB.plg_content_avatar_slide_skitter.sys.ini</language>
+	</languages>
+</extension>
