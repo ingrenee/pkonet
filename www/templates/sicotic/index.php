@@ -17,6 +17,7 @@ require_once(dirname(__FILE__).DS.'parameters.php');
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/<?php echo $this->params->get('jqueryUIVersion'); ?>/jquery-ui.min.js"></script>
   <?php endif;?>
   <jdoc:include type="head" />
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="<?php echo $this->baseurl; ?>/templates/system/css/system.css" type="text/css" />
   <link rel="stylesheet" href="<?php echo $this->baseurl; ?>/templates/system/css/general.css" type="text/css" />
   <link rel="stylesheet" href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/960.css" type="text/css" />
@@ -186,17 +187,30 @@ if ($is_home) { ?>
 
   <div id="footerWrapper">
     <div id="footer" class="clearfix">
-      <div id="copyright"><?php echo $copyright; ?></div>
-      <?php if ($this->countModules('position-15')): ?>
-      <div id="footermenu">
-        <jdoc:include type="modules" name="position-15" style="xhtml" />
-      </div>
-      <?php endif; ?>
+    
+    <div class="footer-left">
+
       <?php if ($this->countModules('position-16')): ?>
       <div id="footerBottom">
         <jdoc:include type="modules" name="position-16" style="xhtml" />
       </div>
       <?php endif; ?>
+
+    </div>
+    
+    <div class="footer-right">
+
+
+      <?php if ($this->countModules('position-15')): ?>
+      <div id="footermenu">
+        <jdoc:include type="modules" name="position-15" style="xhtml" />
+      </div>
+      <?php endif; ?>
+
+      <div id="copyright"><?php echo $copyright; ?></div>    </div>
+    
+
+
     </div>
   </div>
   
