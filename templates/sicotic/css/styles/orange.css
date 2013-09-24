@@ -1,0 +1,107 @@
+a:link, a:visited {
+    color: #f75300;
+}
+
+#nav {
+	color: #fff;
+	background: #ff671a;	
+	background-image: -moz-linear-gradient(top, #ff671a, #ce4702);
+	background-image: -o-linear-gradient(top, #ff671a, #ce4702);
+	background-image: -ms-linear-gradient(top, #ff671a, #ce4702);	
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #ff671a), color-stop(1, #ce4702));
+	background-image: -webkit-linear-gradient(#ff671a, #ce4702);
+	background-image: linear-gradient(top, #ff671a, #ce4702);
+}
+
+#nav > ul > li > a:hover,
+#nav > ul > li.active.current > a {
+	background: #b13c00;
+	background-image: -moz-linear-gradient(top, #b13c00, #fd6c23);
+	background-image: -o-linear-gradient(top, #b13c00, #fd6c23);
+	background-image: -ms-linear-gradient(top, #b13c00, #fd6c23);	
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #b13c00), color-stop(1, #fd6c23));
+	background-image: -webkit-linear-gradient(#b13c00, #fd6c23);
+	background-image: linear-gradient(top, #b13c00, #fd6c23);
+	-moz-box-shadow: 1px -1px 2px #7d2a00, -1px -1px 2px #7d2a00;
+	-webkit-box-shadow: 1px -1px 2px #7d2a00, -1px -1px 2px #7d2a00;
+	box-shadow: 1px -1px 2px #7d2a00, -1px -1px 2px #7d2a00;
+}
+
+#nav ul li ul {
+	background: #fcfaf8;
+	-moz-box-shadow: 0 0 2px #222;
+	-webkit-box-shadow: 0 0 2px #222;
+	box-shadow: 0 0 2px #222;
+}
+
+#nav ul li ul li a:hover,
+#nav ul li.active.current ul li a:hover {
+	background: #fbeee7;
+}
+
+#nav ul li ul li.deeper > a:hover,
+#nav ul li.active.current ul li.deeper > a:hover {
+	background: url("../img/arrow.png") no-repeat right center #fbeee7;
+}
+
+.moduletable h3,
+.moduletable_menu h3 {
+	border-bottom: 1px solid #ff671a;
+}
+
+.moduletable_rounded h3 {
+	border-bottom: 1px solid #ff671a;
+}
+
+.moduletable_rounded_light h3 {
+	border: 1px solid #fd894e;
+}
+
+.moduletable_rounded_dark h3 {
+	border: 1px solid #ff671a;
+}
+
+.moduletable_rounded_light h3,
+.moduletable_rounded_light_outside h3 {
+	color: #444;
+	background-color: #fd894e;
+	background-image: -moz-linear-gradient(top, #fd894e, #ffa476);
+	background-image: -o-linear-gradient(top, #fd894e, #ffa476);
+	background-image: -ms-linear-gradient(top, #fd894e, #ffa476);	
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #fd894e), color-stop(1, #ffa476));
+	background-image: -webkit-linear-gradient(#fd894e, #ffa476);
+	background-image: linear-gradient(top, #fd894e, #ffa476);
+}
+
+.moduletable_rounded_dark h3,
+.moduletable_rounded_dark_outside h3 {
+	color: #eee;
+	background-color: #ce4702;
+	background-image: -moz-linear-gradient(top, #ce4702, #ff671a);
+	background-image: -o-linear-gradient(top, #ce4702, #ff671a);
+	background-image: -ms-linear-gradient(top, #ce4702, #ff671a);
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #ce4702), color-stop(1, #ff671a));
+	background-image: -webkit-linear-gradient(#ce4702, #ff671a);
+	background-image: linear-gradient(top, #ce4702, #ff671a);
+}
+
+.moduletable_shadowbox_light h3 {
+	background: #fd894e;
+	background: rgba(253, 137, 78, 0.7);
+	color: #444;
+}
+
+.moduletable_shadowbox_dark h3 {
+	background: #ce4702;
+	background: rgba(206, 71, 2, 0.7);
+	color: #eee;
+}
+
+#footermenu ul.menu li a:link, 
+#footermenu ul.menu li a:visited {
+	color: #f75300;
+}
+
+#footermenu ul.menu li a:hover {
+	text-decoration: underline;
+}

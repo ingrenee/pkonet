@@ -1,0 +1,80 @@
+#headerWrapper {
+	color: #fff;
+	background: #666;
+	background-image: -moz-linear-gradient(top, #444, #666);
+	background-image: -o-linear-gradient(top, #444, #666);
+	background-image: -ms-linear-gradient(top, #444, #666);	
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #444), color-stop(1, #666));
+	background-image: -webkit-linear-gradient(#444, #666);
+	background-image: linear-gradient(top, #444, #666);
+	box-shadow: 1px 0 5px #4c3f27;
+}
+
+#headerWrapper a:link, 
+#headerWrapper a:visited {
+	color: #c1dbfe;
+}
+
+#footerWrapper {
+	background: #555;
+	background-image: -moz-linear-gradient(top, #666, #444);
+	background-image: -o-linear-gradient(top, #666, #444);
+	background-image: -ms-linear-gradient(top, #666, #444);	
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #666), color-stop(1, #444));
+	background-image: -webkit-linear-gradient(#666, #444);
+	background-image: linear-gradient(top, #666, #444);
+	box-shadow: 0 0 2px #4c3f27;
+	padding: 20px 0 5px;
+	color: #fff;
+}
+
+#footerWrapper a:link, 
+#footerWrapper a:visited {
+	color: #efffa7;
+}
+
+#logo a h1 {
+  color: #fff;
+	text-shadow: 0 0 1px #333;
+}
+
+#nav {
+	color: #444;
+	background: #eee;	
+	background-image: -moz-linear-gradient(top, #fefefe, #bdbdbd);
+	background-image: -o-linear-gradient(top, #fefefe, #bdbdbd);
+	background-image: -ms-linear-gradient(top, #fefefe, #bdbdbd);	
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #fefefe), color-stop(1, #bdbdbd));
+	background-image: -webkit-linear-gradient(#fefefe, #bdbdbd);
+	background-image: linear-gradient(top, #fefefe, #bdbdbd);
+}
+
+#nav ul li a:link, 
+#nav ul li a:visited {
+	color: #444;
+	text-shadow: 1px 1px #eee;
+}
+
+#nav > ul > li > a:hover,
+#nav > ul > li.active.current > a {
+	background: #ddd;
+	background-image: -moz-linear-gradient(top, #aaa, #ccc);
+	background-image: -o-linear-gradient(top, #aaa, #ccc);
+	background-image: -ms-linear-gradient(top, #aaa, #ccc);	
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #aaa), color-stop(1, #ccc));
+	background-image: -webkit-linear-gradient(#aaa, #ccc);
+	background-image: linear-gradient(top, #aaa, #ccc);
+	-moz-box-shadow: 1px -1px 2px #555, -1px -1px 2px #555;
+	-webkit-box-shadow: 1px -1px 2px #555, -1px -1px 2px #555;
+	box-shadow: 1px -1px 2px #555, -1px -1px 2px #555;
+}
+
+#footermenu ul.menu li a:link, 
+#footermenu ul.menu li a:visited {
+	color: #c1dbfe;
+	border-color: #999;
+}
+
+#footermenu ul.menu li a:hover {
+	text-decoration: underline;
+}

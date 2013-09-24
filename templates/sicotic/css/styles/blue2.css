@@ -1,0 +1,137 @@
+a:link, a:visited {
+    color: #004762;
+}
+
+#headerWrapper {
+	color: #fff;
+	background: #065574;
+	background-image: -moz-linear-gradient(top, #053649, #065574);
+	background-image: -o-linear-gradient(top, #053649, #065574);
+	background-image: -ms-linear-gradient(top, #053649, #065574);
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #053649), color-stop(1, #065574));
+	background-image: -webkit-linear-gradient(#053649, #065574);
+	background-image: linear-gradient(top, #053649, #065574);
+	box-shadow: 1px 0 5px #4c3f27;
+}
+
+#headerWrapper a:link, 
+#headerWrapper a:visited {
+	color: #91cfe8;
+}
+
+#footerWrapper {
+	background: #053649;
+	background-image: -moz-linear-gradient(top, #065574, #053649);
+	background-image: -o-linear-gradient(top, #065574, #053649);
+	background-image: -ms-linear-gradient(top, #065574, #053649);
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #065574), color-stop(1, #053649));
+	background-image: -webkit-linear-gradient(#065574, #053649);
+	background-image: linear-gradient(top, #065574, #053649);
+	box-shadow: 0 0 2px #4c3f27;
+	padding: 20px 0 5px;
+	color: #fff;
+}
+
+#footerWrapper a:link, 
+#footerWrapper a:visited {
+	color: #91cfe8;
+}
+
+#logo a h1 {
+  color: #fff;
+	text-shadow: 0 0 1px #333;
+}
+
+#nav {
+	color: #444;
+	background: #eee;	
+	background-image: -moz-linear-gradient(top, #fefefe, #bdbdbd);
+	background-image: -o-linear-gradient(top, #fefefe, #bdbdbd);
+	background-image: -ms-linear-gradient(top, #fefefe, #bdbdbd);
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #fefefe), color-stop(1, #bdbdbd));
+	background-image: -webkit-linear-gradient(#fefefe, #bdbdbd);
+	background-image: linear-gradient(top, #fefefe, #bdbdbd);
+}
+
+#nav ul li a:link, 
+#nav ul li a:visited {
+	color: #444;
+	text-shadow: 1px 1px #eee;
+}
+
+#nav > ul > li > a:hover,
+#nav > ul > li.active.current > a {
+	background: #ddd;
+	background-image: -moz-linear-gradient(top, #aaa, #ccc);
+	background-image: -o-linear-gradient(top, #aaa, #ccc);
+	background-image: -ms-linear-gradient(top, #aaa, #ccc);
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #aaa), color-stop(1, #ccc));
+	background-image: -webkit-linear-gradient(#aaa, #ccc);
+	background-image: linear-gradient(top, #aaa, #ccc);
+	-moz-box-shadow: 1px -1px 2px #555, -1px -1px 2px #555;
+	-webkit-box-shadow: 1px -1px 2px #555, -1px -1px 2px #555;
+	box-shadow: 1px -1px 2px #555, -1px -1px 2px #555;
+}
+
+.moduletable h3,
+.moduletable_menu h3 {
+	border-bottom: 1px solid #065574;
+}
+
+.moduletable_rounded h3 {
+	border-bottom: 1px solid #065574;
+}
+
+.moduletable_rounded_light h3 {
+	border: 1px solid #b4e1f2;
+}
+
+.moduletable_rounded_dark h3 {
+	border: 1px solid #065574;
+}
+
+.moduletable_rounded_light h3,
+.moduletable_rounded_light_outside h3 {
+	color: #444;
+	background-color: #b4e1f2;
+	background-image: -moz-linear-gradient(top, #91cfe8, #b4e1f2);
+	background-image: -o-linear-gradient(top, #91cfe8, #b4e1f2);
+	background-image: -ms-linear-gradient(top, #91cfe8, #b4e1f2);
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #91cfe8), color-stop(1, #b4e1f2));
+	background-image: -webkit-linear-gradient(#91cfe8, #b4e1f2);
+	background-image: linear-gradient(top, #91cfe8, #b4e1f2);
+}
+
+.moduletable_rounded_dark h3,
+.moduletable_rounded_dark_outside h3 {
+	color: #fff;
+	background-color: #053649;
+	background-image: -moz-linear-gradient(top, #053649, #065574);
+	background-image: -o-linear-gradient(top, #053649, #065574);
+	background-image: -ms-linear-gradient(top, #053649, #065574);
+	background-image: -webkit-gradient(linear, center top, center bottom, color-stop(0, #053649), color-stop(1, #065574));
+	background-image: -webkit-linear-gradient(#053649, #065574);
+	background-image: linear-gradient(top, #053649, #065574);
+}
+
+.moduletable_shadowbox_light h3 {
+	background: #91cfe8;
+	background: rgba(145, 207, 232, 0.7);
+	color: #444;
+}
+
+.moduletable_shadowbox_dark h3 {
+	background: #065574;
+	background: rgba(5, 54, 73, 0.7);
+	color: #eee;
+}
+
+#footermenu ul.menu li a:link, 
+#footermenu ul.menu li a:visited {
+	color: #91cfe8;
+	border-color: #eee;
+}
+
+#footermenu ul.menu li a:hover {
+	text-decoration: underline;
+}
