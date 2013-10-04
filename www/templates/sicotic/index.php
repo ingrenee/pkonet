@@ -13,7 +13,9 @@ require_once(dirname(__FILE__).DS.'parameters.php');
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/<?php echo $this->params->get('jqueryVersion'); ?>/jquery.min.js"></script>
   <script type="text/javascript">jQuery.noConflict();</script>
   <?php endif;?>  
+  <script src="http://cdn.jquerytools.org/1.2.6/jquery.tools.min.js" type="text/javascript"></script>
   <?php if ($this->params->get('jqueryUICDN') == 'yes'): ?>
+  <!-- <?php echo $this->params->get('jqueryUIVersion'); ?> -->
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/<?php echo $this->params->get('jqueryUIVersion'); ?>/jquery-ui.min.js"></script>
   <?php endif;?>
   <jdoc:include type="head" />
@@ -22,6 +24,8 @@ require_once(dirname(__FILE__).DS.'parameters.php');
   <link rel="stylesheet" href="<?php echo $this->baseurl; ?>/templates/system/css/general.css" type="text/css" />
   <link rel="stylesheet" href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/960.css" type="text/css" />
   <link rel="stylesheet" href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/template.css" type="text/css" />
+ 
+ 
   <?php if ($style != 'gray'): ?>
   <link rel="stylesheet" href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/styles/<?php echo $style; ?>.css" type="text/css" />
   <?php endif;?>
@@ -33,6 +37,18 @@ require_once(dirname(__FILE__).DS.'parameters.php');
   <link rel="stylesheet" href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/template_rtl.css" type="text/css" />
   <?php endif;?>  
   <link rel="stylesheet" href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/css/custom.css" type="text/css" />
+ 
+  <link rel="stylesheet" href="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/colorbox.css" type="text/css" />
+  <script type="text/javascript" src="<?php echo $this->baseurl; ?>/templates/<?php echo $this->template; ?>/jquery.colorbox.js"></script>
+  <script>
+   jQuery(document).ready(function(e) {
+        
+		jQuery("#pruebe-aqui").colorbox({inline:true, href:".moduletable_menu_modal_opciones"});
+		jQuery(".boton_entrar_ya").colorbox({inline:true, href:".moduletable_form_login"});
+    });
+  </script>
+  
+  
   <?php if ($this->params->get('googleAnalytics') == 'yes'): ?>
   
     <script type="text/javascript">
@@ -47,7 +63,7 @@ require_once(dirname(__FILE__).DS.'parameters.php');
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
     
-    
+   
 </script>
 	<?php endif;?>
   
@@ -80,17 +96,17 @@ if ($is_home) { ?>
         </a>        
       </div>
       <?php if ($this->countModules('position-0')): ?>
-      <div id="banner">
+      <div id="banner" class="position-0">
         <jdoc:include type="modules" name="position-0" />
       </div>
       <?php endif; ?>
       <?php if ($this->countModules('position-1')): ?>
-      <div id="nav">
+      <div id="nav" class="position-1">
         <jdoc:include type="modules" name="position-1" />
       </div>
       <?php endif; ?>
       <?php if ($this->countModules('position-2')): ?>
-      <div id="breadcrumbs">
+      <div id="breadcrumbs" class="position-2">
         <jdoc:include type="modules" name="position-2" />
       </div>
       <?php endif; ?>
@@ -125,14 +141,14 @@ if ($is_home) { ?>
     
         
         <?php if ($is_home && $this->countModules('position-home')): ?>
-      <div id="slider-home" class="grid_<?php //echo $grid; ?>">        
+      <div id="slider-home" class="grid_<?php //echo $grid; ?>" class="position-home">        
         <jdoc:include type="modules" name="position-home" style="xhtml" />
       </div>
       <?php endif; ?>
         
         
       <?php if ($this->countModules('position-3') || $this->countModules('position-4')): ?>
-      <div id="top" class="grid_<?php echo $grid; ?>">        
+      <div id="top" class="grid_<?php echo $grid; ?>" class="position-3-4">        
         <jdoc:include type="modules" name="position-3" style="xhtml" />
         <jdoc:include type="modules" name="position-4" style="xhtml" />
       </div>
@@ -150,7 +166,7 @@ if ($is_home) { ?>
       </div>
   
       <?php if ($show_sidebar): ?>
-      <div id="sidebar" class="<?php echo $sidebar_position; ?>">
+      <div id="sidebar" class="<?php echo $sidebar_position; ?>" class="position-5-6-7">
         <jdoc:include type="modules" name="position-5" style="xhtml" />
         <jdoc:include type="modules" name="position-6" style="xhtml" />
         <jdoc:include type="modules" name="position-7" style="xhtml" />
@@ -158,25 +174,25 @@ if ($is_home) { ?>
       <?php endif; ?>
       
       <?php if ($this->countModules('position-8') || $this->countModules('position-9') || $this->countModules('position-10') || $this->countModules('position-11') || $this->countModules('position-12') || $this->countModules('position-14')): ?>  
-      <div id="bottom" class="container_12">
+      <div id="bottom" class="container_12" class="position-8-9-10-11-12">
         <?php if ($this->countModules('position-8')): ?>
-        <div class="grid_12">
+        <div class="grid_12" class="position-8">
           <jdoc:include type="modules" name="position-8" style="xhtml" />
         </div>
         <?php endif; ?>
         <?php if ($this->countModules('position-9') || $this->countModules('position-10') || $this->countModules('position-11')): ?>
-        <div class="grid_4">
+        <div class="grid_4" class="position-9">
           <jdoc:include type="modules" name="position-9" style="xhtml" />
         </div>
-        <div class="grid_4">
+        <div class="grid_4" class="position-9">
           <jdoc:include type="modules" name="position-10" style="xhtml" />
         </div>
-        <div class="grid_4">
+        <div class="grid_4" class="position-9">
           <jdoc:include type="modules" name="position-11" style="xhtml" />
         </div>
         <?php endif; ?>
         <?php if ($this->countModules('position-14')): ?>
-        <div class="grid_12">
+        <div class="grid_12" class="position-14">
           <jdoc:include type="modules" name="position-14" style="xhtml" />
         </div>
         <?php endif; ?>
@@ -191,7 +207,7 @@ if ($is_home) { ?>
     <div class="footer-left">
 
       <?php if ($this->countModules('position-16')): ?>
-      <div id="footerBottom">
+      <div id="footerBottom" class="position-16">
         <jdoc:include type="modules" name="position-16" style="xhtml" />
       </div>
       <?php endif; ?>
@@ -202,7 +218,7 @@ if ($is_home) { ?>
 
 
       <?php if ($this->countModules('position-15')): ?>
-      <div id="footermenu">
+      <div id="footermenu" class="position-15">
         <jdoc:include type="modules" name="position-15" style="xhtml" />
       </div>
       <?php endif; ?>

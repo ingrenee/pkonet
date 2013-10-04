@@ -677,7 +677,9 @@ padding-top: 90px;
 text-shadow: 0px 0px 2px #292929;
         filter: dropshadow(color=#292929, offx=0, offy=0);
 }
-.moduletable_botones_home a#pruebe-aqui
+.moduletable_botones_home a#pruebe-aqui,
+.moduletable_botones_home a.pruebe-aqui,
+.moduletable_botones_home .pruebe-aqui-content a
 {
 	background-image: url(../images/bg_button_01.png);
 	line-height: 65px;
@@ -689,13 +691,16 @@ text-shadow: 0px 0px 2px #292929;
 	border: 1px solid #1b557e;
 }
 
-.moduletable_botones_home a#pruebe-aqui:hover
+.moduletable_botones_home a#pruebe-aqui:hover,
+.moduletable_botones_home .pruebe-aqui-content a:hover
+
 {
 	background-color: #2980bd;
 	background-image: none;
 }
 
-.moduletable_botones_home a#conozca
+.moduletable_botones_home a#conozca,
+.moduletable_botones_home a.conozca
 {
 	background-image: url(../images/bg_button_02.png);
 	font-size: 16.14px;
@@ -707,12 +712,14 @@ text-shadow: 0px 0px 2px #292929;
 	display: block;
 	border: 1px solid #6f2d2f;
 }
-.moduletable_botones_home a#conozca:hover
+.moduletable_botones_home a#conozca:hover,
+.moduletable_botones_home a.conozca:hover
 {
 	background-color: #c35c5f;
 	background-image: none;
 }
-.moduletable_botones_home a#conozca span
+.moduletable_botones_home a#conozca span,
+.moduletable_botones_home a.conozca span
 {
 	padding-top: 13px;
 display: block;}

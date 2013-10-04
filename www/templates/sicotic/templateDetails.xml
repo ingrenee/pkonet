@@ -116,7 +116,7 @@
 				<field 
 					name="jqueryVersion"
 					type="text"
-					default="1.6.2"
+					default="1.9.0"
 					label="jQuery Version"
 					description="Enter version of jQuery that will be loaded if enabled above."
 					filter="string" />
@@ -132,7 +132,7 @@
 				<field 
 					name="jqueryUIVersion"
 					type="text"
-					default="1.8.16"
+					default="1.10.3"
 					label="jQuery UI Version"
 					description="Enter version of jQuery UI that will be loaded if enabled above."
 					filter="string" />
