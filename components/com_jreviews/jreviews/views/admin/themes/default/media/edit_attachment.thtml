@@ -1,0 +1,9 @@
+<?php
+
+$thumbnailSize = Sanitize::getString($this->Config,'media_detail_gallery_thumbnail_size');
+
+$thumbnailMode = Sanitize::getString($this->Config,'media_detail_gallery_thumbnail_mode');
+
+echo $Media->thumb($media['Media'],array('size'=>$thumbnailSize,'mode'=>$thumbnailMode),array('style'=>'max-width:250px;height:auto;'));
+
+

@@ -1,0 +1,134 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+//prx($replies);
+$predefined_replies = 5;
+
+$types = array(
+    'listing'=>__a("Listings",true),
+    'review'=>__a("Reviews",true),
+    'media'=>__a("Media",true),
+    'owner_reply'=>__a("Owner Replies",true),
+    'discussion_post'=>__a("Discussion Posts",true),
+    'claim'=>__a("Claims",true)
+);
+
+$tags_listing = sprintf(__a("%s = user name; %s = frontend url; %s = listing_title",true),'{name}','{url}','{listing_title}');
+
+$tags_review = sprintf(__a("%s = user name; %s = frontend url; %s = listing_title, %s = review_title",true),'{name}','{url}','{listing_title}','{review_title}');
+
+$tags_post = sprintf(__a("%s = user name; %s = frontend url; %s = review_title",true),'{name}','{url}','{review_title}');
+
+$valid_tags = array(
+    'listing'=>$tags_listing,
+    'review'=>$tags_review,
+	'media'=>$tags_review,
+	'owner_reply'=>$tags_review,
+    'discussion_post'=>$tags_post,
+    'claim'=>$tags_listing
+);
+
+$count = $predefined_replies*count($types);
+?>
+
+<div class="jrPageHeading"><?php __a("Predefined Email Replies for Moderation Actions");?></div>
+
+<form id="jr-page-form" class="jrForm" action="index.php" method="post">
+
+    <div class="jrPageToolbar jrRoundedPanel">
+
+        <span id="jr-status" class="jrLeft jrStatus"></span>
+
+        <button class="jr-save-settings jrButton jrGreen">
+
+            <span class="jrIconSave"></span><?php __a("Save");?>
+
+        </button>
+
+    </div>
+
+    <div class="jr-tabs jrTabs jrForm">
+
+        <ul>
+            <?php foreach($types AS $type=>$label):?>
+
+			<li><a href="#<?php echo $type;?>"><span><?php __a("{$label}");?></span></a></li>
+
+			<?php endforeach;?>
+        </ul>
+
+        <?php $t = 0; foreach($types AS $type=>$label):?>
+
+        <div id="<?php echo $type;?>">
+
+			<p><?php echo sprintf(__a("Valid tags: %s",true),$valid_tags[$type]);?></p>
+
+            <div class="jrDataList">
+
+                <?php
+				for($i=0;$i<=$predefined_replies-1;$i++):
+
+					$reply_id = $reply_subject = $reply_body = '';
+					$reply_type = $type;
+					$j = $i+1;
+					$reply = isset($replies[$type]) && isset($replies[$type][$i]) ? $replies[$type][$i] : array();
+					extract($reply);
+				?>
+
+                <div class="jrGrid jrDataListHeader">
+
+                    <div class="jrCol12 "><?php echo sprintf(__a("Predefined Reply #%s",true),$j);?></div>
+
+                </div>
+
+                <div class="jrGrid">
+
+                    <div class="jrCol2"><?php __a("Subject");?></div>
+
+                    <div class="jrCol10">
+
+                        <input name="data[replies][<?php echo $t;?>][PredefinedReply][reply_subject]" type="text" value="<?php echo $reply_subject;?>" style="width: 350px;" />
+
+                    </div>
+
+                </div>
+
+                <div class="jrGrid">
+
+                    <div class="jrCol2"><?php __a("Body");?></div>
+
+                    <div class="jrCol10">
+
+                         <textarea name="data[replies][<?php echo $t;?>][PredefinedReply][reply_body]"rows="5" cols="400" style="margin:4px;width:98%;height:8em;"><?php echo $reply_body;?></textarea>
+
+                        <input name="data[replies][<?php echo $t;?>][PredefinedReply][reply_id]" type="hidden" value="<?php echo $reply_id;?>" />
+
+                        <input name="data[replies][<?php echo $t;?>][PredefinedReply][reply_type]" type="hidden" value="<?php echo $type;?>" />
+
+                    </div>
+
+                </div>
+
+                <?php $t++; endfor;?>
+
+            </div>
+
+
+        </div>
+
+        <?php endforeach;?>
+
+    </div>
+
+    <input type="hidden" name="data[controller]" value="admin/admin_predefined_replies" />
+
+    <input type="hidden" name="data[action]" value="_save" />
+
+</form>

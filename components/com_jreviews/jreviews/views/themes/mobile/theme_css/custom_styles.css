@@ -1,0 +1,63 @@
+/* Directory */
+.jrDirview > ul {
+  padding-left: 10px;
+}
+.jrDirview ul li.jrCatLevel1 {
+  float: none !important;
+  width: auto !important;
+  overflow: hidden;
+}
+/* List pages */
+.jrListSearch a {
+  clear: both;
+  display: block;
+  margin: 5px 0;
+}
+.jrPagenavResults {
+  display: none;
+}
+/* Blogview */
+.jrListingColumn {
+  width: auto !important;
+}
+.jrMapColumn {
+  display: none;
+}
+.jrBlogview .jrListingThumbnail {
+  float: left;
+  margin: 0 0 6px 0;
+  border: solid 1px #CCC;
+  padding: 1px;
+}
+.jrBlogview .jrCustomFields {
+  clear: both;
+}
+/* Tableview */
+.jrTableview .jrTableColumnFirst {
+  display: none !important;
+}
+/* Detail page */
+.jrListingDetail .jrListingStatus {
+  float: left !important;
+}
+.jrListingDetail .jrListingMainImage {
+  float: left !important;
+  margin-left: 0;
+}
+.jrListingDetail .jrCustomFields {
+  clear: both;
+}
+.jrAttachments .jrAttachementSize,
+.jrAttachments .jrAttachementType {
+  display: none;
+}
+.jrRatingsSubmission .jrRatingCriteria {
+  width: 145px;
+}
+/* Grid */
+.jrListColumn2 .jrListItem {
+  width: 48.72857143%;
+}
+.jrPopup {
+  display: none !important;
+}

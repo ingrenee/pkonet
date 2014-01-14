@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" version="2.5" method="upgrade">
+	<name>JReviews Media Module</name>
+	<author>ClickFWD LLC</author>
+	<creationDate>March 2013</creationDate>
+	<copyright>Copyright (C) 2010-2013 ClickFWD LLC. All rights reserved.</copyright>
+	<license>Commercial</license>
+	<authorEmail>sales@reviewsforjoomla.com</authorEmail>
+	<authorUrl>www.reviewsforjoomla.org</authorUrl>
+	<version>2.4</version>
+	<description>MODULE_HEADER</description>
+	<files>
+		<filename module="mod_jreviews_media">mod_jreviews_media.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">en-GB.mod_jreviews_media.ini</language>
+		<language tag="en-GB">en-GB.mod_jreviews_media.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<!-- main setup -->
+				<field type="spacer" class="dataListHeader" label="MAIN SETUP" />
+				<field name="media_type" type="list" default="all" label="Media Type" description="">
+					<option value="all">All</option>
+					<option value="photo">Photos</option>
+					<option value="video">Videos</option>
+					<option value="audio">Audio</option>
+					<option value="attachment">Attachments</option>
+				</field>
+				<field name="media_order" type="list" default="recent" label="Media Ordering" description="">
+					<option value="recent">Newest</option>
+					<option value="liked">Most Liked</option>
+					<option value="views">Popular</option>
+				</field>
+				<field name="tmpl_suffix" type="text" default="" label="JReviews Theme Suffix" description="This suffix will be applied to the module view file and is useful to create multiple instances of the module that have different outputs." />
+				<!-- thumbnails -->
+				<field type="spacer" class="dataListHeader" label="THUMBNAIL SETTINGS" />
+				<field name="tn_mode" type="radio" default="crop" label="Type" description="">
+					<option value="crop">Crop</option>
+					<option value="scale">Scale</option>
+				</field>
+				<field name="tn_size" type="text" default="100x100" label="Size (WIDTHxHEIGHT)" description="In pixels" />
+				<field name="media_type_icon" type="radio" default="1" label="Show Media Type Icon" description="Media type icon is overlayed in a corner of the thumbnail">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<!-- basic filters -->
+				<field type="spacer" class="dataListHeader" label="BASIC FILTERS" />
+				<field name="extension" type="text" default="" label="Everywhere Extension" description="If you want to limit results to a specific extension, then enter it here (i.e. com_content, com_virtuemart, com_sobi2, etc.). Only ONE extension at a time!" />
+				<field name="media_by" type="list" default="all" label="Display Media Uploaded By" description="Only works when Everywhere Extension setting is set to 'com_content'.">
+					<option value="all">Everyone</option>
+					<option value="owner">Listing Owner</option>
+					<option value="user">Users</option>
+				</field>
+				<field name="cat_auto" type="radio" default="0" label="Category Autodetect" description="Filters results for current category.">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="dir" type="text" default="" label="Directory IDs (com_content)" description="Comma separated list, no spaces." />
+				<field name="category" type="text" default="" label="Category IDs (everywhere)" description="Comma separated list, no spaces." />
+				<field name="listing" type="text" default="" label="Listing IDs (everywhere)" description="Comma separated list, no spaces." />
+				<!-- advanced filters -->
+				<field type="spacer" class="dataListHeader" label="ADVANCED FILTERS" />
+				<field name="custom_where" filter="raw" type="textarea" default="" rows="5" cols="28" label="Custom WHERE" description="Custom WHERE for query" />
+				<field name="custom_order" filter="raw" type="textarea" default="" rows="2" cols="28" label="Custom ORDER BY" description="Overrides Media ordering" />
+				<!-- pagination and slideshow -->
+				<field type="spacer" class="dataListHeader" label="PAGINATION &amp; SLIDESHOW" />
+				<field name="nav_position" type="radio" default="bottom" label="Positioning of Pagination" description="">
+					<option value="bottom">Bottom</option>
+					<option value="side">Sides</option>
+				</field>
+				<field name="orientation" type="list" default="horizontal" label="Page Transition" description="">
+					<option value="horizontal">Horizonal sliding</option>
+					<option value="vertical">Vertical sliding</option>
+					<option value="fade">Fade effect</option>
+				</field>
+				<field name="slideshow" type="radio" default="0" label="Enable Slideshow" description="The module will automatically advance pages">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="slideshow_interval" type="text" default="6" label="Slideshow Interval (sec.)" description="Time between pages in seconds" />
+				<field name="module_total" type="text" default="10" label="Max. number of results" description="" />
+				<field name="module_limit" type="text" default="5" label="Results per page" description="" />
+				<field name="columns" type="text" default="1" label="Columns" description="Number of columns or items per row to show." />
+				<field name="show_numbers" type="radio" default="0" label="Show numbers" description="Adds numbers before each review.">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+			</fieldset>
+			<fieldset name="advanced">
+				<field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
+				<field name="moduleclass_sfx" type="text" label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL" description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+				<field name="cache" type="list" default="0" label="COM_MODULES_FIELD_CACHING_LABEL" description="COM_MODULES_FIELD_CACHING_DESC">
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+				<field name="cache_time" type="text" default="900" label="COM_MODULES_FIELD_CACHE_TIME_LABEL" description="COM_MODULES_FIELD_CACHE_TIME_DESC" />
+				<field name="cachemode" type="hidden" default="static">
+					<option value="static"></option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

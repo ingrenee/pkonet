@@ -1,0 +1,167 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ *                                 CONFIGURATION AND SETUP
+ **********************************************************************************/
+$enableMainImage = Sanitize::getString($this->Config,'media_detail_main');
+
+$mainThumbnailSize = Sanitize::getString($this->Config,'media_detail_main_thumbnail_size');
+
+$mainThumbnailMode = Sanitize::getString($this->Config,'media_detail_main_thumbnail_mode');
+
+$reviewType = Sanitize::getInt($review['Review'],'editor_rating_count') > 0 ? 'editor' : 'user';
+
+$main_media = isset($listing['MainMedia']) ? $listing['MainMedia'] : null;
+
+$thumb = $Media->thumb($main_media,array('size'=>$mainThumbnailSize,'mode'=>$mainThumbnailMode),array('class'=>'photo' /*rich snippets*/));
+
+/**********************************************************************************
+ *                                 PAGINATION HELPER
+ **********************************************************************************/
+if($this->Config->review_discussions == 1)
+{
+	$Paginator->paginate(
+		array(
+			'current_page'=>$this->page,
+			'items_per_page'=>$this->limit,
+			'items_total'=>$pagination['total']
+		)
+	);
+}
+
+/**********************************************************************************
+ *                                 META DATA
+ **********************************************************************************/
+echo $this->element('page_meta');
+
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+?>
+
+<div class="jr-page jrPage jrDiscussion">
+
+	<h1 class="contentheading"><?php __t("Review Detail");?></h1>
+
+	<?php /* LISTING SUMMARY */ ?>
+
+	<div class="jrListItem">
+
+		<div class="jrContentColumn">
+
+			<div class="jrClear">&nbsp;</div>
+
+			<?php if($enableMainImage && $thumb):?>
+				<div class="jrListingThumbnail"><?php echo $Html->sefLink($thumb,$listing['Listing']['url']);?></div>
+			<?php endif;?>
+
+		</div>
+
+		<div class="jrContentTitle">
+
+			<?php echo $Html->sefLink($listing['Listing']['title'],$listing['Listing']['url']);?> <?php echo Sanitize::getString($listing['Listing'],'tag') ? '(' .Sanitize::getString($listing['Listing'],'tag') . ')' : '';?>
+
+			<?php /* LISTING STATUS LABELS */ ?>
+
+			<?php $Jreviews->listingStatusLabels($listing);?>
+
+		</div>
+
+		<div class="jrListingInfo">
+
+			<?php if($this->action!='category'):?>
+
+				<?php echo $listing['Category']['title'];?><br />
+
+			<?php endif;?>
+
+			<?php if(isset($listing['User']['user_id']) && $this->Config->getOverride('list_show_author',$listing['ListingType']['config'])):?><?php __t("Written by");?> <?php echo $Community->screenName($listing);?>&nbsp;&nbsp;&nbsp;&nbsp;<?php endif;?>
+
+			<?php if(isset($listing['Listing']['created']) && $this->Config->getOverride('list_show_date',$listing['ListingType']['config'])):?><?php echo $Time->nice($listing['Listing']['created']);?>&nbsp;&nbsp;&nbsp;&nbsp;<?php endif;?>
+
+			<?php if(isset($listing['Listing']['hit']) && $this->Config->getOverride('list_show_hits',$listing['ListingType']['config'])):?><?php __t("Hits");?>:&nbsp;<?php echo $listing['Listing']['hits']?>&nbsp;&nbsp;&nbsp;&nbsp;<?php endif;?>
+
+		</div>
+
+	</div>
+
+	<div class="jrClear"></div>
+
+	<?php /* REVIEW */ ?>
+
+	<div class="jrReviewColumn">
+
+		<?php echo $this->renderControllerView('reviews','review_layout',array('listing'=>$listing,'review'=>$review,'reviewType'=>$reviewType,'review_class'=>'single'))?>
+	</div>
+
+	<?php /* COMMENTS */ ?>
+
+	<?php if($this->Config->review_discussions):?>
+
+		<div class="jrClear"></div>
+
+		<h3 class="jrHeading">
+
+			<span class="jrIconComments"></span>
+
+			<span class="jrHeadingText"><?php __t("Comments");?></span>
+
+		</h3>
+
+	 	<?php /* PAGINATION */ ?>
+
+		<?php echo $this->element('pagination',array('position'=>'top'));?>
+
+		<?php if($this->Access->canAddPost()):?>
+
+			<div class="jrPostNewComment">
+
+				<button class="jr-comment-add jrButton" data-discussion-id="0">
+
+					<span class="jrIconAddComment"></span><span class="jrButtonText"><?php __t("Add new comment");?></span>
+
+				</button>
+
+			</div>
+
+			<?php echo $this->renderControllerView('discussions','create',array('discussion_id'=>0,'review_id'=>Sanitize::getInt($review['Review'],'review_id')));?>
+
+		<?php elseif(!$this->Access->canAddPost() && empty($User->id)):?>
+
+			<div class="jrRoundedPanel jrReview jrClearfix">
+
+				<div class="jrLoginBox"><?php echo $this->element('login');?></div>
+
+			</div>
+
+		<?php endif;?>
+
+		<div class="jr-review-comments jrReviewComments">
+
+			<?php if(!empty($posts)):?>
+
+				<?php foreach($posts AS $post):?>
+
+					<?php echo $this->renderControllerView('discussions','post_layout',array('post'=>$post));?>
+
+				<?php endforeach;?>
+
+			<?php endif;?>
+
+		</div>
+
+	 	<?php /* PAGINATION */ ?>
+
+		<?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+	<?php endif;?>
+
+</div>

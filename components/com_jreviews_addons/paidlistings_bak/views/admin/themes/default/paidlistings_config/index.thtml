@@ -1,0 +1,264 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<div class="jr-paid-configuration">
+
+    <div class="jrPageHeading"><?php __a("PaidListings Configuration");?></div>
+
+    <form id="jr-page-form" class="" action="index.php" method="post">
+
+        <div class="jrPageToolbar jrRoundedPanel">
+
+            <span id="jr-status" class="jrLeft jrStatus"></span>
+
+            <button class="jr-save-settings jrButton jrGreen" data-lang='{"success":"<?php __a("New settings saved successfully.");?>"}'>
+
+                <span class="jrIconSave"></span><?php __a("Save");?>
+
+            </button>
+
+        </div>
+
+        <div class="jr-tabs">
+
+            <ul>
+                <li><a href="#general"><span><?php __a("General");?></span></a></li>
+
+                <li><a href="#cron"><span><?php __a("Cron");?></span></a></li>
+
+                <li><a href="#notifications"><span><?php __a("Expiration Notifications");?></span></a></li>
+
+                <li><a href="#tracking"><span><?php __a("Tracking");?></span></a></li>
+            </ul>
+
+           <?php
+            $generalTab = array(
+                /*** NEW HEADER ***/
+                '' => array(
+                    array(
+                        'label'=>'<div class="jrInfo">'.__a("MyAccount Menu: To create the My Account menu where users can manage their orders and make payments create a JReviews menu and select the PaidListings, My Account option.",true).'</div>',
+                        'type'=>'placeholder'
+                    ),
+                    array(
+                        'label'=>__a("Enable stealth mode",true),
+                        'type'=>'radioYesNo',
+                        'name'=>'data[Config][paid.stealth]',
+                        'default'=>0,
+                        'help'=>__a("When enabled allows only admins are able to see the effect of the paid listings add-on. Useful for testing on a production website before opening it up to all users.",true)
+                    ),
+                    array(
+                        'label'=>__a("Payment Handler Currency",true),
+                        'type'=>'text',
+                        'name'=>'data[Config][paid.currency]',
+                        'default'=>'USD',
+                        'attributes'=>array('style'=>'width:5em'),
+                        'help'=>'USD, GBP, EUR, ...'
+                    ),
+                    array(
+                        'label'=>__a("Currency Symbol",true),
+                        'type'=>'text',
+                        'name'=>'data[Config][paid.currency_symbol]',
+                        'default'=>'$',
+                        'attributes'=>array('style'=>'width:5em'),
+                        'help'=>'$, £, €, ...'
+                    ),
+                    array(
+                        'label'=>__a("Tax %",true),
+                        'type'=>'text',
+                        'name'=>'data[Config][paid.tax]',
+                        'default'=>'',
+                        'after'=>'%',
+                        'attributes'=>array('style'=>'width:3em'),
+                        'help'=>__a("Applied to order before checkout",true)
+                    )
+                ),
+                __a("Terms of Service",true) => array(
+                    array(
+                        'label'=>__a("Enable TOS in final order step",true),
+                        'type'=>'select',
+                        'name'=>'data[Config][paid.tos]',
+                        'default'=>0,
+                        'options'=>array(
+                                0=>__a("No",true),
+                                1=>__a("Yes, without checkbox",true),
+                                2=>__a("Yes, with checkbox",true)
+                            )
+                    ),
+                    array(
+                        'label'=>__a("TOS Article ID",true),
+                        'type'=>'text',
+                        'name'=>'data[Config][paid.tos_articleid]',
+                        'default'=>'',
+                        'after'=>'',
+                        'attributes'=>array('style'=>'width:5em'),
+                        'help'=>__a("You will find this ID in the Joomla Article Manager",true)
+                    )
+                ),
+                __a("Invoice",true) => array(
+                    array(
+                        'label'=>__a("Company Logo Image",true),
+                        'type'=>'text',
+                        'name'=>'data[Config][paid.logo]',
+                        'default'=>Sanitize::getString($this->Config,'paid.logo',_DS . 'components' . _DS .'com_jreviews_addons' . _DS . 'paidlistings' . _DS . 'images' . _DS . 'company_logo.jpg'),
+                        'attributes'=>array('style'=>'width:40em;'),
+                        'after'=>__a("Relative path from Joomla root.",true)
+                    ),
+                    array(
+                        'label'=>__a("Your Business Information",true),
+                        'type'=>'textarea',
+                        'name'=>'data[Config][paid.business_info]',
+                        'default'=>"Company Name\nStreet, City\nCountry\nPhone: (123) 444-3223",
+                        'help'=>__a("Address, phone, ...",true),
+                        'attributes'=>array('style'=>'width:100%;height:10em;')
+                    )
+                )
+            );
+
+            $AdminSettings->columns = array(5,8,11); $AdminSettings->displayTab('general',$generalTab);
+            ?>
+
+            <?php
+            $cronTab = array(
+                /*** NEW HEADER ***/
+                '' => array(
+                    array(
+                        'label'=>'<div class="jrInfo">PaidListings cron actions will use the settings you have chosen in the JReviews Configuration, Cron tab. Try to set the cron periods at different intervals so all scheduled actions don\'t run at the same time.</div>',
+                        'type'=>'placeholder'
+                    ),
+                    array(
+                        'label'=>__a("Process Expirations and Renewals",true),
+                        'type'=>'text',
+                        'name'=>'data[Config][paid_orders_interval]',
+                        'default'=>3,
+                        'after'=>__a("hours",true),
+                        'attributes'=>array('style'=>'width:3em'),
+                        'help'=>''
+                    ),
+                    array(
+                        'label'=>__a("Send expiration notifications",true),
+                        'type'=>'text',
+                        'name'=>'data[Config][paid_notifications_interval]',
+                        'default'=>0.2,
+                        'after'=>__a("hours",true),
+                        'attributes'=>array('value'=>12,'style'=>'width:3em'),
+                        'help'=>''
+                    )
+                )
+            );
+
+            $AdminSettings->columns = array(5,8,11); $AdminSettings->displayTab('cron',$cronTab);
+            ?>
+
+            <?php
+            $first_notification_days =  $Form->text('data[Config][paid.notify_expiration1_days]',array('value'=>Sanitize::getString($this->Config,'paid.notify_expiration1_days','10'),'style'=>'width:4em;'));
+
+            $last_notification_days =  $Form->text('data[Config][paid.notify_expiration2_days]',array('value'=>Sanitize::getString($this->Config,'paid.notify_expiration2_days','5'),'style'=>'width:4em;'));
+
+            $notificationsTab = array(
+                /*** NEW HEADER ***/
+                __a("Expiration Notifications for single payment plans",true) => array(
+                    array(
+                        'label'=>__a("Maximum emails sent at once",true),
+                        'type'=>'text',
+                        'name'=>'data[Config][paid.notify_max_emails]',
+                        'default'=>250,
+                        'attributes'=>array('style'=>'width:3em'),
+                        'help'=>''
+                    ),
+                    array(
+                        'label'=>__a("First expiration notification",true),
+                        'type'=>'radioYesNo',
+                        'name'=>'data[Config][paid.notify_expiration1]',
+                        'default'=>1,
+                        'after'=>'&nbsp;&nbsp;&nbsp;'.sprintf(__a("Send %s days before expiration",true),$first_notification_days),
+                        'attributes'=>array('value'=>12,'style'=>'width:3em'),
+                        'help'=>''
+                    ),
+                    array(
+                        'label'=>__a("Final expiration notification",true),
+                        'type'=>'radioYesNo',
+                        'name'=>'data[Config][paid.notify_expiration2]',
+                        'default'=>1,
+                        'after'=>'&nbsp;&nbsp;&nbsp;'.sprintf(__a("Send %s days before expiration",true),$last_notification_days),
+                        'attributes'=>array('value'=>12,'style'=>'width:3em'),
+                        'help'=>''
+                    )
+                )
+            );
+
+            $AdminSettings->columns = array(5,19,0); $AdminSettings->displayTab('notifications',$notificationsTab);
+            ?>
+
+            <?php
+            $trackingTab = array(
+                /*** NEW HEADER ***/
+                '' => array(
+                    array(
+                        'label'=>'<div class="jrInfo">'.__a("You can insert javascript tracking code, like for Google Analytics, for the following order flow steps. Make sure you include the script tags with your code.",true).'</div>',
+                        'type'=>'placeholder'
+                    ),
+                    array(
+                        'type'=>'placeholder',
+                        'label'=>__a("Trigger",true),
+                        'text'=>__a("Code",true)
+                    ),
+                    array(
+                        'label'=>__a("Paid Category Selection in Submit Listing Form",true),
+                        'type'=>'text',
+                        'name'=>'data[Config][paid.track_listing_form]',
+                        'attributes'=>array('style'=>'width:100%;height:5em;'),
+                        'help'=>__a("User selects a paid category when submitting a listing. No tags available.",true)
+                    ),
+                    array(
+                        'label'=>__a("Submit Listing",true),
+                        'type'=>'text',
+                        'name'=>'data[Config][paid.track_listing_submit]',
+                        'attributes'=>array('style'=>'width:100%;height:5em;'),
+                        'help'=>__a("Plan selected and listing submitted. Valid tags: {order_amount}, {plan_name}.",true)
+                    ),
+                   array(
+                        'label'=>__a("Order Form",true),
+                        'type'=>'text',
+                        'name'=>'data[Config][paid.track_order_form]',
+                        'attributes'=>array('style'=>'width:100%;height:5em;'),
+                        'help'=>__a("Order form dialog shown, user can change plan so no tags available.",true)
+                    ),
+                   array(
+                        'label'=>__a("Submit Order",true),
+                        'type'=>'text',
+                        'name'=>'data[Config][paid.track_order_submit]',
+                        'attributes'=>array('style'=>'width:100%;height:5em;'),
+                        'help'=>__a("Order submitted. Valid tags: {order_amount}, {order_id}, {plan_name}.",true)
+                    ),
+                   array(
+                        'label'=>__a("Order Complete",true),
+                        'type'=>'text',
+                        'name'=>'data[Config][paid.track_order_complete]',
+                        'attributes'=>array('style'=>'width:100%;height:5em;'),
+                        'help'=>__a("Order complete page. Valid tags: {order_amount}, {order_id}, {plan_name}.",true)
+                    )
+
+                )
+            );
+
+            $AdminSettings->columns = array(5,11,8); $AdminSettings->displayTab('tracking',$trackingTab);
+            ?>
+
+        </div><!-- end tabs -->
+
+        <input type="hidden" name="data[controller]" value="admin/admin_paidlistings_config" />
+
+        <input type="hidden" name="data[action]" value="_save" />
+
+    </form>
+
+</div>

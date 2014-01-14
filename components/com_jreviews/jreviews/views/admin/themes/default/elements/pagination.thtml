@@ -1,0 +1,29 @@
+<?php if(isset($pagination) && $pagination['total']):?>
+
+<div class="jr-pagenav jrGrid jrPagination jrPagination<?php echo ucfirst($position);?>">
+
+	<div class="jrCol4">
+
+			<?php echo sprintf(__t("%1\$s results - showing %2\$s - %3\$s",true), $pagination['total'], ($this->page-1)*$this->limit+1, min($pagination['total'],$this->page*$this->limit));?>
+
+	</div>
+
+	<div class="jrCol4">
+
+    	<?php if($pagination['total'] > $this->limit):?><?php echo $Paginator->display_pages();?><?php endif;?>&nbsp;
+
+	</div>
+
+	<div class="jrCol4">
+
+		<?php if($position == 'bottom'):?>
+
+		<div class="jrRight"><?php echo $Paginator->display_items_per_page();?></div>
+
+		<?php endif;?>&nbsp;
+
+	</div>
+
+</div>
+
+<?php endif;?>

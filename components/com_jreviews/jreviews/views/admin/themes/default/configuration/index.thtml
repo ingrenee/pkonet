@@ -1,0 +1,1568 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<div class="jr-configuration">
+
+	<div class="jrPageHeading"><?php __a("Configuration Settings");?></div>
+
+	<form id="jr-page-form" action="index.php" method="post">
+
+		<div class="jrPageToolbar jrRoundedPanel">
+
+			<span id="jr-status" class="jrLeft jrStatus"></span>
+
+			<button class="jr-save-settings jrButton jrGreen">
+
+				<span class="jrIconSave"></span><?php __a("Save");?>
+
+			</button>
+
+		</div>
+
+		<div class="jr-tabs jrTabs">
+
+			<ul>
+				<li><a href="#general"><span><?php __a("General");?></span></a></li>
+				<li><a href="#cron"><span><?php __a("Cron");?></span></a></li>
+				<li><a href="#community"><span><?php __a("Community");?></span></a></li>
+				<li><a href="#directory"><span><?php __a("Directory");?></span></a></li>
+				<li><a href="#items-list"><span><?php __a("List page");?></span></a></li>
+				<li><a href="#listings"><span><?php __a("Listings");?></span></a></li>
+				<li><a href="#reviews"><span><?php __a("Reviews");?></span></a></li>
+				<li><a href="#forms"><span><?php __a("Standard Fields");?></span></a></li>
+				<li><a href="#search"><span><?php __a("Search");?></span></a></li>
+				<li><a href="#notifications"><span><?php __a("Notifications");?></span></a></li>
+				<li><a href="#rss"><span><?php __a("RSS");?></span></a></li>
+				<li><a href="#cache"><span><?php __a("Cache");?></span></a></li>
+			</ul>
+
+			<!-- GENERAL SETTINGS -->
+
+			<?php // Output the theme descriptions to be shown when a theme is selected
+			foreach($themes_description AS $theme_name=>$desc):?>
+
+				<div id="theme-<?php echo $theme_name;?>" style="display:none;" ><?php echo $desc;?></div>
+
+			<?php endforeach;?>
+
+			<?php
+			$captcha_groups = array(1=>'Guest',2=>'Registered');
+			?>
+
+			<?php $generalTab = array(
+				/*** NEW HEADER ***/
+				__a("Troubleshooting",true) => array(
+					array(
+						'label'=>__a("Debug PHP & Queries",true),
+						'type'=>'radioYesNo',
+						'name'=>'debug_enable',
+						'help'=>__a("Shows PHP and Database debug information at the bottom of the page.",true)
+					),
+					array(
+						'label'=>__a("Debug Themes",true),
+						'type'=>'radioYesNo',
+						'name'=>'debug_theme_enable',
+						'help'=>__a("Shows the theme output of each theme labeled with the theme filepath as well as the controller filename and function is used to process the output.",true)
+					),
+					array(
+						'label'=>__a("Debug IP",true),
+						'type'=>'text',
+						'name'=>'debug_ipaddress',
+						'after'=>'<a href="javascript:void(0)" class="jr-insert-ip jrButton jrSmall">'.__a("Insert IP",true).'</a>',
+						'help'=>__a("Limits debug output to this IP address only.",true)
+					),
+					array(
+						'label'=>__a("Disable Overrides",true),
+						'type'=>'radioYesNo',
+						'name'=>'debug_overrides_disable',
+						'help'=>__a("Ignore all files in the overrides folder. The Debug IP setting above has no effect over this setting which runs for all site visitors.",true)
+					),
+					array(
+						'label'=>__a("Include language segment in Ajax URI",true),
+						'type'=>'radioYesNo',
+						'name'=>'ajaxuri_lang_segment',
+						'help'=>__a("Setting only relevant for multilingual sites. Disable if ajax requests fail on non-default languages.",true)
+					)
+				),
+				__a("Javascript Libraries",true) => array(
+					array(
+						'label'=>__a("Load All Minified",true),
+						'type'=>'radioYesNo',
+						'name'=>'libraries_scripts_minified',
+						'help'=>__a("Most 3rd party javascript libraries are already minified by default. By enabling this setting all proprietary JReviews files will also load minified to improve loading time.",true)
+					),
+					array(
+						'label'=>__a("Enable Javascript Loader",true),
+						'type'=>'radioYesNo',
+						'name'=>'libraries_scripts_loader',
+						'help'=>'<span class="jrStatusLabel jrOrange">'.__a("Experimental",true).'</span>&nbsp;'.__a("Loads scripts in parallel and non-blocking to speed up the page rendering process.",true)
+					),
+					array(
+						'label'=>__a("Disable jQuery",true),
+						'type'=>'radioYesNo',
+						'name'=>'libraries_jquery',
+						'help'=>__a("NOT optional. If you disable it, make sure it is loaded by your template or a plugin.",true)
+					),
+					array(
+						'label'=>__a("Disable jQuery UI",true),
+						'type'=>'radioYesNo',
+						'name'=>'libraries_jqueryui',
+						'help'=>__a("NOT optional. If you disable it, make sure it is loaded by your template or a plugin.",true)
+					)
+				),
+				__a("General Settings",true) => array(
+					array(
+						'label'=>__a("Joomla style URL parameters",true),
+						'type'=>'radioYesNo',
+						'name'=>'url_param_joomla',
+						'help'=>__a("Uses the &amp;param=val style for url parameters rather than /param:val.",true)
+					),
+					array(
+						'label'=>__a("Display 'Results per page'",true),
+						'type'=>'radioYesNo',
+						'name'=>'display_list_limit',
+						'help'=>__a("Disabled by default to avoid duplicate pages for SEO",true)
+					),
+					array(
+						'label'=>__a("Security image verification",true),
+						'type'=>'selectmultiple',
+						'options'=>$captcha_groups,
+						'name'=>'security_image',
+						'help'=>__a("Used in submission listing, review and review discussion forms.",true)
+					),
+					array(
+						'label'=>__a("Create accounts for guests",true),
+						'type'=>'radioYesNo',
+						'name'=>'user_registration_guest',
+						'help'=>__a("Guests will be given the option to enter a username when making a submission to automatically create an account for them. This feature requires that email activation in Joomla is enabled so users can receive an email with a temporary password.",true)
+					),
+					array(
+						'label'=>__a("Use username or realname",true),
+						'type'=>'select',
+						'options'=>array('realname'=>__a("Real Name",true),'alias'=>__a("Username",true)),
+						'name'=>'name_choice'
+					)
+				),
+				__a("Theme Settings",true) => array(
+					array(
+						'label'=>__a("Site theme",true),
+						'type'=>'select',
+						'options'=>$themes_config,
+						'name'=>'template',
+						'attributes'=>array('id'=>'jr-site-theme'),
+						'help'=>__a("Choose the Theme to use for the JReviews frontend.",true) . '<div id="jr-site-theme-desc" style="padding:3px;" class="jrInfo">'.$themes_description[$this->Config->template].'</div>'
+					),
+					array(
+						'label'=>__a("Mobile theme",true),
+						'type'=>'select',
+						'options'=>$themes_mobile,
+						'name'=>'mobile_theme',
+						'attributes'=>array('id'=>'jr-mobile-theme'),
+						'help'=>__a("If a mobile device is detected the selected theme will be used instead of the Site Theme.",true) . '<div id="jr-mobile-theme-desc" style="padding:3px;" class="jrInfo">'.$themes_description[$this->Config->mobile_theme].'</div>'
+					),
+					array(
+						'label'=>__a("Fallback theme",true),
+						'type'=>'select',
+						'options'=>$themes_fallback,
+						'name'=>'fallback_theme',
+						'attributes'=>array('id'=>'jr-mobile-theme'),
+						'help'=>__a("Choose a theme with a complete set of files to use as fallback if the selected theme doesn't include all theme files.",true)
+					),
+					array(
+						'label'=>__a("Number of items per page",true),
+						'type'=>'numbers',
+						'range'=>array(5,50,5),
+						'name'=>'list_limit',
+						'help'=>__a("Used for pagination",true)
+					),
+					array(
+						'label'=>__a("Number of pages shown in pagination in lists",true),
+						'type'=>'text',
+						'name'=>'paginator_mid_range',
+						'help'=>__a("Number of pages between the first and last page.",true),
+						'attributes'=>array('style'=>'width:4em;')
+					),
+				),
+				__a("Breadcrumb Settings",true) => array(
+					array(
+						'label'=>__a("Show Breadcrumb",true),
+						'type'=>'radioYesNo',
+						'name'=>'dir_show_breadcrumb',
+						'help'=>__a("Adds a pathway on top of JReviews' category and detail pages.",true)
+					),
+					array(
+						'label'=>__a("Override CMS breadcrumb in detail page",true),
+						'type'=>'radioYesNo',
+						'name'=>'breadcrumb_detail_override',
+						'help'=>__a("Takes over the article page breadcrumb showing JReviews links.",true)
+					),
+					array(
+						'label'=>__a("Show directory in breadcrumb",true),
+						'type'=>'radioYesNo',
+						'name'=>'breadcrumb_detail_directory'
+					),
+					array(
+						'label'=>__a("Show parent categories in breadcrumb",true),
+						'type'=>'radioYesNo',
+						'name'=>'breadcrumb_detail_category'
+					)
+				)
+			);
+
+			?>
+
+			<?php $AdminSettings->columns = array(5,8,11); $AdminSettings->displayTab('general',$generalTab);?>
+
+			<!-- CRON -->
+			<?php
+			$cron_secret = Sanitize::getString($this->Config,'cron_secret');
+
+			$cron_secret == '' and $this->Config->cron_secret = md5(PATH_ROOT . cmsFramework::getConfig('secret'));
+
+			$cronTab = array(
+				/*** NEW HEADER ***/
+				__a("Cron",true) => array(
+					 array(
+						'label'=>__a("Cron Secret",true),
+						'type'=>'text',
+						'name'=>'cron_secret',
+						'attributes'=>array('style'=>'width:22em'),
+						'help'=>__a("This will be the secret key used to call the cron url to prevent abuse.",true)
+					),
+					 array(
+						'label'=>__a("Cron url",true),
+						'type'=>'placeholder',
+						'text'=>'  http://yourdomain.com/index.php?option=com_jreviews&amp;format=raw&amp;url=cron&secret={SECRET}',
+						'help'=>__a("Set up a cron in your server crontab using the specified URL. Replace {SECRET} with the value you entered above. You can schedule to run every 15 minutes and each task below will run only at the specified intervals. This allows you to split the jobs so they are no always run together.",true)
+					),
+					 array(
+						'label'=>__a("Run Cron on site visits",true),
+						'type'=>'radioYesNo',
+						'name'=>'cron_site_visits',
+						'attributes'=>array(),
+						'help'=>__a("If you disable this setting you should setup a cron job on your server to be run at specified intervals. It is recommended you do this for large sites where cron jobs may take longer to complete.",true)
+					),
+					 array(
+						'label'=>__a("Rebuild reviewer rank",true),
+						'type'=>'text',
+						'name'=>'ranks_rebuild_interval',
+						 'after'=>__a("hours",true),
+						'attributes'=>array('style'=>'width:3em'),
+						'help'=>__a("Use zero only for testing purposes.",true)
+					),
+					 array(
+						'label'=>__a("Rebuild media likes rank",true),
+						'type'=>'text',
+						'name'=>'media_likes_rebuild_interval',
+						'after'=>__a("hours",true),
+						'attributes'=>array('style'=>'width:3em'),
+						'help'=>__a("Use zero only for testing purposes.",true)
+					),
+					 array(
+						'label'=>__a("Purge cache interval",true),
+						'type'=>'text',
+						'name'=>'cache_cleanup',
+						 'after'=>__a("hours",true),
+						'attributes'=>array('value'=>12,'style'=>'width:3em'),
+						'help'=>__a("Removes all cached content.",true)
+					)
+				)
+			);?>
+
+			<?php $AdminSettings->columns = array(5,8,11); $AdminSettings->displayTab('cron',$cronTab);?>
+
+			<!-- COMMUNITY BUILDING SETTINGS -->
+			<?php $communityTab = array(
+				/*** NEW HEADER ***/
+				__a("Joomla Community Integration",true) => array(
+					array(
+						'label'=>__a("Community",true),
+						'type'=>'select',
+						'name'=>'community',
+						'options'=>array(''=>__t("Select",true),'community_builder'=>'CommunityBuilder','jom_social'=>'JomSocial','kunena'=>'Kunena'),
+						'help'=>__a("JReviews will automatically show user avatars and create links to user profiles from listings and reviews.",true)
+					)
+				),
+				__a("Social Sharing",true) => array(
+					array(
+						'label'=>__a("Services",true),
+						'type'=>'checkbox',
+						'name'=>'social_sharing_detail',
+						'options'=>array(
+								'fbsend'=>'FB Send',
+								'fblike'=>'FB Like',
+								'twitter'=>'Twitter',
+								'gplusone'=>'Google+1',
+								'linkedin'=>'LinkedIn',
+								'pinit'=>'Pinterest'
+							),
+						'help'=>__a("Output can be modified in /jreviews/views/helpers/community.php",true)
+					),
+					array(
+						'label'=>__a("Button Count Position",true),
+						'type'=>'radio',
+						'name'=>'social_sharing_count_position',
+						'options'=>array('vertical'=>__a("Vertical",true),'horizontal'=>__a("Horizontal",true)/*,'none'=>'None'*/)
+					)
+				),
+				__a("JomSocial Activty Feed integration",true) => array(
+					array(
+						'label'=>__a("Thumbnail mode",true),
+						'type'=>'radio',
+						'name'=>'jomsocial_tnmode',
+						'options'=>array('crop'=>__a("Crop",true),'scale'=>__a("Scale",true)),
+					),
+					array(
+						'label'=>__a("Thumbnail dimensions",true),
+						'type'=>'text',
+						'name'=>'jomsocial_tnsize',
+						'attributes'=>array('style'=>'width:6em;'),
+						'help'=>__a("WIDTHxHEIGHT in pixels",true)
+					),
+					array(
+						'label'=>__a("Post listings",true),
+						'type'=>'select',
+						'name'=>'jomsocial_listings',
+						'options'=>array(0=>__a("No",true),1=>__a("New only",true),2=>__a("New + Updates",true))
+					),
+					array(
+						'label'=>__a("Post review",true),
+						'type'=>'select',
+						'name'=>'jomsocial_reviews',
+						'options'=>array(0=>__a("No",true),1=>__a("New only",true),2=>__a("New + Updates",true))
+					),
+					array(
+						'label'=>__a("Post review comments",true),
+						'type'=>'select',
+						'name'=>'jomsocial_discussions',
+						'options'=>array(0=>__a("No",true),1=>__a("New only",true),2=>__a("New + Updates",true))
+					),
+					array(
+						'label'=>__a("Post media uploads",true),
+						'type'=>'select',
+						'name'=>'jomsocial_media',
+						'options'=>array(0=>__a("No",true),1=>__a("New only",true))
+					),
+					array(
+						'label'=>__a("Post favorites",true),
+						'type'=>'select',
+						'name'=>'jomsocial_favorites',
+						'options'=>array(0=>__a("No",true),1=>__a("Add only",true),2=>__a("Add + Remove",true))
+					),
+					array(
+						'label'=>__a("Post review voting",true),
+						'type'=>'select',
+						'name'=>'jomsocial_votes',
+						'options'=>array(0=>__a("No",true),1=>__a("Vote yes only",true),2=>__a("Vote yes + Vote no",true))
+					)
+				),
+				__a("Twitter integration",true) => array(
+					array(
+						'label'=>__a("Enable Auto Tweets",true),
+						'type'=>'radioYesNo',
+						'name'=>'twitter_enable'
+					),
+					array(
+						'label'=>__a("Twitter Authentication",true),
+						'type'=>'placeholder',
+						'text'=>'<button class="jr-twitter-setup jrButton jrSmall">'.__a("Setup Twitter Authentication",true).'</button>'.'&nbsp;'.__a("Create a new Twitter App and fill in the requested values in the dialog.",true)
+					),
+					array(
+						'label'=>__a("bit.ly user",true),
+						'type'=>'text',
+						'name'=>'bitly_user',
+						'help'=>sprintf(__a("The bit.ly service is used to automatically shorten the urls. Sign up for a %sbit.ly account%s",true),'<a target="_blank" href="http://bit.ly/">','</a>')
+					),
+					array(
+						'label'=>__a("bit.ly API Key",true),
+						'type'=>'text',
+						'name'=>'bitly_key',
+						'help'=>__a("Get the API Key from the Account page at the Bit.ly site.",true)
+					),
+					array(
+						'label'=>__a("Save bit.ly links in account history",true),
+						'type'=>'radioYesNo',
+						'name'=>'bitly_history',
+						'help'=>__a("Stores generated links in your Bit.ly's account history.",true)
+					),
+					array(
+						'label'=>__a("Tweet on new listing",true),
+						'type'=>'radioYesNo',
+						'name'=>'twitter_listings'
+					),
+					array(
+						'label'=>__a("Tweet on new review",true),
+						'type'=>'radioYesNo',
+						'name'=>'twitter_reviews'
+					),
+					array(
+						'label'=>__a("Tweet on new review comment",true),
+						'type'=>'radioYesNo',
+						'name'=>'twitter_discussions'
+					),
+				),
+				__a("Facebook integration",true) => array(
+					array(
+						'text'=>'<div class="jrWarning">'
+							.__a("Facebook Wall posts only work for unmoderated submissions (i.e. those automatically published). Make sure you check these in Access Settings.",true)
+							.sprintf(__a("For additional help read the %sFacebook integration%s article.",true),'<a target="_blank" href="http://docs.reviewsforjoomla.com/Setup_Facebook_integration">','</a>')
+							.'</div>',
+						'type'=>'placeholder'
+					),
+					array(
+						'label'=>__a("Application ID",true),
+						'type'=>'text',
+						'name'=>'facebook_appid',
+						'attributes'=>array('style'=>'width:98%;'),
+						'help'=>sprintf(__a("Create a Facebook App at %sfacebook.com/developers%s",true),'<a href="http://www.facebook.com/developers/" target="_blank">','</a>')
+					),
+					array(
+						'label'=>__a("Secret",true),
+						'type'=>'text',
+						'name'=>'facebook_secret',
+						'attributes'=>array('style'=>'width:98%;')
+					),
+					array(
+						'label'=>__a("Enable Open Graph Protocol",true),
+						'type'=>'radioYesNo',
+						'name'=>'facebook_opengraph',
+						'help'=>sprintf(__a("Enabling Open Graph will result in better functionality of the Facebook Like button enabled via the Social Sharing setting above. %sMore info about Open Graph%s.",true),'<a target="_blank" href="http://developers.facebook.com/docs/opengraph/">','</a>')
+					),
+					array(
+						'label'=>__a("Enable FB Wall Posts",true),
+						'type'=>'radioYesNo',
+						'name'=>'facebook_enable'
+					),
+					array(
+						'label'=>__a("Allow users to opt out",true),
+						'type'=>'radioYesNo',
+						'name'=>'facebook_optout',
+						'help'=>__a("Enabling this will always show the Publish to Facebook checkbox so users can opt out of publishing to their FB account.",true)
+					),
+					array(
+						'label'=>__a("Post on new listing",true),
+						'type'=>'radioYesNo',
+						'name'=>'facebook_listings',
+						'help'=>__a("Works for umoderated listings only.",true)
+					),
+					array(
+						'label'=>__a("Post on new review",true),
+						'type'=>'radioYesNo',
+						'name'=>'facebook_reviews',
+						'help'=>__a("Works for umoderated reviews only.",true)
+					),
+					array(
+						'label'=>__a("Post on helpful vote",true),
+						'type'=>'radioYesNo',
+						'name'=>'facebook_votes'
+					),
+					array(
+						'label'=>__a("Trim posts",true),
+						'type'=>'text',
+						'name'=>'facebook_posts_trim',
+						'attributes'=>array('style'=>'width:3em;'),
+						'help'=>__a("Applies to all posts above.",true)
+					)
+				)
+			);?>
+
+			<?php $AdminSettings->columns = array(5,8,11); $AdminSettings->displayTab('community',$communityTab);?>
+
+			<!-- DIRECTORY SETTINGS -->
+			<?php $dirTab = array(
+				/*** NEW HEADER ***/
+				__a("General settings",true) => array(
+					 array(
+						'label'=>__a("Show alphabetical index bar",true),
+						'type'=>'radioYesNo',
+						'name'=>'dir_show_alphaindex'
+					),
+					 array(
+						'label'=>__a("Display category images",true),
+						'type'=>'select',
+						'name'=>'dir_cat_images',
+						'options'=>array('No'=>__a("No",true),
+										'Above'=>__a("Above category",true),
+										'Left'=>__a("Left of category",true)),
+						'help'=>__a("Applies to top level categories only.",true)
+					),
+					 array(
+						'label'=>__a("Number of columns",true),
+						'type'=>'text',
+						'name'=>'dir_columns',
+						'attributes'=>array('style'=>'width:3em'),
+						'help'=>__a("Applies to top level categories only.",true)
+					),
+					 array(
+						'label'=>__a("Show number of entries per category",true),
+						'type'=>'radioYesNo',
+						'name'=>'dir_cat_num_entries',
+						'help'=>__a("Also applies to the category box in lists.",true)
+					),
+					 array(
+						'label'=>__a("Hide empty categories",true),
+						'type'=>'radioYesNo',
+						'name'=>'dir_category_hide_empty',
+						'help'=>__a("Also applies to the category box in lists.",true)
+					),
+					 array(
+						'label'=>__a("Category levels to show",true),
+						'type'=>'text',
+						'name'=>'dir_category_levels',
+						'attributes'=>array('style'=>'width:3em')
+					),
+					 array(
+						'label'=>__a("Categories format",true),
+						'type'=>'select',
+						'name'=>'dir_cat_format',
+						'options'=>array(
+										'1'=>__a("Bullet list",true),
+										'0'=>__a("Comma separated list",true)
+										),
+						'help'=>__a("When comma list is selected only 2 level of categories are shown.",true)
+					)
+				)
+			);?>
+
+			<?php $AdminSettings->columns = array(5,8,11); $AdminSettings->displayTab('directory',$dirTab);?>
+
+			<!-- LIST PAGE SETTINGS -->
+
+			<?php $listPageTab = array(
+				/*** NEW HEADER ***/
+				__a("Category List Global View Selection",true) => array(
+					 array(
+						'label'=>__a("Theme Layout",true),
+						'type'=>'select',
+						'name'=>'list_display_type',
+						'options'=>array(
+										'0'=>__a("Tableview",true),
+										'1'=>__a("Blogview",true),
+										'2'=>__a("Thumbview",true),
+										'3'=>__a("Masonry",true)
+										),
+						'help'=>__a("For better results with the Masonry layout, choose the 'scale' thumbnail mode for list pages in Media Settings",true)
+					)
+				),
+				__a("General settings for listings",true) => array(
+					 array(
+						'label'=>__a("Show 'Add new listing' button in category pages",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_show_addnew'
+					),
+					 array(
+						'label'=>__a("Use current page Itemid in the 'Add new listing' url",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_addnew_menuid'
+					),
+					 array(
+						'label'=>__a("Show listings of child categories",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_show_child_listings',
+						'help'=>__a("In category pages current category and child category listings are displayed.",true)
+					)
+				),
+				__a("Listing Comparison",true) => array(
+					 array(
+						'label'=>__a("Enable listing comparison",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_compare'
+					),
+					 array(
+						'label'=>__a("Slider listing columns",true),
+						'type'=>'text',
+						'name'=>'list_compare_columns',
+						'attributes'=>array('style'=>'width:3em;'),
+						'help'=>__a("Defines the number of listings that the user can see at once.",true)
+					),
+					 array(
+						'label'=>__a("Show detailed user ratings",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_compare_user_ratings',
+						'help'=>__a("If enabled the individual criteria ratings will be shown.",true)
+					),
+					 array(
+						'label'=>__a("Show detailed editor ratings",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_compare_editor_ratings',
+						'help'=>__a("If enabled the individual criteria ratings will be shown.",true)
+					)
+				),
+				__a("Category Box",true) => array(
+					 array(
+						'label'=>__a("Show categories in CATEGORY list view",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_show_categories',
+						'help'=>__a("List of sub-category links shown at the top of the page.",true)
+					),
+					 array(
+						'label'=>__a("Number of columns for categories",true),
+						'type'=>'text',
+						'name'=>'cat_columns',
+						'attributes'=>array('style'=>'width:3em;')
+					),
+					 array(
+						'label'=>__a("Show ordering dropdown list",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_show_orderselect'
+					),
+					 array(
+						'label'=>__a("Default Ordering",true),
+						'type'=>'select',
+						'options'=>$Jreviews->orderingList(null,null,true),
+						'name'=>'list_order_default'
+					),
+					 array(
+						'label'=>__a("Order by field",true),
+						'type'=>'text',
+						'name'=>'list_order_field',
+						'attributes'=>array('style'=>'width:15em;'),
+						'help'=>__a("This setting overrides the default ordering. Use jr_field or rjr_field for descending order. You should use this setting only if the field you are using is common across all listing. Otherwise you should use the equivalent setting in the listing types.",true)
+					),
+				),
+				__a("Listing Information",true) => array(
+					 array(
+						'label'=>__a("Date",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_show_date'
+					),
+					 array(
+						'label'=>__a("Listing Author",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_show_author'
+					),
+					 array(
+						'label'=>__a("Average User Rating",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_show_user_rating',
+						'help'=>__a("List pages only",true),
+					),
+					 array(
+						'label'=>__a("Views",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_show_hits'
+					)
+				),
+				__a("Listing Summary & Status Labels",true) => array(
+					 array(
+						'label'=>__a("Show summary",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_show_abstract'
+					),
+					 array(
+						'label'=>__a("Trim summary (words)",true),
+						'type'=>'text',
+						'name'=>'list_abstract_trim',
+						'attributes'=>array('style'=>'width:3em;'),
+						'help'=>__a("If zero or blank it will display all the text. Limiting the number of words will strip all html formatting.",true)
+					),
+					 array(
+						'label'=>__a("Show 'New' Label",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_new'
+					),
+					 array(
+						'label'=>__a("'New' button days",true),
+						'type'=>'text',
+						'name'=>'list_new_days',
+						'attributes'=>array('style'=>'width:3em;')
+					),
+					 array(
+						'label'=>__a("Show 'Hot' Label",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_hot'
+					),
+					 array(
+						'label'=>__a("'Hot' number of views",true),
+						'type'=>'text',
+						'name'=>'list_hot_hits',
+						'attributes'=>array('style'=>'width:3em;')
+					),
+					 array(
+						'label'=>__a("Show 'Featured' Label",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_featured'
+					)
+				),
+				__a("Action Box",true) => array(
+					 array(
+						'label'=>__a("Show 'read more' link",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_show_readmore'
+					),
+					 array(
+						'label'=>__a("Show 'read reviews' link",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_show_readreviews'
+					),
+					 array(
+						'label'=>__a("Show 'write review' link",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_show_newreview'
+					)
+				)
+			);?>
+
+			<?php $AdminSettings->columns = array(5,8,11); $AdminSettings->displayTab('items-list',$listPageTab);?>
+
+			<!-- LISTINGS SETTINGS -->
+
+			<?php $listingsTab = array(
+				/*** NEW HEADER ***/
+				__a("Favorites",true) => array(
+					 array(
+						'label'=>__a("Enable favorites",true),
+						'type'=>'radioYesNo',
+						'name'=>'favorites_enable'
+					)
+				),
+				__a("Claims",true) => array(
+					 array(
+						'label'=>__a("Enable Listing Claims",true),
+						'type'=>'radioYesNo',
+						'name'=>'claims_enable'
+					),
+					 array(
+						'label'=>__a("Enable claims only for listings owned by (optional)",true),
+						'type'=>'text',
+						'name'=>'claims_enable_userids',
+						'attributes'=>array('style'=>'width:98%;'),
+						'help'=>__a("Add user ids separated by comma without any spaces. If you are adding most listings yourself you can enable the claims functionality only for your userid or setup a special user to submit listings and make them claimable.",true)
+					)
+				),
+				__a("Summary/Description Text",true) => array(
+					array(
+						'label'=>__a("Limit the number of characters shown",true),
+						'type'=>'text',
+						'name'=>'summary_desc_char_limit',
+						'attributes'=>array('style'=>'width:3em;'),
+						'help'=>__a("If you enter the number of characters higher than 0, visitors will need to click the 'show more' link to expand the full text. Limiting the number of characters will strip all html formatting.",true)
+					),
+				),
+				__a("Inquiries",true) => array(
+					array(
+						'type'=>'placeholder',
+						'label'=>"<div class='jrInfo'><p>".__a('To embed the form directly on the page you can leave inquiries disabled below and manually call the inquiry form in /listings/detail.thtml by using this code:
+							&lt;?php echo $this-&gt;element("inquiry_widget");?&gt;. If you decide to do this, you need to disable the email cloaking plugin in Joomla or make sure it runs before the JReviews plugin.',true)."</p></div>"
+					),
+					 array(
+						'label'=>__a("Enable Listing Inquiries",true),
+						'type'=>'radioYesNo',
+						'name'=>'inquiry_enable',
+						'help'=>__a("Site visitors can fill a contact form to request information.",true)
+					),
+					 array(
+						'label'=>__a("Inquiry is sent to",true),
+						'type'=>'select',
+						'name'=>'inquiry_recipient',
+						'options'=>array(
+									'owner' => __a("Listing owner",true),
+									'admin' => __a("Site e-mail",true),
+									'field' => __a("Custom field e-mail",true)
+									)
+					),
+					 array(
+						'label'=>__a("Custom field name",true),
+						'type'=>'text',
+						'name'=>'inquiry_field',
+						'attributes'=>array('style'=>'width:15em;'),
+						'help'=>__a("If custom field selected above, enter the field's name here (i.e. jr_email).",true)
+					),
+					 array(
+						'label'=>__a("BCC Admin email",true),
+						'type'=>'text',
+						'name'=>'inquiry_bcc',
+						'attributes'=>array('style'=>'width:98%;'),
+						'help'=>__a("You can send a bcc to this email address.",true)
+					)
+				)
+			);?>
+
+			<?php $AdminSettings->columns = array(5,8,11); $AdminSettings->displayTab('listings',$listingsTab);?>
+
+			<!-- REVIEWS SETTINGS -->
+
+			<?php $reviewsTab = array(
+				/*** NEW HEADER ***/
+				__a("General settings",true) => array(
+					 array(
+						'label'=>__a("View All Reviews Canonical (SEO)",true),
+						'type'=>'radioYesNo',
+						'name'=>'viewallreviews_canonical',
+						'help'=>__a("Outputs a canonical tag to the listing detail page in the view all reviews page for a listing.",true)
+					),
+					 array(
+						'label'=>__a("Enable User Reviews",true),
+						'type'=>'radioYesNo',
+						'name'=>'user_reviews'
+					),
+					 array(
+						'label'=>__a("Enable Editor Reviews",true),
+						'type'=>'select',
+						'name'=>'author_review',
+						'options'=>array(
+									'0' => __a("Disabled",true),
+									'1' => __a("One editor review per listing",true),
+									'2' => __a("Multiple editor reviews per listing",true)
+									)
+					),
+					 array(
+						'label'=>__a("Comma list of JReviews Editors user IDs",true),
+						'type'=>'text',
+						'name'=>'authorids',
+						'attributes'=>array('style'=>'width:98%;'),
+						'help'=>__a("Only reviews written by these users will be automatically recognized as editor reviews. Addittionaly, any review can be marked as an editor review in the review moderation menu.",true)
+							.'<a href="index.php?option=com_users&view=users&tmpl=component" class="jr-popup-window" target="_blank">'.__a("View list of users",true).'</a>'
+					),
+					 array(
+						'label'=>__a("Multiple user reviews per listing",true),
+						'type'=>'radioYesNo',
+						'name'=>'user_multiple_reviews',
+						'help'=>__a("Valid for registered users only. Checking is done against IP address and userid.",true)
+					),
+					 array(
+						'label'=>__a("Disable IP address check for multiple reviews",true),
+						'type'=>'radioYesNo',
+						'name'=>'review_ipcheck_disable',
+						'help'=>__a("Performs check on user id only.",true)
+					),
+					 array(
+						'label'=>__a("Stop users from reviewing their own listings",true),
+						'type'=>'radioYesNo',
+						'name'=>'user_owner_disable',
+						'help'=>__a("Also disable the review form in listing submission in Configuration => Standard Fields.",true)
+					)
+				),
+				__a("Ordering Box",true) => array(
+					 array(
+						'label'=>__a("Default Ordering",true),
+						'type'=>'select',
+						'name'=>'user_review_order',
+						'options'=>$Jreviews->orderingListReviews(null,array('return'=>true))
+					)
+				),
+				__a("Rating Settings",true) => array(
+					 array(
+						'label'=>__a("Rating scale",true),
+						'type'=>'text',
+						'name'=>'rating_scale',
+						'attributes'=>array('style'=>'width: 3em;'),
+						'help'=>__a("Enter a number higher than zero. Once you have reviews on your site DO NOT change this setting",true)
+					),
+					 array(
+						'label'=>__a("Rating increment",true),
+						'type'=>'select',
+						'name'=>'rating_increment',
+						'options'=>array('1'=>1,'0.5'=>0.5)
+					),
+					 array(
+						'label'=>__a("Rating selector in review form",true),
+						'type'=>'select',
+						'name'=>'rating_selector',
+						'options'=>array('select'=>__a("Select List",true),'stars'=>__a("Star Images",true))
+					),
+					 array(
+						'label'=>__a("Pre-select N/A for optional rating criteria",true),
+						'type'=>'radioYesNo',
+						'name'=>'rating_default_na',
+						'help'=>__a("If enabled, users don't need to click on the N/A option to ignore a criterion.",true)
+					),
+					 array(
+						'label'=>__a("Hide non-rated criteria from detailed ratings",true),
+						'type'=>'radioYesNo',
+						'name'=>'rating_hide_na',
+						'help'=>__a("Useful if there are many optional criteria.",true)
+					),
+					 array(
+						'label'=>__a("Show rating count in detailed ratings",true),
+						'type'=>'select',
+						'name'=>'show_criteria_rating_count',
+						'options'=>array(
+									'2'=>__a("Show for all criteria sets",true),
+									'1'=>__a("Show for criteria sets where N/A ratings are enabled",true),
+									'0'=>__a("Do not show",true)
+									),
+						'help'=>__a("This can be informational when users gave N/A ratings to certain criteria.",true)
+					)
+				),
+				__a("Owner Replies",true) => array(
+					 array(
+						'label'=>__a("Enable listing owner replies to user reviews",true),
+						'type'=>'radioYesNo',
+						'name'=>'owner_replies'
+					)
+				),
+				__a("Review Discussions",true) => array(
+					 array(
+						'label'=>__a("Enable review discussions",true),
+						'type'=>'radioYesNo',
+						'name'=>'review_discussions'
+					)
+				),
+				__a("Review Reporting",true) => array(
+					 array(
+						'label'=>__a("Enable reporting of user reviews",true),
+						'type'=>'radioYesNo',
+						'name'=>'user_report'
+					),
+					 array(
+						'label'=>__a("Enable reporting of editor reviews",true),
+						'type'=>'radioYesNo',
+						'name'=>'author_report'
+					)
+				),
+				__a("Review Helpfulness Voting",true) => array(
+					 array(
+						'label'=>__a("Enable user review voting",true),
+						'type'=>'radioYesNo',
+						'name'=>'user_vote'
+					),
+					 array(
+						'label'=>__a("Enable editor review voting",true),
+						'type'=>'radioYesNo',
+						'name'=>'author_vote'
+					),
+					 array(
+						'label'=>__a("Disable ip address check for votes",true),
+						'type'=>'radioYesNo',
+						'name'=>'vote_ipcheck_disable'
+					)
+				),
+				__a("Editor Reviews",true) => array(
+					 array(
+						'label'=>__a("Number of editor reviews per page",true),
+						'type'=>'numbers',
+						'range'=>array(5,50,5),
+						'name'=>'editor_limit',
+						'help'=>__a("Used for pagination of editor reviews, if multiple editor reviews are enabled.",true)
+					),
+					 array(
+						'label'=>__a("Exclude Editor Reviews from Reviewer Ranking",true),
+						'type'=>'radioYesNo',
+						'name'=>'editor_rank_exclude'
+					),
+					 array(
+						'label'=>__a("Show detailed ratings in reviews",true),
+						'type'=>'radioYesNo',
+						'name'=>'author_ratings'
+					),
+					 array(
+						'label'=>__a("Show reviewer rank",true),
+						'type'=>'radioYesNo',
+						'name'=>'author_rank_link'
+					),
+					 array(
+						'label'=>__a("Show 'See all reviews' link for reviewer",true),
+						'type'=>'radioYesNo',
+						'name'=>'author_myreviews_link'
+					),
+					array(
+						'label'=>__a("Limit the number of characters shown in the review comments",true),
+						'type'=>'text',
+						'name'=>'editor_review_char_limit',
+						'attributes'=>array('style'=>'width:3em;'),
+						'help'=>__a("If you enter the number of characters higher than 0, visitors will need to click the 'show more' link to expand the full text. Limiting the number of characters will strip all html formatting.",true)
+					),
+				),
+				__a("User Reviews",true) => array(
+					 array(
+						'label'=>__a("Number of user reviews per page",true),
+						'type'=>'numbers',
+						'range'=>array(5,50,5),
+						'name'=>'user_limit'
+					),
+					 array(
+						'label'=>__a("Show detailed ratings in reviews",true),
+						'type'=>'radioYesNo',
+						'name'=>'user_ratings'
+					),
+					 array(
+						'label'=>__a("Show reviewer rank",true),
+						'type'=>'radioYesNo',
+						'name'=>'user_rank_link'
+					),
+					 array(
+						'label'=>__a("Show 'See all reviews' link for reviewer",true),
+						'type'=>'radioYesNo',
+						'name'=>'user_myreviews_link'
+					),
+					array(
+						'label'=>__a("Limit the number of characters shown in the review comments",true),
+						'type'=>'text',
+						'name'=>'user_review_char_limit',
+						'attributes'=>array('style'=>'width:3em;'),
+						'help'=>__a("If you enter the number of characters higher than 0, visitors will need to click the 'show more' link to expand the full text. Limiting the number of characters will strip all html formatting.",true)
+					),
+				),
+			);?>
+
+			<?php $AdminSettings->columns = array(5,8,11); $AdminSettings->displayTab('reviews',$reviewsTab);?>
+
+			<!-- STANDARD FIELDS SETTINGS -->
+
+			<?php $standardFieldsTab = array(
+				/*** NEW HEADER ***/
+				__a("Listing Form",true) => array(
+					 array(
+						'label'=>__a("Allow duplicate listing titles",true),
+						'type'=>'select',
+						'name'=>'content_title_duplicates',
+						'options'=>array(
+										'no'=>__a("No, don't allow duplicates",true),
+										'yes'=>__a("Yes, allow duplicates",true),
+										'category'=>__a("Yes, but only in different categories",true)
+										)
+					),
+					 array(
+						'label'=>__a("Name",true),
+						'type'=>'select',
+						'name'=>'content_name',
+						'options'=>array(
+										'required'=>__a("Required",true),
+										'optional'=>__a("Optional",true),
+										'hidden'=>__a("Hidden",true)
+										),
+						'help'=>__a("By default not shown to registered users",true)
+					),
+					 array(
+						'label'=>__a("E-mail",true),
+						'type'=>'select',
+						'name'=>'content_email',
+						'options'=>array(
+										'required'=>__a("Required",true),
+										'optional'=>__a("Optional",true),
+										'hidden'=>__a("Hidden",true)
+										),
+						'help'=>__a("By default not shown to registered users",true)
+					),
+					 array(
+						'label'=>__a("Summary",true),
+						'type'=>'select',
+						'name'=>'content_summary',
+						'options'=>array(
+										'required'=>__a("Required",true),
+										'optional'=>__a("Optional",true),
+										'hidden'=>__a("Hidden",true)
+										)
+					),
+					 array(
+						'label'=>__a("Description",true),
+						'type'=>'select',
+						'name'=>'content_description',
+						'options'=>array(
+										'required'=>__a("Required",true),
+										'optional'=>__a("Optional",true),
+										'hidden'=>__a("Hidden",true)
+										),
+					)
+				),
+				__a("Review Form when submitting a new Listing",true) => array(
+					 array(
+						'label'=>__a("Review form shown to",true),
+						'type'=>'select',
+						'name'=>'content_show_reviewform',
+						'options'=>array(
+										'authors'=>__a("JReviews Editors",true),
+										'noteditors'=>__a("Everyone except JReviews Editors",true),
+										'all'=>__a("Everyone",true),
+										'none'=>__a("Disabled",true)
+										)
+					),
+					 array(
+						'label'=>__a("Make review optional",true),
+						'type'=>'radioYesNo',
+						'name'=>'reviewform_optional',
+						'help'=>__a("Shows a checkbox allowing users to hide the review form",true)
+					)
+				),
+				__a("Review Form ",true) => array(
+					 array(
+						'label'=>__a("Title",true),
+						'type'=>'select',
+						'name'=>'reviewform_title',
+						'options'=>array(
+										'required'=>__a("Required",true),
+										'optional'=>__a("Optional",true),
+										'hidden'=>__a("Hidden",true)
+										)
+					),
+					 array(
+						'label'=>__a("Name",true),
+						'type'=>'select',
+						'name'=>'reviewform_name',
+						'options'=>array(
+										'required'=>__a("Required",true),
+										'optional'=>__a("Optional",true),
+										'hidden'=>__a("Hidden",true)
+										),
+						'help'=>__a("By default not shown to registered users.",true)
+					),
+					 array(
+						'label'=>__a("E-mail",true),
+						'type'=>'select',
+						'name'=>'reviewform_email',
+						'options'=>array(
+										'required'=>__a("Required",true),
+										'optional'=>__a("Optional",true),
+										'hidden'=>__a("Hidden",true)
+										),
+						'help'=>__a("By default not shown to registered users.",true)
+					),
+					 array(
+						'label'=>__a("Comment",true),
+						'type'=>'select',
+						'name'=>'reviewform_comment',
+						'options'=>array(
+										'required'=>__a("Required",true),
+										'optional'=>__a("Optional",true),
+										'hidden'=>__a("Hidden",true)
+										)
+					)
+				),
+				__a("Discussion Form ",true) => array(
+					 array(
+						'label'=>__a("Name",true),
+						'type'=>'select',
+						'name'=>'discussform_name',
+						'options'=>array(
+										'required'=>__a("Required",true),
+										'optional'=>__a("Optional",true),
+										'hidden'=>__a("Hidden",true)
+										),
+						'help'=>__a("By default not shown to registered users.",true)
+					),
+					 array(
+						'label'=>__a("E-mail",true),
+						'type'=>'select',
+						'name'=>'discussform_email',
+						'options'=>array(
+										'required'=>__a("Required",true),
+										'optional'=>__a("Optional",true),
+										'hidden'=>__a("Hidden",true)
+										),
+						'help'=>__a("By default not shown to registered users.",true)
+					)
+				),
+				__a("Media Form ",true) => array(
+					 array(
+						'label'=>__a("Name",true),
+						'type'=>'select',
+						'name'=>'mediaform_name',
+						'options'=>array(
+										'required'=>__a("Required",true),
+										'optional'=>__a("Optional",true),
+										'hidden'=>__a("Hidden",true)
+										),
+						'help'=>__a("By default not shown to registered users.",true)
+					),
+					 array(
+						'label'=>__a("E-mail",true),
+						'type'=>'select',
+						'name'=>'mediaform_email',
+						'options'=>array(
+										'required'=>__a("Required",true),
+										'optional'=>__a("Optional",true),
+										'hidden'=>__a("Hidden",true)
+										),
+						'help'=>__a("By default not shown to registered users.",true)
+					)
+				)
+			);?>
+
+			<?php $AdminSettings->columns = array(5,8,11); $AdminSettings->displayTab('forms',$standardFieldsTab);?>
+
+			<!-- SEARCH SETTINGS -->
+
+			<?php $searchTab = array(
+				/*** NEW HEADER ***/
+				__a("General",true) => array(
+					 array(
+						'label'=>__a("Use current page Itemid for search results",true),
+						'type'=>'radioYesNo',
+						'name'=>'search_itemid',
+						'help'=>__a("Works only for JReviews pages, not detail pages which are com_content. In that case the JReviews search menu id will be used or one you specify below.",true)
+					),
+					 array(
+						'label'=>__a("Specify a menu id for search results",true),
+						'type'=>'text',
+						'name'=>'search_itemid_hc',
+						'attributes'=>array('style'=>'width:4em;'),
+						'help'=>__a("Used in detail pages; and other JReviews pages if the setting above is disabled.",true)
+					),
+					 array(
+						'label'=>__a("If one result found, redirect to detail page",true),
+						'type'=>'radioYesNo',
+						'name'=>'search_one_result'
+					),
+					 array(
+						'label'=>__a("Allow all listings to be returned with empty search queries",true),
+						'type'=>'radioYesNo',
+						'name'=>'search_return_all'
+					),
+					 array(
+						'label'=>__a("Theme Layout",true),
+						'type'=>'select',
+						'name'=>'search_display_type',
+						'options'=>array(
+										'0'=>__a("Tableview",true),
+										'1'=>__a("Blogview",true),
+										'2'=>__a("Thumbview",true),
+										'3'=>__a("Masonry",true)
+										),
+						'help'=>__a("For better results with the Masonry layout, choose the 'scale' thumbnail mode for list pages in Media Settings",true)
+					),
+					 array(
+						'label'=>__a("View Suffix",true),
+						'type'=>'text',
+						'name'=>'search_tmpl_suffix',
+						'attributes'=>array('style'=>'width:15em;')
+					)
+				),
+				__a("Simple search",true) => array(
+					array(
+						'label'=>__a("Default query type",true),
+						'type'=>'radio',
+						'name'=>'search_simple_query_type',
+						'options'=>array('any'=>__a("Any",true),'all'=>__a("All",true)/*,'none'=>'None'*/),
+						'help'=>__a("'Any' will look for listings which contain any of the words. 'All' will look for listings that contain all the words.",true)
+					),
+					 array(
+						'label'=>__a("Show search box in listings and directory",true),
+						'type'=>'radioYesNo',
+						'name'=>'list_show_searchbox'
+					),
+					 array(
+						'label'=>__a("Use current page category id as filters for simple search",true),
+						'type'=>'radioYesNo',
+						'name'=>'search_cat_filter'
+					)
+				),
+				__a("Advanced search",true) => array(
+					 array(
+						'label'=>__a("Allow searching by listing owner",true),
+						'type'=>'radioYesNo',
+						'name'=>'search_item_author'
+					),
+					 array(
+						'label'=>__a("Allow searches on more than one option for single select and radiobutton fields",true),
+						'type'=>'radioYesNo',
+						'name'=>'search_field_conversion',
+						'help'=>'<div class="jrWarning">'.__a("This feature will not work if you use control fields in your setup.",true) . '</div>' . __a("Allows searches that match several options for single select and radiobuttons. For example: if you have a multiple select field with all the states in the US, the user will be able to choose several of the states instead of just one if this setting is disabled.",true)
+					)
+				)
+
+			);?>
+
+			<?php $AdminSettings->columns = array(5,8,11); $AdminSettings->displayTab('search',$searchTab);?>
+
+			<!-- NOTIFICATIONS SETTINGS -->
+
+			<div id="notifications">
+
+				<div class="jrInfo">
+
+					<?php echo sprintf(__a("To customize the text of the emails you need to edit the email themes in %s",true),'/components/com_jreviews/jreviews/views/themes/default/email_templates/');?>
+				</div>
+
+				<div class="jrDataList">
+
+					<div class="jrGrid jrDataListHeader">
+
+						<div class="jrCol3"><?php __a("Administrative e-mails");?></div>
+
+						<div class="jrCol4"><?php __a("Enabled");?></div>
+
+						<div class="jrCol5"><?php __a("Admin e-mail Addresses (one per line)");?></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("New/edited listing");?></div>
+
+						<div class="jrCol4"><?php echo $Form->radioYesNo( "notify_content", "", $this->Config->notify_content );?></div>
+
+						<div class="jrCol5"><textarea name="notify_content_emails" style="height:4em;" rows="2" cols="50"><?php echo ($this->Config->notify_content_emails != '' ? $this->Config->notify_content_emails : cmsFramework::getConfig('mailfrom'))?></textarea></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("New/edited review");?></div>
+
+						<div class="jrCol4"><?php echo $Form->radioYesNo( "notify_review", "", $this->Config->notify_review );?></div>
+
+						<div class="jrCol5"><textarea name="notify_review_emails" style="height:4em;" rows="2" cols="50"><?php echo ($this->Config->notify_review_emails != '' ? $this->Config->notify_review_emails : cmsFramework::getConfig('mailfrom'))?></textarea></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("New review comment");?></div>
+
+						<div class="jrCol4"><?php echo $Form->radioYesNo( "notify_review_post", "", $this->Config->notify_review_post );?></div>
+
+						<div class="jrCol5"><textarea name="notify_review_post_emails" style="height:4em;" rows="2" cols="50"><?php echo ($this->Config->notify_review_post_emails != '' ? $this->Config->notify_review_post_emails : cmsFramework::getConfig('mailfrom'))?></textarea></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("New owner reply");?></div>
+
+						<div class="jrCol4"><?php echo $Form->radioYesNo( "notify_owner_reply", "", $this->Config->notify_owner_reply );?></div>
+
+						<div class="jrCol5"><textarea name="notify_owner_reply_emails" style="height:4em;" rows="2" cols="50"><?php echo ($this->Config->notify_owner_reply_emails != '' ? $this->Config->notify_owner_reply_emails : cmsFramework::getConfig('mailfrom'))?></textarea></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("New abuse report");?></div>
+
+						<div class="jrCol4"><?php echo $Form->radioYesNo( "notify_report", "", $this->Config->notify_report );?></div>
+
+						<div class="jrCol5"><textarea name="notify_report_emails" style="height:4em;" rows="2" cols="50"><?php echo ($this->Config->notify_report_emails != '' ? $this->Config->notify_report_emails : cmsFramework::getConfig('mailfrom'))?></textarea></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("New claimed listing");?></div>
+
+						<div class="jrCol4"><?php echo $Form->radioYesNo( "notify_claim", "", $this->Config->notify_claim );?></div>
+
+						<div class="jrCol5"><textarea name="notify_claim_emails" style="height:4em;" rows="2" cols="50"><?php echo ($this->Config->notify_claim_emails != '' ? $this->Config->notify_claim_emails : cmsFramework::getConfig('mailfrom'))?></textarea></div>
+
+					</div>
+
+				</div>
+
+				<div class="jrDataList">
+
+					<div class="jrGrid jrDataListHeader">
+
+						<div class="jrCol3"><?php __a("User e-mails");?></div>
+
+						<div class="jrCol4"><?php __a("Enabled");?></div>
+
+						<div class="jrCol5"><?php __a("BCC to other e-mail Addresses (one per line)");?></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("New/edited listing to submitter");?></div>
+
+						<div class="jrCol4"><?php echo $Form->radioYesNo( "notify_user_listing", "", $this->Config->notify_user_listing );?></div>
+
+						<div class="jrCol5"><textarea name="notify_user_listing_emails" style="height:4em;" rows="2" cols="50"><?php echo $this->Config->notify_user_listing_emails;?></textarea></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("New/edited review to listing owner");?></div>
+
+						<div class="jrCol4">
+
+							<?php echo $Form->radioYesNo( "notify_owner_review", "", $this->Config->notify_owner_review );?>
+
+							&nbsp;
+
+							<?php echo $Form->select('notify_owner_review_claimed',
+										array(0=>__a("All listings",true),1=>__a("Claimed listings",true)),
+										$this->Config->notify_owner_review_claimed
+								);?>
+						</div>
+
+						<div class="jrCol5"><textarea name="notify_owner_review_emails" style="height:4em;" rows="2" cols="50"><?php echo $this->Config->notify_owner_review_emails;?></textarea></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("New/edited review to submitter");?></div>
+
+						<div class="jrCol4"><?php echo $Form->radioYesNo( "notify_user_review", "", $this->Config->notify_user_review );?></div>
+
+						<div class="jrCol5"><textarea name="notify_user_review_emails" style="height:4em;" rows="2" cols="50"><?php echo $this->Config->notify_user_review_emails;?></textarea></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("New/edited review comment to submitter");?></div>
+
+						<div class="jrCol4">
+
+							<?php echo $Form->radioYesNo( "notify_user_comment", "", $this->Config->notify_user_comment );?>
+
+						</div>
+
+						<div class="jrCol5"><textarea name="notify_reviewer_comment_emails" style="height:4em;" rows="2" cols="50"><?php echo $this->Config->notify_user_comment_emails;?></textarea></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("New/edited review comment to reviewer");?></div>
+
+						<div class="jrCol4">
+
+							<?php echo $Form->radioYesNo( "notify_reviewer_comment", "", $this->Config->notify_reviewer_comment );?>
+
+						</div>
+
+						<div class="jrCol5"><textarea name="notify_reviewer_comment_emails" style="height:4em;" rows="2" cols="50"><?php echo $this->Config->notify_reviewer_comment_emails;?></textarea></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("New/edited review comment to listing owner");?></div>
+
+						<div class="jrCol4">
+
+							<?php echo $Form->radioYesNo( "notify_owner_comment", "", $this->Config->notify_owner_comment );?>
+
+							&nbsp;
+
+							<?php echo $Form->select('notify_owner_comment_claimed',
+										array(0=>__a("All listings",true),1=>__a("Claimed listings",true)),
+										$this->Config->notify_owner_comment_claimed
+								);?>
+						</div>
+
+						<div class="jrCol5"><textarea name="notify_owner_comment_emails" style="height:4em;" rows="2" cols="50"><?php echo $this->Config->notify_owner_comment_emails;?></textarea></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("Video encoding finished to submitter");?></div>
+
+						<div class="jrCol4"><?php echo $Form->radioYesNo( "notify_user_media_encoding", "", $this->Config->notify_user_media_encoding );?></div>
+
+						<div class="jrCol5"><textarea name="notify_user_media_encoding_emails" style="height:4em;" rows="2" cols="50"><?php echo Sanitize::getString($this->Config,'notify_user_media_encoding_emails');?></textarea></div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<!-- RSS SETTINGS -->
+
+			<?php $feedsTab = array(
+				/*** NEW HEADER ***/
+				__a("RSS Feeds Settings",true) => array(
+					 array(
+						'label'=>__a("Display feed icons",true),
+						'type'=>'radioYesNo',
+						'name'=>'rss_enable'
+					)
+				),
+				__a("Channel Settings",true) => array(
+					 array(
+						'label'=>__a("Listings in feed",true),
+						'type'=>'text',
+						'name'=>'rss_limit',
+						'attributes'=>array('style'=>'width:4em')
+					),
+					 array(
+						'label'=>__a("Feed title",true),
+						'type'=>'text',
+						'name'=>'rss_title',
+						'attributes'=>array('style'=>'width:98%;')
+					),
+					 array(
+						'label'=>__a("Feed description",true),
+						'type'=>'textarea',
+						'name'=>'rss_description',
+						'attributes'=>array('style'=>'width:98%;')
+					),
+					 array(
+						'label'=>__a("Feed image",true),
+						'type'=>'placeholder',
+						'text'=>cmsFramework::listImages( 'rss_image', $this->Config->rss_image, ' ')
+								.'<img id="jr-feed-img" style="height:100px;float:right;" src="../images/'.$this->Config->rss_image.'" />'
+					)
+				),
+				__a("Listing Settings",true) => array(
+					 array(
+						'label'=>__a("Show listing thumbnail",true),
+						'type'=>'radioYesNo',
+						'name'=>'rss_item_images'
+					),
+					 array(
+						'label'=>__a("Thumbnail alignment",true),
+						'type'=>'placeholder',
+						'text'=>cmsFramework::listPositions( 'rss_item_image_align',$this->Config->rss_item_image_align),
+					)
+				)
+			);?>
+
+			<?php $AdminSettings->columns = array(5,8,11); $AdminSettings->displayTab('rss',$feedsTab);?>
+
+			<!-- CACHE SETTINGS -->
+
+			<?php $cacheTab = array(
+				/*** NEW HEADER ***/
+				__a("File Registry",true) => array(
+					 array(
+						'label'=>__a("Provides a significant boost in performance by mapping the whole framework and jReviews filesystem and caching it. You should clear the file registry often using the link on the left column if you are creating custom theme files with suffixes or adding new files to the jreviews_overrides folder. Otherwise JReviews is not able to find the new files.",true),
+						'type'=>'placeholder'
+					)
+				),
+				__a("File Registry",true) => array(
+					 array(
+						'label'=>__a("Cache Settings",true),
+						'type'=>'text',
+						'name'=>'cache_expires',
+						'after'=>__a("hours",true),
+						'attributes'=>array('style'=>'width:3em;'),
+						'help'=>__a("Cached files will be re-created if they have expired.",true)
+					),
+					 array(
+						'label'=>__a("Enable query cache",true),
+						'type'=>'radioYesNo',
+						'name'=>'cache_query',
+						'help'=>__a("Reduces the number of queries per page. The cache is cleared after the cache duration has passed or everytime the jReviews setup, configuration, a listing or review is submitted or updated..",true)
+					),
+					 array(
+						'label'=>__a("Enable view cache (Guests only)",true),
+						'type'=>'radioYesNo',
+						'name'=>'cache_view',
+						'help'=>__a("Caches whole views for guest users only. The cache is cleared after the cache duration has passed or everytime the jReviews setup, configuration, a listing or review is submitted or updated.",true)
+					),
+					 array(
+						'label'=>__a("Enable session cache",true),
+						'type'=>'radioYesNo',
+						'name'=>'cache_session',
+						'help'=>__a("Caches data to the user's session to reduce the number of queries. For example the total count of results for different paginated pages is cached and then read from the user's session data.",true)
+					),
+				)
+
+			);?>
+
+			<?php $AdminSettings->columns = array(5,8,11); $AdminSettings->displayTab('cache',$cacheTab);?>
+
+		</div> <!-- end jtabs-->
+
+		<input type="hidden" name="data[controller]" value="admin/configuration" />
+
+		<input type="hidden" name="data[action]" value="_save" />
+
+	</form>
+
+</div>

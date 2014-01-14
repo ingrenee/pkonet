@@ -1,0 +1,202 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+$coupon_id = Sanitize::getInt($coupon['PaidCoupon'],'coupon_id');
+?>
+
+<div class="jr-paid-coupon-edit">
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post">
+
+        <div class="jrPageHeading"><?php __a("Coupon");?></div>
+
+            <div class="jrPageToolbar jrRoundedPanel">
+
+                <button class="jr-save jrButton jrGreen" data-id="<?php echo $coupon_id;?>">
+
+                    <span class="jrIconSave"></span><?php __a("Save");?>
+
+                </button>
+
+                <button class="jr-cancel jrButton">
+
+                    <span class="jrIconCancel"></span><?php __a("Cancel");?>
+
+                </button>
+
+        </div>
+
+        <div class="jr-validation jrError jrHidden"></div>
+
+        <?php
+
+        $couponData = array(
+            /*** NEW HEADER ***/
+            '' => array(
+                array(
+                    'label'=>__a("Name",true),
+                    'type'=>'text',
+                    'name'=>'data[PaidCoupon][coupon_name]',
+                    'default'=>Sanitize::getString($coupon['PaidCoupon'],'coupon_name',''),
+                    'attributes'=>array('class'=>'jrName')
+                ),
+                array(
+                    'label'=>__a("Enable",true),
+                    'type'=>'radioYesNo',
+                    'name'=>'data[PaidCoupon][coupon_state]',
+                    'default'=>Sanitize::getString($coupon['PaidCoupon'],'coupon_state',0),
+                    'attributes'=>array('div'=>false)
+                ),
+                array(
+                    'label'=>__a("Valid for renewals only",true),
+                    'type'=>'radioYesNo',
+                    'name'=>'data[PaidCoupon][coupon_renewals_only]',
+                    'default'=>Sanitize::getString($coupon['PaidCoupon'],'coupon_renewals_only',0),
+                    'attributes'=>array('div'=>false)
+                ),
+                array(
+                    'label'=>__a("Discount %",true),
+                    'type'=>'text',
+                    'name'=>'data[PaidCoupon][coupon_discount]',
+                    'default'=>Sanitize::getString($coupon['PaidCoupon'],'coupon_discount',''),
+                    'attributes'=>array('class'=>'jrInteger')
+                ),
+                array(
+                    'label'=>__a("Dates",true),
+                    'type'=>'text',
+                    'name'=>'data[PaidCoupon][coupon_starts]',
+                    'default'=>Sanitize::getString($coupon['PaidCoupon'],'coupon_starts',''),
+                    'before'=>__a("From",true).'&nbsp;',
+                    'after'=>'&nbsp;'.__a("To",true).'&nbsp;'.$Form->text('data[PaidCoupon][coupon_ends]',array('value'=>Sanitize::getString($coupon['PaidCoupon'],'coupon_ends'),'class'=>'jr-date jrDate')),
+                    'attributes'=>array('class'=>'jr-date jrDate'),
+                    'help'=>__a("Leave empty to ignore",true)
+                ),
+                array(
+                    'label'=>__a("Count",true),
+                    'type'=>'text',
+                    'name'=>'data[PaidCoupon][coupon_count]',
+                    'default'=>Sanitize::getString($coupon['PaidCoupon'],'coupon_count',''),
+                    'before'=>__a("Limit usage to",true).'&nbsp;',
+                    'after'=>'time(s) &nbsp;'.$Form->radio('data[PaidCoupon][coupon_count_type]',array('user'=>__a("per user",true),'global'=>__a("sitewide",true)),array('div'=>false,'value'=>Sanitize::getString($coupon['PaidCoupon'],'coupon_count_type','user'))),
+                    'attributes'=>array('style'=>'width:3em;'),
+                    'help'=>__a("Leave empty to ignore",true)
+                )
+            )
+        );
+
+        $AdminSettings->displayTab('coupon-edit',$couponData,'',$coupon['PaidCoupon']);
+        ?>
+
+        <div class="jrDataList">
+
+            <div class="jrGrid24">
+
+                <div class="jrCol5"><?php __a("Restrict to Users");?></div>
+
+                <div class="jrCol11">
+
+                        <?php echo $Form->text('CouponUserSearch',array('placeholder'=>__a("Type for suggestions",true),'class'=>'jr-user-autocomplete jrName'));?>
+
+                        <div class="jr-user-checkbox-div">
+
+                        <?php if(!empty($coupon['PaidCoupon']['coupon_users'])):?>
+
+                            <?php foreach($coupon['PaidCoupon']['coupon_users'] AS $user_id):?>
+
+                            <label for="jr-coupon-user-<?php echo $user_id;?>">
+
+                                <input class="jr-coupon-user" id="jr-coupon-user-<?php echo $user_id;?>" name="data[PaidCoupon][coupon_users][]" type="checkbox" checked="checked" value="<?php echo $user_id;?>" />
+
+                                <?php echo $coupon['User'][$user_id]['User']['name'];?>
+
+                           </label>
+
+                           <?php endforeach;?>
+
+                        <?php endif;?>
+
+                        </div>
+
+                </div>
+
+                <div class="jrCol8"></div>
+
+            </div>
+
+           <div class="jrGrid24">
+
+                <div class="jrCol5"><?php __a("Restrict to Plans");?></div>
+
+                <div class="jrCol11">
+
+                    <?php if(!empty($plans)):?>
+
+                        <?php foreach($plans AS $plan_id=>$plan): extract($plan['PaidPlan']);?>
+
+                        <?php $checked = in_array($plan_id,Sanitize::getVar($coupon['PaidCoupon'],'coupon_plans')) ? 'checked="checked' : '';?>
+
+                       <label for="CouponPlan<?php echo $plan_id;?>" style="display:block;"><input class="CouponPlan" id="CouponPlan<?php echo $plan_id;?>" <?php echo $checked;?> name="data[PaidCoupon][coupon_plans][]" type="checkbox" value="<?php echo $plan_id;?>" /><span><?php echo $plan_name;?>  (<?php echo $plan_type==0 ? 'New' : 'Upgrade';?>)</span></label>
+
+                        <?php endforeach;?>
+
+                    <?php endif;?>
+
+                </div>
+
+                <div class="jrCol8"></div>
+
+            </div>
+
+           <div class="jrGrid24">
+
+                <div class="jrCol5"><?php __a("Restrict to Categories");?></div>
+
+                <div class="jrCol11">
+
+                    <div class="jrGrid">
+
+                        <div class="jrCol12">
+
+                            <button class="jr-cat-tree-toggle jrButton"><?php __a("Expand/Collapse");?></button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="jrGrid">
+
+                        <div class="jrCol12">
+
+                            <div id="jr-cat-tree"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="jrCol8"></div>
+
+            </div>
+
+        </div>
+
+        <input type="hidden" name="data[PaidCoupon][coupon_id]" value="<?php echo Sanitize::getInt($coupon['PaidCoupon'],'coupon_id');?>" />
+
+        <input type="hidden" name="data[controller]" value="admin/admin_paidlistings_coupons" />
+
+        <input type="hidden" name="data[action]" value="_save" />
+
+        <input type="hidden" id="curr_cat_ids" name="curr_cat_ids" value="<?php echo implode(",",Sanitize::getVar($coupon['PaidCoupon'],'coupon_categories'));?>" />
+
+        <input type="hidden" id="cat_ids" name="data[PaidCoupon][coupon_categories]" value="" />
+
+    </form>
+
+</div>

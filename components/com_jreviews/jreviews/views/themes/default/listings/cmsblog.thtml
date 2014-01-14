@@ -1,0 +1,95 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**
+ * Core blog pages, includes frontpage and blogcategory pages
+ */
+
+$tn_size = Sanitize::getString($this->Config,'media_list_thumbnail_size','120x120');
+$tn_mode = Sanitize::getString($this->Config,'media_list_thumbnail_mode','crop');
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<div class="jr-page jrPage jrCMSBlog">
+
+	<div class="jrListItem">
+
+		<div class="jrListingInfo">
+
+			<?php if($this->Config->getOverride('list_show_author',$listing['ListingType']['config'])):?><?php __t("Written by");?> <?php echo $Community->screenName($listing);?>&nbsp;&nbsp;&nbsp;&nbsp;<?php endif;?>
+
+			<?php if($this->Config->getOverride('list_show_date',$listing['ListingType']['config'])):?><?php echo $Time->nice($listing['Listing']['created']);?>&nbsp;&nbsp;&nbsp;&nbsp;<?php endif;?>
+
+			<span class="jrListingStatus">
+
+				<?php if($this->Config->list_show_hits):?>
+
+					<span title="<?php __t("Views");?>"><span class="jrIconGraph"></span><?php echo $listing['Listing']['hits']?></span>&nbsp;&nbsp;
+
+				<?php endif;?>
+
+				<?php if($media_video_show_count):?>
+
+					<span title="<?php __t("Video count");?>"><span class="jrIconVideo"></span><?php echo (int)$listing['Listing']['video_count'];?></span>&nbsp;&nbsp;
+
+				<?php endif;?>
+
+				<?php if($media_photo_show_count):?>
+
+					<span title="<?php __t("photo count");?>"><span class="jrIconPhoto"></span><?php echo (int)$listing['Listing']['photo_count'];?></span>&nbsp;&nbsp;
+
+				<?php endif;?>
+
+				<?php if($media_audio_show_count):?>
+
+					<span title="<?php __t("Audio count");?>"><span class="jrIconAudio"></span><?php echo (int)$listing['Listing']['audio_count'];?></span>&nbsp;&nbsp;
+
+				<?php endif;?>
+
+				<?php if($media_attachment_show_count):?>
+
+					<span title="<?php __t("Attachment count");?>"><span class="jrIconAttachment"></span><?php echo (int)$listing['Listing']['attachment_count'];?></span>&nbsp;&nbsp;
+
+				<?php endif;?>
+
+				<?php if($this->Config->favorites_enable):?>
+
+					<span title="<?php __t("Favorite count");?>"><span class="jrIconFavorite"></span><span id="jr-favorite-<?php echo  $listing['Listing']['listing_id']; ?>"><?php echo (int)$listing['Favorite']['favored'];?></span></span>
+
+				<?php endif;?>
+
+			</span>
+		</div>
+
+		<!-- OVERALL RATINGS -->
+		<?php echo $Rating->overallRatings($listing, 'list'); ?>
+
+		<div class="jrClear"></div>
+
+		<!-- BEGIN INTROTEXT -->
+		<div class="jrListingSummary">
+			<?php if($this->Config->media_list_thumbnail && $mainMediaThumb = $Media->thumb(Sanitize::getVar($listing,'MainMedia'),array('listing'=> &$listing,'size'=>$tn_size,'mode'=>$tn_mode))):?>
+			<div class="jrListingThumbnail">
+				<?php echo $Routes->content($mainMediaThumb,$listing);?>
+			</div>
+			<?php endif;?>
+			 <?php echo $listing['Listing']['summary'];?>
+		</div>
+
+		<!-- CUSTOM FIELDS -->
+		<?php echo $CustomFields->displayAll($listing,'list');?>
+
+   </div>
+</div>
+
+<div class="jrClear"></div>

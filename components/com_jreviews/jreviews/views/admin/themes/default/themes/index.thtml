@@ -1,0 +1,32 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<div class="jrPageHeading"><?php __a("Theme Manager");?></div>
+
+<div class="jrPageToolbar jrRoundedPanel">
+
+    <button class="jr-menu jrButton" data-controller="themes" data-action="sections">
+
+    	<?php __a("Section Themes");?>
+
+    </button>
+
+
+    &nbsp;&nbsp;
+
+    <button class="jr-menu jrButton" data-controller="themes" data-action="categories">
+
+        <?php __a("Category Themes");?>
+
+    </button>
+
+</div>

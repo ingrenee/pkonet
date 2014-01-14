@@ -1,0 +1,395 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$langDel = json_encode(array(
+	'del_confirm'=>__a("This action will delete the file(s) and associated votes. Are you sure you want to continue?",true,true),
+	'del_error'=>__a('There was a problem deleting the file(s).',true,true)
+	));
+
+$mainMediaStates = array(0=>'jrIconEmptyStar',1=>'jrIconStar');
+
+$publishStates = array(0=>'jrIconUnpublished',1=>'jrIconPublished',2=>'jrIconUnpublished');
+
+# Initialize paginator helper
+$Paginator->paginate(
+	array(
+		'current_page'=>$this->page,
+		'items_per_page'=>$this->limit,
+		'items_total'=>$pagination['total']
+	)
+);
+$thumbnailSize = Sanitize::getString($this->Config,'media_detail_gallery_thumbnail_size');
+
+$thumbnailMode = Sanitize::getString($this->Config,'media_detail_gallery_thumbnail_mode');
+
+$minThumbWidth = min((int) $thumbnailSize,85) . 'px';
+
+foreach($accessLevels AS $accessLevel)
+{
+	$levelArray[$accessLevel['value']] = $accessLevel['text'];
+}
+
+$listing_id = Sanitize::getInt($this->params,'listing_id');
+
+$review_id = Sanitize::getInt($this->params,'review_id');
+?>
+
+<div class="jr-media-list">
+
+    <div class="jrPageHeading"><?php __a("Browse Media");?></div>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="media">
+
+		<div class="jrPageToolbar jrRoundedPanel">
+
+			<button class="jr-delete-all jrButton" data-lang='<?php echo $langDel;?>'>
+
+				<span class="jrIconDelete"></span><span><?php __a("Delete");?></span>
+
+			</button>
+
+			<?php if($listing_id || $review_id):?>
+
+	        <button class="jr-cancel jrButton" data-fieldid="<?php echo $field['fieldid'];?>">
+
+	            <span class="jrIconPrev"></span><?php __a("Back");?>
+
+	        </button>
+
+			<?php endif;?>
+
+		</div>
+
+	    <div class="jr-filters jrPageFilters jrRoundedPanelLt jrClearfix">
+
+	    	<input type="hidden" name="listing_id" value="<?php echo $listing_id;?>" />
+
+	    	<input type="hidden" name="review_id" value="<?php echo $review_id;?>" />
+
+	    	<input type="hidden" name="user_id" value="<?php echo Sanitize::getInt($this->params,'user_id');?>" />
+
+	    	<div class="jrLeft">
+
+				<!-- COMPONENTS FILTER -->
+				<?php echo $Form->select(
+				 	    'extension',
+				 	    array_merge(array(array('value'=>'','text'=>'- '.__a("Select Component",true).' -'),array('value'=>'com_content','text'=>__a("JReviews Listings",true))),$extensions),
+				 	    $extension
+				     );
+			    ?>
+
+			</div>
+
+	    	<div class="jrLeft">
+
+				<!-- ORDER/PUBLISHED/APPROVED FILTERS -->
+				<?php
+				    echo $Form->select(
+					    'filter_order',
+					    array('created'=>__a("Most recent",true),'published'=>__a("Published",true),'unpublished'=>__a("Unpublished",true),'rejected'=>__a("Rejected",true)),
+					    $filter_order
+				    );
+			    ?>
+
+			</div>
+
+	    	<div class="jrLeft">
+
+				<!-- MEDIA TYPE FILTERS -->
+				<?php
+				    echo $Form->select(
+					    'filter_media_type',
+					    array(''=>'- '.__a("Media Types",true).' -','photo'=>__a("Photos",true),'video'=>__a("Videos",true),'attachment'=>__a("Attachments",true),'audio'=>__a("Audio",true)),
+					    $filter_media_type
+				    );
+			    ?>
+
+			</div>
+
+	    	<div class="jrLeft">
+
+				<!-- MEDIA Location FILTERS -->
+				<?php
+				    echo $Form->select(
+					    'filter_media_location',
+					    array(''=>'- '.__a("Media Location",true).' -','review'=>__a("Review",true),'listing'=>__a("Listing",true)),
+					    $filter_media_location
+				    );
+			    ?>
+
+			</div>
+
+	    	<div class="jrLeft">
+
+				<!-- LISTING TITLE SEARCH -->
+			    <input type="text" <?php if(!$extension):?>disabled="disabled"<?php endif;?> placeholder="<?php __a("Listing title");?>" name="entry_title" value="<?php echo $extension ? $entry_title : __a("Select component",true);?>" />
+
+		   </div>
+
+	    </div>
+
+	    <div class="jrMediaIconLegend">
+
+			<span class="jrIconListing"></span> <?php __a("Listing Media");?>
+
+			&nbsp;&nbsp;
+
+			<span class="jrIconComments"></span> <?php __a("Review Media");?>
+
+			&nbsp;&nbsp;
+
+			<span class="jrIconEditor"></span> <?php __a("Listing Owner");?>
+
+			&nbsp;&nbsp;
+
+			<span class="jrIconUsers"></span> <?php __a("User");?>
+
+		</div>
+
+        <?php echo $this->element('pagination',array('position'=>'top'));?>
+
+        <div class="jrDataList">
+
+	        <div class="jrGrid24 jrDataListHeader">
+
+        		<div class="jrCol1"><input class="jr-cb-all" value="" type="checkbox"></div>
+
+        		<div class="jrCol1">#</div>
+
+        		<div class="jrCol2">ID</div>
+
+        		<div class="jrCol2"><?php __a("Media");?></div>
+
+        		<div class="jrCol2"><?php __a("Type");?></div>
+
+        		<div class="jrCol3"><?php __a("Location");?> - <?php __a("Extension");?></div>
+
+        		<div class="jrCol2"><?php __a("View Access");?></div>
+
+        		<div class="jrCol2"><?php __a("Approved");?></div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconPublished jr-more-info"></span>
+        			<div class="jrPopup jrHidden"><?php __a("Published");?></div>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconStar jr-more-info"></span>
+        			<div class="jrPopup jrHidden"><?php __a("Main Media");?></div>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconUsers jr-more-info"></span>
+        			<div class="jrPopup jrHidden"><?php __a("Filter by users");?></div>
+
+        		</div>
+
+        		<div class="jrCol4"><?php __a("Date & Reviewer");?></div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconGraph jr-more-info"></span>
+        			<div class="jrPopup jrHidden"><?php __a("Views");?></div>
+
+        		</div>
+
+        		<div class="jrCol1">&nbsp;</div>
+
+        	</div>
+
+			<?php $i = $this->page*$this->limit - ($this->limit - 1); foreach($media AS $medium): extract($medium['Media']);?>
+
+	        <div class="jr-layout-outer jrGrid24" data-id="<?php echo $media_id;?>">
+
+        		<div class="jrCol1"><input type="checkbox" class="jr-row-cb" name="cid[]" value="<?php echo $media_id;?>" /></div>
+
+        		<div class="jrCol1"><?php echo ($this->page-1)*$this->limit + $i++;?></div>
+
+        		<div class="jrCol2 jrSizeS"><?php echo $media_id;?></div>
+
+        		<div class="jrCol2">
+
+        			<div class="jr-edit jr-more-info" data-id="<?php echo $media_id;?>">
+
+						<?php echo $Media->thumb($medium['Media'],array('lazyload'=>true,'size'=>$thumbnailSize,'mode'=>$thumbnailMode),array('style'=>'width:'.$minThumbWidth.';height:auto;'));?>
+
+					</div>
+
+					<div class="jrMediaInfo jrPopup jrPopupMedium">
+
+						<?php if($title != ''): ?>
+
+							<h3 class="jrMediaTitle"><?php echo $title;?></h3>
+
+						<?php endif; ?>
+
+						<?php if($description != ''): ?>
+
+							<div class="jrMediaDescription"><?php echo $Text->truncateWords($description, 50);?></div>
+
+						<?php endif; ?>
+
+						<div class="jrMediaListingTitle">
+
+							<?php echo sprintf(__a("Listing: %s (#%s)",true),$medium['Listing']['title'],$medium['Listing']['listing_id']);?>
+
+							<br /><br />
+
+							<span class="jrStatusLabel jrBlue"><?php echo $extension;?></span>
+
+							<?php if(isset($medium['ListingUser']) && $medium['ListingUser']['user_id'] == $user_id):?>
+
+								<span class="jrStatusLabel jrGreen"><?php __a("Listing Owner");?></span>
+
+							<?php else:?>
+
+								<span class="jrStatusLabel jrOrange"><?php __a("User");?></span>
+
+							<?php endif;?>
+
+						</div>
+
+					</div>&nbsp;
+
+        		</div>
+
+        		<div class="jrCol2">
+
+        			<span class="jrIcon<?php echo ucfirst($media_type);?>"></span>
+
+					<?php if($review_id):?>
+
+						<span class="jrIconComments"></span>
+
+					<?php else:?>
+
+						<span class="jrIconListing"></span>
+
+					<?php endif;?>
+
+					<?php if(isset($medium['ListingUser']) && $medium['ListingUser']['user_id'] == $user_id):?>
+
+						<span class="jrIconEditor"></span>
+
+					<?php else:?>
+
+						<span class="jrIconUsers"></span>
+
+					<?php endif;?>
+
+        		</div>
+
+        		<div class="jrCol3">
+
+					<span class="jrStatusLabel jrBlue"><?php echo $extension;?></span>&nbsp;
+
+        		</div>
+
+        		<div class="jrCol2"><?php echo $levelArray[$access];?></div>
+
+        		<div class="jrCol2 jrCenter">
+
+					<?php $approved_state = array(0=>'Pending',1=>'Approved',-2=>'Rejected');?>
+
+					<?php $approved_style = array(0=>'jrOrange',1=>'jrGreen',-2=>'jrRed');?>
+
+					<span class="ui-corner-all jrStatusLabel <?php echo $approved_style[$approved];?>"><?php echo $approved_state[$approved];?></span>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+                   <button class="jr-toggle jrButton jrSmall jrIconOnly" data-id="<?php echo $media_id;?>" data-state="<?php echo $published;?>" data-columns='{"key":"media_id","state":"published"}' data-states='<?php echo json_encode($publishStates);?>'>
+
+                        <span class="<?php echo $publishStates[$published];?>"></span>
+
+                    </button>
+
+        		</div>
+
+       		<div class="jrCol1">
+
+					<?php if(!Sanitize::getInt($this->params,'listing_id')):?>
+
+						<span class="<?php echo $mainMediaStates[$main_media];?>"></span>
+
+					<?php else:?>
+
+						<?php $disabled = $main_media ? 'disabled="disabled"' : '';?>
+
+						<button class="jr-media-main jrButton jrSmall jrIconOnly" data-id="<?php echo $media_id;?>" data-listing-id="<?php echo $listing_id;?>" data-state="<?php echo $main_media;?>" data-states='<?php echo json_encode($mainMediaStates);?>' <?php echo $disabled;?>>
+
+							<span class="<?php echo $mainMediaStates[$main_media];?>"></span>
+
+						</button>
+
+					<?php endif;?>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+					<?php if($medium['User']['user_id']>0):?>
+
+	                    <button class="jr-media-filter jrButton jrSmall jrIconOnly" data-user-id="<?php echo $medium['User']['user_id'];?>" title="<?php __a("Filter by user");?>">
+
+	                    	<span class="jrIconSearch"></span>
+	                   	</a>
+
+				     <?php else:?>&nbsp;<?php endif;?>
+
+        		</div>
+
+        		<div class="jrCol4">
+
+        			<span class="jr-user" data-key="User.name">
+
+        				<a href="mailto:<?php echo $medium['User']['email'];?>"><?php echo $medium['User']['name']; ?></a>
+
+        			</span>
+
+        			<br />
+
+                    <span class="jrSizeS"><?php echo $Time->niceShort($created); ?>&nbsp;-&nbsp;<?php echo $Routes->whois($ipaddress);?></span>
+
+        		</div>
+
+        		<div class="jrCol1 jrSizeS"><?php echo (int)$views;?></div>
+
+        		<div class="jrCol1">
+
+                    <button class="jr-delete jrButton jrSmall jrIconOnly" data-lang='<?php echo $langDel;?>'>
+
+                        <span class="jrIconDelete"></span>
+
+                    </button>
+
+        		</div>
+
+        	</div>
+
+			<?php endforeach;?>
+
+        </div>
+
+	    <input type="hidden" name="data[controller]" value="admin/admin_media" />
+
+	    <input type="hidden" name="data[action]" value="browse" />
+
+        <?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+    </form>
+
+</div>

@@ -1,0 +1,62 @@
+<?php //prx($videos);?>
+<?php echo '<?xml version="1.0" encoding="UTF-8"?>'?>
+
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+     xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+    <?php
+    foreach($videos AS $video):
+
+        extract($video['Media']);
+
+        $listing = &$video['Listing'];
+
+        $user = &$video['Community'];
+
+if(!isset($media_info['image'])) {
+    prx($video['Media']);
+}
+
+        $thumbnail_loc = $media_info['image']['url'];
+
+        $uploader = $Community->screenName($video,false);
+
+        $uploader_info = cmsFramework::makeAbsUrl($user['url']);
+
+        $content_loc = $media_path.'.mp4';
+
+        $video_title = substr($title != '' ? $title . ' - ' . $listing['title'] : sprintf(__t("Video for %s",true),$listing['title']),0,100);
+
+        $video_description = substr(strip_tags($description), 0, 2048);
+
+        $publication_date = substr($created, 0,10);
+
+        $rating = $likes_total > 0 ? round(5*($likes_up/$likes_total),1) : 0.0;
+    ?>
+    <url>
+        <loc><?php echo $Routes->videoLanding($video);?></loc>
+        <video:video>
+            <video:thumbnail_loc><?php echo $thumbnail_loc;?></video:thumbnail_loc>
+            <video:title><![CDATA[<?php echo $video_title;?>]]></video:title>
+            <video:description><![CDATA[<?php echo $description;?>]]></video:description>
+            <video:content_loc><?php echo $content_loc;?></video:content_loc>
+            <video:duration><?php echo $duration;?></video:duration>
+            <video:rating><?php echo $rating;?></video:rating>
+            <video:view_count><?php echo $views;?></video:view_count>
+            <video:publication_date><?php echo $publication_date;?></video:publication_date>
+            <video:gallery_loc title="<?php $listing['title'];?>">
+            <?php echo cmsFramework::makeAbsUrl(cmsFramework::route($listing['url']));?>
+            </video:gallery_loc>
+            <video:uploader info="<?php echo $uploader_info;?>"><?php echo $uploader;?></video:uploader>
+            <?php /*<video:expiration_date>2009-11-05T19:20:30+08:00</video:expiration_date>*/?>
+            <?php /*?><video:player_loc allow_embed="yes" autoplay="ap=1">http://www.example.com/videoplayer.swf?video=123</video:player_loc><?php */?>
+            <?php /*<video:family_friendly>yes</video:family_friendly><?php */?>
+            <?php /*<video:restriction relationship="allow">IE GB US CA</video:restriction>*/?>
+            <?php /*<video:price currency="EUR">1.99</video:price>*/?>
+            <?php /*<video:requires_subscription>yes</video:requires_subscription>*/?>
+            <?php /*<video:live>no</video:live><?php */?>
+        </video:video>
+    </url>
+    <?php endforeach;?>
+
+</urlset>
+

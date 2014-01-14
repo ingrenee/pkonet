@@ -1,0 +1,246 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/
+
+$galleryThumbnailSize = Sanitize::getString($this->Config,'media_media_thumbnail_size');
+
+$galleryThumbnailMode = Sanitize::getString($this->Config,'media_media_thumbnail_mode');
+
+$videoFrameSize = explode('x',Sanitize::getString($this->Config,'media_encode_size'));
+
+$item_columns = 4;
+
+// Codecs
+$codecs = array(
+	'mp4'=>'video/mp4',
+	'webm'=>'video/webm',
+	'ogg'=>'video/ogg'
+);
+
+$countPosition = 'vertical'; // temporary setting
+
+if($listing_id > 0) {
+	$listing = reset($videos);
+}
+
+/**
+ * Get the first video
+ */
+$video = $media_id && isset($videos[$media_id]) ? $videos[$media_id] : reset($videos);
+
+$embed = $video['Media']['embed'];
+
+/**********************************************************************************
+ * 								META DATA
+ **********************************************************************************/
+echo $this->element('page_meta');
+
+// Facebook Open Graph tags
+$facebook_xfbml = Sanitize::getBool($this->Config,'facebook_opengraph') && Sanitize::getBool($this->Config,'facebook_appid');
+
+// Make sure FB is enabled and we have an FB App Id
+if($facebook_xfbml)
+{
+	$open_graph = array(
+		'fb:app_id'=>Sanitize::getString($this->Config,'facebook_appid'),
+		'fb:admins'=>Sanitize::getString($this->Config,'facebook_admins') != '' ? str_replace(' ','',$this->Config->facebook_admins) : '',
+		'og:site_name'=>cmsFramework::getConfig('sitename'),
+		'og:url'=>$Routes->mediaDetail('', array('media'=>$video),array('return_url'=>true)),
+		'og:title'=>Sanitize::getString($video['Media'],'title'),
+		'og:description'=>Sanitize::getString($video['Media'],'description'),
+		'og:type'=>'video',
+		'og:image'=>$video['Media']['media_info']['image']['url'],
+		'og:duration'=>$video['Media']['duration'],
+		// 'og:video'=>url-to-video-only,
+		// 'og:video:type'=>'application/x-shockwave-flash',
+		'og:video:width'=>$videoFrameSize[0],
+		'og:video:height'=>$videoFrameSize[1]
+	);
+
+	foreach($open_graph AS $tag=>$content) {
+		$content != '' and cmsFramework::meta($tag,$content);
+	}
+}
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<div class="jr-page jr-video-gallery jrPage jrVideoGallery">
+
+	<div class="jrVideo" itemscope itemtype="http://schema.org/VideoObject">
+
+		<h1 class="jrListingTitle"><?php echo $listing['Listing']['title'];?>: VIDEOS</h1>
+
+		<h2 class="jrVideoTitle" itemprop="name"><?php echo $video['Media']['title'];?></h2>
+
+		<meta itemprop="duration" content="<?php echo $Time->sToHMS($video['Media']['duration']);?>" />
+
+		<div style="margin-bottom: 10px;">
+
+			<?php echo $Html->sefLink('<span class="jrIconPrev"></span>'.$listing['Listing']['title'],$listing['Listing']['url'], array('class'=>'jrButton'));?>
+
+			<?php echo $Routes->mediaCreate('<span class="jrIconAddMedia"></span>' . __t("Add Media",true),current($videos),array('class'=>'jrButton','rel'=>'nofollow'));?>
+
+		</div>
+
+		<div class="jrClear"></div>
+
+		<?php
+		/*****************************
+		 *	VIDEO PLAYER
+		 ****************************/
+		?>
+
+		<div class="video-player-outer">
+
+			<?php if($embed != ''):?>
+
+				<?php $embedClass = 'MediaStorage'.Inflector::camelize($embed).'Component';?>
+
+				<div class="video-embed-box">
+					<?php echo call_user_func(array($embedClass,'displayEmbed'),$video['Media']['filename'],$videoFrameSize);?>
+				</div>
+
+			<?php else:?>
+
+				<div class="video-js-box">
+
+					<video id="jr-video-player" class="video-js vjs-default-skin" data-width="<?php echo $videoFrameSize[0];?>" data-height="<?php echo $videoFrameSize[1];?>" controls="controls" preload="auto" poster="<?php echo $video['Media']['media_info']['image']['url'];?>">
+
+						<?php if($video['Media']['embed'] == ''): foreach($video['Media']['media_info']['video'] AS $format=>$row):?>
+
+						<source src="<?php echo $row['url'];?>" type='<?php echo $codecs[$format];?>' />
+
+						<?php endforeach; endif;?>
+
+					</video>
+
+				</div>
+
+			<?php endif;?>
+
+			<div class="jrVideoInfo">
+
+				<span><?php echo $Time->nice($video['Media']['created']);?></span>
+
+				- <span><?php __t("Duration");?>: <?php echo $Time->sToHMS($video['Media']['duration']);?></span>
+
+				- <span><?php echo $Routes->myMedia(sprintf(__t("More by %s",true),$Community->screenName($video,false)),$video['User']['user_id'],array());?></span>
+
+			</div>
+
+			<?php if($video['Media']['description'] != ''): ?>
+
+				<div itemprop="description" class="jrRoundedPanel jrMediaDescription"><?php echo $video['Media']['description'];?></div>
+
+			<?php endif;?>
+
+			<?php $Media->mediaActions($video);?>
+
+		</div>
+
+		<?php $Community->socialBookmarks($listing);?>
+
+		<div class="jrClear"></div>
+
+	</div>
+
+	<div class="jrClear"></div>
+
+	<div class="jrMediaFilter">
+
+		<span class="jrMediaOrder">
+
+			<?php echo $Media->orderingListListing(Sanitize::getString($this->params,'order',Sanitize::getString($this->Config,'media_general_default_order_listing')));?>
+
+		</span>
+
+	</div>
+
+	<div class="jrClear"></div>
+
+	<?php
+	/*****************************
+	 *	VIDEO LIST
+	 ****************************/?>
+
+	<div class="jrListColumn<?php echo $item_columns;?> jrMediaList">
+
+		<div>
+
+			<?php foreach($videos AS $video):?>
+
+				<?php
+				$duration = $video['Media']['duration'];
+				$description = $video['Media']['description'];
+				?>
+
+				<div class="jrListItem jrMediaItem jrMediaTypeVideo jrShadowBox">
+
+					<div class="jrMediaThumb jr-more-info" <?php if ($duration != 0): ?> data-duration="<?php echo $Time->sToHMS($duration); ?>"<?php endif;?>>
+
+					<?php
+					$videoThumb = $Media->thumb($video['Media'],array('size'=>$galleryThumbnailSize,'mode'=>$galleryThumbnailMode),array(
+						'class'=>'videoThumb',
+						'data-path'=>Sanitize::getString($video['Media'],'media_path'),
+						'data-listing-id'=>$video['Media']['listing_id'],
+						'data-review-id'=>$video['Media']['review_id'],
+						'data-media-id'=>s2alphaID($video['Media']['media_id'],false,5,cmsFramework::getConfig('secret')),
+						'data-media-extension'=>$video['Media']['extension'],
+						'data-embed'=>$video['Media']['embed']
+					));
+
+					echo $Routes->mediaDetail($videoThumb, array('media'=>$video));
+					?>
+
+					</div>
+
+					<div class="jrPopup jrPopupLarge">
+
+						<?php if($video['Media']['title'] != ''): ?>
+							<h3 class="jrMediaTitle">
+
+								<?php echo $video['Media']['title'];?>
+
+							</h3>
+						<?php endif; ?>
+
+						<?php if($description != ''): ?>
+
+							<div class="jrMediaDescription"><?php echo $Text->truncateWords($description, 50);?></div><br>
+
+						<?php endif; ?>
+
+					</div>
+
+					<div class="jrMediaInfo">
+
+						<div class="jrMediaFrom"><?php __t("Submitted by:");?> <?php echo $Community->screenName($video);?> <br> <?php echo $Time->timeAgoInWords($video['Media']['created']);?></div>
+
+						<div class="jrMediaFrom"><?php echo $Routes->myMedia(sprintf(__t("More by %s",true),$Community->screenName($video,false)),$video['User']['user_id'],array());?></div>
+
+						<span class="jrMediaViews"><span class="jrIconGraph"></span><?php echo sprintf(__t("%s views",true),$video['Media']['views']);?></span>
+
+					</div>
+
+				</div>
+
+			<?php endforeach; ?>
+
+		</div>
+
+	</div>
+
+</div>

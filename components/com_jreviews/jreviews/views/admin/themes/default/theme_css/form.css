@@ -1,0 +1,667 @@
+/*************************************************
+Form Chooser Container - For selecting categories
+**************************************************/
+.jrFormChooser {
+  font-weight: bold;
+  clear: right;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+  position: relative;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+.jrFormChooser .jrSelect {
+  margin-right: 5px;
+  color: #444;
+  background: #fff;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #aaa #ccc #ccc #aaa;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.jrFormChooser .jrSelect:focus {
+  background: #fff;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #777 #aaa #aaa #777;
+}
+.jrAdvSearchPage .jrFormChooser {
+  margin-top: 18px;
+}
+/*************************************
+Form Container - Outer box for form
+*************************************/
+.jrForm {
+  padding: 0;
+  margin-bottom: 10px;
+  text-align: left;
+}
+.jrFormContainer {
+  border: 0;
+  background: none;
+}
+/******************************
+Fields
+*******************************/
+.jrForm .jrFieldDiv {
+  margin: 0 0 10px 0;
+  overflow: hidden;
+}
+.jrForm .jrFieldDiv:last-child {
+  margin: 0;
+}
+.jrForm .jrFieldDiv label {
+  font-size: 13px;
+  font-weight: 300;
+  display: block;
+  float: none;
+  margin: 0 0 3px 0;
+  color: #333;
+}
+.jrForm .jrFieldDiv label.error {
+  color: #ff0000;
+}
+.jrForm .jrFieldDescription {
+  margin: 5px 0 2px 0;
+  color: #777;
+  font-style: italic;
+}
+.jrForm input[type="text"],
+.jrForm input[type="email"],
+.jrForm input[type="url"],
+.jrForm input[type="number"],
+.jrForm input[type="password"],
+.jrForm textarea,
+.jrForm select {
+  float: none;
+  background: #fff;
+  padding: 4px;
+  font-size: 13px;
+  line-height: 18px;
+  vertical-align: top;
+  color: #444;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #bbb #ddd #ddd #bbb;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.jrForm input[type="text"]:focus,
+.jrForm input[type="email"]:focus,
+.jrForm input[type="url"]:focus,
+.jrForm input[type="number"]:focus,
+.jrForm input[type="password"]:focus,
+.jrForm textarea:focus,
+.jrForm select:focus {
+  outline: none;
+  border-color: #777 #aaa #aaa #777;
+}
+.jrForm input[type=radio],
+.jrForm input[type=checkbox] {
+  border: 0;
+  background: none;
+  margin: 0 2px;
+  vertical-align: baseline;
+}
+.jrForm input[type="text"],
+.jrForm input[type="email"],
+.jrForm input[type="url"],
+.jrForm input[type="number"],
+.jrForm input[type="password"],
+.jrForm select option {
+  padding: 3px 10px 3px 2px;
+  margin: 0 5px 0 0;
+}
+.jrForm .jrSelect option {
+  padding: 0 10px 0 2px;
+  margin-right: 5px;
+}
+.jrForm .jrCode,
+.jrForm textarea,
+.jrForm .jrTextArea {
+  width: 99%;
+  padding: 2px;
+  margin: 0;
+  height: 11em;
+  overflow: auto;
+}
+.jrForm .jrTitle,
+.jrForm .jrWebsite {
+  width: 50%;
+  min-width: 20em;
+}
+.jrForm .jrTitleMedium {
+  width: 25em;
+}
+.jrForm .jrText,
+.jrForm .jrEmail {
+  width: 20em;
+}
+.jrForm .jrKeywords {
+  width: 15em;
+}
+.jrForm .jrName,
+.jrForm .jrAutoSuggest {
+  width: 14em;
+}
+.jrAutoSuggest {
+  float: left!important;
+}
+.jrRelatedListingSelected {
+  margin-top: 5px;
+  float: left;
+}
+.jrForm .jrDecimal,
+.jrForm .jrInteger {
+  width: 8em;
+}
+.jrForm .jrSelect,
+.jrForm .jrSelectMultiple {
+  margin-right: 5px;
+}
+.jrForm .jrSearchOptions {
+  margin-right: 4px;
+  width: auto !important;
+}
+.jrForm span.error {
+  color: #ff0000;
+}
+.jrForm input.error,
+.jrForm select.error,
+.jrForm textarea.error {
+  background-color: #ff0000;
+  color: #fff;
+}
+.jrForm .jrDate {
+  width: 80px !important;
+}
+.jrForm .jrButtons {
+  margin: 20px 0 0 0;
+}
+.jrForm input.button,
+.jrForm input.jrButton {
+  width: auto !important;
+  margin: 0;
+}
+.jrForm .jrFieldBefore {
+  float: right;
+  margin: 0;
+  padding: 2px 4px;
+  background-color: #999;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+/* Checkbox/Radiobuttons */
+.jrForm .jrFieldDiv .jrFieldOption {
+  float: left;
+  margin: 0 20px 0 0;
+  line-height: 30px;
+  white-space: nowrap;
+  /* width: 20%; // Uncomment and adjust width for regular spacing of checkbox and radio options */
+
+}
+.jrForm .jrFieldDiv .jrFieldOption input {
+  /* set checkboxes and radiobutton widths back to natural width */
+
+  width: auto !important;
+}
+.jrForm .jrFieldDiv .jrNewFieldOption {
+  display: none;
+  float: left;
+  margin-left: 10px;
+}
+/******************************
+Field Group Container
+*******************************/
+.jrForm fieldset {
+  padding: 10px;
+  margin: 20px 0 0 0;
+  background-color: #f5f5f5;
+  position: relative;
+  border: 1px solid #ccc;
+  border-bottom-color: #bbb;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+.jrForm fieldset.jrFieldsetMargin {
+  margin: 40px 0 0 0 !important;
+}
+.jrForm legend {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: -25px;
+  font-size: 16px !important;
+  line-height: 18px;
+  font-weight: bold;
+  color: #333 !important;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+/****************************************
+Reviews Field Group
+*****************************************/
+.jrForm fieldset.jrReviewFormOption .jrFieldDiv {
+  margin: 0;
+}
+.jrForm fieldset.jrReviewForm {
+  margin: 20px 0 0 0;
+}
+.jrForm fieldset.jrReviewForm .jrReviewTitle,
+.jrForm fieldset.jrReviewForm .jrName,
+.jrForm fieldset.jrReviewForm .jrReviewer,
+.jrForm fieldset.jrReviewForm .jrEmail {
+  background: #fff !important;
+}
+.jrForm fieldset.jrReviewForm fieldset {
+  background: #fff;
+  border: 1px solid #ccc !important;
+}
+.jrForm fieldset.jrReviewForm input[type="text"],
+.jrForm fieldset.jrReviewForm input[type="email"],
+.jrForm fieldset.jrReviewForm input[type="url"],
+.jrForm fieldset.jrReviewForm input[type="number"],
+.jrForm fieldset.jrReviewForm input[type="password"],
+.jrForm fieldset.jrReviewForm textarea,
+.jrForm fieldset.jrReviewForm select {
+  background: #f5f5f5;
+}
+.jrForm fieldset.jrReviewForm input[type="text"]:focus,
+.jrForm fieldset.jrReviewForm input[type="email"]:focus,
+.jrForm fieldset.jrReviewForm input[type="url"]:focus,
+.jrForm fieldset.jrReviewForm input[type="number"]:focus,
+.jrForm fieldset.jrReviewForm input[type="password"]:focus,
+.jrForm fieldset.jrReviewForm textarea:focus,
+.jrForm fieldset.jrReviewForm select:focus {
+  background: #fff;
+}
+.jrForm label.jrReviewTitleLabel {
+  font-weight: bold;
+  font-size: 16px;
+}
+/******************************
+Field Groups in tabs
+*******************************/
+.jrForm .jrTabs {
+  margin: 20px 0 0 0;
+}
+.jrForm .jrTabs .ui-tabs-panel {
+  padding: 10px !important;
+}
+.jrForm .jrTabs fieldset {
+  margin: 0 !important;
+}
+.jrForm .jrTabs legend {
+  display: none;
+}
+/******************************
+Listing Submit Form
+*******************************/
+.jrListingCreate ul {
+  margin-left: 25px;
+}
+.jrListingTitle {
+  margin: 0 0 15px 0;
+}
+.jrListingTitleAlias {
+  margin: 0;
+}
+#introtext.jrTextArea {
+  height: 10em;
+}
+#fulltext.jrTextArea {
+  height: 25em;
+}
+/* WYSIWYG Editor */
+.jr-wysiwyg-editor {
+  width: 34em;
+}
+table.mceLayout {
+  width: 99.9% !important;
+}
+input#jr_submitListing {
+  margin: 0 10px 0 0;
+}
+/* Form messages */
+.jrForm .jrWarning,
+.jrForm .jrSuccess,
+.jrForm .jrError,
+.jrForm .jrInfo {
+  margin: 20px 0 !important;
+}
+.jrForm label [class^="jrIcon"],
+.jrForm legend [class^="jrIcon"],
+.jrForm .jrRatingCriteria .jrIconRequired {
+  margin: 0 0 0 5px;
+}
+.jrIconRequired {
+  width: 11px;
+}
+.jrIconRequired:before {
+  font-size: 11px;
+  color: #AD0909;
+}
+.jrIconInfo:before {
+  font-size: 13px;
+  color: #3F7FD5;
+}
+/****************************************
+Media Upload Form
+*****************************************/
+.jrMediaForm {
+  margin-top: 40px;
+}
+.jrMediaForm .jrTabs {
+  margin: 20px 0;
+}
+.jrMediaForm .jrMediaLimits {
+  margin: 10px 0;
+  display: block;
+}
+.jrMediaForm .jrMediaLimits ul {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.jrMediaForm .jrMediaLimits ul li {
+  float: left;
+  list-style: none;
+  background: none;
+  margin: 0 10px 5px 0;
+}
+.jrMediaForm .jrMediaLimits ul li:first-child {
+  margin: 0 10px 0 0;
+}
+.jrMediaForm .jrMediaDiv {
+  border-bottom: 1px solid #bbb;
+  padding: 15px;
+}
+.jrMediaForm .jrMediaDiv:last-child {
+  border: 0;
+  margin: 0;
+}
+.jrMediaForm .jrMediaInfo {
+  float: right;
+  text-align: right;
+}
+.jrMediaForm .jrMediaInfo span {
+  width: auto;
+  clear: both;
+  margin-top: 5px;
+}
+.jrMediaForm .jrMediaThumb {
+  text-align: center;
+}
+.jrMediaForm .jrMediaDetails input,
+.jrMediaForm .jrMediaDetails textarea {
+  width: 98%;
+  margin: 0;
+  padding: 2px;
+}
+.jrMediaForm .jrMediaDiv .jrButton:first-child {
+  margin: 0 8px 0 0;
+}
+.jrMediaForm .jrMediaMessage li {
+  margin-left: 10px;
+}
+.jrMediaForm .jrDropArea {
+  text-align: center;
+  padding: 10px;
+  margin: 10px;
+}
+.jrMediaForm label {
+  margin-bottom: 3px;
+}
+.jrMediaForm .jrMediaDelete {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+/****************************************
+Media Edit Form
+*****************************************/
+.jrThumbList label {
+  font-weight: bold;
+}
+.jrThumbList div {
+  margin: 5px 0;
+}
+.jrThumbList .jrThumbSize {
+  color: #555555;
+  font-size: 10px;
+  line-height: 1.5em;
+  margin: 3px;
+  min-width: 60px;
+  padding: 2px;
+  text-align: center;
+}
+.jrThumbList .jrIconOnly {
+  margin-top: 10px;
+}
+/******************************
+Dialog
+*******************************/
+/* prevents large font sizes on dialog forms */
+.jrDialog {
+  font-size: 13px !important;
+  padding: 3px !important;
+  margin-top: 35px;
+}
+.jrDialogContent {
+  margin-top: 3px;
+  padding: 0 !important;
+}
+.jrDialog .jrForm {
+  margin: 0;
+}
+.jrDialog .ui-widget-header {
+  border: 0 !important;
+}
+.jrDialog legend {
+  font-size: 14px !important;
+}
+.jrDialog .ui-dialog-buttonpane {
+  border: 0;
+  margin: 10px;
+  padding: 0;
+}
+.jrDialog .ui-dialog-buttonset button:first-child {
+  *margin-left: 0;
+}
+.jrDialog .ui-button-text-only .ui-button-text {
+  padding: 0;
+  display: inline;
+}
+.jrDialog .jrClaimForm fieldset,
+.jrDialog .jrInquiryForm fieldset,
+.jrDialog .jrReportForm fieldset,
+.jrDialog fieldset.jrReviewForm,
+.jrDialog fieldset:first-of-type {
+  margin: 2px 0;
+}
+/******************************
+AUTOCOMPLETE UI
+*******************************/
+.jrForm .acInstructions {
+  font-style: italic;
+  color: #696969;
+}
+.jrForm .ui-optionsDiv {
+  margin: 2px 0;
+  padding: 4px 0 0;
+}
+.jrForm .ui-optionsDiv a {
+  display: inline-block;
+  margin: 5px 5px 0 0;
+  color: #fff;
+  outline: none;
+  background: #777;
+  border: 1px solid #555;
+  font-weight: normal;
+  text-decoration: none;
+  padding: 0.2em 0.3em;
+  white-space: nowrap;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.jrForm .ui-optionsDiv a.ui-disabled:hover,
+.jrForm .ui-optionsDiv a.ui-disabled:active {
+  background: #ddd !important;
+  color: #333 !important;
+}
+.jrForm .ui-optionsDiv label {
+  float: left;
+  clear: none;
+  margin: 0 5px 2px 0;
+  font-weight: bold;
+}
+.jrForm .ui-optionsDiv .ui-disabled {
+  color: #333;
+  font-weight: normal;
+  background: none;
+  border: 1px solid #aaa;
+}
+/******************************
+VALIDATION
+*******************************/
+.jrForm #msg span,
+.jrForm #msg p {
+  color: red;
+}
+.jrForm #msg li {
+  margin-left: 15px;
+}
+.jrValidation {
+  margin-top: 5px;
+  color: red;
+  font-weight: normal;
+}
+.jrCaptchaImg {
+  float: left;
+  margin-right: 10px;
+}
+input.jrCaptchaCode {
+  height: 20px;
+  width: 55px;
+  padding: 5px !important;
+  margin: 0 !important;
+  text-align: center;
+}
+.jrCaptchaText {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  padding: 8px;
+}
+/******************************
+Ratings
+*******************************/
+ul.jrRatingsSubmission,
+ul.jrRatingsSubmission li {
+  float: left;
+  list-style: none;
+  margin: 0 !important;
+  padding: 0;
+  background: none;
+}
+ul.jrRatingsSubmission li {
+  clear: left;
+  margin: 3px 0 !important;
+  padding: 0;
+  background: none;
+}
+.jrRatingsSubmission .jrRatingCriteria,
+.jrRatingsSubmission .jrRatingStars,
+.jrRatingsSubmission .jrRatingCaption {
+  float: left;
+}
+.jrRatingsSubmission .jrRatingCriteria {
+  width: 200px;
+  text-align: right;
+}
+.jrRatingsSubmission .jrRatingStars {
+  min-width: 100px;
+  max-width: 200px;
+}
+.jrRatingsSubmission .jrRatingCaption {
+  width: 100px;
+}
+/* rating stars */
+.ui-stars-star,
+.ui-stars-cancel {
+  float: left;
+  display: block;
+  overflow: hidden;
+  text-indent: -999em;
+  cursor: pointer;
+}
+.ui-stars-cancel {
+  margin-right: 1px;
+}
+.ui-stars-cancel a,
+.ui-stars-star a {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+.ui-stars-cancel a {
+  background: url(images/rating_stars_disabled.png) no-repeat 0 0;
+}
+.ui-stars-star a {
+  background: url(images/rating_stars.png) no-repeat 0 0;
+}
+.ui-stars-cancel.ui-stars-star-on a,
+.ui-stars-cancel.ui-stars-star-hover a,
+.ui-stars-cancel-hover a,
+ul.jrRatingsSubmission.jrEditorRatings .ui-stars-cancel.ui-stars-star-on a,
+ul.jrRatingsSubmission.jrEditorRatings .ui-stars-cancel.ui-stars-star-hover a,
+ul.jrRatingsSubmission.jrEditorRatings .ui-stars-cancel-hover a {
+  background-position: 0 -16px;
+}
+.ui-stars-star a {
+  background-position: 0 0;
+}
+.ui-stars-star-on a,
+.ui-stars-star-hover a {
+  background-position: 0 -16px;
+}
+ul.jrRatingsSubmission.jrEditorRatings .ui-stars-star a {
+  background-position: 0 0;
+}
+ul.jrRatingsSubmission.jrEditorRatings .ui-stars-star-on a,
+ul.jrRatingsSubmission.jrEditorRatings .ui-stars-star-hover a {
+  background-position: 0 -32px;
+}
+.ui-stars-star-disabled,
+.ui-stars-star-disabled a,
+.ui-stars-cancel-disabled a {
+  cursor: default !important;
+}
+/* datepicker override */
+#ui-datepicker-div {
+  font-size: 13px;
+}
+/* IE7 fix */
+#jr_review0Form,
+#jr_postCommentFormOuter0,
+#jr_postCommentForm0 {
+  zoom: 1;
+}

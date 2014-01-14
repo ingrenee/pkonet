@@ -1,0 +1,133 @@
+<!-- paid orders  complete -->
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+extract($order['PaidOrder']);
+
+if($payment_type == 1 && $order_status == 'Incomplete') $order_status = 'Processing';
+
+?>
+
+<?php
+switch($order_status):
+
+    case 'Complete':?>
+
+        <h1><?php __t("Your order is complete");?></h1>
+
+        <p><?php echo sprintf(__t("%s, we have received your payment and you may now check the status of your listing in your <a href=\"%s\">account</a>.",true),$listing_info['owner_name'],$PaidRoutes->myAccount());?></p>
+        <p><?php __t("Thank you for your business!");?></p>
+
+    <?php break;
+
+    case 'Pending':?>
+
+        <h1><?php __t("Your order is pending");?></h1>
+
+        <p><?php echo sprintf(__t("%s, your order is under review at the payment processor and will be processed once payment is confirmed.",true),$listing_info['owner_name']);?></p>
+
+    <?php break;
+
+    case 'Failed':?>
+
+        <h1><?php __t("Your order failed");?></h1>
+
+        <p><?php echo sprintf(__t("%s, your order failed to pass out security validations. If you feel this is an error, please contact us with your order number.",true),$listing_info['owner_name']);?></p>
+
+    <?php break;
+
+    case 'Incomplete':?>
+
+        <h1><?php __t("Your order is incomplete");?></h1>
+
+        <?php if(Sanitize::getInt($this->params,'offline')): // Offline payment instructions ?>
+
+        <div id="offlinePayment"><?php echo Sanitize::getVar($handler['PaidHandler']['settings'],'offline');?></div>
+
+        <?php else:?>
+
+        <p><?php echo sprintf(__t("%s, your order failed to pass out security validations. If you feel this is an error, please contact us with your order number.",true),$listing_info['owner_name']);?></p>
+
+        <?php endif;?>
+
+    <?php break;
+
+    case 'Processing':?>
+
+        <h1><?php __t("Your order is being processed");?></h1>
+
+        <p><?php echo sprintf(__t("%s, you will receive an email in a few minutes when your order is finalized and your listing is updated. You can also check the account page for the status of your listings.",true),$listing_info['owner_name']);?></p>
+
+    <?php break;
+
+endswitch;
+?>
+<br />
+
+<h3><?php __t("Order details");?></h3>
+
+<?php if($this->Access->isGuest()):?>
+
+    <div class="jrWarning">
+
+        <?php __t("We've sent you an account activation email and temporary password so you can log in to your account.");?>
+
+    </div>
+
+<?php endif;?>
+
+<div class="jrSuccess">
+
+    <a class="jrButton" href="<?php echo $PaidRoutes->myAccount();?>"><?php __t("My Account");?></a>
+
+    <?php if($Paid->displayAddMediaLink($order, $listing)):?>
+
+        <?php echo $Routes->mediaCreate('<span class="jrIconAddMedia"></span>' . __t("Add Media",true),$listing,array('class'=>'jrButton'));?>
+
+    <?php endif;?>
+
+</div>
+
+<div class="jrRoundedPanel">
+
+    <span id="order_id"><?php __t("Order #");?>: </span><span id="order_id_val" style="font-size:1.2em;font-weight:bold;"><?php echo str_pad($order_id, 7, "0", STR_PAD_LEFT);?></span>
+
+    <br />
+
+    <span id="order_status"><?php __t("Order status");?>: </span><span id="order_statu_val" style="font-size:1.2em;font-weight:bold;"><?php echo $Paid->getOrderStatus($order_status);?></span>
+
+    <br />
+
+    <span id="listing_title"><?php __t("Listing");?>:</span> <span id="listing_title" style="font-size:1.2em;text-decoration:underline;"><a href="<?php echo $listing_info['listing_url'];?>"><?php echo $listing_info['listing_title'];?></a></span>
+
+    <br />
+
+    <strong><?php echo $plan_info['plan_name'];?></strong>
+    &nbsp;&#8226;&nbsp;<?php __t("Expiration");?> <span id="expiration"><?php echo $plan_info['plan_array']['duration_number'] > 0 ? $plan_info['plan_array']['duration_number'] . ' ' : '';?><?php echo $Paid->getDurationPeriods($plan_info['plan_array']['duration_period']);?></span>
+
+    <?php if($plan_info['plan_array']['description']!=''):?>
+
+    <br />
+
+    <span id="plan_description" style="font-style: italic;"><?php echo $plan_info['plan_array']['description'];?></span>
+
+    <?php endif;?>
+
+</div>
+
+<?php /**
+    * Tracking code
+    */
+    if($order_status == "Complete" && $track = Sanitize::stripWhiteSpace(Sanitize::getVar($this->Config,'paid.track_order_complete','')))
+    {
+        $track = PaidlistingsComponent::trackingReplacements($track, $order);
+        echo html_entity_decode($track,ENT_QUOTES,cmsFramework::getCharset());
+    }
+?>

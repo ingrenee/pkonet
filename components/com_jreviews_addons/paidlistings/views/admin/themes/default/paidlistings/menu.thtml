@@ -1,0 +1,87 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+?>
+
+<div class="jrGrid">
+
+    <button class="jr-main-menu jrButton"><span class="jrIconPrev"></span><?php __a("Back to JReviews");?></button>
+
+    <div class="jrCol12 jrHeader"><?php __a("PaidListings Manager");?></div>
+
+    <div class="jrCol12">
+
+        <ul>
+
+            <li>
+
+                <a class="jr-menu" href="index.php?option=com_jreviews&amp;url=admin_paidlistings" data-controller="admin_paidlistings" data-action="index"><?php __a("Summary");?></a>
+
+            </li>
+
+            <li>
+
+                <a class="jr-menu" href="javascript:void(0)" data-controller="admin_paidlistings_orders" data-action="index"><?php __a("Orders");?></a>
+
+            </li>
+
+            <li>
+
+                <a class="jr-menu" href="javascript:void(0)" data-controller="admin_paidlistings_txn" data-index="index"><?php __a("Transactions");?></a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+
+<div class="jrGrid">
+
+    <div class="jrCol12 jrHeader"><?php __a("PaidListings Setup");?></div>
+
+    <div class="jrCol12">
+
+        <ul>
+
+            <li>
+
+                <a class="jr-menu" href="javascript:void(0)" data-controller="admin_paidlistings_config" data-action="index"><?php __a("Configuration");?></a>
+
+            </li>
+
+            <li>
+
+                <a class="jr-menu" href="javascript:void(0)" data-controller="admin_paidlistings_handlers" data-action="index"><?php __a("Payment Handlers");?></a>
+
+            </li>
+
+            <li>
+
+                <a class="jr-menu" href="javascript:void(0)" data-controller="admin_paidlistings_plans" data-action="index"><?php __a("Pricing Plans");?></a>
+
+            </li>
+
+            <li>
+
+                <a class="jr-menu" href="javascript:void(0)" data-controller="admin_paidlistings_coupons" data-action="index"><?php __a("Coupons");?></a>
+
+            </li>
+
+            <li>
+
+                <a class="jr-menu" href="javascript:void(0)" data-controller="admin_paidlistings_emails" data-action="index"><?php __a("Email Notifications");?></a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>

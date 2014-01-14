@@ -1,0 +1,67 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+extract($claim['Claim']);
+?>
+
+<form id="jr-form-claim" class="jrForm" action="index.php" method="" data-id="<?php echo $claim_id;?>" data-referrer="browse">
+
+    <div class="jrFieldDiv">
+
+        <label for="user_id"><?php __a("User claiming the listing");?></label>
+
+        <?php echo $Form->text('jr-user',array('class'=>'jr-user-autocomplete','style'=>'width:15em;'));?>
+
+        <?php echo $Form->text('data[Claim][user_id]',array('value'=>$user_id,'class'=>'jr-user-id-ac','style'=>'width:5em;'));?>
+
+    </div>
+
+    <div class="jrFieldDiv">
+
+        <label for="claim_text"><?php __a("Claim");?></label>
+
+        <textarea name="data[Claim][claim_text]" style="width:98%; height:10em;"><?php echo $claim_text;?></textarea>
+
+    </div>
+
+    <div class="jrFieldDiv">
+
+        <label for="reply_text"><span class="jrIconNote"></span><?php __a("Admin Note");?></label>
+
+        <textarea name="data[Claim][claim_note]" style="width:98%; height:8em;"><?php echo $claim_note;?></textarea>
+
+    </div>
+
+    <div class="jrFieldDiv">
+
+        <label><?php __a("Action");?></label>
+
+        <?php echo $Form->select(
+                'data[Claim][approved]',
+                array('1'=>__a("Approve",true),'-1'=>__a('Reject',true)),
+                $approved
+            );
+        ?>
+    </div>
+
+    <input type="hidden" name="data[Claim][created]" value="<?php echo $created;?>" />
+
+    <input type="hidden" name="data[Claim][claim_id]" value="<?php echo $claim_id;?>" />
+
+    <input type="hidden" name="data[Claim][listing_id]" value="<?php echo $listing_id;?>" />
+
+    <input type="hidden" name="data[referrer]" value="<?php echo $referrer;?>" />
+
+    <input type="hidden" name="data[controller]" value="admin/admin_claims" />
+
+    <input type="hidden" name="data[action]" value="_save" />
+
+</form>

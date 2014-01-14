@@ -1,0 +1,21 @@
+/****************************************************
+Add your custom styles for modules and plugins here
+****************************************************/
+/*************************************
+RATING STARS
+*************************************/
+.jrRatingStarsUser,
+.jrRatingStarsEditor,
+.jrRatingStarsUser div,
+.jrRatingStarsEditor div {
+  background-image: url(images/rating_stars_dark.png);
+}
+.ui-stars-star a {
+  background-image: url(images/rating_stars_dark.png);
+}
+/************************
+GeoMaps
+*************************/
+.jrMapModule {
+  border: 1px solid #000 !important;
+}

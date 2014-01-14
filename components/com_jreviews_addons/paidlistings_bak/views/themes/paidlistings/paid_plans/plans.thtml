@@ -1,0 +1,173 @@
+<?php if(Sanitize::getVar($plans['PlanType0'],'PaymentType0') || Sanitize::getVar($plans['PlanType0'],'PaymentType2')):?>
+
+<h2><?php __t("One time payment plans");?></h2>
+
+<div class="jrNewPlans">
+
+    <?php foreach($plans['PlanType0'] AS $payment_type=>$new_plans): if($payment_type=='PaymentType1') continue;?>
+
+        <?php foreach($new_plans AS $plan):?>
+
+            <div class="jr-plan-info jrPlanInfo jrRoundedPanel <?php echo $plan['plan_default'] ? 'jrHighlightedPlan' : '';?>">
+
+                <div class="jrPlanName"><?php echo $plan['plan_name'];?></div>
+
+                <div class="jrPlanDuration"><?php echo $plan['plan_array']['duration_period'] != 'never' ? $plan['plan_array']['duration_number'] : '';?> <?php echo $plan['plan_array']['duration_period'] == 'never' ? __t("Never expires",true) : $Paid->getDurationPeriods($plan['plan_array']['duration_period']);?></div>
+
+                <div class="jrPlanPrice">
+
+                    <span class="jrCurrency"><?php echo $plan['plan_price'] != 0 ? $this->Config->{'paid.currency_symbol'} : '';?></span>
+
+                    <span class="jrPlanAmount"><?php echo $plan['plan_price'] == 0 ? __t("Free") : s2_num_format($plan['plan_price']);?></span>
+
+                </div>
+
+                <div class="jrPlanDesc"><?php echo $plan['plan_array']['description'];?></div>
+
+                <div class="jrPlanSubmit">
+
+                    <?php echo $PaidRoutes->newListing(__t("Submit",true),$category,$plan['plan_id'],array('class'=>'jrButton'));?>
+
+                </div>
+
+        </div>
+
+        <?php endforeach;?>
+
+    <?php endforeach;?>
+
+    <div class="jrClear"></div>
+
+</div>
+
+<?php endif;?>
+
+<?php if(Sanitize::getVar($plans['PlanType0'],'PaymentType1')):?>
+
+<h2><?php __t("Subscription plans");?></h2>
+
+<div class="jrNewPlans">
+
+    <?php foreach($plans['PlanType0']['PaymentType1'] AS $plan):?>
+
+    <div class="jr-plan-info jrPlanInfo jrRoundedPanel <?php echo $plan['plan_default'] ? 'jrHighlightedPlan' : '';?>">
+
+        <div class="jrPlanName"><?php echo $plan['plan_name'];?></div>
+
+        <div class="jrPlanDuration"><?php echo $plan['plan_array']['duration_period'] != 'never' ? $plan['plan_array']['duration_number'] : '';?> <?php echo $plan['plan_array']['duration_period'] == 'never' ? __t("Never expires",true) : $Paid->getDurationPeriods($plan['plan_array']['duration_period']);?></div>
+
+        <div class="jrPlanPrice">
+
+            <span class="jrCurrency"><?php echo $plan['plan_price'] != 0 ? $this->Config->{'paid.currency_symbol'} : '';?></span>
+
+            <span class="jrPlanAmount"><?php echo $plan['plan_price'] == 0 ? __t("Free") : s2_num_format($plan['plan_price']);?></span>
+
+        </div>
+
+        <div class="jrPlanDesc"><?php echo $plan['plan_array']['description'];?></div>
+
+        <div class="jrPlanSubmit">
+
+            <?php echo $PaidRoutes->newListing(__t("Submit",true),$category,$plan['plan_id'],array('class'=>'jrButton'));?>
+
+        </div>
+
+    </div>
+
+    <?php endforeach;?>
+
+    <div class="jrClear"></div>
+
+</div>
+
+<?php endif;?>
+
+<?php if(Sanitize::getVar($plans,'PlanType1')):?>
+
+    <h4><?php __t("Upgrades");?></h4>
+
+    <?php if(Sanitize::getVar($plans['PlanType1'],'PaymentType2')):?>
+
+    <h5><?php __t("Free or trial");?></h5>
+
+    <div class="jrUpgradePlans">
+
+        <ul>
+
+            <?php foreach($plans['PlanType1']['PaymentType2'] AS $plan):?>
+
+            <li>
+
+                <?php echo $plan['plan_name'];?> - <span><?php  __t("Free");?></span>
+
+                <span class="jrPlanDuration"><?php echo $plan['plan_array']['duration_period'] != 'never' ? $plan['plan_array']['duration_number'] : '';?> - <?php echo $plan['plan_array']['duration_period'] == 'never' ? __t("Never expires",true) : $Paid->getDurationPeriods($plan['plan_array']['duration_period']);?></span>
+
+                <div class="jrPlanDesc"><?php echo $plan['plan_array']['description'];?></div>
+
+            </li>
+
+            <?php endforeach;?>
+
+        </ul>
+
+    </div>
+
+    <?php endif;?>
+
+    <?php if(Sanitize::getVar($plans['PlanType1'],'PaymentType0')):?>
+
+    <h5><?php __t("One time payment");?></h5>
+
+    <div class="jrUpgradePlans">
+
+        <ul>
+
+            <?php foreach($plans['PlanType1']['PaymentType0'] AS $plan):?>
+
+            <li>
+
+                <?php echo $plan['plan_name'];?> - <span><?php echo $this->Config->{'paid.currency_symbol'};?></span> <span><?php echo $plan['plan_price'] == 0 ? __t("Free") : s2_num_format($plan['plan_price']);?></span>
+
+                <span class="jrPlanDuration"><?php echo $plan['plan_array']['duration_period'] != 'never' ? $plan['plan_array']['duration_number'] : '';?> - <?php echo $plan['plan_array']['duration_period'] == 'never' ? __t("Never expires",true) : $Paid->getDurationPeriods($plan['plan_array']['duration_period']);?></span>
+
+                <div class="jrPlanDesc"><?php echo $plan['plan_array']['description'];?></div>
+
+            </li>
+
+            <?php endforeach;?>
+
+        </ul>
+
+    </div>
+
+    <?php endif;?>
+
+    <?php if(Sanitize::getVar($plans['PlanType1'],'PaymentType1')):?>
+
+    <h5><?php __t("Subscriptions");?></h5>
+
+    <div class="jrUpgradePlans">
+
+        <ul>
+
+            <?php foreach($plans['PlanType1']['PaymentType1'] AS $plan):?>
+
+            <li>
+
+                <?php echo $plan['plan_name'];?> - <span><?php echo $this->Config->{'paid.currency_symbol'};?></span> <span><?php echo $plan['plan_price'] == 0 ? __t("Free") : s2_num_format($plan['plan_price']);?></span>
+
+                <span class="jrPlanDuration"><?php echo $plan['plan_array']['duration_period'] != 'never' ? $plan['plan_array']['duration_number'] : '';?> <?php echo $plan['plan_array']['duration_period'] == 'never' ? ' - ' . __t("Never expires",true) : $Paid->getDurationPeriods($plan['plan_array']['duration_period']);?></span>
+
+                <div class="jrPlanDesc"><?php echo $plan['plan_array']['description'];?></div>
+
+            </li>
+
+            <?php endforeach;?>
+
+        </ul>
+
+    </div>
+
+    <?php endif;?>
+
+<?php endif; // end upgrades ?>

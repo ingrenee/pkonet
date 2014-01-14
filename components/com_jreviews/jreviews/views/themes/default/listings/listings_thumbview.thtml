@@ -1,0 +1,164 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								PAGINATION HELPER
+ **********************************************************************************/
+$Paginator->paginate(array(
+		'current_page'=>$this->page,
+		'items_per_page'=>$this->limit,
+		'items_total'=>$pagination['total'],
+));
+
+// Add page meta tags - must go after Paginator helper
+echo $this->element('page_meta');
+
+// Map
+$show_map = (!isset($GeomapsCenter) /*not proximity search*/ && Sanitize::getBool($this->Config,'geomaps.enable_map_list',false))
+			||
+			(isset($GeomapsCenter) /*proximity search*/ && Sanitize::getBool($this->Config,'geomaps.enable_map_search',false))
+			;
+
+// Number of listing columns
+if ($show_map == true) {
+	$item_columns = 2;
+} else {
+	$item_columns = 4;
+}
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+ <div class="jr-page jrPage jrListings jrThumbview">
+
+ 	<?php /* PAGE HEADER */ ?>
+
+	<?php echo $this->renderControllerView('listings','listings_header');?>
+
+ 	<?php /* PAGINATION */ ?>
+
+	<?php echo $this->element('pagination',array('position'=>'top','orderList'=>$order_list));?>
+
+ 	<?php /* LISTING LIST */ ?>
+
+	<?php if(!empty($listings)):?>
+
+	<div class="jrResults">
+
+		<div <?php if($show_map == true): ?>id="jr-listing-column" class="jrListingColumn jrListColumn<?php echo $item_columns; ?>"<?php else:?> class="jrListColumn<?php echo $item_columns; ?>"<?php endif;?>>
+
+			<?php foreach($listings AS $listing):?>
+
+			<?php
+				/***************************************************************
+				 ************ SET CONFIG OVERRIDES FOR EACH LISTING ************
+				 ***************************************************************/
+
+				$featured = ($listing['Listing']['featured']) ? ' jrFeatured' : '';
+
+				$tn_size = $this->Config->getOverride('media_list_thumbnail_size',$listing['ListingType']['config']);
+
+				$tn_mode = $this->Config->getOverride('media_list_thumbnail_mode',$listing['ListingType']['config']);
+			?>
+
+			<div class="jr-listing-outer jrListItem <?php echo $featured; ?> jrShadowBox">
+
+				<?php if($this->Config->media_list_thumbnail && $mainMediaThumb = $Media->thumb(Sanitize::getVar($listing,'MainMedia'),array('listing'=> &$listing,'size'=>$tn_size,'mode'=>$tn_mode))):?>
+
+					<div class="jrListingThumbnail jr-more-info">
+
+						<?php echo $Routes->content($mainMediaThumb,$listing);?>
+
+					</div>
+
+					<?php /* SUMMARY */ ?>
+
+					<?php
+					$list_show_abstract = $listing['Listing']['summary'] != '' && $this->Config->getOverride('list_show_abstract',$listing['ListingType']['config']);
+
+					$list_abstract_trim = $this->Config->getOverride('list_abstract_trim',$listing['ListingType']['config']);
+
+					if($list_show_abstract && ($list_abstract_trim != '' || $list_abstract_trim > 0)):?>
+
+						<div class="jrListingSummary jrPopup">
+
+							<?php echo $Text->truncateWords($listing['Listing']['summary'],$list_abstract_trim);?>
+
+						</div>
+
+					<?php elseif($list_show_abstract == 1):?>
+
+						<div class="jrListingSummary jrPopup">
+
+							<?php echo $listing['Listing']['summary'];?>
+
+						</div>
+
+					<?php endif;?>
+
+				<?php endif;?>
+
+				<div class="jrContentTitle"><?php echo $Routes->content($listing['Listing']['title'],$listing,array('id'=>'jr-listing-title-'.$listing['Listing']['listing_id']))?>
+
+					<?php /* LISTING STATUS LABELS */ ?>
+
+					<?php $Jreviews->listingStatusLabels($listing);?>
+
+				</div>
+
+				<?php /* OVERALL RATINGS */ ?>
+
+				<?php echo $Rating->overallRatings($listing, 'list');?>
+
+				<?php /* LISTING ACTIONS BUTTONS */ ?>
+
+				<div class="jrListingButtons">
+
+					<?php $Widgets->listingManager($listing);?>
+
+					<?php $Widgets->compareCheckbox($listing);?>
+
+				</div>
+
+			</div>
+
+			<?php endforeach;?>
+
+		</div>
+
+		<?php if($show_map == true):?>
+
+		<div id="jr-map-column" class="jrMapColumn">
+
+			<?php echo $this->renderControllerView('geomaps','map_results'); /* MAP */?>
+
+		</div>
+
+		<?php endif;?>
+
+		<div class="jrClear"></div>
+
+	</div>
+
+	<div class="jrClear"></div>
+
+	<?php endif;?>
+
+ 	<?php /* PAGINATION */ ?>
+
+	<?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+	<div class="jrClear"></div>
+
+</div>
+
+<?php if(empty($listings)) { echo $this->renderControllerView('listings','listings_noresults'); } ?>

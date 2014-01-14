@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" version="2.5" method="upgrade">
+	<name>JReviews Fields Module</name>
+	<author>ClickFWD LLC</author>
+	<creationDate>March 2013</creationDate>
+	<copyright>Copyright (C) 2010-2013 ClickFWD LLC. All rights reserved.</copyright>
+	<license>Commercial</license>
+	<authorEmail>sales@reviewsforjoomla.com</authorEmail>
+	<authorUrl>www.reviewsforjoomla.org</authorUrl>
+	<version>2.4</version>
+	<description>MODULE_HEADER</description>
+	<files>
+		<filename module="mod_jreviews_fields">mod_jreviews_fields.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">en-GB.mod_jreviews_fields.ini</language>
+		<language tag="en-GB">en-GB.mod_jreviews_fields.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<!-- main setup -->
+				<field type="spacer" class="dataListHeader" label="MAIN SETUP" />
+				<field name="field" type="text" default="" label="Field name (i.e. jr_fieldname)" description="You should use a single select or radio button field here." />
+				<field name="tmpl_suffix" type="text" default="" label="JReviews Theme Suffix" description="Suffix to be applied to field module's theme file." />
+				<field name="itemid_options" type="list" default="search" label="Itemid selection" description="You can control the itemid used for the field option links so that modules on the current page are seen on the result list or not.">
+					<option value="none">None</option>
+					<option value="category">JReviews Category Menu</option>
+					<option value="search">Adv. Search Menu</option>
+					<option value="hardcode">Use Itemid below</option>
+				</field>
+				<field name="hc_itemid" type="text" default="" label="Itemid" />
+				<!-- display settings -->
+				<field type="spacer" class="dataListHeader" label="DISPLAY SETTINGS" />
+				<field name="display_mode" type="list" default="links_vert" label="Display mode" description="">
+					<option value="links_horiz">Links horizontal</option>
+					<option value="links_vert">Links vertical</option>
+					<option value="tags">Tags</option>
+					<option value="select">Dropdown list</option>
+				</field>
+				<field name="fieldoption_order" type="list" default="text" label="Field option ordering" description="Select the sort order for fieldoptions">
+					<option value="text">A-Z</option>
+					<option value="ordering">Ordering</option>
+				</field>
+				<field name="fieldoption_length" type="text" default="" label="Limit option text to x chars" description="" />
+				<field name="before_text" type="textarea" rows="3" cols="28" default="" label="Before text" description="This text will appear before the list. You can use html tags." />
+				<!-- basic filters -->
+				<field type="spacer" class="dataListHeader" label="BASIC FILTERS" />
+				<field name="catauto" type="radio" default="1" label="Category Auto Detect" description="If a category is found for the page, the results will be limited to that category. If it's a section list, then the results will be limited to categories for that section. If no category is found then the module will use the listing type and category settings below if they are set.">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="criteria" type="text" default="" label="Listing Type ID (single value)" description="Limit results to all categories with the same listing type." />
+				<field name="cat" type="text" default="" label="Category IDs (comma list)" description="Separate values with comma. Limit results to specified categories. No need to specify listing type id above." />
+				<field name="custom_params" type="text" default="" label="Custom URL parameters" description="Add any other custom search parameters you want. This could be custom field filters (i.e. jr_brand:canon) or custom ordering (order:jr_price)." />
+			</fieldset>
+			<fieldset name="advanced">
+				<field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
+				<field name="moduleclass_sfx" type="text" label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL" description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+				<field name="cache" type="list" default="0" label="COM_MODULES_FIELD_CACHING_LABEL" description="COM_MODULES_FIELD_CACHING_DESC">
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+				<field name="cache_time" type="text" default="900" label="COM_MODULES_FIELD_CACHE_TIME_LABEL" description="COM_MODULES_FIELD_CACHE_TIME_DESC" />
+				<field name="cachemode" type="hidden" default="static">
+					<option value="static"></option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

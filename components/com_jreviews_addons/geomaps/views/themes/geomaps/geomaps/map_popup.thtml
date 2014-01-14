@@ -1,0 +1,10 @@
+<!-- Popup map dialog used in new and edited listings -->
+<div class="ui-widget" style="margin-bottom: 5px;">
+    <div style="padding: 0pt 0.7em;" class="ui-state-highlight ui-corner-all"> 
+        <p><span style="float:left;margin-right:0.3em;" class="ui-icon ui-icon-info"></span> 
+        <strong>Drag the marker to fine-tune the geographic location on the map.</strong>
+        </p>
+    </div>
+</div>  
+
+<div id="gm_mapPopupCanvas" class="jrMapLoading" style="width: 580px; height: 300px"></div>   

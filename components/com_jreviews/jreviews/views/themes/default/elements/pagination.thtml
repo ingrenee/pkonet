@@ -1,0 +1,96 @@
+<?php
+$ajax = isset($ajax) ? $ajax : 0;
+
+// PAGINATION SETUP
+$list_page = $this->Config->list_show_orderselect &&
+				$this->name == 'categories' &&
+				in_array($this->action,array('search','category','alphaindex','list','mylistings','favorites'));
+
+$discussion_latest = $this->name == 'discussions' && $this->action == 'latest';
+
+$review_detail = $this->name == 'discussions' && $this->action == 'review';
+
+$review_list = ($this->name == 'reviews' && $this->action != 'rankings') || ($this->name == 'listings' && $this->action == 'detail');
+
+$media_list = $this->name == 'media' && in_array($this->action,array('mediaList','myMedia'));
+?>
+
+<?php if(isset($pagination) && $pagination['total']):?>
+
+	<div class="jr-pagenav jrGrid jrPagination jrPagination<?php echo ucfirst($position);?>" data-ajax="<?php echo $ajax;?>">
+
+		<div class="jrCol4 jrPagenavResults">
+
+				<?php echo sprintf(__t("%1\$s results - showing %2\$s - %3\$s",true), $pagination['total'], ($this->page-1)*$this->limit+1, min($pagination['total'],$this->page*$this->limit));?>
+
+		</div>
+
+		<div class="jrCol4 jrPagenavPages">
+
+	    	<?php if($pagination['total'] > $this->limit):?><?php echo $Paginator->display_pages();?><?php endif;?>&nbsp;
+
+		</div>
+
+		<div class="jrCol4 jrPagenavLimit">
+
+			<?php if($position == 'top'):?>
+
+			<div class="jrOrdering">
+
+				<?php /* LISTING LIST PAGES */ ?>
+
+				<?php if($list_page && isset($orderList)):?>
+
+					<?php __t("Ordering");?>&nbsp;<?php echo $Jreviews->orderingList(Sanitize::getString($this->params,'order'), $orderList)?>
+
+				<?php endif;?>
+
+				<?php /* REVIEW DISCUSSIONS */ ?>
+
+				<?php if($discussion_latest || $review_detail):?>
+
+					<?php __t("Ordering");?>&nbsp;<?php echo $Jreviews->orderingListPosts(Sanitize::getString($this->params,'order'));?>
+
+				<?php endif;?>
+
+				<?php /* REVIEW LIST */ ?>
+
+				<?php if($review_list && $this->action != 'myreviews'):?>
+
+					<?php __t("Ordering");?>&nbsp;<?php echo $Jreviews->orderingListReviews(Sanitize::getString($this->params,'order'));?>
+
+				<?php endif;?>
+
+				<?php /* MEDIA LIST */ ?>
+
+				<?php if($media_list):?>
+
+					<?php if($page['show_media_type_filter']):?>
+
+						<span class="jrMediaFilter"><?php __t("Filter");?>&nbsp;<?php echo $Media->mediaTypeFilter(Sanitize::getString($this->params,'type'));?></span>
+
+					<?php endif;?>
+
+					<?php if($page['show_order_list']):?>
+
+						<span clasS="jrMediaSort">&nbsp;<?php __t("Sort");?>&nbsp;<?php echo $Media->orderingList(Sanitize::getString($this->params,'order'),array('default'=>'newest'));?></span>
+
+					<?php endif;?>
+
+				<?php endif;?>
+
+			</div>
+
+			<?php endif;?>
+
+			<?php if($position == 'bottom'):?>
+
+				<?php echo $Paginator->display_items_per_page();?>
+
+			<?php endif;?>&nbsp;
+
+		</div>
+
+	</div>
+
+<?php endif;?>

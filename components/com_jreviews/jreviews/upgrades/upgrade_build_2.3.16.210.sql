@@ -1,0 +1,1 @@
+ALTER TABLE  `#__jreviews_config` CHANGE  `value` `value` TEXT NOT NULL;

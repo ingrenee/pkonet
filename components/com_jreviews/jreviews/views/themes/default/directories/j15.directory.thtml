@@ -1,0 +1,256 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ *                                 CONFIGURATION OPTIONS
+ **********************************************************************************/
+$columns = $this->Config->dir_columns ? $this->Config->dir_columns : 1; // Number of section columns
+$width = (int) ((100-3*$columns)/$columns);
+$format = $this->Config->dir_cat_format; // "0" comma separated | "1" bullet list
+$thumbPosition = $this->Config->dir_cat_images; // Left|Above|None - Uses section images
+$separator = ', '; // Separator used in comma list
+$showListingCount = $this->Config->dir_cat_num_entries;
+$hideEmpty = $this->Config->dir_category_hide_empty;
+$limit_categories = $this->Config->dir_category_limit; // Number of categories to show
+$more_categories = '...';
+$dir_id = Sanitize::getInt($this->params,'dir') > 0 ? Sanitize::getInt($this->params,'dir') : '';
+
+/**********************************************************************************
+ *                                 META DATA
+ **********************************************************************************/
+echo $this->element('page_meta');
+
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<?php if(empty($directories)):?>
+
+	<?php __t("The directory is empty.");?>
+
+<?php else:?>
+
+	<div class="jr-page jrPage jrDirectory">
+
+		<?php if($this->Config->rss_enable || (isset($page['title']) && $page['show_title'])):?>
+		<div class="jrPageHeader">
+			<?php if (isset($page['title']) && $page['show_title']):?>
+				<h1 class="contentheading"><?php echo $page['title'];?></h1>
+			<?php endif;?>
+			<div class="jrClear">&nbsp;</div>
+		</div>
+		<?php endif;?>
+
+
+		<?php if($this->Config->dir_show_alphaindex || $this->Config->list_show_searchbox):?>
+
+		<div class="jrListScope jrRoundedPanel">
+
+			<?php if($this->Config->dir_show_alphaindex) echo $this->element('alphaindex');?>
+
+			<?php if($this->Config->list_show_searchbox):?>
+
+			<div class="jrListSearch">
+
+				<form id="jr-form-directory-search" name="jr-form-directory-search" action="<?php echo WWW_ROOT;?>index.php?option=com_jreviews<?php echo isset($this->params['lang'])? "&amp;lang=".$this->params['lang'] : '';?>" method="post">
+
+					<?php if($this->Config->list_show_searchbox):?>
+
+					<input class="jrText" type="text" name="data[keywords]" placeholder="<?php __t("Search")?>" />
+
+					<button type="submit" class="jrButton"><span class="jrIconSearch"></span><span><?php __t("Search");?></span></button>
+
+					&nbsp;<?php echo $Routes->search(__t("Advanced search",true));?>
+
+					<?php endif;?>
+
+					<input type="hidden" name="data[simple_search]" id="simple_search" value="1" />
+
+					<input type="hidden" name="data[dir]" id="dir" value="<?php echo $dir_id;?>" />
+
+					<input type="hidden" name="data[controller]" value="search" />
+
+					<input type="hidden" name="data[action]" value="_process" />
+
+					<input type="hidden" name="data[menu_id]" value="<?php echo $search_itemid;?>" />
+
+				</form>
+
+			</div>
+
+			<?php endif;?>
+
+		</div>
+		<?php endif;?>
+
+		<div class="jrDirview jrDirviewThumb<?php echo $thumbPosition?>">
+
+		 <?php foreach ($directories AS $directory):?>
+
+			<?php if($this->Config->rss_enable):?>
+
+			<div class="jrRSS">
+
+				<ul class="jrFeeds">
+
+					<li><?php echo $Routes->listingsFeedDirectory($directory);?></li>
+
+					<li><?php echo $Routes->rssDirectory($directory);?></li>
+
+				</ul>
+
+			</div>
+
+			<?php endif;?>
+
+			<?php
+			$sectionNumber = count($directory['Sections']);
+			$section = current($directory['Sections']);
+			$sectionsPerColumn = (int)($sectionNumber/$columns);
+			$leftOverSections = $sectionNumber % $columns;
+			?>
+
+			<h3 class="contentheading"><?php echo $directory['Directory']['title']?></h3>
+
+			<div class="jrClear"></div>
+
+			<!-- BEGIN COLUMNS -->
+
+			<?php for($col=1;$col<=$columns;$col++):?>
+
+				<?php if($leftOverSections>0) {$leftOver=1;} else {$leftOver=0;} // Distributes extra sections across columns?>
+
+					<div class="jrDirectoryColumn" style="width:<?php echo $width;?>%">
+
+					<?php for($i=1; $i<=$sectionsPerColumn+$leftOver; $i++):?>
+
+						<?php if(!$hideEmpty || ($hideEmpty && $section['listing_count'] > 0)):?>
+
+						<!-- BEGIN SECTION BLOCK -->
+
+						<div class="jrDirectorySection">
+
+							<?php if ($section['image'] != ''): ?>
+
+							<div class="jrListingThumbnail"><?php echo $Routes->section($directory,$section,array('image'=>true));?></div>
+
+							<?php endif; ?>
+
+							<div class="jrContentDiv">
+
+								<div class="jrContentTitle"><?php echo $Routes->section($directory,$section);?>
+
+								<?php if($showListingCount):?>(<?php echo (int)$section['listing_count'];?>)<?php endif;?></div>
+
+								<!-- BEGIN CATEGORY BLOCK -->
+
+								<?php if($format == 0 && !empty($section['Categories'])):?>
+
+								<!-- COMMA SEPARATED LIST -->
+
+									<?php $category = current($section['Categories']);?>
+
+										<?php $categoryCount = count($section['Categories']);?>
+
+										<?php $c=0; for($j=1;$j<=$categoryCount;$j++): // Loop through currect section's categories?>
+
+										<!-- BEGIN CATEGORIES -->
+											<?php if(!$hideEmpty || ($hideEmpty && $category['listing_count'] > 0)): $c++;?>
+
+												<?php echo $Routes->category($directory,$section,$category);?><?php if($showListingCount):?>&nbsp;(<?php echo (int)$category['listing_count'];?>)<?php endif;?><?php if($category = next($section['Categories'])) {if((!$hideEmpty || ($hideEmpty && $category['listing_count'] > 0))) echo $separator;}?>
+
+											<?php else:?>
+
+												<?php $category = next($section['Categories']);?>
+
+											<?php endif;?>
+
+											<?php if($limit_categories >0 && $c == $limit_categories) {echo $more_categories;break
+
+												;}?>
+										<!-- END CATEGORIES -->
+
+										<?php endfor;?>
+
+								<?php elseif(!empty($section['Categories'])):?>
+
+								<!-- BULLET LIST -->
+
+								<ul>
+
+									<?php $c=0; foreach ($section['Categories'] AS $category):; // Loop through currect section's categories?>
+
+									<!-- BEGIN CATEGORIES -->
+
+										<?php if(!$hideEmpty || ($hideEmpty && $category['listing_count'] > 0)): $c++?>
+
+												<?php
+												// The code below can be used to display category images, but the css will need to be adjusted
+												/*
+													<li><?php echo $category['image'] != '' ? $Routes->category($directory,$section,$category,array('image'=>true)) : '';?></li>
+												*/
+												?>
+
+												<li><?php echo $Routes->category($directory,$section,$category);?> <?php if($showListingCount):?>&nbsp;(<?php echo (int)$category['listing_count'];?>)<?php endif;?></li>
+
+												<?php if($limit_categories >0 && $c == $limit_categories):?>
+													<li><?php echo $more_categories;?></li><?php break;?>
+
+												<?php endif;?>
+
+										<?php else:?>
+
+											<?php $category = next($section['Categories']);?>
+
+										<?php endif;?>
+
+									<!-- END CATEGORIES -->
+
+									<?php endforeach;?>
+
+								</ul>
+
+								<?php endif;?>
+
+								<!-- END CATEGORY BLOCK -->
+
+							</div>
+
+						</div>
+
+						<!-- END SECTION BLOCK -->
+
+						<?php endif;?>
+
+						<?php if(!$section = next($directory['Sections'])) break; // Get the next section?>
+
+					<?php endfor;?>
+
+					<?php if($leftOverSections>0) $leftOverSections--; else $leftOverSections = 0;?>
+
+				</div>
+
+			<?php endfor;?>
+
+			<!-- END COLUMNS -->
+
+			<div class="jrClear"></div>
+
+		<?php endforeach;?>
+
+		<!-- END DIRECTORY -->
+
+		</div>
+
+	</div>
+
+	<div class="jrClear"></div>
+
+<?php endif;?>

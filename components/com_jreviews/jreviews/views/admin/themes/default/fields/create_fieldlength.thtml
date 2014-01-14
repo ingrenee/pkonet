@@ -1,0 +1,38 @@
+<?php
+extract($field['Field']);
+$db = cmsFramework::getDB();
+
+$db_version = explode('.',$db->getVersion());
+
+if($db_version[0] >= 5 && $db_version[1] >= 0 && $db_version[2] >= 3) {
+	$varchar = "1 to 65535";
+}
+else {
+	$varchar = "1 to 255";
+}
+?>
+
+<p style="font-size: 1.3em;">
+	<?php echo sprintf(__a("Maximum character length currently used for this field: %s",true),'<strong>'.$max_length.'</strong>');?>
+</p>
+
+<form name="FieldLength" id="FieldLength" class="jrForm">
+
+	<div class="jrFieldDiv">
+
+		<label><?php __a("New Maximum Characters");?></label>
+
+		<input type="text" name="data[Field][maxlength]" size="6" maxlength="6" value="<?php echo max($max_length,Sanitize::getInt($field['Field'],'maxlength',255)); ?>" />
+
+		<?php echo $varchar;?>
+
+	</div>
+
+	<input type="hidden" name="data[controller]" value="admin/fields" />
+	<input type="hidden" name="data[action]" value="_changeFieldLength" />
+	<input type="hidden" name="data[task]" value="change" />
+	<input type="hidden" name="data[id]" value="<?php echo $fieldid;?>" />
+
+</form>
+
+<div class="jrError jrHidden"></div>

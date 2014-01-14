@@ -1,0 +1,140 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+$Paginator->paginate(array('current_page'=>$this->page,'items_per_page'=>$this->limit,'items_total'=>$pagination['total']));
+
+$langDel = json_encode(array('del_confirm'=>__a("Are you sure you want to delete this transaction log?",true)));
+?>
+
+<?php echo $this->element('pagination',array('position'=>'top'));?>
+
+<div class="jrDataList">
+
+    <div class="jrGrid24 jrDataListHeader">
+
+        <div class="jrCol1"><input class="jr-cb-all" value="" type="checkbox"></div>
+
+        <div class="jrCol2"><?php __a("Log ID");?></div>
+
+        <div class="jrCol2"><?php __a("Order #");?></div>
+
+        <div class="jrCol2"><?php __a("Created");?></div>
+
+        <div class="jrCol2"><?php __a("Amount");?></div>
+
+        <div class="jrCol2"><?php __a("Coupon");?></div>
+
+        <div class="jrCol4"><?php __a("Listing");?></div>
+
+        <div class="jrCol4"><?php __a("Plan");?></div>
+
+        <div class="jrCol2"><?php __a("Handler");?></div>
+
+        <div class="jrCol1"><span class="jrIconCart"></span></div>
+
+        <div class="jrCol1"><span class="jrIconPrint"></span></div>
+
+        <div class="jrCol1"><span class="jrIconDelete"></span></div>
+
+    </div>
+
+    <?php foreach($txns AS $txn): extract($txn['PaidTxnLog']);?>
+
+    <div class="jr-layout-outer jrGrid24">
+
+        <div class="jrCol1"><input type="checkbox" class="jr-row-cb" name="cid[]" value="<?php echo $log_id;?>" /></div>
+
+        <div class="jrCol2 jrSizeS">
+
+            <?php echo $log_id;?>
+
+        </div>
+
+        <div class="jrCol2 jrSizeS">
+
+            <?php echo str_pad($order_id, 7, "0", STR_PAD_LEFT);?>
+
+        </div>
+
+        <div class="jrCol2">
+
+            <?php echo $Time->niceShort($txn_date);?>
+
+        </div>
+
+        <div class="jrCol2">
+
+            <?php echo number_format($txn['PaidOrder']['order_amount'],2,__l('DECIMAL_SEPARATOR',true),__l('THOUSANDS_SEPARATOR',true));?>
+
+        </div>
+
+        <div class="jrCol2">
+
+            <?php echo $txn['PaidOrder']['coupon_name'];?>&nbsp;
+
+        </div>
+
+        <div class="jrCol4">
+
+            <?php echo $txn['PaidOrder']['listing_info']['listing_title'];?>
+
+            <br />
+
+            Owner: <?php echo $txn['PaidOrder']['listing_info']['owner_name'];?> (<?php echo $txn['PaidOrder']['user_id'];?>)
+
+        </div>
+
+        <div class="jrCol4">
+
+            <?php echo $txn['PaidOrder']['plan_info']['plan_name'];?> (<?php echo number_format($txn['PaidOrder']['plan_info']['plan_price'],2,__l('DECIMAL_SEPARATOR',true),__l('THOUSANDS_SEPARATOR',true));?>)
+
+        </div>
+
+        <div class="jrCol2">
+
+            <?php echo $txn['PaidHandler']['name'] != '' ? $txn['PaidHandler']['name'] : '---' ;?>
+
+        </div>
+
+        <div class="jrCol1">
+
+            <button class="jr-paid-txn jrButton jrIconOnly" data-txn-id="<?php echo $log_id;?>" >
+
+                <span class="jrIconCart"></span>
+
+            </button>
+
+        </div>
+
+        <div class="jrCol1">
+
+            <button class="jr-invoice jrButton jrIconOnly" data-url='<?php echo $PaidRoutes->invoice($log_id, $txn['PaidOrder']['user_id']);?>'>
+
+                <span class="jrIconPrint"></span>
+
+            </button>
+
+        </div>
+
+        <div class="jrCol1">
+
+            <button class="jr-delete jrButton jrIconOnly" data-lang='<?php echo $langDel;?>'>
+
+                <span class="jrIconDelete"></span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <?php endforeach;?>
+
+</div>
+
+<?php echo $this->element('pagination',array('position'=>'bottom'));?>

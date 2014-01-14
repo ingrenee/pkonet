@@ -1,0 +1,175 @@
+<?php
+# Initialize paginator helper
+$pagination['total'] && $Paginator->paginate(
+	array(
+		'current_page'=>$this->page,
+		'items_per_page'=>$this->limit,
+		'items_total'=>$pagination['total']
+	)
+);
+
+$langDel = json_encode(array(
+    'del_confirm'=>__a("Are you sure you want to delete the selected inquiry(ies)?",true,true)
+    ));
+?>
+
+<div class="jr-inquiries-list">
+
+	<div class="jrPageHeading"><?php __a("Inquiries");?></div>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="inquiry">
+
+		<div class="jrPageToolbar jrRoundedPanel">
+
+			<button class="jr-delete-all jrButton" data-lang='<?php echo $langDel;?>'>
+
+				<span class="jrIconDelete"></span><span><?php __a("Delete");?></span>
+
+			</button>
+
+		</div>
+
+	    <div class="jr-filters jrPageFilters jrRoundedPanelLt jrClearfix">
+
+	        <div class="jrLeft">
+
+	        	<input type="text" name="filter[title]" placeholder="<?php __a("Listing Title");?>" value="<?php echo Sanitize::getString($filters,'title');?>" />
+
+	        </div>
+
+	        <div class="jrLeft">
+
+	        	<label><?php __a("From");?>
+	        	<input type="text" class="jrDate jr-date" name="filter[date_from]" value="<?php echo Sanitize::getString($filters,'date_from');?>" />
+
+	        </div>
+
+	        <div class="jrLeft">
+
+	        	<label><?php __a("To");?>
+	        	<input type="text" class="jrDate jr-date" name="filter[date_to]" value="<?php echo Sanitize::getString($filters,'date_to');?>" />
+
+	        </div>
+
+        </div>
+
+	    <?php echo $this->element('pagination',array('position'=>'top'));?>
+
+	    <div class="jrDataList">
+
+	    	<div class="jrGrid24 jrDataListHeader">
+
+        		<div class="jrCol1"><input class="jr-cb-all" value="" type="checkbox"></div>
+
+	    		<div class="jrCol1">#</div>
+
+	    		<div class="jrCol5"><?php __a("Listing");?></div>
+
+	    		<div class="jrCol6">
+
+	    			<span class="jrIconArrowRight"></span>&nbsp;<?php __a("Sender");?>
+
+	    			&nbsp;/&nbsp;
+
+	    			<span class="jrIconArrowLeft"></span>&nbsp;<?php __a("Recepient");?>
+
+	    		</div>
+
+	    		<div class="jrCol7"><?php __a("Message");?></div>
+
+	    		<div class="jrCol1">&nbsp;</div>
+
+	    		<div class="jrCol2"><?php __a("Sent");?></div>
+
+    			<div class="jrCol1">&nbsp;</div>
+
+	    	</div>
+
+			<?php $j = 1; foreach($inquiries AS $inquiry): extract($inquiry['Inquiry']);?>
+
+	        <div class="jr-layout-outer jrGrid24" data-id="<?php echo $inquiry_id;?>">
+
+        		<div class="jrCol1"><input type="checkbox" class="jr-row-cb" name="cid[]" value="<?php echo $inquiry_id;?>" /></div>
+
+	    		<div class="jrCol1"><?php echo ($this->page-1)*$this->limit + $j++;?></div>
+
+	    		<div class="jrCol5"><span class="jr-title"><?php echo $inquiry['Listing']['title'];?></span>&nbsp;</div>
+
+	    		<div class="jrCol6">
+
+	    			<span class="jrIconArrowRight"></span>&nbsp;<?php echo $from_email;?>
+
+					<br />
+
+					<span class="jrIconArrowLeft"></span>&nbsp;<?php echo $to_email;?>&nbsp;
+
+	    		</div>
+
+	    		<div class="jrCol7">
+
+	    			<?php echo $Text->truncateWords($message,25);?>&nbsp;
+
+	    			<span class="jr-preview-html jrHidden">
+
+	    				<?php
+	    				$extra_fields = json_decode($extra_fields,true);
+	    				?>
+
+	    				<?php if(!empty($extra_fields)):?>
+
+	    					<div class="jrDataList">
+
+	    					<?php foreach($extra_fields AS $key=>$val):?>
+
+	    						<div class="jrGrid">
+
+	    							<div class="jrCol2"><strong><?php echo $key;?></strong>:</div>
+	    							<div class="jrCol10"><?php echo $val;?></div>
+
+	    						</div>
+
+
+	    					<?php endforeach;?>
+
+	    					</div>
+
+	    					<br />
+
+	    				<?php endif;?>
+
+	    				<?php echo $message;?>
+
+	    			</span>
+
+	    		</div>
+
+	    		<div class="jrCol1"><button class="jr-preview jrButton jrIconOnly"><span class="jrIconPreview"></span></button></div>
+
+	    		<div class="jrCol2"><?php echo $Time->niceShort($created);?><br /><?php echo $Routes->whois(long2ip($ipaddress));?></div>
+
+        		<div class="jrCol1">
+
+                    <button class="jr-delete jrButton jrSmall jrIconOnly" data-lang='<?php echo $langDel;?>'>
+
+                        <span class="jrIconDelete"></span><span class="jrHidden"><?php __a("Delete");?></span>
+
+                    </button>
+
+        		</div>
+
+	    	</div>
+
+	    	<?php endforeach;?>
+
+
+	    </div>
+
+	    <?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+	    <input type="hidden" name="data[controller]" value="admin/admin_inquiries" />
+
+	    <input type="hidden" name="data[action]" value="browse" />
+
+	</form>
+
+</div>

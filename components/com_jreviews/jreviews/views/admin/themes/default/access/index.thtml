@@ -1,0 +1,545 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$accessGroupsGuest = $accessGroups;
+
+$accessGroupsNoGuest = array_slice($accessGroups,1);
+?>
+
+<div class="jr-access-settings">
+
+	<div class="jrPageHeading"><?php __a("Access settings");?></div>
+
+	<form id="jr-page-form" class="jrForm" action="index.php" method="post">
+
+		<div class="jrPageToolbar jrRoundedPanel">
+
+	        <span id="jr-status" class="jrLeft jrStatus"></span>
+
+	        <button class="jr-save-settings jrButton jrGreen">
+
+	            <span class="jrIconSave"></span><?php __a("Save");?>
+
+	        </button>
+
+		</div>
+
+		<div class="jr-tabs jrTabs">
+
+		    <ul>
+		        <li><a href="#listings"><span><?php __a("Listings");?></span></a></li>
+		        <li><a href="#reviews"><span><?php __a("Reviews");?></span></a></li>
+		        <li><a href="#media"><span><?php __a("Media");?></span></a></li>
+	            <li><a href="#discussions"><span><?php __a("Discussions");?></span></a></li>
+	            <li><a href="#owner-replies"><span><?php __a("Owner Replies");?></span></a></li>
+		    </ul>
+
+		    <!-- BEGIN LISTINGS TAB -->
+		    <?php $listingsTab = array(
+				/*** NEW HEADER ***/
+				__a("Submit",true) => array(
+					 array(
+						'label'=>__a("Submit New Listing",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][addnewaccess]',
+						'options'=>$accessGroupsGuest,
+						'help'=>__a("Select all groups allowed to submit new listings.",true)
+					)
+				),
+				/*** NEW HEADER ***/
+				__a("Moderate (Hold for approval)",true) => array(
+					 array(
+						'label'=>__a("Moderate new listing",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][moderation_item]',
+						'options'=>$accessGroupsGuest,
+						'help'=>__a("Each group has to be selected separately. Admin must approve and publish new items for the selected groups.",true)
+					),
+					 array(
+						'label'=>__a("Moderate edited listing",true),
+						'type'=>'radioYesNo',
+						'name'=>'data[Access][moderation_item_edit]',
+						'help'=>__a("Listings will be unpublished and held for approval when edited via the frontend.",true)
+					)
+
+				),
+				/*** NEW HEADER ***/
+				__a("Frontend Listing Management",true) => array(
+					 array(
+						'label'=>__a("Edit listing",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][editaccess]',
+						'options'=>$accessGroupsNoGuest,
+						'help'=>__a("Registered and Author can only edit their own listings. Editor and above can edit all listings, but only see custom fields for which they have access.",true)
+					),
+					 array(
+						'label'=>__a("Publish/unpublish listing",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][listing_publish_access]',
+						'options'=>$accessGroupsNoGuest,
+						'help'=>__a("Registered and Author can only publish/unpublish their own listings.",true)
+					),
+					 array(
+						'label'=>__a("Delete listing",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][listing_delete_access]',
+						'options'=>$accessGroupsNoGuest,
+						'help'=>__a("Registered and Author can only delete their own listings.",true)
+					)
+				),
+				/*** NEW HEADER ***/
+				__a("Miscellaneous",true) => array(
+					 array(
+						'label'=>__a("WYSIWYG editor",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][addnewwysiwyg]',
+						'options'=>$accessGroupsGuest,
+						'help'=>__a("Used in standard fields summary and description.",true)
+					),
+					 array(
+						'label'=>__a("Meta data fields",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][addnewmeta]',
+						'options'=>$accessGroupsGuest,
+						'help'=>__a("Listing description and keywords meta data.",true)
+					)
+				)
+			);
+			?>
+
+			<?php $AdminSettings->displayTab('listings',$listingsTab);?>
+
+		    <!-- END LISTINGS TAB -->
+
+		    <!-- BEGIN REVIEWS TAB -->
+		    <?php $reviewsTab = array(
+				/*** NEW HEADER ***/
+				__a("Submit",true) => array(
+					 array(
+						'label'=>__a("Submit new review",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][addnewaccess_reviews]',
+						'options'=>$accessGroupsGuest,
+						'help'=>__a("Select all groups allowed to submit new reviews.",true)
+					)
+				),
+				__a("Moderate (Hold for approval)",true) => array(
+					 array(
+						'label'=>__a("Moderate new user reviews",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][moderation_reviews]',
+						'options'=>$accessGroupsGuest,
+						'help'=>__a("Each group has to be selected separately. Admin must approve and publish new items for the selected groups.",true)
+					),
+					 array(
+						'label'=>__a("Moderate new editor reviews",true),
+						'type'=>'radioYesNo',
+						'name'=>'data[Access][moderation_editor_reviews]',
+						'help'=>__a("Define JReviews editors in Configuration => Reviews tab. These are not Joomla editors.",true)
+					),
+					 array(
+						'label'=>__a("Moderate edited user reviews",true),
+						'type'=>'radioYesNo',
+						'name'=>'data[Access][moderation_review_edit]',
+						'help'=>__a("User reviews will be unpublished and held for approval when edited via the frontend.",true)
+					),
+					 array(
+						'label'=>__a("Moderate edited editor reviews",true),
+						'type'=>'radioYesNo',
+						'name'=>'data[Access][moderation_editor_review_edit]',
+						'help'=>__a("Editor reviews will be unpublished and held for approval when edited via the frontend.",true)
+					)
+				),
+				__a("Helpful Voting",true) => array(
+					 array(
+						'label'=>__a("Enable voting",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][user_vote_public]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					)
+				),
+				__a("Frontend Review Management",true) => array(
+					 array(
+						'label'=>__a("Edit review",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][editaccess_reviews]',
+						'options'=>$accessGroupsNoGuest,
+						'help'=>__a("Registered and Author can only edit their own reviews.",true)
+					)
+				)
+			);
+			?>
+
+			<?php $AdminSettings->displayTab('reviews',$reviewsTab);?>
+		    <!-- END REVIEWS TAB -->
+
+		    <!-- BEGIN MEDIA TAB -->
+		    <?php $mediaTab = array(
+				/*** NEW HEADER ***/
+				__a("Default View Access Level for LISTINGS Media",true) => array(
+					 array(
+						'text'=>__a("The media count totals will  reflect the count for media that is not accessible to the current user. This is because totals are pre-calculated for improved performance.",true),
+						'type'=>'separator'
+					),
+					 array(
+						'label'=>__a("Photos",true),
+						'type'=>'select',
+						'name'=>'data[Access][media_access_view_photo_listing]',
+						'options'=>$accessLevels,
+						'attributes'=>array('class'=>"jrSelect"),
+						'help'=>__a("Only the selected access level will be able to view/play/download media.",true)
+					),
+					 array(
+						'label'=>__a("Videos",true),
+						'type'=>'select',
+						'name'=>'data[Access][media_access_view_video_listing]',
+						'options'=>$accessLevels,
+						'attributes'=>array('class'=>"jrSelect"),
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("Attachments",true),
+						'type'=>'select',
+						'name'=>'data[Access][media_access_view_attachment_listing]',
+						'options'=>$accessLevels,
+						'attributes'=>array('class'=>"jrSelect"),
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("Audio",true),
+						'type'=>'select',
+						'name'=>'data[Access][media_access_view_audio_listing]',
+						'options'=>$accessLevels,
+						'attributes'=>array('class'=>"jrSelect"),
+						'help'=>""
+					)
+				),
+				__a("Default View Access Level for REVIEWS Media",true) => array(
+					 array(
+						'text'=>__a("The media count totals will reflect the count for media that is not accessible to the current user. This is because totals are pre-calculated for improved performance.",true),
+						'type'=>'separator'
+					),
+					 array(
+						'label'=>__a("Photos",true),
+						'type'=>'select',
+						'name'=>'data[Access][media_access_view_photo_review]',
+						'options'=>$accessLevels,
+						'attributes'=>array('class'=>"jrSelect"),
+						'help'=>__a("Only the selected access level will be able to view/play/download media.",true)
+					),
+					 array(
+						'label'=>__a("Videos",true),
+						'type'=>'select',
+						'name'=>'data[Access][media_access_view_video_review]',
+						'options'=>$accessLevels,
+						'attributes'=>array('class'=>"jrSelect"),
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("Attachments",true),
+						'type'=>'select',
+						'name'=>'data[Access][media_access_view_attachment_review]',
+						'options'=>$accessLevels,
+						'attributes'=>array('class'=>"jrSelect"),
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("Audio",true),
+						'type'=>'select',
+						'name'=>'data[Access][media_access_view_audio_review]',
+						'options'=>$accessLevels,
+						'attributes'=>array('class'=>"jrSelect"),
+						'help'=>""
+					)
+				),
+				__a("Uploads for LISTINGS",true) => array(
+					 array(
+						'label'=>__a("Allow Uploads from URL",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_upload_url_listing]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("Photos",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_submit_photo_listing]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>'&nbsp;&nbsp;&nbsp;'.__a("Registered Group",true),
+						'type'=>'radio',
+						'name'=>'data[Access][media_access_submit_photo_listing_owner]',
+						'options'=>array(1=>__a("Listing Owner",true),0=>__a("All",true)),
+						'default'=>0,
+						'attributes'=>array('div'=>false),
+						'help'=>__a("Select ALL to allow uploads by any registered user without the need to submit a review.",true)
+					),
+					 array(
+						'label'=>__a("Videos",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_submit_video_listing]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>'&nbsp;&nbsp;&nbsp;'.__a("Registered Group",true),
+						'type'=>'radio',
+						'name'=>'data[Access][media_access_submit_video_listing_owner]',
+						'options'=>array(1=>__a("Listing Owner",true),0=>__a("All",true)),
+						'default'=>0,
+						'attributes'=>array('div'=>false),
+						'help'=>__a("Select ALL to allow uploads by any registered user without the need to submit a review.",true)
+					),
+					 array(
+						'label'=>__a("Attachments",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_submit_attachment_listing]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>'&nbsp;&nbsp;&nbsp;'.__a("Registered Group",true),
+						'type'=>'radio',
+						'name'=>'data[Access][media_access_submit_attachment_listing_owner]',
+						'options'=>array(1=>__a("Listing Owner",true),0=>__a("All",true)),
+						'default'=>0,
+						'attributes'=>array('div'=>false),
+						'help'=>__a("Select ALL to allow uploads by any registered user without the need to submit a review.",true)
+					),
+					 array(
+						'label'=>__a("Audio",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_submit_audio_listing]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>'&nbsp;&nbsp;&nbsp;'.__a("Registered Group",true),
+						'type'=>'radio',
+						'name'=>'data[Access][media_access_submit_audio_listing_owner]',
+						'options'=>array(1=>__a("Listing Owner",true),0=>__a("All",true)),
+						'default'=>0,
+						'attributes'=>array('div'=>false),
+						'help'=>__a("Select ALL to allow uploads by any registered user without the need to submit a review.",true)
+					)
+				),
+				/*** NEW HEADER ***/
+				__a("Uploads for REVIEWS",true) => array(
+					 array(
+						'label'=>__a("Allow Uploads from URL",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_upload_url_review]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("Photos",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_submit_photo_review]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("Videos",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_submit_video_review]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("Attachments",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_submit_attachment_review]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("Audio",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_submit_audio_review]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					)
+				),
+				/*** NEW HEADER ***/
+				__a("Moderate (Hold for approval)",true) => array(
+					 array(
+						'label'=>__a("New Photos",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_moderate_photo]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("New Videos",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_moderate_video]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("New Attachments",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_moderate_attachment]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("New Audio",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_moderate_audio]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("Edited Media",true),
+						'type'=>'radioYesNo',
+						'name'=>'data[Access][media_access_moderate_edit]',
+						'default'=>0,
+						'help'=>__a("Media will be sent back to the moderation queue and held for approval when edited via the frontend.",true)
+					)
+				),
+				__a("Like/Dislike Voting",true) => array(
+					 array(
+						'label'=>__a("Likes for Photos",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_like_photo]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					),
+					 array(
+						'label'=>__a("Likes for Videos",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_like_video]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+					)
+					// ,array(
+					// 	'label'=>__a("Likes for Attachments",true),
+					// 	'type'=>'selectmultiple',
+					// 	'name'=>'data[Access][media_access_like_attachment]',
+					// 	'options'=>$accessGroupsGuest,
+					// 	'help'=>""
+					// ),
+					//  array(
+					// 	'label'=>__a("Likes for Audio",true),
+					// 	'type'=>'selectmultiple',
+					// 	'name'=>'data[Access][media_access_like_audio]',
+					// 	'options'=>$accessGroupsGuest,
+					// 	'help'=>""
+					// )
+				),
+				__a("Frontend Media Management",true) => array(
+					 array(
+						'label'=>__a("Edit Media",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_edit]',
+						'options'=>$accessGroupsNoGuest,
+						'help'=>__a("Registered and Author can only edit their own Media. Editor and above can edit all media.",true)
+					),
+					 array(
+						'label'=>__a("Delete Media",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_delete]',
+						'options'=>$accessGroupsNoGuest,
+						'help'=>__a("Registered and Author can only delete their own Media. Editor and above can delete all media.",true)
+					),
+					 array(
+						'label'=>__a("Publish Media",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][media_access_publish]',
+						'options'=>$accessGroupsNoGuest,
+						'help'=>__a("Registered and Author can only publish their own Media. Editor and above can delete all media.",true)
+					)
+				)
+			);
+			?>
+
+			<?php $AdminSettings->displayTab('media',$mediaTab);?>
+		    <!-- END MEDIA TAB -->
+
+	        <!-- BEGIN DISCUSSIONS TAB -->
+		    <?php $discussionsTab = array(
+				/*** NEW HEADER ***/
+				__a("Submit",true) => array(
+					 array(
+						'label'=>__a("New Comment",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][addnewaccess_posts]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+
+					)
+				),
+				__a("Moderate (Hold for approval)",true) => array(
+					 array(
+						'label'=>__a("New Comment",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][moderation_posts]',
+						'options'=>$accessGroupsGuest,
+						'help'=>""
+
+					)
+				),
+				__a("Frontend Discussion Management",true) => array(
+					 array(
+						'label'=>__a("Edit Comment",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][post_edit_access]',
+						'options'=>$accessGroupsNoGuest,
+						'help'=>__a("Registered and Author can only edit their own comments. Editor and above can edit all comments.",true)
+
+					),
+					 array(
+						'label'=>__a("Delete Comment",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][post_delete_access]',
+						'options'=>$accessGroupsNoGuest,
+						'help'=>__a("Registered and Author can only delete their own comments. Editor and above can delete all comments.",true)
+
+					)
+				)
+			);
+			?>
+
+			<?php $AdminSettings->displayTab('discussions',$discussionsTab);?>
+	        <!-- END DISCUSSIONS TAB -->
+
+	       <!-- BEGIN OWNER REPLIES TAB -->
+		    <?php $ownerrepliesTab = array(
+				/*** NEW HEADER ***/
+				__a("Owner Replies",true) => array(
+					 array(
+						'label'=>__a("Moderate listing owner replies to reviews",true),
+						'type'=>'selectmultiple',
+						'name'=>'data[Access][moderation_owner_replies]',
+						'options'=>$accessGroupsNoGuest,
+						'help'=>""
+
+					)
+				)
+			);
+			?>
+
+			<?php $AdminSettings->displayTab('owner-replies',$ownerrepliesTab);?>
+
+		</div>
+
+	    <input type="hidden" name="data[controller]" value="admin/access" />
+
+	    <input type="hidden" name="data[action]" value="_save" />
+
+	</form>
+
+</div>

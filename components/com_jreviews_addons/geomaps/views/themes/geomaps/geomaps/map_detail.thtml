@@ -1,0 +1,89 @@
+<?php
+/**********************************************************************************
+ *                                 CONFIGURATION AND SETUP
+ **********************************************************************************/
+if(!$json_data) return;
+
+/**********************************************************************************
+ *                                 JAVASCRIPT
+ **********************************************************************************/
+?>
+<script type="text/javascript">
+/* <![CDATA[ */
+jreviews.geomaps.mapData['detail'] = <?php echo $json_data;?>;
+/* ]]> */
+</script>
+
+<?php
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+?>
+<div class="jr-directions-address jrDirectionsAddress jrHidden">
+
+    <div class="jrGrid">
+
+    	<div class="jrCol9">
+
+    		<a href="javascript:void(0)" class="jr-directions-swap jrRight"><?php __t("Swap Start/End");?></a>
+
+    		<label><?php __t("Start Address");?></label>
+
+    		<input type="text" value="" name="from_point" class="jr-directions-origin"/>
+
+    	</div>
+
+        <div class="jrCol3">
+
+    		<?php echo $Form->select('jr-directions-travelmode',array(
+                    'DRIVING'=>__t("Driving",true),
+                    'BICYCLING'=>__t("Bicycling",true),
+                    'TRANSIT'=>__t("Transit",true),
+                    'WALKING'=>__t("Walking",true)
+                ),'DRIVING',array('class'=>'jr-directions-travelmode'));
+            ?>
+
+    	</div>
+
+    </div>
+
+    <div class="jrGrid">
+
+    	<div class="jrCol9">
+
+    		<label><?php __t("End");?></label>
+
+    		<input class="jr-directions-destination" type="text" value="<?php echo Sanitize::getString($listing['Geomaps'],'address');?>"  name="to_point"/>
+
+    	</div>
+
+        <div class="jrCol3">
+
+    		<button class="jr-directions-submit jrButton"><?php __t("Get Directions");?></button>
+
+    	</div>
+
+    </div>
+
+</div>
+
+<?php
+/**********************************************
+* Different layouts for different configurations
+**********************************************/
+?>
+
+<div id="jr-map-layout" class="jrMapLayoutDetail">
+
+    <div class="jr-map-canvas jrMapDetail jrMapLoading jrLeft" data-referrer="detail"></div>
+
+    <div class="jr-streetview-canvas jrStreetviewDetail jrHidden jrRight"></div>
+
+    <div class="jrClear"></div>
+
+    <div class="jr-directions-canvas jrDirections jrHidden"
+        data-locale="<?php echo $map_locale;?>"
+        data-dest-coord="<?php echo $listing['Geomaps']['lat'].','.$listing['Geomaps']['lon'];?>"
+        data-dest-addr="<?php echo Sanitize::getString($listing['Geomaps'],'address');?>"></div>
+
+</div>

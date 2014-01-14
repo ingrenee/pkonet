@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<theme>
+	<creationDate>Feb 2012</creationDate>
+	<author>ClickFWD</author>
+	<authorEmail>support@reviewsforjoomla.com</authorEmail>
+	<authorUrl>http://www.reviewsforjoomla.com</authorUrl>
+	<copyright>Copyright (C) 2006-2011 ClickFWD LLC. All rights reserved.</copyright>
+	<license>Proprietary</license>
+	<version>2.3</version>
+	<description>The Default Theme is the main theme which contains all required layouts and files. Other themes are variations of the Default Theme and they inherit unmodified files from it.</description>
+	<settings>
+		<name>default</name>
+		<title>Default Theme</title>
+		<addon>0</addon>
+		<configuration>1</configuration>
+		<fallback>1</fallback>
+	</settings>
+</theme>

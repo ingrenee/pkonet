@@ -1,0 +1,126 @@
+<?php
+/***************************************************************
+* This is a register and login widget shown in restricted pages
+****************************************************************/
+
+// Check if registrations are enabled in Joomla. Otherwise don't output anything.
+if($this->Access->isGuest()) {
+
+	$registration_enabled = Configure::read('CMS.registration');
+
+	if(!$registration_enabled) return;
+}
+
+$secure = false;
+
+$register_guests = isset($register_guests) ? $register_guests : false;
+
+// register url
+$register_url = Configure::read('Community.register_url');
+
+if(!$register_url) {
+
+	$register_url = 'index.php?option=com_users&view=registration';
+}
+
+$register_url = cmsFramework::route($register_url);
+
+# Return url
+if(!$this->ajaxRequest) {
+
+	$return_url = cmsFramework::getCurrentUrl();
+}
+else {
+
+	// For ajax loaded forms, get the return url value from the session
+	$return_url = cmsFramework::getSessionVar('return_url','jreviews');
+}
+
+$return_url_encoded = base64_encode($return_url);
+
+$add_page_div = in_array($this->name,array('media_upload')) && in_array($this->action,array('create'));
+?>
+
+<?php if($register_guests):?>
+
+	<?php if($add_page_div):?>
+
+	<div class="jr-page jrPage">
+
+	<?php endif;?>
+
+	<div class="jrFieldDiv jrInfo" style="">
+
+		<?php /* When guests submission enabled and account creation activated, remove the create account button */?>
+
+		<?php if(isset($access_submit) && $access_submit):?>
+
+			<?php echo sprintf(__t("Already have an account? %sLog in now%s",true),'<a href="javascript:void(0)" class="jr-show-login jrButton">','</a>');?>
+
+		<?php else:?>
+
+			<?php echo sprintf(__t("Already have an account? %sLog in now%s or %sCreate an account%s",true),'<a href="javascript:void(0)" class="jr-show-login jrButton">','</a>','<a class="jrButton" rel="nofollow" href="'.$register_url.'">','</a>');?>
+
+		<?php endif;?>
+
+<?php endif;?>
+
+	<?php if(!$register_guests):?>
+
+		<?php if($this->name == 'listings' && $this->action == 'create'):?>
+
+			<?php echo sprintf(__t("To submit a listing please %sregister%s or %slog in%s",true),'<a rel="nofollow" href="'.$register_url.'">','</a>','<a href="javascript:void(0)" class="jr-show-login jrLogin jrButton">','</a>');?>
+
+		<?php elseif($this->name == 'com_content' && $this->action == 'com_content_view' || $this->name == 'everywhere'):?>
+
+			<?php echo sprintf(__t("To write a review please %sregister%s or %slog in%s",true),'<a rel="nofollow" href="'.$register_url.'">','</a>','<a href="javascript:void(0)" class="jr-show-login jrLogin jrButton">','</a>');?>
+
+		<?php elseif($this->name == 'discussions' && $this->action == 'review'):?>
+
+			<?php echo sprintf(__t("To write a comment please %sregister%s or %slog in%s",true),'<a rel="nofollow" href="'.$register_url.'">','</a>','<a href="javascript:void(0)" class="jr-show-login jrLogin jrButton">','</a>');?>
+
+		<?php else:?>
+
+			<div class="jr-page jrPage">
+
+				<?php echo sprintf(__t("Access restricted to members. To continue %sregister%s or %slog in%s",true),'<a rel="nofollow" href="'.$register_url.'">','</a>','<a href="javascript:void(0)" class="jr-show-login jrLogin jrButton">','</a>');?>
+
+			</div>
+
+		<?php endif;?>
+
+	<?php endif;?>
+
+	<div id="jr-login-form" class="jr-login-form jrHidden">
+
+		<form action="<?php echo $return_url;?>" method="post" name="jrLogin" id="jr_loginForm" style="margin-top:10px;">
+
+			<input id="jr-username" type="text" name="username" placeholder="<?php __t("Username");?>" size="10" />
+
+			<input id="jr-password" type="password" name="password" placeholder="<?php __t("Password");?>" size="10" />
+
+			<input type="hidden" name="option" value="com_users" />
+
+			<input type="hidden" name="task" value="user.login" />
+
+			<input type="submit" name="Submit" class="jrButton jrLogin" value="<?php __t("Submit");?>" />
+
+			<input type="hidden" name="return" value="<?php echo $return_url_encoded; ?>" />
+
+			<?php echo cmsFramework::getTokenInput();?>
+
+		</form>
+
+	</div>
+
+<?php if($register_guests):?>
+
+	</div>
+
+	<?php if($add_page_div):?>
+
+	<div class="jr-page jrPage">
+
+	<?php endif;?>
+
+<?php endif;?>

@@ -1,0 +1,113 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**
+ * New/edit listing form
+ * create_form.thtml view is a separate file because it's used in ajax calls when selecting a category
+ * on new listing submissions
+ */
+
+$listing_id = Sanitize::getString($listing['Listing'],'listing_id');
+
+$cat_id = Sanitize::getInt($listing['Listing'],'cat_id');
+
+// Set return url to be used in ajax loaded create_form
+$return_url = cmsFramework::getCurrentUrl();
+
+cmsFramework::setSessionVar('return_url',$return_url,'jreviews');
+
+$isNew = $listing_id == 0;
+
+// Guest info & registration
+$user_session = UserAccountComponent::getUser();
+
+$show_user_info_inputs = $User->id == 0 && empty($user_session);
+
+$register_guests = $show_user_info_inputs && Sanitize::getBool($this->Config,'user_registration_guest');
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+?>
+
+<?php if(in_array(1,$submit_step)):?>
+<div class="jr-page jr-form-listing-outer jrPage jrListingCreate">
+
+	<?php if(!$listing_id):?>
+		<!-- Submission instructions -->
+		<?php echo $this->element('submission_instructions');?>
+	<?php endif;?>
+
+
+	<?php if($isNew && $register_guests):?>
+
+		<?php echo $this->element('login',array('register_guests'=>true));?>
+
+	<?php endif;?>
+
+	<form id="jr-form-listing" method="post" action="<?php echo cmsFramework::getCurrentUrl();?>" data-listing-id="<?php echo $listing_id;?>" data-cat-id="<?php echo $cat_id;?>">
+
+		<?php if(!$listing_id || $this->Access->isAdmin()):?>
+<div class="sub_panel">
+			<div class="cuadro_redondeado jr-form-categories-outer jrFormChooser">
+<div class="label-subpanel">
+				<?php __t("Category");?>&nbsp;
+</div>
+				<span class="jr-form-categories jrCategories">
+
+					<?php echo $this->element('category_list',compact('listing_id','cat_id'));?>
+
+				</span>
+
+			</div>
+</div>
+		<?php else:?>
+
+			<input id="catid" class="jrSelect" name="data[Listing][catid][]" type="hidden" value="<?php echo $cat_id;?>" />
+
+		<?php endif;?>
+
+		<div class="jrForm jrFormContainer">
+
+			<div class="jr-form-listing-fields jrHidden"><!-- div required to show/hide form on category selection -->
+			<?php if(in_array(2,$submit_step)):?><?php echo $this->renderControllerView('listings','create_form');?><?php endif;?>
+			</div>
+
+			<?php if(isset($this->params['lang'])):?>
+			<input type="hidden" name="lang" value="<?php echo $this->params['lang'];?>" />
+			<?php endif;?>
+
+			<input type="hidden" name="option" value="com_jreviews" />
+
+			<input type="hidden" name="data[controller]" value="listings" />
+
+			<input type="hidden" name="data[action]" value="_save" />
+
+			<input type="hidden" id="parent_category" name="data[parent_category]" value="" />
+
+			<input type="hidden" id="category" name="data[category]" value="<?php echo $listing_id ? $listing['Category']['title'] : '';?>" />
+
+			<input type="hidden" id="listing_id" name="data[Listing][id]" value="<?php echo $listing_id;?>" />
+
+			<input type="hidden" name="format" value="raw" />
+
+			<input type="hidden" name="Itemid" value="<?php echo $public_menu_id;?>" />
+
+			<?php echo cmsFramework::getTokenInput();?>
+
+			<?php echo $listing_id ? cmsFramework::formIntegrityToken($listing['Listing'],$formTokenKeys) : '';?>
+
+		</div>
+
+	</form>
+
+</div>
+
+<?php endif;?>

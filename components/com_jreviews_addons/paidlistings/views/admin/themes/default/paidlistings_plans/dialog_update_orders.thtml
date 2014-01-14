@@ -1,0 +1,29 @@
+<div class="jrGrid">
+
+  <div class="jrCol4 jrCenter">
+
+    <div class="jrRoundedPanelLt">
+
+      <?php __a("Remaining Orders");?>
+
+      <br />
+
+      <span id="jr-order-count" style="font-size: 40px;"><?php echo $total;?></span>
+
+    </div>
+
+  </div>
+
+  <div class="jrCol8">
+
+    <div class="jrRoundedPanelLt">
+
+        <p><?php __a("Click 'Start' to update field, media and featured status for orders placed before the last plan update.");?></p>
+
+        <div class="jrWarning"><span class="jrIconInfo"></span><?php __a("Updating past orders will have the following effect for removed features. If you removed fields these will be hidden for updated orders. If you disabled the featured status existing listings will have the featured status removed. If you reduced the number of media, media that exceeds the limit for each listing will be unpublished.");?></div>
+
+    </div>
+
+  </div>
+
+</div>

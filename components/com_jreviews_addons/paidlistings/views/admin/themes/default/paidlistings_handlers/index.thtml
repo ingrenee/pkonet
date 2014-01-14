@@ -1,0 +1,105 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+$handler_states = array(0=>'jrIconNo',1=>'jrIconYes',2=>'jrIconManage');
+
+$langDel = json_encode(array('del_confirm'=>__a("Are you sure you want to delete this payment handler?",true)));
+?>
+
+<div class="jr-paid-handlers-list">
+
+    <div class="jrPageHeading"><?php __a("Payment Handlers");?></div>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="paidlistings_handlers">
+
+        <div class="jrPageToolbar jrRoundedPanel">
+
+            <button class="jr-edit jrButton jrGreen">
+
+                <span class="jrIconNew"></span><?php __a("New");?>
+
+            </button>
+
+        </div>
+
+        <div id="jr-fields" class="jr-sortable jrDataList">
+
+            <div class="jrGrid24 jrDataListHeader">
+
+                <div class="jrCol1"><span class="jrIconSort"></span></div>
+
+                <div class="jrCol1">ID</div>
+
+                <div class="jrCol20"><?php __a("Handler");?></div>
+
+                <div class="jrCol1"><?php __a("State");?></div>
+
+                <div class="jrCol1"><span class="jrIconDelete"></span></div>
+
+            </div>
+
+            <?php foreach($handlers AS $handler): extract($handler['PaidHandler']);?>
+
+            <div class="jr-layout-outer jrGrid24 jrSortable" data-id="<?php echo $handler_id;?>"
+
+                data-group="handlers" data-order="<?php echo $ordering;?>">
+
+                <div class="jrCol1">
+
+                    <div class="jr-sort-handle jrSortHandle"><span class="jrIconSort"></span>&nbsp;</div>
+
+                </div>
+
+                <div class="jrCol1">
+
+                    <input type="checkbox" class="jr-row-cb jrHidden" name="cid[]" value="<?php echo $handler_id;?>" />
+                    <?php echo $handler_id;?>
+
+                </div>
+
+                <div class="jrCol20">
+
+                    <a href="javascript:void(0)" class="jr-edit" data-id="<?php echo $handler_id;?>">
+
+                        <span data-key="PaidHandler.name"><?php echo $name;?></span>
+
+                    </a>
+
+                </div>
+
+                <div class="jrCol1">
+
+                    <span data-key="PaidHandler.state"
+                            data-key-type="class"
+                            data-states='<?php echo json_encode($handler_states);?>'
+                            class="<?php echo $handler_states[$state];?>"></span>
+
+                    <span class=""></span>
+
+                </div>
+
+                <div class="jrCol1">
+
+                    <button class="jr-delete jrButton jrIconOnly" data-object-type="paidlistings_handlers"
+                        data-id="<?php echo $handler_id;?>" data-lang='<?php echo $langDel;?>'>
+
+                        <span class="jrIconDelete"></span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <?php endforeach;?>
+
+        </form>
+
+    </div>
+
+</div>

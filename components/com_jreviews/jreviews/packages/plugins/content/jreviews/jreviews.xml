@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="content" method="upgrade">
+	<name>JReviews</name>
+	<creationDate>January 2012</creationDate>
+	<author>ClickFWD LLC</author>
+	<copyright>ClickFWD LLC</copyright>
+	<license>Commercial</license>
+	<authorEmail>support@reviewsforjoomla.com</authorEmail>
+	<authorUrl>www.reviewsforjoomla.com</authorUrl>
+	<description>Reviews extension plugin for Joomla</description>
+	<version>2.3.16</version>
+	<files>
+		<filename plugin="jreviews">jreviews.php</filename>
+	</files>
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field name="frontpage" type="radio" default="0" label="Disable in Joomla Featured page" description="Will not run jReviews on content items on the frontpage and will not load any libraries or css files.">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </field>
+                <field name="blog" type="radio" default="0" label="Disable in core Category Blog Layout page" description="Will not run jReviews on content items on the Joomla blogcategory/blogsection content lists and will not load any libraries or css files.">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+	<params>
+		<param name="frontpage" type="radio" default="0" label="Disable in frontpage" description="Will not run jReviews on content items on the frontpage and will not load any libraries or css files.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="blog" type="radio" default="0" label="Disable in core blogcategory/blogsection lists" description="Will not run jReviews on content items on the Joomla blogcategory/blogsection content lists and will not load any libraries or css files.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+	</params>
+</extension>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jomsocial>
+     <component>com_jreviews</component>
+     <rules>
+          <rule>
+              <name>Submit JReviews Listing</name>
+              <description>Give points when registered user adds a listing.</description>
+              <action_string>jreviews.listing.add</action_string>
+              <publish>true</publish>
+              <points>5</points>
+              <access_level>1</access_level>       
+          </rule>
+          <rule>
+              <name>Delete JReviews Listing</name>
+              <description>Deduct points when a listing is deleted.</description>
+              <action_string>jreviews.listing.delete</action_string>
+              <publish>true</publish>
+              <points>-5</points>
+              <access_level>1</access_level>       
+          </rule>          
+          <rule>
+              <name>Submit JReviews Review</name>
+              <description>Give points when registered user adds a review.</description>
+              <action_string>jreviews.review.add</action_string>
+              <publish>true</publish>
+              <points>5</points>
+              <access_level>1</access_level>       
+          </rule>
+          <rule>
+              <name>Delete JReviews Review</name>
+              <description>Deduct points when a review is deleted.</description>
+              <action_string>jreviews.review.delete</action_string>
+              <publish>true</publish>
+              <points>-5</points>
+              <access_level>1</access_level>       
+          </rule>
+          <rule>
+              <name>Submit JReviews Review Comment</name>
+              <description>Give points when registered user adds a comment.</description>
+              <action_string>jreviews.discussion.add</action_string>
+              <publish>true</publish>
+              <points>1</points>
+              <access_level>1</access_level>       
+          </rule>
+          <rule>
+              <name>Delete JReviews Review Comment</name>
+              <description>Deduct points when a comment is deleted.</description>
+              <action_string>jreviews.discussion.delete</action_string>
+              <publish>true</publish>
+              <points>-1</points>
+              <access_level>1</access_level>       
+          </rule>          
+     </rules>
+</jomsocial>

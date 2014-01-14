@@ -1,0 +1,49 @@
+<form id="jr-form-listing" action="index.php" method="post">
+
+    <div class="jrInfo"><?php __a("Drag the marker to fine-tune the geographic location on the map.");?></div>
+
+    <div class="jrGrid">
+
+        <div class="jrCol6">
+
+            <div class="jrForm">
+
+                <?php echo $CustomFields->makeFormFields($listing_fields,'listing',null,__t("Select",true));?>&nbsp;
+
+            </div>
+
+        </div>
+
+        <div class="jrCol6">
+
+            <div class="jr-geomaps-map jrMapGeocodeCanvas jrMapLoading"></div>
+
+        </div>
+
+    </div>
+
+    <?php if(isset($listing['Section'])):?>
+
+    <input type="hidden" id="section" name="data[section]" value="<?php echo $listing['Section']['title'];?>" />
+
+    <?php endif;?>
+
+    <?php if(isset($listing['ParentCategory'])):?>
+
+    <input type="hidden" id="parent_category" name="data[parent_category]" value="<?php echo $listing['ParentCategory']['title'];?>" />
+
+    <?php endif;?>
+
+    <input type="hidden" id="category" name="data[category]" value="<?php echo $listing['Category']['title'];?>" />
+
+    <input name="data[Criteria][id]" type="hidden" value="<?php echo $listing['Criteria']['criteria_id'];?>" />
+
+    <input name="data[Listing][id]" id="listing_id" type="hidden" value="<?php echo $listing['Listing']['listing_id'];?>" />
+
+    <input name="data[Field][Listing][contentid]" type="hidden" value="<?php echo $listing['Listing']['listing_id'];?>" />
+
+    <input name="data[controller]" type="hidden" value="admin/admin_geomaps" />
+
+    <input name="data[action]" type="hidden" value="_saveGeoData" />
+
+</form>

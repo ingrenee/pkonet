@@ -1,0 +1,288 @@
+<?php
+
+$review_id = Sanitize::getInt($review['Review'],'review_id');
+
+$isNew = !$review_id;
+
+$register_guests = isset($register_guests) ? $register_guests : false;
+
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<div class="jr-form-review-outer jrFormContainer <?php if((int)$review['Review']['review_id']==0):?>jrHidden<?php endif;?>">
+
+	<?php if($isNew && $register_guests):?>
+
+		<?php echo $this->element('login',array('register_guests'=>true,'access_submit'=>true));?>
+
+	<?php endif;?>
+
+	<form id="jr-form-review-<?php echo (int)$review['Review']['review_id'];?>" action="<?php echo cmsFramework::getCurrentUrl();?>" method="post" class="jrForm" data-review-id="<?php echo $review_id;?>">
+
+		<fieldset class="jrReviewForm">
+
+			<?php if($this->Access->isGuest() && ($register_guests || in_array($this->Config->reviewform_name,array('required','optional')))):?>
+
+				<div class="jrFieldDiv jrLeft">
+
+					<label class="jrLabel">
+
+						<?php __t("Name");?><?php if($this->Config->reviewform_name == 'required'):?><span class="jrIconRequired"></span><?php endif;?>
+
+					</label>
+
+					<input type="text" class="jr-user-name jrName" name="data[Review][name]" maxlength="50" />
+
+				</div>
+
+			<?php endif;?>
+
+			<?php if($register_guests):?>
+
+				<div class="jrFieldDiv jrLeft">
+
+					<label class="jrLabel">
+
+						<?php __t("Username");?><span class="jrIconInfo jr-more-info"></span>
+
+						<div class="jrPopup jrHidden"><?php __t("Create an account to be able to manage all of your submissions. After you submit the form we'll email you an activation link with a temporary password.");?></div>
+
+					</label>
+
+					<input type="text" class="jr-user-username jrName" name="data[username]" maxlength="25" />
+
+				</div>
+
+			<?php endif;?>
+
+			<div class="jrClear"></div>
+
+			<?php if($this->Access->isGuest() && ($register_guests || in_array($this->Config->reviewform_email,array('required','optional')))):?>
+
+				<div class="jrFieldDiv">
+
+					<label class="jrLabel">
+
+						<?php __t("Email");?><?php if($this->Config->reviewform_email == 'required'):?><span class="jrIconRequired"></span><?php endif;?>
+
+					</label>
+
+					<input type="email" class="jr-user-email jrEmail" name="data[Review][email]" maxlength="100" />
+
+				</div>
+
+			<?php endif;?>
+
+			<?php if(!$isNew && $this->Access->isManager()): // Allows managers and above to change the reviewer when editing a review ?>
+
+				<div class="jrFieldDiv">
+
+					<label for="jr-reviewer-<?php echo $review_id;?>">
+
+						<?php __t("Reviewer");?><span class="jrIconRequired"></span>
+
+					</label>
+
+					<?php echo $Form->text('jr-reviewer',array(
+
+						'id'=>'jr-reviewer-'.$review_id,
+						'value'=>$review['User']['name'],
+						'class'=>'jr-user-autocomplete jrText jrReviewer',
+						'size'=>50,
+						'maxlength'=>100
+
+					));?> &nbsp;<?php __t("Start typing for suggestions");?>
+
+					<input type="hidden" name="data[Review][userid]" class="jr-user-id-ac" value="<?php echo $review['User']['user_id'];?>" />
+
+					<input type="hidden" name="data[Review][name]" class="jr-user-name-ac" value="<?php echo $review['User']['name'];?>" />
+
+					<input type="hidden" name="data[Review][username]" class="jr-user-username-ac" value="<?php echo $review['User']['username'];?>" />
+
+					<input type="hidden" name="data[Review][email]" class="jr-user-email-ac" value="<?php echo $review['User']['email'];?>" />
+
+				</div>
+
+			<?php endif;?>
+
+			<?php if(in_array($this->Config->reviewform_title,array('required','optional'))):?>
+
+			<div class="jrFieldDiv">
+
+				<label class="jrReviewTitleLabel"><?php (Sanitize::getInt($review['Criteria'],'state')!=2) ? __t("Review Title") : __t("Title");?><?php if($this->Config->reviewform_title=='required'):?><span class="jrIconRequired"></span><?php endif;?></label>
+				<?php echo $Form->text('data[Review][title]',array(
+						'id'=>'title',
+						'value'=>$review['Review']['title'],
+						'class'=>'jrReviewTitle',
+						'size'=>50,
+						'maxlength'=>100
+				));?>
+
+			</div>
+
+			<?php endif;?>
+
+			<?php if ( $review['Criteria']['state'] == 1 ):?>
+
+			<fieldset class="jrFieldsetMargin">
+
+				<legend><?php __t("Ratings (the higher the better)");?></legend>
+
+				<ul class="jrRatingsSubmission<?php echo ($this->Access->isJreviewsEditor($User->id)) ? ' jrEditorRatings' : ''?>">
+
+					<?php foreach($review['Criteria']['criteria'] AS $key=>$value):?>
+
+						<li>
+
+							<div class="jrRatingCriteria">
+
+								<?php echo $value;?><?php if($review['Criteria']['required'][$key]):?><span class="jrIconRequired"></span><?php endif;?>
+								<?php if(isset($review['Criteria']['tooltips'][$key]) && trim($review['Criteria']['tooltips'][$key]) != ''):?>
+									<span class="jrIconInfo jr-more-info"></span><div class="jrPopup"><?php echo $review['Criteria']['tooltips'][$key];?></div>
+								<?php endif;?>
+
+							</div>
+
+							<div class="jrRatingStars">
+
+								 <div class="jr-rating-stars" data-selector="<?php echo $this->Config->rating_selector;?>" data-inc="<?php echo $this->Config->rating_increment;?>">
+
+									<?php echo $Form->select(
+										'data[Rating][ratings][]',
+										$Rating->options($this->Config->rating_scale,__t("Rate it",true), $review['Criteria']['required'][$key]),
+										($review['Review']['review_id'] > 0
+											?
+												Sanitize::getVar($review['Rating']['ratings'],$key)
+											:
+												($this->Config->rating_default_na && !$review['Criteria']['required'][$key] ? 'na' : '')
+										)
+									);?>
+								</div>
+
+							</div>
+
+							<div class="jrRatingCaption"></div>
+
+						</li>
+
+					<?php endforeach;?>
+
+				</ul>
+
+			</fieldset>
+
+			<?php endif;?>
+
+			<?php echo $CustomFields->makeFormFields($review_fields,'review',null,__t("Select",true));?>
+
+			<?php if(in_array($this->Config->reviewform_comment,array('required','optional'))):?>
+
+			<fieldset class="reviewFormComments jrFieldsetMargin">
+
+				<legend><?php __t("Comments");?><?php if($this->Config->reviewform_comment=='required'):?><span class="jrIconRequired"></span><?php endif;?></legend>
+
+				<div class="jrFieldDiv">
+					<?php echo $Form->textarea('data[Review][comments]',array(
+							'value'=>$review['Review']['comments'],
+							'rows'=>5,
+							'cols'=>45,
+							'class'=>'jrTextArea'
+					));?>
+				</div>
+
+			</fieldset>
+
+			<?php endif;?>
+
+			<?php if($isNew):?>
+
+				<div class="jr-validation jrError jrHidden"></div>
+
+				<?php if($this->Access->showCaptcha()):?>
+
+				<div class="jrWarning jrCaptcha">
+
+					<div class="jr-captcha jrCaptchaImg"></div>
+
+					<div>
+						<input type="text" class="jr-captcha-code jrCaptchaCode" name="data[Captcha][code]" size="5" maxlength="5" />
+						<span class="jrCaptchaText"><?php __t("Please enter the security code.");?></span>
+					</div>
+
+				</div>
+
+				<?php endif;?>
+
+				<?php if($this->Access->canAddAnyReviewMedia($User->id,$listing['ListingType']['config'])):?>
+
+					<div class="jrInfo">
+
+						<?php
+
+							if (Sanitize::getInt($listing['Criteria'],'state') != 2) {
+
+								__t("You will be able to upload media right after you submit your review.");
+
+							} else {
+
+								__t("You will be able to upload media right after you submit your comment.");
+							}
+
+						?>
+
+					</div>
+
+				<?php endif;?>
+
+				<div class="jr-buttons jrButtons" class="jrFieldDiv">
+
+					<button class="jr-review-submit jrButton"><?php __t("Submit");?></button>
+
+					<button class="jr-review-cancel jrButton"><?php __t("Cancel");?></button>
+
+				</div>
+
+			<?php endif;?>
+
+			<input type="hidden" name="data[Review][id]" id="review_id" value="<?php echo $review['Review']['review_id'];?>" />
+
+			<input type="hidden" name="data[Review][pid]" id="pid" value="<?php echo isset($listing['Listing']['listing_id']) ? $listing['Listing']['listing_id'] : $review['Review']['listing_id'];?>" />
+
+			<input type="hidden" name="data[Review][mode]" id="mode" value="<?php echo $review['Review']['extension'];?>" />
+
+			<input type="hidden" name="data[page]" id="extension_page" value="<?php echo $review['Review']['extension'];?>" />
+
+			<input type="hidden" name="data[Criteria][id]" id="criteriaid" value="<?php echo $review['Criteria']['criteria_id'];?>" />
+
+			<input type="hidden" name="data[Criteria][state]" id="criteriastate" value="<?php echo $review['Criteria']['state'];?>" />
+
+			<input type="hidden" name="data[view]" id="view" value="<?php echo $this->view;?>" />
+
+			<input type="hidden" name="option" value="com_jreviews" />
+
+			<input type="hidden" name="data[controller]" value="reviews" />
+
+			<input type="hidden" name="data[action]" value="_save" />
+
+			<input type="hidden" name="data[tmpl_suffix]" value="<?php echo $this->viewSuffix;?>" />
+
+			<input type="hidden" name="format" value="raw" />
+
+			<input type="hidden" name="Itemid" value="" />
+
+			<?php echo cmsFramework::getTokenInput();?>
+
+			<?php echo cmsFramework::formIntegrityToken($review['Review'],$formTokenKeys);?>
+
+		</fieldset>
+
+		<?php if(!$isNew):?>
+
+		<div class="jr-validation jrError jrHidden"></div>
+
+		<?php endif;?>
+
+	</form>
+
+</div>

@@ -1,0 +1,404 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$preSel_plan_id = Sanitize::getInt($order['PaidOrder'],'plan_id',$sel_plan_id);
+
+$tax_rate = Sanitize::getFloat($this->Config,'paid.tax',0)/100;
+
+if($tos = Sanitize::getInt($this->Config,'paid.tos',0)) {
+    $tos_url = $Routes->article($tos_article,array('return_url'=>true));
+}
+?>
+
+<?php if(!isset($plans['PaidPlan']) || (!Sanitize::getVar($plans['PaidPlan'],'PlanType0') && !Sanitize::getVar($plans['PaidPlan'],'PlanType1'))): ?>
+
+	<?php __t("There are no plans available for this listing."); return;?>
+
+<?php endif;?>
+
+<?php
+$plans = $plans['PaidPlan'];
+
+/**
+* Tracking code
+*/
+if($track = Sanitize::stripWhiteSpace(Sanitize::getVar($this->Config,'paid.track_order_form'))) {
+    echo html_entity_decode($track,ENT_QUOTES,cmsFramework::getCharset());
+}
+?>
+<!-- paid orders  form -->
+<form name="jr-paid-order-form" class="jr-paid-order-form jrPaidOrderForm jrForm" type="post" action="index.php" data-tos="<?php echo $tos;?>">
+
+	<fieldset>
+
+	    <?php if($renewal):?>
+
+	        <div class="jrWarning">
+
+	            <span class="jrIconInfo"></span>
+
+	            <?php __t("Renewal orders become active only when the current plan order expires.");?>
+
+	        </div>
+
+	    <?php endif;?>
+
+	    <div id="jr-paid-order-step1" class="jrPaidStep">
+
+			<h2><?php __t("Step 1: Select a Plan");?></h2>
+
+			<?php if(!empty($plans['PlanType'.$plan_type])): // New listing, Upgrade ?>
+
+				<?php foreach($plans['PlanType'.$plan_type] AS $payment_type=>$plans): // New listing, Upgrade ?>
+
+				<div class="jrPaidHandlerList jrDataList">
+
+					<div class="jrGrid jrDataListHeader">
+
+						<div class="jrCol12"><?php echo $Paid->getPaymentTypes(str_replace('PaymentType','',$payment_type));?></div>
+
+					</div>
+
+					<?php foreach($plans AS $plan): extract($plan); // Free / Subscription / Single Payment ?>
+
+						<?php $disabled = $payment_type == 2 && $plan_array['trial_limit'] > 0 && $plan_array['trial_limit']-$used_trials === 0 ? true: false;?>
+
+						<div class="jrPaidHandler jrGrid">
+
+							<div class="jrCol1">
+
+								<input id="jr-plan<?php echo $plan_id;?>" name="data[PaidOrder][plan_id]" type="radio"
+										value="<?php echo $plan_id;?>"
+										data-plan="<?php echo htmlspecialchars($plan_name);?>"
+										data-price="<?php echo $plan_price;?>"
+										data-payment-type="<?php echo $payment_type;?>"
+										data-tax-rate="<?php echo $tax_rate;?>"
+										<?php if($preSel_plan_id==$plan_id || (!$preSel_plan_id && $plan_default)):?>checked="checked"<?php endif;?>
+										<?php if($disabled):?>disabled="disabled"<?php endif;?> />
+							</div>
+
+							<div class="jrCol8">
+
+								<label for="jr-plan<?php echo $plan_id;?>"><strong><?php echo $plan_name;?></strong></label>
+
+								<?php if($payment_type == 2 && Sanitize::getInt($plan_array,'trial_limit') > 0):?>
+
+								<p style="font-style:italic;"><?php echo sprintf(__t("You have %s free submission(s) left out of %s",true),$plan_array['trial_limit']-$used_trials,$plan_array['trial_limit']);?></p>
+
+								<?php endif;?>
+
+								<p><?php echo $plan_array['description'];?></p>
+
+							</div>
+
+							<div class="jrCol3 jrRightAlign">
+
+								<span><?php echo Sanitize::getString($this->Config,'paid.currency_symbol');?><?php echo s2_num_format($plan_price);?></span>
+
+							</div>
+
+						</div>
+
+					<?php endforeach;?>
+
+				</div>
+
+				<?php endforeach;?>
+
+			<?php endif;?>
+
+	        <div class="jr-validation jrError jrHidden">
+
+	        	<?php __t("Please select a plan to continue.");?>
+
+	        </div>
+
+	    </div>
+
+	    <div id="jr-paid-order-step2" class="jrPaidStep jrHidden">
+
+			<h2><?php __t("Step 2: Select Payment Method");?></h2>
+
+			<div class="jrHeading"><span id="jr-paid-plan-selected"></span></div>
+
+			<?php if(!empty($handlers_single)):?>
+
+				<div id="jr-single-payment" class="jrDataList">
+
+					<?php foreach($handlers_single AS $handler):?>
+
+						<?php list($width, $height, $type, $attr) = getimagesize(rtrim(PATH_ROOT,DS).str_replace(_DS,DS,$handler['PaidHandler']['settings']['button']));?>
+
+						<div class="jrPaidHandler jrGrid">
+
+							<div class="jrCol1">
+
+									<input id="jr-single-payment<?php echo $handler['PaidHandler']['handler_id'];?>"
+											name="data[PaidOrder][handler_id]" type="radio"
+											value="<?php echo $handler['PaidHandler']['handler_id'];?>"
+											<?php echo (isset($handler['balance']) ? 'data-points-balance="' . $handler['balance']['value'] . '"' : ''); ?> />
+
+							</div>
+
+							<div class="jrCol3">
+
+									<label for="jr-single-payment<?php echo $handler['PaidHandler']['handler_id'];?>"><img alt="<?php echo $handler['PaidHandler']['name'];?>" src="<?php echo rtrim(WWW_ROOT,_DS).$handler['PaidHandler']['settings']['button'];?>" <?php echo $attr;?> /></label>
+
+							</div>
+
+							<div class="jrCol8">
+
+								<?php if(isset($handler['balance'])) : ?>
+
+									<p><?php echo sprintf(__t("You have a balance of %s points, equivalent to %s", true), '<span class="jrStatusLabel jrBlue">'.$handler['balance']['points'].'</span>', '<span class="jrStatusLabel jrGreen">'.Sanitize::getString($this->Config,'paid.currency_symbol') . s2_num_format($handler['balance']['value']).'</span>'); ?></p>
+
+									<p id="jr-single-payment<?php echo $handler['PaidHandler']['handler_id'];?>_balance" class="jrHidden"><?php __t("You don't have enough points to pay for the selected plan"); ?></p>
+
+								<?php endif; ?>&nbsp;
+
+							</div>
+
+						</div>
+
+					<?php endforeach;?>
+
+			<?php endif;?>
+
+			</div>
+
+			<?php if(!empty($handlers_subs)):?>
+
+			<div id="jr-subscription-payment" class="jrDataList">
+
+				<?php foreach($handlers_subs AS $handler):?>
+
+					<div class="jrPaidHandler jrGrid">
+
+						<div class="jrCol1">
+
+							<input id="jr-subscription-payment<?php echo $handler['PaidHandler']['handler_id'];?>"
+									name="data[PaidOrder][handler_id]" type="radio"
+									value="<?php echo $handler['PaidHandler']['handler_id'];?>" />
+
+						</div>
+
+						<div class="jrCol3">
+
+							<label for="jr-subscription-payment<?php echo $handler['PaidHandler']['handler_id'];?>"><img alt="<?php echo $handler['PaidHandler']['name'];?>" src="<?php echo rtrim(WWW_ROOT,_DS).$handler['PaidHandler']['settings']['button'];?>" <?php echo $attr;?> /></label>
+
+						</div>
+
+						<div class="jrCol8">&nbsp;</div>
+
+					</div>
+
+				<?php endforeach;?>
+
+			</div>
+
+			<?php endif;?>
+
+	        <div class="jr-validation jrError jrHidden">
+
+	        	<?php __t("Please select a payment method to continue.");?>
+
+	        </div>
+
+	    </div>
+
+	    <div id="jr-paid-order-step3" class="jrPaidStep jrHidden">
+
+			<h2><?php __t("Step 3: Confirm order");?></h2>
+
+			<div class="jrGrid">
+
+				<div class="jrCol2"><?php __t("Listing");?></div>
+
+				<div class="jrCol10"><span id="jr-paid-listing"><?php echo isset($listing_title) ? $listing_title : '';?></span></div>
+
+			</div>
+
+			<div class="jrGrid">
+
+				<div class="jrCol2"><?php __t("Plan");?></div>
+
+				<div class="jrCol10"><span id="jr-paid-plan-title"><?php echo isset($listing_title) ? $listing_title : '';?></span></div>
+
+			</div>
+
+			<div class="jrGrid">
+
+				<div class="jrCol7">&nbsp;</div>
+
+				<div class="jrCol3 jrRightAlign"><?php __t("Plan Price");?></div>
+
+				<div class="jrCol2 jrRightAlign"><span id="jr-order-price"></span></div>
+
+			</div>
+
+			<div class="jrGrid">
+
+				<div class="jrCol7">&nbsp;</div>
+
+				<div class="jrCol3 jrRightAlign"><?php __t("Discount");?></div>
+
+				<div class="jrCol2 jrRightAlign"><span id="jr-order-discount">(0.00)</span></div>
+
+			</div>
+
+			<?php if($tax_rate > 0):?>
+
+			<div class="jrGrid">
+
+				<div class="jrCol7">&nbsp;</div>
+
+				<div class="jrCol3 jrRightAlign"><?php __t("Subtotal");?></div>
+
+				<div class="jrCol2 jrRightAlign"><span id="jr-order-subtotal">(0.00)</span></div>
+
+			</div>
+
+			<div class="jrGrid">
+
+				<div class="jrCol7">&nbsp;</div>
+
+				<div class="jrCol3 jrRightAlign"><?php echo sprintf(__t("Tax (%s%%)",true),Sanitize::getVar($this->Config,'paid.tax'));?></div>
+
+				<div class="jrCol2 jrRightAlign"><span id="jr-order-tax"></span></div>
+
+			</div>
+
+			<?php endif;?>
+
+			<div class="jrGrid">
+
+				<div class="jrCol7">&nbsp;</div>
+
+				<div class="jrCol3 jrRightAlign"><?php __t("Total");?></div>
+
+				<div class="jrCol2 jrRightAlign"><span id="jr-paid-currency-symbol"><?php echo Sanitize::getString($this->Config,'paid.currency_symbol');?></span><span id="jr-order-total"></span></div>
+
+			</div>
+
+			<div id="jr-paid-coupon" class="jrClearfix jrPaidCoupon">
+
+				<div class="jrRight">
+
+					<?php __t("Coupon");?> <?php echo $Form->text('coupon',array('id'=>'jr-coupon-code','style'=>'width:150px'));?>
+
+					<button class="jr-paid-coupon-validate jrButton"><?php __t("Apply");?></button>
+
+					<div id="jr-coupon-error" class="jrPaidCouponError jrHidden">
+
+						<span class="jrStatusLabel jrRed"><?php __t("Coupon invalid or expired");?></span>
+
+					</div>
+
+					<div id="jr-coupon-success" class="jrPaidCouponSuccess jrHidden">
+
+						<span class="jrStatusLabel jrGreen"><?php __t("The coupon was applied to your order");?></span>
+
+					</div>
+
+				</div>
+
+			</div>
+
+
+			<?php if($tos == 1 || $tos == 2):?>
+
+			<div class="jrPaidTos">
+
+				<label><?php __t("Terms of Service");?></label>
+
+				<div id="jr-paid-tos" class="jrPaidTosText">
+
+						<?php echo $tos_article['Article']['summary'];?>
+
+				</div>
+
+			</div>
+
+			<?php endif;?>
+
+			<div class="jrPaidTosAgreement">
+
+				<?php if($tos == 0):?>
+
+					<?php __t("Click the submit button to finalize your order. You will be taken to the payment processor site to make your payment.");?>
+
+				<?php elseif($tos == 1):?>
+
+					<?php echo sprintf(__t("By placing your order you agree to the %sTerms of Service%s above.",true),'<a href="'.$tos_url.'" target="_blank">','</a>');?>
+
+				<?php elseif($tos == 2):?>
+
+					<input name="data[tos]" type="checkbox" id="jr-paid-tos-accept"></checkbox>&nbsp;&nbsp;
+
+					<label style="display:inline;" for="jr-paid-tos-accept"><?php echo sprintf(__t("I have read and agree to the %sTerms of Service%s above.",true),'<a href="'.$tos_url.'" target="_blank">','</a>');?></label>
+
+				<?php endif;?>
+
+			</div>
+
+
+			<div class="jr-validation jrError jrHidden"></div>
+
+	    </div>
+
+    </fieldset>
+
+    <?php /* These buttons are only used in the inline order form after submitting a listing */?>
+	<div class="jr-buttons jrPaidOrderButtons jrHidden jrRoundedPanel jrClearfix">
+
+		<div class="jrRight">
+
+			<button class="jr-back jrButton jrHidden">
+
+				<span class="jrIconPrev"></span><?php __t("Back");?>
+
+			</button>
+
+			<button class="jr-continue jrButton jrHidden">
+
+				<span class="jrIconNext"></span><?php __t("Continue");?>
+
+			</button>
+
+			<button class="jr-checkout jrButton jrHidden">
+
+				<span class="jrIconCart"></span><?php __t("Place Order");?>
+
+			</button>
+
+		</div>
+
+	</div>
+
+    <input name="data[PaidOrder][listing_id]" type="hidden" value="<?php echo $listing_id;?>" />
+
+    <input name="data[PaidOrder][coupon_name]" type="hidden" value="" />
+
+    <?php if($renewal && $order_id):?>
+
+    <input name="data[PaidOrder][order_id]" type="hidden" value="<?php echo $order_id;?>" />
+
+    <?php endif;?>
+
+    <input name="data[controller]" type="hidden" value="paidlistings_orders" />
+
+    <input name="data[action]" type="hidden" value="_submit" />
+
+    <input name="tmpl" type="hidden" value="component" />
+
+    <input name="format" type="hidden" value="raw" />
+
+
+</form>

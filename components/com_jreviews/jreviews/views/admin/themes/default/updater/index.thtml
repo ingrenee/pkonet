@@ -1,0 +1,219 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$status_msg = array(
+    'update'=>__a("Update",true),
+    'uptodate'=>__a("Already Installed",true),
+    'min_s2version'=>__a("Must upgrade S2 Framework",true),
+    'min_version'=>__a("Must upgrade JReviews",true),
+    'install'=>__a("Install",true),
+    'trial'=>__a("Blocked for trial",true),
+    'not_active'=>__a("Addon not active for this license",true)
+);
+$uninstall_status = array('update','uptodate');
+?>
+
+<div class="jr-installer">
+
+    <div class="jrPageHeading"><?php __a("Installer/Updater");?></div>
+
+    <div class="jrForm">
+
+        <div class="jrFieldDiv">
+
+        <label for="update_overwrite"><?php __a("Updates");?>:</label>
+
+        <input type="checkbox" id="update_overwrite" value="1">
+
+        <u><?php __a("I understand that the updates process will overwrite all previous files for the component or addon and I should have backups in case I've made any changes.");?></u>
+
+        <label for="backup_confirm"><?php __a("Backups");?>:</label>
+
+        <input type="checkbox" id="backup_confirm" checked="checked" value="1">
+
+        <?php __a("I want the updater to create a backup of my addon folder before the update. The folder will be renamed with the _bak suffix.");?>
+
+        <label for="jr-betas"><?php __a("Use Betas");?>:</label>
+
+        <input type="checkbox" id="jr-betas" <?php if($this->Config->updater_betas):?>checked="checked"<?php endif;?> name=="data[updater_betas]" value="1">
+
+        <?php __a("I understand betas are not meant to be used for production sites, but I want to be alerted of new betas and have the ability to upgrade.");?>
+
+        </div>
+    </div>
+
+    <h2><?php __a("Components");?></h2>
+
+    <form action="index.php" method="post">
+
+        <div class="jrDataList">
+
+            <div class="jrGrid jrHeader">
+
+                <div class="jrCol2"><?php __a("Name");?></div>
+
+                <div class="jrCol6"><?php __a("Description");?></div>
+
+                <div class="jrCol1"><?php __a("Version");?></div>
+
+                <div class="jrCol3"><?php __a("Actions");?></div>
+
+            </div>
+
+            <?php foreach($remote_components AS $key=>$package):?>
+
+            <div id="package<?php echo $key;?>" class="jrGrid">
+
+                <div class="jrCol2"><?php echo $package['name'];?></div>
+
+                <div class="jrCol6"><?php echo $package['description'];?>&nbsp;</div>
+
+                <div class="jrCol1">
+
+                        <?php echo $package['version'];?>
+
+                        <?php if(Sanitize::getInt($package,'is_beta')):?> <span class="jr_beta">beta!</span><?php endif;?>
+
+                        <?php if(isset($package['installed_version'])):?>
+
+                            <br /><br />
+
+                            <u><?php __a("Installed");?></u>
+
+                            <br />
+
+                            <?php echo $package['installed_version'];?> <?php if(Sanitize::getInt($package,'installed_beta')):?> <span class="jr_beta">beta!</span><?php endif;?>
+
+                        <?php endif;?>
+
+                </div>
+
+                <div class="jrCol3">
+
+                        <button class="jr-installer-update jrButton" data-status="<?php echo (int) $package['status'];?>"
+                            data-type="component" data-title="<?php echo $package['name'];?>" data-name="<?php echo $key;?>" data-version="<?php echo $package['version'];?>">
+
+                            <?php echo $status_msg[$package['status_msg']];?>
+
+                        </button>
+
+                </div>
+
+            </div>
+
+            <?php endforeach;?>
+
+        </div>
+
+    </form>
+
+    <h2><?php __a("Add-ons");?></h2>
+
+    <form action="index.php" method="post">
+
+        <div class="jrDataList">
+
+            <div class="jrGrid jrHeader">
+
+                <div class="jrCol2"><?php __a("Name");?></div>
+
+                <div class="jrCol4"><?php __a("Description");?></div>
+
+                <div class="jrCol1"><?php __a("Version");?></div>
+
+                <div class="jrCol1"><?php __a("Required JReviews version");?></div>
+
+                <div class="jrCol1"><?php __a("Type");?></div>
+
+                <div class="jrCol3"><?php __a("Actions");?></div>
+
+            </div>
+
+            <?php foreach($remote_addons AS $key=>$addon):?>
+
+            <div class="jrGrid">
+
+                <div class="jrCol2"><?php echo $addon['name'];?></div>
+
+                <div class="jrCol4"><?php echo $addon['description'];?></div>
+
+                <div class="jrCol1">
+
+                    <?php echo $addon['version'];?><?php if(Sanitize::getInt($addon,'is_beta')):?> <span class="jr_beta">beta!</span><?php endif;?>
+
+                    <?php if(isset($addon['installed_version'])):?>
+
+                        <br /><br />
+
+                        <u><?php __a("Installed");?></u>
+
+                        <br />
+
+                        <?php echo $addon['installed_version'];?> <?php if(Sanitize::getInt($addon,'installed_beta')):?> <span class="jr_beta">beta!</span><?php endif;?>
+
+                    <?php endif;?>&nbsp;
+
+                </div>
+
+                <div class="jrCol1">
+
+                    <?php echo $addon['min_app_version_required'];?>
+
+                    <br /><br />
+
+                    <u><?php __a("Installed");?></u>
+
+                    <br />
+
+                    <?php echo $this->Config->version;?>&nbsp;
+
+                </div>
+
+                <div class="jrCol1"><?php echo $addon['type'];?></div>
+
+                <div class="jrCol3">
+
+                    <?php if($addon['status'] == false && !in_array($addon['status_msg'],$uninstall_status)):?>
+
+                        <button class="jrButton" data-status="0"><?php echo $status_msg[$addon['status_msg']];?></button>
+
+                    <?php elseif($addon['status'] == true):?>
+
+                        <button class="jr-installer-update jrButton" data-title="<?php echo $addon['name'];?>" data-status="<?php echo (int) $addon['status'];?>"
+                            data-type="addon" data-name="<?php echo $key;?>" data-version="<?php echo $addon['version'];?>">
+
+                            <?php echo $status_msg[$addon['status_msg']];?>
+
+                        </button>
+
+                    <?php endif;?>
+
+                    <?php if(in_array($addon['status_msg'],$uninstall_status)):?>
+
+                        <button class="jr-delete-addon jrButton" data-status="2" data-name="<?php echo $key;?>">
+
+                            <?php __a("Remove");?>
+
+                        </button>
+
+                    <?php endif;?>
+
+                </div>
+
+            </div>
+
+            <?php endforeach;?>
+
+        </div>
+
+    </form>
+
+</div>

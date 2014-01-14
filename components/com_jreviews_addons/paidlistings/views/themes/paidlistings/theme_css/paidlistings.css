@@ -1,0 +1,246 @@
+/**
+* My Account
+*/
+.jrMyAccount .jrListingThumbnail img {
+	border: 1px solid #ccc !important;
+	margin-right: 5px;
+	width: 45px !important;
+	height: auto !important;
+}
+.jrMyAccount .ui-tabs-panel {
+	font-size: 0.85em;
+	padding: 10px 5px !important;
+}
+.jrMyAccount .jrDataList {
+	margin-bottom: 30px;
+}
+.jrMyAccount .jrListingThumbnail {
+	float: left;
+	margin-right: 5px;
+}
+.jrMyAccount .jrAccountDetails,
+.jrMyAccount .jrAccountDetails fieldset {
+	margin: 0;
+}
+
+/**
+* ORDER FORM
+*/
+.jrPaidStep {
+	width: 615px;
+}
+.jrPaidHandler label {
+	display: inline;
+}
+.jrPaidCoupon {
+	margin: 10px 0;
+}
+.jrPaidOrderButtons {
+	margin-top: 10px;
+}
+.jrPaidCouponError,
+.jrPaidCouponSuccess {
+	margin: 10px 0;
+	text-align: right;
+}
+.jrPaidTos {
+	margin-top: 10px;
+}
+.jrPaidTosText {
+	border: 1px solid #ccc;
+	padding: 8px 0 8px 8px;
+	background-color: #fff;
+	display: block;
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 5em;
+	width: 100%;
+	font-size: 11px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+div.jrPaidTosAgreement {
+	margin: 20px 5px 0 0;
+}
+div.jrPaidTosAgreement a {
+	text-decoration: underline;
+}
+div.jrPaidTosAgreement span {
+	font-weight: bold;
+}
+
+/**
+* Pricing Plans
+*/
+.jrNewPlans {
+	margin-bottom: 20px;
+	overflow: hidden;
+}
+.jrNewPlans .jrPlanInfo {
+	position: relative;
+	margin: 0 10px 10px 0;
+	padding: 5px !important;
+	float: left;
+	text-align: center;
+	width: 160px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+.jrNewPlans .jrPlanInfo.jrHighlightedPlan {
+	border: 1px solid #e5b100;
+	background-color: #FFE27F;
+	background-image: -moz-linear-gradient(top, #FFE27F, #ffdc65);
+	background-image: -ms-linear-gradient(top, #FFE27F, #ffdc65);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#FFE27F), to(#ffdc65));
+	background-image: -webkit-linear-gradient(top, #FFE27F, #ffdc65);
+	background-image: -o-linear-gradient(top, #FFE27F, #ffdc65);
+	background-image: linear-gradient(top, #FFE27F, #ffdc65);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFE27F', endColorstr='#ffdc65', GradientType=0);
+}
+.jrNewPlans .jrPlanName {
+	font-size: 16px;
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 5px;
+}
+.jrNewPlans .jrPlanDuration {
+	font-size: 12px;
+	display: block;
+	text-align: center;
+}
+.jrNewPlans .jrPlanPrice {
+	color: #000;
+	font-size: 25px;
+	margin: 10px 0 10px 0;
+	display: block;
+	border-top: 1px solid #bbb;
+	border-bottom: 1px solid #bbb;
+	background: #eee;
+}
+.jrNewPlans .jrPlanInfo.jrHighlightedPlan .jrPlanPrice {
+	border-top: 1px solid #e5b100;
+	border-bottom: 1px solid #e5b100;
+	background: #ffd64c;
+}
+.jrNewPlans .jrPlanDesc {
+	overflow: hidden;
+	margin-bottom: 10px;
+}
+
+/**
+* Invoice
+*/
+#jrInvoicePage {
+	width: 800px;
+	margin: 0 auto;
+	line-height: 1.4;
+	font-size: 14px;
+}
+#jrHeader {
+	background: #222 none repeat scroll 0 0;
+	color: #fff;
+	font-family: Helvetica, sans-serif;
+	font-size: 15px;
+	font-weight: bold;
+	height: 15px;
+	letter-spacing: 20px;
+	line-height: normal;
+	margin: 20px 0;
+	padding: 8px 0;
+	text-align: center;
+	width: 100%;
+	text-transform: uppercase;
+}
+#jrFooter {
+	margin: 20px 0 0;
+	text-align: center;
+}
+/* Seller */
+#jrSeller {
+	width: 100%;
+}
+#jrSellerInfo {
+	float: left;
+	height: 150px;
+}
+#jrSeller #jrLogo {
+	border: 1px solid #fff;
+	float: right;
+	max-height: 100px;
+	max-width: 540px;
+	overflow: hidden;
+	position: relative;
+	text-align: right;
+}
+/* Customer */
+#jrCustomer {
+	width: 100%;
+	clear: both;
+}
+#jrCustomerInfo {
+	float: left;
+	font-size: 16px;
+	font-weight: bold;
+}
+/* Invoice header */
+table#jrInvoiceData {
+	float: right;
+	width: 290px;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+table#jrInvoiceData td {
+	text-align: right;
+	border: 1px solid black;
+	padding: 5px;
+}
+table#jrInvoiceData td.label {
+	background-color: #eee;
+}
+
+/* Invoice details */
+table#jrInvoiceItems {
+	width: 99%;
+	border-collapse: collapse;
+	clear: both;
+	margin: 30px 0 0;
+}
+
+table#jrInvoiceItems td {
+	text-align: left;
+	border: 1px solid black;
+	padding: 5px;
+}
+table#jrInvoiceItems th {
+	border: 1px solid black;
+	padding: 5px;
+	background-color: #eee;
+	text-align: center;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+table#jrInvoiceItems .jrItemCol {
+	width: 30%;
+}
+table#jrInvoiceItems .jrDescCol {
+	width: 60%;
+}
+table#jrInvoiceItems tr.jrItemRow {
+	height: 400px;
+	vertical-align: top;
+}
+table#jrInvoiceItems td.jrAlignRight {
+	text-align: right;
+}
+table#jrInvoiceItems td.jrInvoiceTotal {
+	text-align: right;
+	border: 0;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+table#jrInvoiceItems td.jrInvoiceAmountTotal {
+	font-weight: bold;
+}

@@ -1,0 +1,154 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+// Force use of no image for formatting consistency
+$this->Config->list_noimage_image = 1;
+
+/**********************************************************************************
+ *                                 PAGINATION HELPER
+ **********************************************************************************/
+$pagination['total'] and $Paginator->paginate(array('current_page'=>$this->page,'items_per_page'=>$this->limit,'items_total'=>$pagination['total']));
+
+if($pagination['total'] == 0) return;
+
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+ ?>
+<!-- paid occount  listing -->
+<div id="jr-listings-table" class="jr-page-inner jrMyAccountListings">
+
+    <form id="jr-listings-form" name="jr-listings-form" type="post" action="index.php">
+
+        <div class="jrDataList">
+
+            <div class="jrGrid jrDataListHeader">
+
+                <div class="jrCol6"><?php __t("Details");?></div>
+
+                <div class="jrCol4"><?php __t("Plan Information");?></div>
+
+                <div class="jrCol2">&nbsp;</div>
+
+            </div>
+
+            <?php foreach($listings AS $listing): $base_plan = 0; $upgrade_plan = 0;?>
+
+            <div class="jr-layout-outer jrGrid">
+
+                <div class="jrCol1">
+
+                    <?php $Widgets->listingManager($listing);?>&nbsp;
+
+                </div>
+
+                <div class="jrCol5">
+
+                    <?php
+                    $tn_size = $this->Config->getOverride('media_list_thumbnail_size',$listing['ListingType']['config']);
+
+                    $tn_mode = $this->Config->getOverride('media_list_thumbnail_mode',$listing['ListingType']['config']);
+
+                    if($mainMediaThumb = $Media->thumb(Sanitize::getVar($listing,'MainMedia'),array('listing'=> &$listing,'size'=>$tn_size,'mode'=>$tn_mode))):?>
+
+                        <div class="jrListingThumbnail"><?php echo $Routes->content($mainMediaThumb,$listing)?></div>
+
+                    <?php endif;?>
+
+                    <div class="jrListingInfo">
+
+                        <?php echo $Routes->content($listing['Listing']['title'],$listing)?>
+
+                           <span class="jrStatusIndicators">
+                                <?php if($this->Config->list_featured && $listing['Listing']['featured']):?>
+                                    <span class="jrStatusFeatured"><?php __t("Featured");?></span>
+                                <?php endif;?>
+                           </span>
+
+                    </div>
+
+                    <div>
+
+                        <?php if($this->action != 'category'):?>
+
+                            <?php echo $listing['Category']['title'];?><br />
+
+                        <?php endif;?>
+
+                    </div>
+
+                </div>
+
+                <div class="jrCol4">
+
+                    <?php if(isset($listing['PaidOrder'])):?>
+
+                        <ul class="jrNoStyle">
+
+                            <?php foreach($listing['PaidOrder'] AS $order): extract($order['plan_info']);?>
+
+                            <li>
+                                <?php if($plan_type == 0 && $base_plan == 0): $base_plan = 1;?>
+
+                                <strong><?php __t("New");?></strong>
+
+                                <?php elseif($plan_type == 1 && $upgrade_plan == 0): $upgrade_plan = 1;?>
+
+                                <strong><?php __t("Upgrade");?></strong>
+
+                                <br />
+
+                                <?php endif;?>
+
+                                <?php echo $plan_name;?>
+
+                                <br />
+
+                                <?php echo $Time->niceShort($order['order_created']);?>
+
+                                <span class="jrIconBullet"></span>
+
+                                <?php echo $order['order_never_expires'] ? __t("Never",true) : $Time->niceShort($order['order_expires']);?>
+
+                            </li>
+
+                        <?php endforeach;?>
+
+                        </ul>
+
+                    <?php endif;?>&nbsp;
+
+                </div>
+
+                <div class="jrCol2 jrRightAlign"><?php echo $PaidRoutes->getPaymentLink($listing);?></div>
+
+            </div>
+
+
+            <?php endforeach;?>
+
+        </div>
+
+        <?php /* PAGINATION */ ?>
+
+        <?php echo $this->element('pagination',array('position'=>'bottom','ajax'=>1));?>
+
+        <input type="hidden" name="data[page]" value="<?php echo $this->page;?>" />
+
+        <input type="hidden" name="data[limit]" value="<?php echo $this->limit;?>" />
+
+        <input type="hidden" name="data[controller]" value="paidlistings_listings" />
+
+        <input type="hidden"name="data[action]" value="index" />
+
+    </form>
+
+</div>
+

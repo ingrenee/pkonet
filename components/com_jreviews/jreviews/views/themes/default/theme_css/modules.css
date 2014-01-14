@@ -1,0 +1,644 @@
+/******************************************
+Shared layout styles for modules & plugins
+*******************************************/
+.jrModuleItems .jrResults {
+  border-top: 0;
+  padding-top: 5px;
+  overflow: hidden;
+}
+.jrModuleItems .jrModuleItem {
+  float: left;
+  padding-right: 10px;
+  margin: 0;
+  font-size: 11px !important;
+  overflow: hidden;
+}
+.jrModuleItems .jrModuleItem.jrLastItem {
+  padding-right: 0px !important;
+}
+.jrModuleItems .jrModuleItemNumber {
+  font-weight: bold;
+  margin: 0 5px 5px 0;
+  float: left;
+}
+.jrModuleItems .jrModuleItemThumbnail {
+  float: left;
+  margin: 0 10px 10px 0;
+  text-align: center;
+}
+.jrModuleItems.jrThumbnailRight .jrModuleItemThumbnail {
+  float: right;
+  margin: 0 10px 10px 10px;
+}
+.jrModuleItems.jrThumbnailBottom .jrModuleItemThumbnail {
+  clear: both;
+}
+.jrModuleItems .jrModuleItemThumbnail a {
+  display: block;
+}
+.jrModuleItems .jrModuleItemThumbnail img {
+  border: 1px solid #CCC;
+  max-width: 100%;
+  max-width: none\9 !important;
+}
+.jrModuleItems .jrModuleItemThumbnail .jrButton {
+  margin-top: 5px;
+}
+.jrModuleItems.jrThumbnailTop .jrModuleItemContent {
+  clear: both;
+}
+.jrModuleItems .jrModuleItemTitle {
+  margin-bottom: 5px;
+  white-space: normal;
+}
+.jrModuleItems .jrModuleItemTitle a {
+  font-size: 12px !important;
+}
+.jrModuleItems .jrModuleItemCategory,
+.jrModuleItems .jrModuleItemReviewer,
+.jrModuleItems .jrModuleFieldDiv {
+  margin-bottom: 5px;
+}
+.jrModuleItems .jrModuleItemInfo {
+  margin-bottom: 5px;
+  border: 0;
+}
+.jrModuleItems .jrModuleItemInfo:after {
+  display: none;
+}
+.jrModuleItems .jrOverallRatings {
+  float: none;
+  margin-bottom: 5px;
+}
+.jrModuleItems .jrOverallRatings .jrOverallEditor,
+.jrModuleItems .jrOverallRatings .jrOverallUser {
+  float: none;
+}
+.jrModuleItems .jrOverallRatings .jrRatingLabel {
+  display: none;
+}
+.jrModuleItems .jrDivider {
+  border: 0;
+  clear: both;
+  line-height: 1px;
+  margin: 0;
+  padding: 2.5px;
+}
+/* Vertical layout */
+.jrModuleItems .jrVerticalLayout {
+  border-bottom: 1px solid #ddd;
+}
+.jrModuleItems .jrVerticalLayout .jrModuleItemNumber {
+  width: 15px;
+}
+.jrModuleItems .jrVerticalLayout .jrModuleItemThumbnail {
+  margin: 0 5px 5px 0;
+}
+.jrModuleItems .jrVerticalLayout .jrModuleItemThumbnail img {
+  width: 25px !important;
+  height: 25px !important;
+}
+.jrModuleItems .jrVerticalLayout .jrModuleFields {
+  float: right;
+}
+.jrModuleItems .jrVerticalLayout .jrModuleFields .jrModuleFieldTitle {
+  display: none;
+}
+/* Slideshow layout */
+.jrModuleItems .jrSlideshowLayout {
+  margin-bottom: 5px;
+}
+.jrModuleItems .jrSlideshowLayout .jrModuleItemThumbnail {
+  width: 100%;
+  height: 230px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  text-align: center;
+}
+.jrModuleItems .jrSlideshowLayout .jrModuleItemContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background: #222;
+  background: rgba(0, 0, 0, 0.6);
+}
+.jrModuleItems .jrSlideshowLayout a.jrModuleItemTitle:link,
+.jrModuleItems .jrSlideshowLayout a.jrModuleItemTitle:visited {
+  display: block;
+  width: 97%;
+  padding: 3%;
+  color: #eee;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+  margin: 0;
+}
+.jrModuleItems .jrSlideshowLayout .jrModuleItemInfo {
+  display: none;
+  width: 97%;
+  padding: 0 3% 3%;
+  margin: 0;
+  color: #fff !important;
+}
+.jrModuleItems .jrSlideshowLayout .jrModuleItemInfo a {
+  display: inline;
+  color: #fff !important;
+  font-weight: bold;
+}
+.jrModuleItems .jrSlideshowLayout .jrModuleItemThumbnail a.jrModuleItemTitle:hover {
+  color: #fff !important;
+}
+.jrModuleItems .jrSlideshowLayout .jrModuleItemThumbnail:hover .jrModuleItemInfo {
+  display: block;
+}
+.jrModuleItems .jrSlideshowLayout .jrOverallRatings {
+  position: absolute;
+  background: #222;
+  background: rgba(0, 0, 0, 0.6);
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 2px;
+  width: 100%;
+}
+.jrModuleItems .jrSlideshowLayout .jrOverallRatings .jrRatingValue {
+  color: #eee;
+}
+.jrModuleItems .jrSlideshowLayout .jrOverallRatings .jrOverallEditor,
+.jrModuleItems .jrSlideshowLayout .jrOverallRatings .jrOverallUser {
+  float: right;
+  margin-left: 10px;
+}
+.jrModuleItems .jrSlideshowLayout .jrRatingStarsUser,
+.jrModuleItems .jrSlideshowLayout .jrRatingStarsEditor,
+.jrModuleItems .jrSlideshowLayout .jrRatingStarsUser div,
+.jrModuleItems .jrSlideshowLayout .jrRatingStarsEditor div {
+  background: url(images/rating_stars_dark.png) 0 0 repeat-x;
+}
+.jrModuleItems .jrSlideshowLayout .jrRatingStarsUser div {
+  background-position: 0 -16px;
+}
+.jrModuleItems .jrSlideshowLayout .jrRatingStarsEditor div {
+  background-position: 0 -32px;
+}
+/* Title animation */
+.jrModuleSlider .jrSlideshowLayout .jrModuleItemInfo {
+  display: block;
+  padding: 0;
+  max-height: 0px;
+  -webkit-transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
+  -moz-transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
+  -ms-transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
+  -o-transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
+  transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1);
+}
+.jrModuleSlider .jrSlideshowLayout .jrModuleItemThumbnail:hover .jrModuleItemInfo {
+  padding: 0 0 1em 0;
+  max-height: 100px;
+}
+/*************************************
+Module Slider Pagination
+*************************************/
+.jrModuleSlider.jrSliderSideArrows {
+  margin: 0 25px;
+}
+/* Reset and layout */
+.bx-wrapper {
+  position: relative;
+  margin: 0 auto 40px;
+  padding: 0;
+  *zoom: 1;
+}
+.bx-wrapper img {
+  max-width: 100%;
+  display: block;
+}
+/* Theme */
+.bx-wrapper .bx-pager,
+.bx-wrapper .bx-controls-auto {
+  position: absolute;
+  bottom: -20px;
+  width: 100%;
+}
+/* Loader */
+.bx-wrapper .bx-loading {
+  min-height: 50px;
+  background: url(images/bx_loader.gif) center center no-repeat #ffffff;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2000;
+}
+/* Pager */
+.bx-wrapper .bx-pager {
+  text-align: center;
+  font-size: .85em;
+  font-family: Arial;
+  font-weight: bold;
+  color: #666;
+}
+.bx-wrapper .bx-pager .bx-pager-item,
+.bx-wrapper .bx-controls-auto .bx-controls-auto-item {
+  display: inline-block;
+  *zoom: 1;
+  *display: inline;
+}
+.bx-wrapper .bx-pager.bx-default-pager a {
+  background: #666;
+  text-indent: -9999px;
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: 0 5px;
+  outline: 0;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+.bx-wrapper .bx-pager.bx-default-pager a:hover,
+.bx-wrapper .bx-pager.bx-default-pager a.active {
+  background: #000;
+}
+/* Direction controls */
+.bx-wrapper .bx-prev {
+  left: 0;
+  background: url(images/arrows.png) no-repeat 0px 0px;
+}
+.bx-wrapper .bx-next {
+  left: 25px;
+  background: url(images/arrows.png) no-repeat -22px 0px;
+}
+.jrSliderVertical .bx-wrapper .bx-prev {
+  background: url(images/arrows.png) no-repeat 0px -22px;
+}
+.jrSliderVertical .bx-wrapper .bx-next {
+  background: url(images/arrows.png) no-repeat -22px -22px;
+}
+.bx-wrapper .bx-controls-direction a {
+  position: absolute;
+  bottom: -25px;
+  margin-top: -11px;
+  outline: 0;
+  width: 22px;
+  height: 22px;
+  text-indent: -9999px;
+  z-index: 9999;
+}
+.bx-wrapper .bx-controls-direction a.disabled {
+  display: none;
+}
+.jrSliderSideArrows .bx-wrapper .bx-controls-direction a {
+  bottom: auto;
+  top: 50%;
+}
+.jrSliderSideArrows .bx-wrapper .bx-prev {
+  left: -25px;
+}
+.jrSliderSideArrows .bx-wrapper .bx-next {
+  left: auto;
+  right: -20px;
+}
+/*************************************
+Single page modules
+*************************************/
+.jrModuleSlider.jrSliderSinglePage .jrModuleItems {
+  width: auto;
+}
+.jrModuleSlider.jrSliderSinglePage .jrModuleContainer {
+  float: none !important;
+}
+.jrModuleSlider.jrSliderSinglePage .jrModuleContainer:not(:first-child) {
+  display: none;
+}
+.jrModuleSlider.jrSliderSinglePage .jrModuleItems.vertical {
+  height: auto;
+  width: auto;
+}
+/*************************************
+JReviews Media Module
+*************************************/
+.jrModuleItems .jrMediaModule .jrModuleItem {
+  position: relative;
+}
+.jrModuleItems .jrMediaModule .jrModuleItemThumbnail {
+  margin: 0 3px 3px 0;
+  float: none;
+  border: 1px solid #CCC;
+}
+.jrModuleItems .jrMediaModule .jrModuleItemThumbnail img {
+  border: 0;
+  max-width: 100%;
+  vertical-align: middle;
+  height: auto !important;
+}
+.jrModuleItems .jrMediaModule .jrModuleItemOverlay {
+  position: relative;
+}
+.jrModuleItems .jrModuleItemOverlay.jrMediaTypeIcon:before {
+  display: inline-block;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  background-image: url(images/icons_overlay.png);
+  background-repeat: no-repeat;
+  content: "";
+}
+.jrModuleItems .jrMediaTypePhoto .jrModuleItemOverlay:before {
+  background-position: 0 0;
+}
+.jrModuleItems .jrMediaTypeVideo .jrModuleItemOverlay:before {
+  background-position: -18px 0;
+}
+.jrModuleItems .jrMediaTypeAudio .jrModuleItemOverlay:before {
+  background-position: -36px 0;
+}
+.jrModuleItems .jrMediaTypeAttachment .jrModuleItemOverlay:before {
+  background-position: -52px 0;
+}
+.jrModuleItems .jrModuleItemOverlay.jrNoTypeIcon:before {
+  display: none;
+}
+.jrModuleItems .jrMediaTypeVideo .jrModuleItemOverlay:after {
+  display: inline-block;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #000;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px;
+  content: attr(data-duration);
+}
+.jrModuleItems .jrMediaInfo.jrPopup .jrMediaTitle,
+.jrModuleItems .jrMediaInfo.jrPopup .jrMediaDescription,
+.jrModuleItems .jrMediaInfo.jrPopup .jrMediaFrom {
+  margin: 0 0 5px 0;
+}
+/*************************************
+JReviews Fields & Range Modules
+*************************************/
+.jrFieldsModule {
+  border-top: solid 0px #ccc;
+  padding-top: 15px;
+  display: inline;
+}
+.jrFieldsModule ul {
+  overflow: hidden;
+  margin-left: 0;
+  padding-left: 0;
+}
+.jrFieldsModule ul li {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  text-indent: 0;
+}
+.jrFieldsModule.jrHorizontalLayout ul {
+  overflow: hidden;
+}
+.jrFieldsModule.jrHorizontalLayout ul li {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  text-indent: 0;
+  float: left;
+  width: 33%;
+  display: block;
+}
+.jrFieldsModule.jrTagsLayout ul {
+  text-align: left;
+}
+.jrFieldsModule.jrTagsLayout ul li {
+  float: none;
+  width: auto;
+  display: inline-block;
+}
+.jrFieldsModule.jrTagsLayout ul li a {
+  display: inline-block;
+  padding: 3px 5px;
+  margin: 0 5px 5px 0;
+  color: #222;
+  background: #eee;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-transition: all 0.1s ease-in-out;
+  -moz-transition: all 0.1s ease-in-out;
+  -ms-transition: all 0.1s ease-in-out;
+  -o-transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out;
+}
+.jrFieldsModule.jrTagsLayout ul li a:hover {
+  text-decoration: none;
+  background: #333;
+  color: #fff;
+}
+/*************************************
+JReviews Favorite Users Module
+*************************************/
+.jrFavoritesModule {
+  border-top: 0;
+  overflow: hidden;
+}
+.favoriteListingTitle {
+  font-weight: normal;
+  line-height: 1.2em;
+  margin-bottom: 10px;
+}
+.jrFavoritesModule .jrModuleItem {
+  float: left;
+  padding-right: 10px;
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+.jrFavoritesModule .jrModuleItem.jrLastItem {
+  padding-right: 0px !important;
+}
+.jrFavoritesModule .jrModuleItem a {
+  display: block;
+  text-align: center;
+  width: 99%;
+  margin: 0 auto;
+}
+.jrFavoritesModule .jrUserAvatar {
+  margin: 0 auto 5px;
+  border: 1px solid #ccc;
+  padding: 1px;
+  height: 49px;
+  width: 49px;
+  overflow: hidden;
+  display: block;
+}
+.jrFavoritesModule .jrUserAvatar img.jrAvatar {
+  width: 49px;
+  text-align: center;
+}
+.jrFavoritesModule .jrDivider {
+  border: 0;
+  clear: both;
+  line-height: 1px;
+  margin: 0;
+  padding: 2.5px;
+}
+/*******************************************************
+My Listings, My Reviews & My Favorites Plugins - overrides to prevent JomSocial conflicts
+*******************************************************/
+.jrPlugin {
+  padding-top: 5px !important;
+}
+.jrPlugin .jrModuleItem {
+  padding-right: 10px !important;
+  font-size: 11px !important;
+}
+.jrPlugin .jrModuleItem.jrLastItem {
+  padding-right: 0px !important;
+}
+.jrPlugin .jrModuleItemNumber {
+  margin: 0 5px 5px 0 !important;
+}
+.jrPlugin .jrModuleItemThumbnail {
+  margin: 0 10px 10px 0 !important;
+}
+.jrModuleItems .jrModuleItemCategory {
+  margin-bottom: 5px !important;
+}
+.jrPlugin .jrModuleItemThumbnail img {
+  border: 1px solid #CCC !important;
+}
+.jrPlugin .jrModuleItemThumbnail label {
+  display: inline !important;
+}
+.jrPlugin .jrModuleItemTitle {
+  margin-bottom: 5px !important;
+}
+.jrPlugin .jrModuleItemTitle a {
+  font-size: 12px !important;
+}
+.jrPlugin .jrModuleItemInfo {
+  margin-bottom: 5px !important;
+}
+.jrPlugin .jrOverallRatings {
+  margin-bottom: 5px !important;
+}
+.jrPlugin .jrDivider {
+  padding: 2.5px !important;
+}
+.jrPlugin .jrRatingStarsUser,
+.jrPlugin .jrRatingStarsEditor,
+.jrPlugin .jrRatingStarsUser div,
+.jrPlugin .jrRatingStarsEditor div {
+  background: url(images/rating_stars.png) 0 0 repeat-x !important;
+}
+.jrPlugin .jrRatingStarsUser div {
+  background-position: 0 -16px !important;
+}
+.jrPlugin .jrRatingStarsEditor div {
+  background-position: 0 -32px !important;
+}
+/*************************************
+Reviews of Me Plugin
+*************************************/
+.jrReviewsPlugin .jrUserReviewsSummary.jrRoundedPanel {
+  border: 1px solid #ccc;
+  margin-bottom: 10px !important;
+  padding: 10px !important;
+}
+.jrReviewsPlugin .jrUserReviewsSummary .jrReviewTitle,
+.jrReviewsPlugin .jrUserReviewsContainer .jrReviewTitle {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 5px 0 0.5em !important;
+}
+.jrReviewsPlugin .jrUserReviewsSummary .jrReviewSummarySidebar {
+  margin: 5px 20px 15px 15px !important;
+}
+.jrReviewsPlugin .jrUserReviewsSummary .jrUserReviewsSummaryTitle {
+  margin: 10px 0 15px 0 !important;
+}
+.jrReviewsPlugin .jrUserReviewsSummary .jrRSS {
+  position: static;
+  float: right;
+  margin: 0 !important;
+}
+.jrReviewsPlugin .jrUserReviewsContainer .jrRoundedPanelLt {
+  border: 1px solid #ddd;
+  margin-bottom: 10px !important;
+  padding: 10px !important;
+}
+.jrReviewsPlugin .jrUserReviewsContainer .jrRatingInfo {
+  border: 1px solid #ddd;
+  margin: 0 0 5px 5px !important;
+  padding: 8px !important;
+}
+.jrReviewsPlugin .jrUserReviewsContainer .jrUserInfo {
+  margin: 5px 0 10px !important;
+  float: none;
+}
+.jrReviewsPlugin .jrUserReviewsContainer .jrReviewActions {
+  padding-top: 5px !important;
+}
+.jrReviewsPlugin .jrUserReviewsContainer .jrReviewVoting {
+  margin-top: 3px !important;
+}
+.jrReviewsPlugin .jrUserReviewsContainer .jrReviewHelpful {
+  margin-right: 10px !important;
+}
+.jrReviewsPlugin .jrForm fieldset {
+  border: 1px solid #ccc !important;
+  padding: 10px !important;
+  margin: 20px 0 40px 0 !important;
+  overflow: visible !important;
+}
+.jrReviewsPlugin .jrForm fieldset.jrFieldsetMargin {
+  margin: 40px 0 0 0 !important;
+}
+.jrReviewsPlugin .jrForm label {
+  font-weight: bold !important;
+  margin: 0 0 1px !important;
+}
+.jrReviewsPlugin .jrForm input,
+.jrReviewsPlugin .jrForm textarea,
+.jrReviewsPlugin .jrForm select {
+  border-width: 1px !important;
+  margin-right: 5px !important;
+  padding: 2px 10px 2px 2px !important;
+}
+.jrReviewsPlugin .jrForm textarea,
+.jrReviewsPlugin .jrForm .jrTextArea {
+  height: 8em !important;
+  overflow: auto !important;
+  margin: 0 !important;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100% !important;
+}
+.jrReviewsPlugin .jrForm .jrFieldDiv {
+  margin: 0 0 10px 0 !important;
+}
+.jrReviewsPlugin .jrForm .reviewFormComments .jrFieldDiv {
+  margin: 0 0 !important;
+}
+.jrReviewsPlugin .jrForm .jrButtons {
+  margin: 20px 0 0 0!important;
+}
+/*************************************
+Messages
+*************************************/
+.jrReviewsPlugin .jrWarning,
+.jrReviewsPlugin .jrSuccess,
+.jrReviewsPlugin .jrInfo,
+.jrReviewsPlugin .jrError {
+  padding: 8px 35px 8px 14px !important;
+  margin-bottom: 18px !important;
+}

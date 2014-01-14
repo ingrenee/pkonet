@@ -1,0 +1,679 @@
+/*************************************
+Listing detail page styles
+*************************************/
+.jrListingDetail h1.contentheading {
+  margin: 10px 0;
+}
+.jrListingDetail h1.contentheading span {
+  margin-right: 10px;
+}
+/*************************************
+Listing author info
+*************************************/
+.jrListingDetail img.jrAvatar {
+  float: left;
+  margin: 0 10px 0 0;
+  border: 0;
+  width: 48px;
+  height: auto;
+}
+.jrListingDetail .jrAuthorInfo {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 10px;
+}
+/*************************************
+Listing info
+*************************************/
+.jrListingDetail .jrListingInfoContainer {
+  clear: left;
+  margin: 5px 0 7px 0;
+  padding: 5px 0 0;
+  border-color: #ddd;
+  border-style: solid;
+  border-width: 1px 0;
+  background-color: #f2f2f2;
+}
+.jrListingDetail .jrListingInfo {
+  padding: 0 5px 5px 5px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+  font-size: .9em;
+  color: #777;
+  *zoom: 1;
+}
+.jrListingDetail .jrListingInfo:before,
+.jrListingDetail .jrListingInfo:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.jrListingDetail .jrListingInfo:after {
+  clear: both;
+}
+.jrListingDetail .jrListingInfo.jrNoButtons {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+.jrListingDetail .jrListingStatus {
+  float: right;
+  white-space: nowrap;
+}
+.jrListingDetail .jrListingInfoButtons {
+  clear: both;
+  padding: 0 5px;
+  font-size: .9em;
+  *zoom: 1;
+}
+.jrListingDetail .jrListingInfoButtons:before,
+.jrListingDetail .jrListingInfoButtons:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.jrListingDetail .jrListingInfoButtons:after {
+  clear: both;
+}
+.jrListingDetail .jrListingButtons {
+  float: left;
+}
+.jrListingDetail .jrListingButtons .jrButton {
+  margin-bottom: 5px;
+}
+/* Overall Ratings */
+.jrListingDetail .jrOverallRatings {
+  float: left;
+}
+.jrListingDetail .jrOverallRatings .jrOverallEditor,
+.jrListingDetail .jrOverallRatings .jrOverallUser {
+  float: left;
+}
+.jrListingDetail .jrOverallRatings .jrOverallEditor {
+  margin: 0 15px 0 0;
+}
+/*************************************
+Main Image & Compact Gallery
+*************************************/
+.jrListingMainImage {
+  float: right;
+  margin: 0 0 10px 10px;
+  padding: 1px;
+  vertical-align: middle;
+}
+.jrListingMainImage.jrMediaLeft {
+  float: left;
+  margin: 0 10px 10px 0;
+}
+.jrListingMainImage.jrMediaLeft img {
+  float: left;
+}
+.jrListingMainImage a {
+  display: block;
+}
+.jrListingMainImage img {
+  padding: 1px;
+  margin: 0;
+  border: solid 1px #ccc;
+  float: right;
+}
+.jrMediaButtons {
+  clear: right;
+  float: right;
+  margin-bottom: 10px;
+}
+.jrMediaButtons.jrMediaLeft {
+  clear: left;
+  float: left;
+}
+.jrCompactGallery {
+  clear: both;
+}
+.jrListingMainImage a:hover img,
+.jrCompactGallery a:hover img {
+  -webkit-box-shadow: 0 0 1px #aaaaaa;
+  -moz-box-shadow: 0 0 1px #aaaaaa;
+  box-shadow: 0 0 1px #aaaaaa;
+}
+.jrCompactGallery img {
+  margin: 2px 0 0 2px;
+  float: none;
+  padding: 1px;
+  border: solid 1px #ccc;
+  vertical-align: middle;
+}
+.jrCompactGallery .jrMediaThumb {
+  float: left;
+  position: relative;
+}
+.jrCompactGallery .jrMediaThumb.jrVideo:before {
+  display: inline-block;
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 16px;
+  height: 16px;
+  background-image: url(images/icons_overlay.png);
+  background-repeat: no-repeat;
+  background-position: -18px 0;
+  content: "";
+}
+.jrCompactGallery .jrMediaThumb.jrVideo:after {
+  display: inline-block;
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  background: #000;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px;
+  content: attr(data-duration);
+}
+/* Contact Video Lightbox/Linked below small gallery */
+.jrContactVideo {
+  clear: right;
+  float: right;
+  max-width: 360px;
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+.jrContactVideo img:hover {
+  -webkit-box-shadow: 0 0 1px #aaaaaa;
+  -moz-box-shadow: 0 0 1px #aaaaaa;
+  box-shadow: 0 0 1px #aaaaaa;
+}
+.jrContactVideo img {
+  margin: 2px 0 0 2px;
+  float: none;
+  padding: 1px;
+  border: solid 1px #ccc;
+  vertical-align: middle;
+}
+.jrContactVideo .jrMediaThumb {
+  float: none;
+  display: inline-block;
+  position: relative;
+  margin: 0 0 10px 10px;
+}
+.jrContactVideo .jrMediaThumb.jrVideo:after {
+  display: inline-block;
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  background: #000;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px;
+  content: attr(data-duration);
+}
+/*************************************
+INTRO AND FULL TEXT
+*************************************/
+.jrListingSummary,
+.jrListingDescription,
+.jrListingFulltext {
+  margin-bottom: 1em;
+  line-height: 1.7em;
+}
+/*************************************
+Media
+*************************************/
+.jrMediaContainer {
+  clear: both;
+  margin-bottom: 30px !important;
+}
+.jrMediaContainer h4 {
+  font-weight: bold;
+  text-transform: none;
+  font-size: 15px;
+  line-height: 22px;
+  border-bottom: 1px solid #ccc;
+}
+.jrMediaContainer .jrMediaLinks {
+  float: right;
+  text-transform: none;
+  position: relative;
+  top: -2px;
+}
+.jrMediaContainer .jrMediaThumbs {
+  float: left;
+  position: relative;
+  border: solid 1px #DDD;
+  padding: 1px;
+  margin: 6px 8px 8px 0;
+  vertical-align: middle;
+  text-align: center;
+}
+.jrMediaContainer .jrMediaThumbs:hover {
+  -webkit-box-shadow: 0 0 1px #aaaaaa;
+  -moz-box-shadow: 0 0 1px #aaaaaa;
+  box-shadow: 0 0 1px #aaaaaa;
+}
+.jrMediaContainer .jrMediaThumbs img {
+  vertical-align: middle;
+}
+/* Videos */
+.jrMediaContainer.jrVideos .jrMediaThumbs:after {
+  display: inline-block;
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  background: #000;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px;
+  content: attr(data-duration);
+}
+/* Attachments */
+.jrMediaContainer.jrAttachments ul {
+  background: none;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none;
+}
+.jrMediaContainer.jrAttachments .jrAttachmentSize,
+.jrMediaContainer.jrAttachments .jrAttachmentType,
+.jrMediaContainer.jrAttachments .jrAttachmentDownloads,
+.jrMediaContainer.jrAttachments .jrAttachmentDownloadButton {
+  text-align: right;
+}
+.jrMediaContainer.jrAttachments .jrAttachmentDescription {
+  word-break: break-all;
+}
+/*************************************
+Audio player
+*************************************/
+/* Main interface */
+.jrAudio .jp-audio {
+  width: 100%;
+  padding: 0;
+  margin: 10px 0 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #444;
+  position: relative;
+}
+.jrAudio .jp-audio .jp-interface {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  background-color: #dadada;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cccccc), color-stop(50%, #dddddd), to(#cccccc));
+  background-image: -webkit-linear-gradient(#cccccc, #dddddd 50%, #cccccc);
+  background-image: -moz-linear-gradient(top, #cccccc, #dddddd 50%, #cccccc);
+  background-image: -ms-linear-gradient(#cccccc, #dddddd 50%, #cccccc);
+  background-image: -o-linear-gradient(#cccccc, #dddddd 50%, #cccccc);
+  background-image: linear-gradient(#cccccc, #dddddd 50%, #cccccc);
+  background-repeat: no-repeat;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#cccccc', GradientType=0);
+}
+.jrAudio .jp-interface ul.jp-controls {
+  list-style-type: none;
+  position: absolute;
+  top: 13px;
+  left: 13px;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+.jrAudio .jp-interface ul.jp-controls li {
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline;
+  float: left;
+}
+.jrAudio .jp-interface ul.jp-controls a {
+  display: block;
+  overflow: hidden;
+  text-indent: -9999px;
+  outline: none;
+}
+.jrAudio .jp-interface a.jp-play,
+.jrAudio .jp-interface a.jp-pause {
+  width: 16px;
+  height: 16px;
+}
+.jrAudio .jp-interface a.jp-play {
+  background: url("images/audio.png") 0 0 no-repeat;
+}
+.jrAudio .jp-interface a.jp-play:hover {
+  background: url("images/audio.png") 0 -16px no-repeat;
+}
+.jrAudio .jp-interface a.jp-pause {
+  background: url("images/audio.png") -16px 0 no-repeat;
+}
+.jrAudio .jp-interface a.jp-pause:hover {
+  background: url("images/audio.png") -16px -16px no-repeat;
+}
+/* Progress bar */
+.jrAudio .jp-progress-container {
+  margin: 0 185px 0 40px;
+  padding-top: 15px;
+}
+.jrAudio .jp-audio .jp-progress {
+  overflow: hidden;
+  background-color: #ddd;
+  width: 100%;
+  height: 12px;
+}
+.jrAudio .jp-seek-bar {
+  background: #888;
+  width: 0px;
+  height: 100%;
+  cursor: pointer;
+}
+.jrAudio .jp-play-bar {
+  background: #000;
+  width: 0px;
+  height: 100%;
+}
+.jrAudio .jp-seeking-bg {
+  background: url("images/audio-preloader.gif") repeat-x;
+}
+/* Volume bar */
+.jrAudio .jp-volume-bar {
+  top: 15px;
+  right: 13px;
+  position: absolute;
+  overflow: hidden;
+  background: #888;
+  width: 50px;
+  height: 12px;
+  cursor: pointer;
+}
+.jrAudio .jp-volume-bar-value {
+  background: #000;
+  width: 0px;
+  height: 12px;
+}
+/* Current time and duration */
+.jrAudio .jp-audio .jp-time-holder {
+  position: absolute;
+  top: 13px;
+  right: 105px;
+  width: 70px;
+  font-size: 11px !important;
+}
+.jrAudio .jp-current-time,
+.jrAudio .jp-duration {
+  display: inline;
+  font-style: oblique;
+}
+/* Mute / unmute */
+.jrAudio .jp-mute-unmute {
+  position: absolute;
+  top: 13px;
+  right: 75px;
+  width: 23px;
+}
+.jrAudio a.jp-mute,
+.jrAudio a.jp-unmute {
+  display: block;
+  position: absolute;
+  overflow: hidden;
+  text-indent: -9999px;
+  height: 16px;
+  outline: none;
+}
+.jrAudio a.jp-mute {
+  background: url("images/audio.png") -46px 0 no-repeat;
+  width: 25px;
+}
+.jrAudio a.jp-mute:hover {
+  background: url("images/audio.png") -46px -16px no-repeat;
+}
+.jrAudio a.jp-unmute {
+  background: url("images/audio.png") -28px 0 no-repeat;
+  width: 15px;
+  display: none;
+}
+.jrAudio a.jp-unmute:hover {
+  background: url("images/audio.png") -28px -16px no-repeat;
+}
+/* Playlist */
+.jrAudio .jp-playlist a {
+  outline: none;
+}
+.jrAudio .jp-playlist-current {
+  font-weight: bold;
+}
+.jrAudio .jp-free-media {
+  float: right;
+}
+/*************************************
+Related Listing Widgets
+*************************************/
+.jrWidget {
+  margin-top: 10px;
+}
+.jrWidget .jrOverallRatings {
+  float: none;
+}
+.jrTabs .jrWidget:first-child .jrHeading {
+  margin-top: 0 !important;
+}
+/*************************************
+EDITOR REVIEW ELEMENTS
+*************************************/
+.jrEditorReviewsSummary {
+  overflow: hidden;
+}
+.jrEditorReviewsSummaryTitle {
+  font-size: 13px;
+  font-weight: bold;
+}
+/*************************************
+USER REVIEW SUMMARY
+*************************************/
+.jrUserReviewsSummary {
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.jrUserReviewsSummaryTitle {
+  font-size: 13px;
+  font-weight: bold;
+}
+.jrReviewSummarySidebar {
+  float: right;
+  margin: 0 20px 15px 15px;
+  white-space: nowrap;
+}
+/*************************************
+COMMON REVIEW ELEMENTS
+*************************************/
+.jrReviewSummarySidebar {
+  float: right;
+  margin: 0 20px 15px 15px;
+  white-space: nowrap;
+}
+.jrReviewContainer .jrUserInfo {
+  font-size: 0.9em;
+  color: #777;
+  line-height: 1.5em;
+  padding-top: 0px;
+  margin: 5px 0 10px 0;
+}
+.jrReviewContainer .jrUserInfo img {
+  float: left;
+  margin: 0 10px 10px 0;
+  border: 0;
+  width: 48px;
+  height: auto;
+}
+.jrReviewContainer .jrReviewContent {
+  clear: left;
+  line-height: 1.5em;
+}
+.jrReviewContainer .jrReviewContent h4.jrReviewTitle {
+  font-size: 14px !important;
+  font-weight: bold !important;
+  margin: 5px 0 .5em 0 !important;
+}
+.jrReviewContainer .jrReviewContent .jrCustomFields {
+  margin-top: 15px;
+}
+.jrReviewContainer .jrOwnerReply {
+  padding: 15px;
+  background: #eee;
+  font-style: italic;
+  margin-bottom: 10px;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+}
+.jrReviewContainer .jrOwnerReply button {
+  margin-top: 5px;
+}
+.jrReviewContainer .jrOwnerReply .jrOwnerReplyTitle {
+  margin: 5px 0;
+  font-weight: bold;
+}
+.jrReviewContainer .jrReviewActions {
+  overflow: hidden;
+  clear: both;
+  padding-top: 5px;
+}
+.jrReviewContainer .jrReviewActions .jrReviewComments {
+  float: left;
+  margin-right: 5px;
+}
+.jrReviewContainer .jrReviewActions .jrReviewComments .jrButton {
+  margin: 0;
+}
+.jrReviewContainer .jrReviewVoting {
+  float: right;
+}
+.jrReviewContainer .jrReviewVoting .jrVoteNo.jrButton {
+  -webkit-border-top-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  -moz-border-radius-bottomright: 3px;
+  border-bottom-right-radius: 3px;
+}
+.jrReviewContainer .jrReviewVoting .jrReviewHelpful {
+  font-size: .9em;
+  color: #777;
+  line-height: 2em;
+  overflow: hidden;
+  margin-right: 10px;
+  float: left;
+}
+.jrReviewContainer .jrReviewVoting .jrHelpfulTitle {
+  float: left;
+  margin: 0;
+}
+/* Review List Layout */
+.jrReviewList {
+  margin: 0 0 15px 0;
+}
+.jrReviewList .jrReviewContainer {
+  position: relative;
+  padding-bottom: 25px;
+}
+.jrReviewList div.jrListingInfo {
+  float: left;
+  margin-bottom: 10px;
+  padding: 0;
+  border: 0;
+}
+.jrReviewList .jrListingTitle {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+.jrReviewList .jrUserInfo {
+  float: right;
+  margin: 0 0 10px;
+  text-align: left;
+}
+.jrReviewList .jrRatingInfo {
+  clear: right;
+  float: right;
+  margin: 5px 0 5px 15px;
+}
+.jrReviewList > *:nth-child(odd) .jrRatingInfo {
+  background: #fff;
+}
+.jrReviewList .jrReviewContent {
+  font-style: italic;
+  clear: left;
+}
+.jrReviewList .jrReviewActions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+.jrReviewList .jrPathway {
+  margin-bottom: 0;
+}
+/* Buttons */
+.jrViewAllButton,
+.jrBackButton {
+  float: right;
+  margin: 10px 0;
+}
+/*************************************
+Compact Detail page
+*************************************/
+.jrListingDetail.jrCompact .jrPathway {
+  margin-bottom: 15px;
+}
+.jrListingDetail.jrCompact h1.contentheading {
+  border: 0 !important;
+  font-size: 22px !important;
+}
+.jrListingDetail.jrCompact .jrOverallRatings {
+  clear: left;
+  float: none;
+  overflow: hidden;
+}
+.jrListingDetail.jrCompact .jrWidget .jrOverallRatings {
+  clear: none;
+}
+.jrListingDetail.jrCompact .jrOverallEditor {
+  float: left;
+  margin-right: 10px;
+}
+.jrListingDetail.jrCompact .jrListingInfoButtons {
+  margin: 10px 0;
+  padding: 0;
+  clear: none;
+}
+.jrListingDetail.jrCompact .jrListingButtons {
+  margin: 10px 0;
+  float: none;
+}
+.jrListingDetail.jrCompact .jrListingButtons .jrButton {
+  margin-bottom: 5px;
+}
+.jrListingDetail.jrCompact .jrCustomFields {
+  width: 45%;
+  clear: right;
+  float: right;
+  background: #f0f0f0;
+  padding: 10px;
+  margin: 10px 0 10px 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}
+.jrListingDetail.jrCompact .contentheading .jrIconInfo {
+  margin: 5px;
+}
+.jrListingDetail.jrCompact .jrContentTitle .jrIconInfo:before {
+  color: #3F7FD5;
+}
+.jrListingDetail.jrCompact.jrMediaLeft .jrCustomFields {
+  clear: left;
+  float: left;
+}
+.jrListingDetail.jrCompact.jrMediaLeft .jrOverallRatings {
+  clear: right;
+  float: none;
+}
+.jrListingDetail.jrCompact.jrMediaLeft .jrListingButtons {
+  float: none;
+}

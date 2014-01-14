@@ -1,0 +1,36 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**
+ * Alphaindex widget called from directory and list views
+ */
+if(isset($directories)) $directory = $directories;
+?>
+
+<?php
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+?>
+
+<?php
+$options= array();
+$options[] = $Routes->alphaindex('0-9',0,$directory,array('class'=>'jrButton','rel'=>'nofollow'));
+?>
+
+<?php for ($i=65; $i<= 90; $i++):?>
+	<?php $options[] = $Routes->alphaindex(chr($i),strtolower(chr($i)),$directory,array('class'=>'jrButton','rel'=>'nofollow'));?>
+<?php endfor;?>
+
+
+<div class="jrAlphaindex jrButtonGroup">
+	<?php echo join('',$options)?>
+</div>

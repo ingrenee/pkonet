@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata>
+    <layout title="COM_JREVIEWS_ADVANCEDSEARCH_VIEW_DEFAULT_TITLE">
+        <message>
+            <![CDATA[COM_JREVIEWS_ADVANCEDSEARCH_VIEW_DEFAULT_TITLE]]>
+        </message>
+    </layout>
+
+    <fields name="params">
+
+        <fieldset name="basic" label="JReviews">
+
+            <field name="action" type="hidden" label="Advanced Search Page" default="11" />
+
+            <field name="criteriaid" type="listingtype" label="Listing Type"
+                description="Use this if you want to display the form directly for a particular listing type, otherwise a dropdown list is shown with the different options to choose from."
+                addfieldpath="/components/com_jreviews/views" />
+
+            <field name="tmpl_suffix" type="text" size="20" default="" label="Theme suffix" description="Use a different theme for this menu by renaming the theme file using the suffix." />
+
+        </fieldset>
+    </fields>
+
+</metadata>

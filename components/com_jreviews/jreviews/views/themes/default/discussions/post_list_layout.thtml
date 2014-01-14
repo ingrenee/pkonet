@@ -1,0 +1,84 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+extract($post['Discussion']);
+
+if($this->action == 'review') $post['Listing'] = $listing['Listing'];
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+
+if($this->action != '_save' || ($this->action == '_save' && $isNew)): // Don't add the outer div if updating on screen after edit?>
+
+<div class="jr-layout-outer">
+
+	<div class="jr-layout-inner jrReviewContainer">
+
+<?php endif;?>
+
+	<!-- BEGIN COMMENT INNER -->
+
+	<div class="jrReviewSummary">
+
+		<div class="jrReviewSummarySidebar">
+
+			<div class="jrUserInfo">
+
+				<?php echo $Community->avatar($post);?>
+
+				<span class="jrPostAuthor"><?php __t("Written by");?> <?php echo $Community->screenName($post);?></span><br />
+
+				<span class="jrPostCreated"><?php echo $Time->nice($created);?></span>
+
+				<div class="jrClear"></div>
+
+			</div>
+
+		</div>
+
+		<div class="jr-comment-text jrCommentText"><?php echo nl2br($text);?></div>
+
+		<div class="jrClear"></div>
+
+		<?php $Widgets->discussionManager($post);?>
+
+	</div>
+	<!-- END COMMENT INNER -->
+
+	<?php if($this->action != '_save' && $this->action != 'latest' && $this->Config->review_discussions && $this->Access->canAddPost()):
+	// Don't show form when updating display after save'?>
+
+	<span class="jrPostCommentReply">
+
+		<button class="jr-comment-reply jrButton jrSmall" data-discussion-id="<?php echo $discussion_id;?>" data-review-id="<?php echo $review_id;?>">
+
+			<span class="jrIconAddComment"></span><span><?php __t("Reply to this comment");?></span>
+
+		</button>
+
+	</span>
+
+	<?php endif;?>
+
+	<?php if($this->Config->user_report && $this->action == 'review'):?>
+
+		<?php $Widgets->report(array('review'=>$review,'post'=>$post));?>
+
+	<?php endif;?>
+
+<?php if($this->action!='_saveEdit'): // Don't add the outer div if updating on screen after edit?>
+
+	</div>
+
+</div>
+
+<?php endif;?>

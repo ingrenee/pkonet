@@ -1,0 +1,135 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: jReviews 2.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-09-12 11:10-0400\n"
+"PO-Revision-Date: \n"
+"Last-Translator: ClickFWD <support@reviewsforjoomla.com>\n"
+"Language-Team: Alejandro Schmeichler\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Thai\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: F:\\components\\\n"
+"X-Poedit-KeywordsList: __l\n"
+"X-Poedit-Country: THAILAND\n"
+"X-Poedit-SearchPath-0: com_jreviews\\jreviews\\views\n"
+"X-Poedit-SearchPath-1: com_s2framework\\s2framework\\libs\\view\n"
+
+#: com_jreviews\jreviews\views/helpers/custom_fields.php:442
+#: com_jreviews\jreviews\views/helpers/custom_fields.php:446
+#: com_jreviews\jreviews\views/helpers/custom_fields.php:533
+msgid "DECIMAL_SEPARATOR"
+msgstr "."
+
+#: com_jreviews\jreviews\views/helpers/custom_fields.php:442
+#: com_jreviews\jreviews\views/helpers/custom_fields.php:446
+#: com_jreviews\jreviews\views/helpers/custom_fields.php:533
+msgid "THOUSANDS_SEPARATOR"
+msgstr ","
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:114
+msgid "Today"
+msgstr "วันนี้"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:116
+msgid "Yesterday"
+msgstr "เมื่อวานนี้"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:147
+msgid "Jan"
+msgstr "ม.ค."
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:147
+msgid "January"
+msgstr "มกราคม"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:148
+msgid "Feb"
+msgstr "ก.พ."
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:148
+msgid "February"
+msgstr "กุมภาพันธ์"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:149
+msgid "Mar"
+msgstr "มี.ค."
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:149
+msgid "March"
+msgstr "มีนาคม"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:150
+msgid "Apr"
+msgstr "เม.ย."
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:150
+msgid "April"
+msgstr "เมษายน"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:151
+msgid "May-Short"
+msgstr "พ.ค."
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:151
+msgid "May"
+msgstr "พฤษภาคม"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:152
+msgid "Jun"
+msgstr "มิ.ย."
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:152
+msgid "June"
+msgstr "มิถุนายน"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:153
+msgid "Jul"
+msgstr "ก.ค."
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:153
+msgid "July"
+msgstr "กรกฎาคม"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:154
+msgid "Aug"
+msgstr "ส.ค."
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:154
+msgid "August"
+msgstr "สิงหาคม"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:155
+msgid "Sep"
+msgstr "ก.ย."
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:155
+msgid "September"
+msgstr "กันยายน"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:156
+msgid "Oct"
+msgstr "ต.ค."
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:156
+msgid "October"
+msgstr "ตุลาคม"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:157
+msgid "Nov"
+msgstr "พ.ย."
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:157
+msgid "November"
+msgstr "พฤษจิกายน"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:158
+msgid "Dec"
+msgstr "ธ.ค."
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:158
+msgid "December"
+msgstr "ธันวาคม"
+

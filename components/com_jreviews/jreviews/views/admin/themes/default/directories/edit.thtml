@@ -1,0 +1,77 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<div class="jr-directories-edit">
+
+    <form action="index.php" method="post" class="jrForm" data-object-type="directory">
+
+        <fieldset>
+
+            <div class="jrGrid">
+
+                <div class="jrCol5">
+
+                    <div class="jrFieldDiv">
+
+                        <label><?php __a("Title");?><span class="jrIconRequired"></span></label>
+
+                        <div>
+                            <?php echo $Form->text('data[Directory][desc]',array('value'=>Sanitize::getString($dir['Directory'],'title'),'max_size'=>'50','class'=>'jr-title jrText','data-slug'=>'jr-name','placeholder'=>__a("Visible on the site",true)));?>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="jrCol5">
+
+                    <div class="jrFieldDiv">
+
+                        <label><?php __a("Name");?><span class="jrIconRequired"></span></label>
+
+                        <div>
+                            <?php echo $Form->text('data[Directory][title]',array('value'=>Sanitize::getString($dir['Directory'],'name'),'max_size'=>'50','class'=>'jr-name jrText','placeholder'=>__a("Reference value",true)));?>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="jrCol2">
+
+                    <?php if($isNew):?>
+                     <div class="jrRight">
+
+                        <button class="jr-edit jrButton jrSmall jrGreen"><span class="jrIconNew"></span><?php __a("Add");?></button>
+
+                        <button class="jr-clear jrButton jrSmall"><span class="jrIconCancel"></span><?php __a("Clear");?></button>
+
+                    </div>
+                    <?php endif;?>&nbsp;
+
+                </div>
+
+            </div>
+
+        </fieldset>
+
+        <div class="jr-validation jrError jrHidden" style="margin-bottom: 15px;"></div>
+
+
+        <input type="hidden" name="data[Directory][id]" value="<?php echo Sanitize::getInt($dir['Directory'],'dir_id');?>" />
+
+        <input type="hidden" name="data[controller]" value="admin/directories" />
+
+        <input type="hidden" name="data[action]" value="_save" />
+
+    </form>
+
+</div>

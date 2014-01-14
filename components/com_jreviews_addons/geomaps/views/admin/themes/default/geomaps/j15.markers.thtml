@@ -1,0 +1,235 @@
+<?php
+/**
+ * jReviews - Reviews Extension
+ * Copyright (C) 2006-2009 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<?php
+# Initialize paginator helper
+$Paginator->paginate(
+    array(
+        'current_page'=>$this->page,
+        'items_per_page'=>$this->limit,
+        'items_total'=>$pagination['total']
+    )
+);
+?>
+
+<style type="text/css">
+img.cat_icons {
+    cursor: pointer; cursor: hand;}
+img.cat_icons:hover
+{
+    border: 3px solid green;}
+img.selected
+{
+    border: 3px solid blue;}
+</style>
+
+<script type="text/javascript">
+jQuery('.ui-dialog').remove();
+jQuery('.ac_results').remove();
+jQuery('.ac_input').remove();
+
+function showMarkerDialog()
+{
+   if(jQuery(":checkbox:checked").length == 0){
+       jQuery.jrAlert("First check the categories to which you want to assign or change the marker icon.");
+       return false;
+   }
+
+   if(jQuery('#marker_dialog').is(':data(dialog)'))
+   {
+        jQuery('#marker_dialog').dialog('open');
+   } else {
+        initAutoComplete();
+       var settings = {
+            'modal': true,
+            'autoOpen': true,
+            'buttons': {
+                "Save":function() {
+                    jQuery('#icon_field').val(jQuery('#icon_field_dialog').val());
+                    jQuery.ajax({
+                        url: s2AjaxUri+'&url=admin_geomaps/_saveMarkers',
+                        type: 'POST',
+                        data:jQuery('#markersForm').serialize(),
+                        dataType: 'html',
+                        success: function(s2Out)
+                        {
+                            jQuery('.cb:checked').each(function(){
+                                var cat_id = jQuery(this).val();
+                                /* update cat icons */
+                                var file_url = jQuery('#icon_src').val();
+                                var filename =  jQuery('#icon_cat').val();
+                                var markerImg = jQuery('<img style="width:20px;" src="" alt="" />').attr({'src':file_url,'alt':filename});
+                                jQuery('#cat_marker'+cat_id).html(markerImg);
+                                /* update field icon */
+                                jQuery('#field_marker'+cat_id).html(jQuery('#icon_field').val());
+                                jQuery(this.checked = false);
+                            });
+                            jQuery('#marker_dialog').dialog('close');
+                            jQuery('#icon_cat').val('');
+                            jQuery('#icon_field').val('');
+                        }
+                    });
+                },
+                "Cancel":function(){jQuery(this).dialog('close');jQuery('#icon_field').val(''); }
+            },
+            'width': '720px',
+            'height': 'auto',
+            'open': function(){},
+            'close': function() {jQuery('#icon_field').val(''); }
+        };
+        jQuery('#marker_dialog').dialog(settings);
+   }
+}
+
+function selectIcon(element)
+{
+    jQuery('.cat_icons').removeClass('selected');
+    jQuery(element).addClass('selected');
+    jQuery('#icon_cat').val(jQuery(element).attr('alt'));
+    jQuery('#icon_src').val(jQuery(element).attr('src'));
+}
+
+function initAutoComplete()
+{
+    var $adminForm = jQuery('#adminForm');
+    jQuery('.autoComplete').autocomplete({
+            minLength: 1,
+            source: function( request, response ) {
+                if($adminForm.data('cache.'+request.term)) {
+                    response($adminForm.data('cache.'+request.term));
+                }
+                else {
+                    var $this = jQuery(this);
+                    jreviews_admin.dispatch({
+                        'type':'json',
+                        'controller':'admin_geomaps',
+                        'action':'_fieldList',
+                        'data': {"data[limit]": 10,"data[value]": request.term,'data[field_types]':['select','radiobutton']},
+                        'onComplete':function( data ) {
+                            $adminForm.data('cache.'+request.term, data);
+                            response(data);
+                        }
+                    });
+                }
+            }
+        });
+}
+</script>
+
+<div class="jrPageHeading">Setup Markers</div>
+
+<div id="categorytable">
+
+    <div class="admin_toolbar ui-widget-header ui-corner-all ui-helper-jrClearfix">
+        <button class="ui-button ui-corner-all" onclick="showMarkerDialog();return false;">Assign Icon</button>
+    </div>
+
+    <div class="admin_filter">
+        <strong>Section filter:</strong>
+        <?php
+            echo $Form->select(
+                'data[sectionid]',
+                array_merge(array(array('value'=>null,'text'=>'All')),$sections),
+                $sectionid,
+                array('id'=>'sectionid_select','onchange'=>"jQuery('#sectionid').val(jQuery(this).val());jQuery('#page_number').val(1);
+                jQuery.post(s2AjaxUri,jQuery('#adminForm').serialize(),function(page){jQuery('#page').html(page);},'html');"
+                )
+            );
+        ?>
+    </div>
+
+    <form action="index.php" method="post" id="markersForm" name="markersForm">
+
+        <table class="admin_list">
+            <tr>
+                <th style="width:20px;"><input name="toggle" value="" onclick="var check_status=this.checked;jQuery('.cb').each(function(){this.checked=check_status;});" type="checkbox"></th>
+                <th style="text-align:center;width:30px;">Cat ID</th>
+                <th align="left" width="125">Section</th>
+                <th align="left" width="125">Category</th>
+                <th width="50" style="text-align:center;">Category Icon</th>
+                <th width="50" style="text-align:center;">Field Icon</th>
+            </tr>
+            <?php
+            $i = $this->page*$this->limit - ($this->limit - 1);
+            foreach($rows AS $key=>$row):
+                $row->marker_icon = (array) json_decode($row->marker_icon); if(!is_array($row->marker_icon)) $row->marker_icon = array('cat'=>'','field'=>'');
+            ?>
+            <tr id="category<?php echo $row->id?>">
+                <td style="width:20px;"><input id="cb<?php echo $key?>" class="cb" name="data[cat_ids][]" value="<?php echo $row->id?>" type="checkbox" /></td>
+                <td style="text-align:center;"><?php echo $row->id?></td>
+                <td align="left"><?php echo $row->section?></td>
+                <td align="left"><?php echo $row->cat?></td>
+                <td style="text-align:center;">
+                    <span id="cat_marker<?php echo $row->id;?>">
+                        <?php if($row->marker_icon['cat']!=''):?>
+                        <img style="width:20px;" id="marker<?php echo $row->id;?>" src="<?php echo $marker_base_url.$row->marker_icon['cat'];?>" alt="<?php echo $row->marker_icon['cat'];?>" />
+                        <?php endif;?>
+                    </span>
+                </td>
+                <td style="text-align:center;">
+                    <span id="field_marker<?php echo $row->id;?>">
+                        <?php echo $row->marker_icon['field'];?>
+                    </span>
+                </td>
+            </tr>
+            <?php endforeach;?>
+        </table>
+
+        <input type="hidden" id="icon_field" name="data[marker_icon][field]" value="" />
+        <input type="hidden" id="icon_cat" name="data[marker_icon][cat]" value="" />
+        <input type="hidden" id="icon_src" name="icon_src" value="" />
+    </form>
+
+    <form action="index.php" method="post" id="adminForm" name="adminForm">
+        <!-- PAGINATION BEGINS HERE -->
+        <table class="jr_pagination" width="100%" cellpadding="0" cellspacing="0">
+         <tr>
+            <td class="jr_pagenav_results"><?php echo $pagination['total']?> results - Showing <?php echo ($this->page-1)*$this->limit+1;?> - <?php echo min($pagination['total'],$this->page*$this->limit);?></td>
+            <td class="jr_pagenav_pages"><?php echo ($pagination['total'] > $this->limit) ? $Paginator->display_pages() : '';?></td>
+            <td class="jr_pagenav_limitbox"><?php echo $Paginator->display_items_per_page();?></td>
+         </tr>
+        </table>
+        <input type="hidden" id="page_number" name="data[page]" value="<?php echo $this->page;?>" />
+        <input type="hidden" id="limit" name="data[limit]" value="<?php echo $this->limit;?>" />
+        <input type="hidden" id="limitstart" name="data[offset]" value="<?php echo $this->offset;?>" />
+        <input type="hidden" id="controller" name="data[controller]" value="admin/admin_geomaps" />
+        <input type="hidden" id="action" name="data[action]" value="markers" />
+        <input type="hidden" id="sectionid" name="data[sectionid]" value="<?php echo $sectionid;?>" />
+
+        <!-- PAGINATION ENDS HERE -->
+   </form>
+
+</div>
+
+<div id="marker_dialog" style="display:none;">
+    <h3>Use images assigned to field options as markers</h3>
+    <div>
+    Field: <?php echo $Form->text('data[field]',array('id'=>'icon_field_dialog','class'=>'autoComplete','style'=>'width:15em;'));?>
+    </div>
+
+    <hr />
+    <h3>Choose an icon for all listings in a category</h3>
+    <ul>
+        <li>Cat icon used if no field selected above or no option selected for listing</li>
+        <li>Use _featured and _hover suffixed version of your markers and GeoMaps will use them (i.e. restaurant_hover.png)</li>
+    </ul>
+    <div style="text-align:center;">
+    <?php foreach($marker_list AS $src=>$file):?>
+        <?php $size = getimagesize(str_replace(WWW_ROOT,PATH_ROOT,$src));?>
+        <div class="img" style="float:left;margin:1px;overflow:hidden;width:45px;height:45px;text-align:center;">
+            <img id="<?php echo $file;?>" class="cat_icons" alt="<?php echo $file;?>" <?php echo $size[3];?> src="<?php echo $src;?>" title="<?php echo $file;?>" onclick="selectIcon(this);return false;">
+        </div>
+    <?php endforeach;?>
+    </div>
+    <div style="clear:both;"></div>
+</div>
+

@@ -1,0 +1,151 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+// Force use of no image for formatting consistency
+$this->Config->list_noimage_image = 1;
+?>
+
+<div id="jr-paid-myaccount" class="jr-page jrPage jrMyAccount">
+
+     <?php /*****************************************
+                     Expiring Orders
+    ***********************************************/?>
+
+    <?php if(isset($orders_expiring) && !empty($orders_expiring)):?>
+
+        <div class="jrHeading"><?php __t("Orders Expiring Soon");?></div>
+
+        <div>
+
+            <?php echo $this->renderControllerView('paid_account','orders',array('orders'=>$orders_expiring,'pagination'=>array()));?>
+
+        </div>
+
+    <?php endif;?>
+
+    <?php /*****************************************
+                Listings Pending Payment
+    ***********************************************/?>
+    <?php if(!empty($listings)): ?>
+
+        <div class="jrHeading"><?php __t("Listings Pending Payment");?></div>
+
+        <div class="jrDataList">
+
+            <?php foreach($listings AS $listing): $plan_id = 0;?>
+
+                <div class="jrGrid">
+
+                    <div class="jrCol1">
+
+                        <?php $Widgets->listingManager($listing);?>&nbsp;
+
+                    </div>
+
+                    <div class="jrCol5">
+
+                        <?php
+                        $tn_size = $this->Config->getOverride('media_list_thumbnail_size',$listing['ListingType']['config']);
+
+                        $tn_mode = $this->Config->getOverride('media_list_thumbnail_mode',$listing['ListingType']['config']);
+
+                        if($mainMediaThumb = $Media->thumb(Sanitize::getVar($listing,'MainMedia'),array('listing'=> &$listing,'size'=>$tn_size,'mode'=>$tn_mode))):?>
+
+                            <div class="jrListingThumbnail"><?php echo $Routes->content($mainMediaThumb,$listing)?></div>
+
+                        <?php endif;?>
+
+                        <div class="jrListingInfo"><?php echo $Routes->content($listing['Listing']['title'],$listing)?></div>
+
+                        <div>
+
+                            <?php if($this->action != 'category'):?>
+
+                                <?php echo isset($listing['Section']) ? $listing['Section']['title'] . '&raquo;' : '';?><?php echo $listing['Category']['title'];?><br />
+
+                            <?php endif;?>
+
+                        </div>
+
+                    </div>
+
+                    <div class="jrCol4">
+
+                        <?php if($listing['Listing']['state'] < 1):?>
+
+                            <span class="jrStatusLabel jrRed"><?php __t("Unpublished");?></span>
+
+                        <?php else:?>
+
+                            <span class="jrStatusLabel jrGreen"><?php __t("Published");?></span>
+
+                        <?php endif;?>
+                        &nbsp;
+
+                    </div>
+
+                    <div class="jrCol2 jrRightAlign">
+
+                        <?php $PaidRoutes->getPaymentLink($listing,array('plan_id'=>$plan_id));?>
+
+                    </div>
+
+                </div>
+
+            <?php endforeach;?>
+
+        </div>
+
+    <?php endif;?>
+
+    <?php /*****************************************
+                     Incomplete Orders
+    ***********************************************/?>
+
+    <?php if(isset($orders_incomplete) && !empty($orders_incomplete)):?>
+
+        <div class="jrHeading"><?php __t("Incomplete Orders");?></div>
+
+        <?php echo $this->renderControllerView('paid_account','orders',array('orders'=>$orders_incomplete,'pagination'=>array()));?>
+
+    <?php endif;?>
+
+ <?php /*****************************************
+                     My Account Tabs
+    ***********************************************/?>
+
+    <div class="jrHeading"><?php __t("Account Information");?></div>
+
+    <div class="jrAddListing jrButton ">
+
+        <span class="jrIconAddListing"></span><?php echo $Routes->listingNew(__t("Add new listing",true));?>
+
+    </div>
+
+    <div class="jrClear"></div>
+
+    <div class="jr-tabs-myaccount jrTabs">
+
+        <ul>
+
+            <li><a href="<?php displayAjaxUri('jreviews');?>&amp;url=paidlistings_listings"><?php __t("Listings");?></a></li>
+
+            <li><a href="<?php displayAjaxUri('jreviews');?>&amp;url=paidlistings_orders"><?php __t("Orders");?></a></li>
+
+            <li><a href="<?php displayAjaxUri('jreviews');?>&amp;url=paidlistings_invoices"><?php __t("Invoices");?></a></li>
+
+            <li><a href="<?php displayAjaxUri('jreviews');?>&amp;url=paidlistings_accounts"><?php __t("Account Details");?></a></li>
+
+        </ul>
+
+    </div>
+
+</div>

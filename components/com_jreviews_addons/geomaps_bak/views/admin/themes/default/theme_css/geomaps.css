@@ -1,0 +1,35 @@
+.jrMarkerIcon {
+	margin:1px;
+	overflow:hidden;
+	width:45px;
+	height:45px;
+}
+.jrMarkerIcon img {
+    cursor: pointer; cursor: hand;
+}
+.jrMarkerIcon img:hover {
+    border: 3px solid green;
+}
+.jrMarkerIcon .jrSelected {
+    border: 3px solid blue;
+}
+.jrMapLoading {
+	position: relative;
+}
+.jrMapLoading:after {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: url('images/loading.gif') center center no-repeat #eee;
+	content: "";
+}
+.jrMapItCanvas {
+	width: 700px;
+	height: 400px;
+}
+.jrMapGeocodeCanvas {
+	width: 100%;
+	height: 490px;
+}

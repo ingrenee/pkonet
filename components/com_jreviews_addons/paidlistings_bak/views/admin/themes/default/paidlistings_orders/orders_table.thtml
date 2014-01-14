@@ -1,0 +1,168 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+$Paginator->paginate(array('current_page'=>$this->page,'items_per_page'=>$this->limit,'items_total'=>$pagination['total']));
+
+$active_state = array(-1=>'jrPaidIconCancelled',0=>'jrPaidIconExpired',1=>'jrPaidIconActive',2=>'jrPaidIconRenewal');
+
+$active_state_title = array(-1=>__a("Unpaid",true),0=>__a("Expired",true),1=>__a("Active",true),2=>__a("Awaiting Renewal",true));
+
+$order_status_class = array('Incomplete'=>'jrRed','Pending'=>'jrOrange','Processing'=>'jrOrange','Complete'=>'jrGreen','Cancelled'=>'jrBrown','Fraud'=>'jrBrown','Failed'=>'jrPurple');
+
+$langDel = json_encode(array('del_confirm'=>__a("Are you sure you want to delete the selected order(s)?",true)));
+?>
+
+<?php echo $this->element('pagination',array('position'=>'top'));?>
+
+<div class="jrDataList">
+
+    <div class="jrGrid24 jrDataListHeader">
+
+        <div class="jrCol1"><input class="jr-cb-all" value="" type="checkbox"></div>
+
+        <div class="jrCol2"><?php __a("Order #");?></div>
+
+        <div class="jrCol1">&nbsp;</div>
+
+        <div class="jrCol2"><?php __a("Created");?></div>
+
+        <div class="jrCol2"><?php __a("Expires");?></div>
+
+        <div class="jrCol3"><?php __a("Plan");?></div>
+
+        <div class="jrCol3">&nbsp;</div>
+
+        <div class="jrCol1">
+
+            <span class="jrIconMessage jr-more-info"></span>
+
+            <div class="jrPopup jrHidden"><?php __a("Expiration notification sent");?></div>
+
+        </div>
+
+        <div class="jrCol2"><?php __a("User");?></div>
+
+        <div class="jrCol2"><?php __a("Coupon");?></div>
+
+        <div class="jrCol2"><?php __a("Status");?></div>
+
+        <div class="jrCol1">&nbsp;</div>
+
+        <div class="jrCol1">&nbsp;</div>
+
+        <div class="jrCol1">&nbsp;</div>
+
+    </div>
+
+    <?php foreach($orders AS $order): extract($order['PaidOrder']);?>
+
+    <div class="jr-layout-outer jrGrid24" data-id="<?php echo $order_id;?>">
+
+        <div class="jrCol1"><input type="checkbox" class="jr-row-cb" name="cid[]" value="<?php echo $order_id;?>" /></div>
+
+        <div class="jrCol2 jrSizeS"><?php echo str_pad($order_id, 7, "0", STR_PAD_LEFT);?></div>
+
+        <div class="jrCol1">
+
+            <span data-key='PaidOrder.ActiveState' data-key-type='class' data-states='<?php echo json_encode($active_state);?>' class="<?php echo $active_state[( $order_status!='Complete' ? -1 : ($order_active && $order_renewal == _NULL_DATE ? 1 : ($daysToExpiration <= 0 && $order_never_expires == 0 ? 0 : 2)) )];?>"></span>
+
+        </div>
+
+        <div class="jrCol2">
+
+            <?php echo $Time->niceShort($order_created);?>
+
+        </div>
+
+        <div class="jrCol2">
+
+            <?php echo $order_never_expires ? __a("Never",true) : $Time->niceShort($order_expires);?>
+
+        </div>
+
+        <div class="jrCol3">
+
+            <a href="javascript:void(0)" class="jr-edit" data-id="<?php echo $listing_id;?>" data-referrer="orders" data-object-type="listing">
+
+                <span data-key="Listing.title"><?php echo $listing_info['listing_title'];?></span>
+
+            </a>
+
+            <br />
+
+            <strong><?php echo $plan_info['plan_name'];?></strong>
+
+        </div>
+
+        <div class="jrCol3">
+
+            <span class="jrStatusLabel jrBlue jrSizeS"><?php echo $Paid->getPlanTypes($plan_type);?></span>
+
+        </div>
+
+        <div class="jrCol1">
+
+            <span class="<?php echo ($order_notify1 + $order_notify2 > 0) ? 'jrIconYes' : 'jrIconMinus';?>"></span>
+
+        </div>
+
+        <div class="jrCol2">
+
+            <?php echo $AdminRoutes->user($listing_info['owner_name'],$user_id,array('target'=>"_blank"));?>
+
+        </div>
+
+        <div class="jrCol2"><?php echo $coupon_name;?>&nbsp;</div>
+
+        <div class="jrCol2">
+
+            <span data-states='<?php echo json_encode($order_status_class);?>' data-key="PaidOrder.order_status" data-key-type="class" class="jrSizeS jrStatusLabel <?php echo $order_status_class[$order_status];?>">
+
+                <span data-key="PaidOrder.order_status"><?php echo $order_status;?></span>
+
+            </span>
+
+        </div>
+
+        <div class="jrCol1">
+
+            <button class="jr-edit jrButton jrIconOnly" data-id="<?php echo $order_id;?>" data-referrer="orders">
+
+                <span class="jrIconEdit"></span>
+
+            </button>
+
+        </div>
+
+        <div class="jrCol1">
+
+            <button class="jr-paid-txn jrButton jrIconOnly" title="<?php echo __a("Transaction log");?>" data-id="<?php echo $order_id;?>" data-listing-id="<?php echo $listing_id;?>">
+
+                <span class="jrIconCart"></span>
+
+            </button>
+
+        </div>
+
+        <div class="jrCol1">
+
+            <button class="jr-delete jrButton jrIconOnly" data-lang='<?php echo $langDel;?>'>
+
+                <span class="jrIconDelete"></span><span class="jrHidden"><?php echo __a("Delete");?></span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <?php endforeach;?>
+
+</div>
+
+<?php echo $this->element('pagination',array('position'=>'bottom'));?>

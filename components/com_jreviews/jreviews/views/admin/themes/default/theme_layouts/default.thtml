@@ -1,0 +1,268 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**
+ * Initialize editor
+ */
+if($this->Access->loadWysiwygEditor() && isset($Editor)) {
+    # Transforms class="jr-wysiwyg-editor" textareas
+    $Editor->load();
+}
+?>
+
+<div id="jr-admin" class="jrGrid24 jrAdmin">
+
+    <div class="jrCol4">
+
+        <div class="jrRoundedPanelLt">
+
+            <div style="text-align:center; margin-bottom: 10px;">
+
+                <div style="margin: 0 0 3px -4px;">
+
+                    <a href="index.php?option=com_jreviews&url=about"><img alt="logo" border="0" src="<?php echo $this->viewImages;?>jr_logo.gif"></a>
+
+                </div>
+
+                <strong>v<span style="font-size:14px;"><?php echo $this->Config->version?></span></strong>
+
+                <center><span id="jr-version"></span></center>
+
+            </div>
+
+
+            <div class="jrMenu">
+
+                <?php if(!isset($addon)):?>
+
+                <div id="main_modules">
+
+                <?php if($stats['entries_unpublished']
+                        +$stats['reviews']
+                        +$stats['owner_replies']
+                        +$stats['reports']
+                        +$stats['discussion_posts']
+                        +$stats['claims']
+                        +$stats['media']
+                        > 0
+                        )
+                        :?>
+
+                    <div class="jrGrid">
+
+                        <div class="jrCol12 jrHeader"><?php __a("Moderation");?></div>
+
+                        <div class="jrCol12">
+
+                            <ul>
+
+                                <?php if($stats['entries_unpublished']>0):?>
+
+                                <li><a href="index.php?option=com_jreviews&amp;url=admin_listings/moderation" class="jr-menu" data-controller="admin_listings" data-action="moderation"><?php __a("Listings");?>&nbsp;<span class="jrStatusLabel jrBlue" id="listing_count"><?php echo $stats['entries_unpublished'];?></span></a></li>
+                                <?php endif;?>
+
+                                <?php if($stats['reviews']>0):?>
+                                <li><a href="index.php?option=com_jreviews&amp;url=admin_reviews/moderation" class="jr-menu" data-controller="admin_reviews" data-action="moderation"><?php __a("Reviews");?>&nbsp;<span class="jrStatusLabel jrBlue" id="review_count"><?php echo $stats['reviews'];?></span></a></li>
+                                <?php endif;?>
+
+                                <?php if($stats['media']>0):?>
+                                <li><a href="index.php?option=com_jreviews&amp;url=admin_media/moderation" class="jr-menu" data-controller="admin_media" data-action="moderation"><?php __a("Media");?>&nbsp;<span class="jrStatusLabel jrBlue" id="media_count"><?php echo $stats['media'];?></span></a></li>
+                                <?php endif;?>
+
+                                <?php if($stats['claims']>0):?>
+                                <li><a href="index.php?option=com_jreviews&amp;url=admin_claims/moderation" class="jr-menu" data-controller="admin_claims" data-action="moderation"><?php __a("Claims");?>&nbsp;<span class="jrStatusLabel jrBlue" id="claim_count"><?php echo $stats['claims'];?></span></a></li>
+                                <?php endif;?>
+
+                                <?php if($stats['owner_replies']>0):?>
+                                <li><a href="index.php?option=com_jreviews&amp;url=admin_owner_replies/moderation" class="jr-menu" data-controller="admin_owner_replies" data-action="moderation"><?php __a("Owner Replies");?>&nbsp;<span class="jrStatusLabel jrBlue" id="reply_count"><?php echo $stats['owner_replies'];?></span></a></li>
+                                <?php endif;?>
+
+                                <?php if($stats['discussion_posts']>0):?>
+                                <li><a href="index.php?option=com_jreviews&amp;url=admin_discussions/moderation" class="jr-menu" data-controller="admin_discussions" data-action="moderation"><?php __a("Discussion Posts");?>&nbsp;<span class="jrStatusLabel jrBlue" id="discussion_count"><?php echo $stats['discussion_posts'];?></span></a></li>
+                                <?php endif;?>
+
+                                <?php if($stats['reports']>0):?>
+                                <li><a href="index.php?option=com_jreviews&amp;url=admin_reports/moderation" class="jr-menu" data-controller="admin_reports" data-action="moderation"><?php __a("Reports");?>&nbsp;<span class="jrStatusLabel jrBlue" id="report_count"><?php echo $stats['reports'];?></span></a></li>
+                                <?php endif;?>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                    <?php endif;?>
+
+                    <div class="jrGrid">
+
+                        <div class="jrCol12 jrHeader"><?php __a("Browse");?></div>
+
+                        <div class="jrCol12">
+
+                            <ul>
+
+                                <li><a href="index.php?option=com_jreviews&amp;url=admin_listings/browse" class="jr-menu" data-controller="admin_listings" data-action="browse"><?php __a("Listings");?></a></li>
+
+                                <li><a href="index.php?option=com_jreviews&amp;url=admin_reviews/browse" class="jr-menu" data-controller="admin_reviews" data-action="browse"><?php __a("Reviews");?></a></li>
+
+                                <li><a href="index.php?option=com_jreviews&amp;url=admin_media/browse" class="jr-menu" data-controller="admin_media" data-action="browse"><?php __a("Media");?></a></li>
+
+                                <li><a href="index.php?option=com_jreviews&amp;url=admin_inquiry/browse" class="jr-menu" data-controller="admin_inquiry" data-action="browse"><?php __a("Inquiries");?></a></li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                    <div class="jrGrid">
+
+                        <div class="jrCol12 jrHeader"><?php __a("Setup JReviews");?></div>
+
+                        <div class="jrCol12">
+
+                            <ul>
+
+                                <li><a href="javascript:void(0)" class="jr-menu" data-controller="groups" data-action="index"><?php __a("Field Groups Manager");?></a></li>
+
+                                <li><a href="javascript:void(0)" class="jr-menu" data-controller="fields" data-action="index"><?php __a("Fields Manager");?></a></li>
+
+                                <li><a href="javascript:void(0)" class="jr-menu" data-controller="listing_types" data-action="index"><?php __a("Listing Types Manager");?></a></li>
+
+                                <li><a href="javascript:void(0)" class="jr-menu" data-controller="directories" data-action="index"><?php __a("Directories Manager");?></a></li>
+
+                                <li><a href="javascript:void(0)" class="jr-menu" data-controller="categories" data-action="index"><?php __a("Categories Manager");?></a></li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                   <div class="jrGrid">
+
+                        <div class="jrCol12 jrHeader"><?php __a("Configuration");?></div>
+
+                        <div class="jrCol12">
+
+                            <ul>
+
+                                <li><a href="javascript:void(0)" class="jr-menu" data-controller="configuration" data-action="index"><?php __a("Configuration Settings");?></a></li>
+
+                                <li><a href="javascript:void(0)" class="jr-menu" data-controller="admin_media" data-action="config"><?php __a("Media Settings");?></a></li>
+
+                                <li><a href="javascript:void(0)" class="jr-menu" data-controller="access" data-action="index"><?php __a("Access settings");?></a></li>
+
+                                <li><a href="javascript:void(0)" class="jr-menu" data-controller="admin_predefined_replies" data-action="index"><?php __a("Predefined Replies");?></a></li>
+
+                                <li><a href="javascript:void(0)" class="jr-menu" data-controller="themes" data-action="index"><?php __a("Theme Manager");?></a></li>
+
+                                <li><a href="javascript:void(0)" class="jr-menu" data-controller="seo" data-action="index"><?php __a("Field SEO Manager");?></a></li>
+
+                                <li><a href="javascript:void(0)" class="jr-menu" data-controller="categories" data-action="seo"><?php __a("Category SEO Manager");?></a></li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                    <?php echo $this->element('addons');?>
+
+                </div>
+
+                <div id="addon_module" class="jrHidden"></div>
+
+                <?php else:?>
+
+                    <?php echo Sanitize::stripWhitespace($this->renderControllerView($addon,'menu'));?>
+
+                <?php endif;?>
+
+               <div class="jrGrid">
+
+                    <div class="jrCol12 jrHeader"><?php __a("Maintenance");?></div>
+
+                    <div class="jrCol12">
+
+                        <ul>
+
+                            <li><a href="javascript:void(0)" class="jr-menu" data-controller="admin_updater" data-action="index"><?php __a("Installer/Updater");?></a></li>
+
+                            <li><a href="#reviewer-ranks" id="rebuild-reviewer-ranks"><?php __a("Rebuild Reviewer Ranks"); ?></a></li>
+
+                            <li><a href="#media-counts" id="rebuild-media-counts"><?php __a("Rebuild Media Counts"); ?></a></li>
+
+                            <li><a href="index.php?option=com_jreviews&url=common/clearCacheRegistry" id="jr-clear-cache-registry"><?php __a("Clear Cache & File Registry");?></a></li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+                <div class="jrGrid">
+
+                    <div class="jrCol12 jrHeader"><?php __a("Support");?></div>
+
+                    <div class="jrCol12">
+
+                        <ul>
+
+                            <li><a target="_blank" href="http://docs.reviewsforjoomla.com/"><?php __a("Documentation");?></a></li>
+
+                            <li><a target="_blank" href="https://support.reviewsforjoomla.com/"><?php __a("Submit Ticket");?></a></li>
+
+                            <li><a target="_blank" href="http://www.reviewsforjoomla.com/forum/"><?php __a("Support Forum");?></a></li>
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+                <br />
+
+                <div class="jrCenter">
+
+                    Copyright &copy; 2010-<?php echo date('Y');?><br />ClickFWD LLC
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="jrCol20">
+
+        <div class="jr-page jrPage jrRoundedPanelLt">
+
+            <?php echo $content_for_layout;?>
+
+            <div class="jrClear"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="jr-page-spinner" style="display:none;background-color:#FEFFBF;text-align:center;margin:0;padding:5px 0;width:100%;position:fixed;z-index:2000;left:0;bottom:0;-moz-box-shadow:0 -1px 6px #EEF076;-webkit-box-shadow:0 -1px 6px #EEF076;">
+
+	<div align="center" style="margin:0 auto;width: 160px;">
+
+		<img alt="loading" src="<?php echo $this->viewImages;?>loading.gif"/> <?php __a("processing...");?>
+
+	</div>
+
+</div>

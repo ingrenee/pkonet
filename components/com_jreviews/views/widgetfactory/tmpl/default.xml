@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata>
+    <layout title="COM_JREVIEWS_WIDGETFACTORY_VIEW_DEFAULT_TITLE">
+            <![CDATA[COM_JREVIEWS_WIDGETFACTORY_VIEW_DEFAULT_TITLE]]>
+    </layout>
+
+    <fields name="params">
+
+        <fieldset name="basic" label="JReviews">
+
+            <field name="action" type="list" default="200" label="Type of Menu" description="Choose a menu type">
+                <option value="200">Available Widgets</option>
+            </field>
+
+            <field name="custom_description" filter="raw" type="textarea" default="" rows="10" cols="45" label="Page Description" description="This custom description will appear at the top of the page" />
+
+        </fieldset>
+
+    </fields>
+
+</metadata>

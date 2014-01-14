@@ -1,0 +1,33 @@
+<div class="jr-paid-handler-new">
+
+    <form id="jr-form-handler" action="index.php" method="post" class="jrForm">
+
+        <fieldset>
+
+            <div class="jrFieldDiv">
+
+                <label><?php __a("Name");?></label>
+
+                <div><?php echo $Form->text('data[PaidHandler][name]',array('class'=>'jrText'));?></div>
+
+            </div>
+
+            <div class="jrFieldDiv">
+
+                <label><?php __a("Plugin File");?></label>
+
+                <div><?php echo $Form->select('data[PaidHandler][plugin_file]',array_merge(array(''=>__a("Select handler plugin",true)),$handler_plugins),'',array('class'=>'jrSelect'));?></div>
+
+            </div>
+
+        </fieldset>
+
+        <div class="jr-validation jrError jrHidden"></div>
+
+        <input type="hidden" name="data[controller]" value="admin/admin_paidlistings_handlers" />
+
+        <input type="hidden" name="data[action]" value="_save" />
+
+    </form>
+
+</div>

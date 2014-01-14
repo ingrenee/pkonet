@@ -1,0 +1,122 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+$filter = Sanitize::getVar($this->params,'filter');
+?>
+
+<div class="jr-paid-orders-list">
+
+    <div class="jrPageHeading"><?php __a("Transactions");?></div>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="paidlistings_txn">
+
+        <div class="jr-filters-search jrPageFilters jrRoundedPanelLt jrClearfix">
+
+            <div class="jrPageToolbar jrRoundedPanel">
+
+                <button class="jr-search jrButton">
+
+                    <span class="jrIconSearch"></span><?php __a("Search");?>
+
+                </button>
+
+            </div>
+
+            <div class="jrGrid24">
+
+                <div class="jrCol3">
+
+                    <label><?php __a("Order #");?></label><br />
+
+                    <?php echo $Form->text('filter[order_id]',array('style'=>'width:6em;','value'=>Sanitize::getString($filter,'order_id')));?>
+
+                </div>
+
+                <div class="jrCol9">
+
+                    <?php
+                    $created = Sanitize::getVar($filter,'txn_date');
+
+                    $created_from = Sanitize::getString($created,0);
+
+                    $created_to = Sanitize::getString($created,1);
+                    ?>
+
+                    <label><?php __a("Transaction Date");?></label><br />
+
+                    <?php __a("From");?>: <?php echo $Form->text('filter[txn_date][]',array('class'=>'jr-date jrDate','value'=>$created_from));?>
+
+                    &nbsp;&nbsp;
+
+                    <?php __a("To");?>: <?php echo $Form->text('filter[txn_date][]',array('class'=>'jr-date jrDate','value'=>$created_to));?>
+
+                </div>
+
+                <div class="jrCol7">
+
+                    <label><?php __a("Listing Title");?></label><br />
+
+                    <?php echo $Form->text('title',array('style'=>'width:20em;','value'=>Sanitize::getString($this->params,'title')));?>
+
+                    <?php echo $Form->hidden('filter[listing_id]',array('value'=>Sanitize::getString($filter,'listing_id')));?>
+
+                </div>
+
+                <div class="jrCol5">
+
+                    <label><?php __a("Plan");?></label><br />
+
+                    <?php echo $Form->select('filter[plan_id]',array_merge(array(''=>__a("Select",true)),$plans),Sanitize::getString($filter,'plan_id'));?>
+
+                </div>
+
+            </div>
+
+           <br />
+
+            <div class="jrGrid24">
+
+                    <div class="jrCol3">
+
+                        <label><?php __a("User");?></label><br />
+
+                        <?php echo $Form->text('user_id',array('class'=>'jr-user-autocomplete','style'=>'width: 10em;','value'=>Sanitize::getString($this->params,'user_id')));?>
+
+                        <?php echo $Form->hidden('filter[user_id]',array('class'=>'jr-user-id-ac','value'=>Sanitize::getString($filter,'user_id')));?>
+
+                    </div>
+
+                    <div class="jrCol3">
+
+                        <label><?php __a("Coupon");?></label><br />
+
+                        <?php echo $Form->text('filter[coupon_name]',array('style'=>'width: 7em;','value'=>Sanitize::getString($filter,'coupon_name')));?>
+
+                    </div>
+
+                    <div class="jrCol18">
+
+                        <label style="display:block;" for="order_id_search"><?php __a("Processor");?></label>
+
+                        <?php echo $Form->select('filter[handler_id]',array_merge(array(''=>__a("Select",true)),$handler_list),Sanitize::getString($filter,'handler_id'),array('style'=>'width:12em;'));?>
+
+                    </div>
+            </div>
+
+        </div>
+
+        <?php echo $this->renderControllerView('paidlistings_txn','txn_table');?>
+
+        <input type="hidden" id="controller" name="data[controller]" value="admin/admin_paidlistings_txn" />
+
+        <input type="hidden" id="action" name="data[action]" value="index" />
+
+    </form>
+
+</div>

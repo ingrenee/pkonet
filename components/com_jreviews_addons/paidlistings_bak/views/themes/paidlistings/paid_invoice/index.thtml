@@ -1,0 +1,186 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+extract($invoice['PaidOrder']);
+
+extract($account['PaidAccount']);
+?>
+
+<div id="jrInvoicePage">
+
+    <div id="jrHeader"><?php __t("Invoice");?></div>
+
+    <div id="jrSeller">
+
+        <div id="jrSellerInfo"><?php echo nl2br($this->Config->{'paid.business_info'});?></div>
+
+        <div id="jrLogo">
+
+            <?php echo $Html->image(WWW_ROOT.ltrim($this->Config->{'paid.logo'},_DS));?>
+
+        </div>
+
+    </div>
+
+    <div id="jrCustomer">
+
+        <div id="jrCustomerInfo">
+
+            <?php if($name!=''):?><?php echo $name;?><br /><?php endif;?>
+
+            <?php if($business!=''):?><?php echo $business;?><br /><?php endif;?>
+
+            <?php if($address!=''):?><?php echo nl2br($address);?><br /><?php endif;?>
+
+            <?php if($country!=''):?><?php echo $country;?><br /><?php endif;?>
+
+            <?php if($tax_id!=''):?><?php echo $tax_id;?><?php endif;?>
+
+        </div>
+
+        <table id="jrInvoiceData">
+
+            <tr>
+
+                <td class="label"><?php __t("Invoice #");?></td>
+
+                <td>
+
+                <?php if(isset($invoice['PaidTxnLog']) && $invoice['PaidTxnLog']['log_id']>0):?>
+
+                    <?php echo str_pad($invoice['PaidTxnLog']['log_id'], 7, "0", STR_PAD_LEFT);?>
+
+                <?php else:?>
+
+                    <?php __t("UNPAID");?>
+
+                <?php endif;?>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td class="label"><?php __t("Order #");?></td>
+
+                <td><?php echo str_pad($invoice['PaidOrder']['order_id'], 7, "0", STR_PAD_LEFT);?></td>
+
+            </tr>
+
+            <tr>
+
+                <td class="label"><?php __t("Date");?></td>
+
+                <td><?php echo $Time->nice(isset($invoice['PaidTxnLog']) ? $invoice['PaidTxnLog']['txn_date'] : $invoice['PaidOrder']['order_created']);?></td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+    <table id="jrInvoiceItems">
+
+        <tr>
+
+            <th class="jrItemCol"><?php __t("Item");?></th>
+
+            <th class="jrDescCol"><?php __t("Description");?></th>
+
+            <th class="jrAmountCol"><?php __t("Amount");?></th>
+
+        </tr>
+
+        <tr class="jrItemRow">
+
+            <td>
+
+                <?php echo $plan_info['plan_name'];?> - <?php echo $listing_info['listing_title'];?>
+
+                    <br />
+
+                    <strong><?php __t("Expires");?>:</strong> <?php echo $order_never_expires ? __t("Never",true) : $Time->format($order_expires,'%m/%d/%y');?>
+
+            </td>
+
+            <td>
+
+                <div><?php echo $plan_info['plan_array']['description'];?></div>
+
+                <?php if($invoice['PaidOrder']['order_status'] == "Incomplete" && isset($invoice['PaidHandler']['settings']['offline'])):?>
+
+                <div style="margin:30px 5px 0 5px;padding:10px; border:1px solid #ccc;">
+
+                    <?php echo $invoice['PaidHandler']['settings']['offline'];?>
+
+                </div>
+
+                <?php endif;?>
+
+            </td>
+
+            <td class="jrAlignRight">
+
+                <?php echo $this->Config->{'paid.currency_symbol'};?><?php echo s2_num_format($invoice[
+                'PaidOrder']['order_amount']-$invoice['PaidOrder']['order_tax']);?>
+
+            </td>
+
+        </tr>
+
+        <?php if($invoice['PaidOrder']['order_tax'] > 0):?>
+
+        <tr>
+
+            <td class="jrInvoiceTotal" colspan="2"><?php __t("Subtotal");?></td>
+
+            <td class="jrInvoiceAmountSubtotal jrAlignRight">
+
+                <?php echo s2_num_format($invoice['PaidOrder']['order_amount']-$invoice['PaidOrder']['order_tax']);?>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td class="jrInvoiceTotal" colspan="2"><?php echo sprintf(__t("Tax (%s%%)",true),$this->Config->{'paid.tax'});?></td>
+
+            <td id="jrInvoiceAmountTax jrAlignRight">
+
+                <?php echo s2_num_format($invoice['PaidOrder']['order_tax']);?>
+
+            </td>
+        </tr>
+
+        <?php endif;?>
+
+        <tr>
+
+            <td class="jrInvoiceTotal" colspan="2"><?php __t("Total");?></td>
+
+            <td class="jrInvoiceAmountTotal jrAlignRight">
+
+                <?php echo $this->Config->{'paid.currency_symbol'};?><?php echo s2_num_format($invoice['PaidOrder']['order_amount']);?>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+    <div id="jrFooter">
+
+        <?php __t("Thank you for your business!");?>
+
+    </div>
+
+</div>

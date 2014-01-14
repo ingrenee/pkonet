@@ -1,0 +1,85 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/?>
+
+ <div class="jr-attachments jrMediaContainer jrAttachments">
+
+	<ul class="jrDataList">
+
+		<li class="jrDataListHeader">
+
+			<div class="jrGrid">
+
+				<div class="jrCol4 jrAttachmentDescription"><strong><?php __t("File Description");?></strong></div>
+
+				<div class="jrCol2 jrAttachmentSize"><strong><?php __t("File Size");?></strong></div>
+
+				<div class="jrCol2 jrAttachmentType"><strong><?php __t("File Type");?></strong></div>
+
+				<div class="jrCol2 jrAttachmentDownloads"><strong><?php __t("Downloads");?></strong></div>
+
+				<div class="jrCol2 jrAttachmentDownloadButton"></div>
+
+			</div>
+
+		</li>
+
+		<?php foreach($listing['Media']['attachment'] AS $attachment):?>
+
+			<?php
+				$file_ext = $attachment['file_extension'];
+				$filetype_img_url = $this->viewImages.'filetype/'.$file_ext.'.png';
+				$filetype_img_path = $this->viewImagesPath.'filetype/'.$file_ext.'.png';
+
+				if (file_exists($filetype_img_path)) {
+					$attachment_type = '<img src="'.$filetype_img_url.'"/>';
+				} else {
+					$attachment_type = $file_ext;
+				}
+			 ?>
+
+			<li data-file-type="<?php echo $file_ext;?>" <?php if($file_ext == 'kml'):?>data-file-path="<?php echo $attachment['media_path'] . '.' . $file_ext;?>"<?php endif;?>>
+
+				<div class="jrGrid">
+
+					<div class="jrCol4 jrAttachmentDescription">
+
+						<strong><?php echo $attachment['title'] != '' ? $attachment['title'] : $attachment['filename'].'.'.$attachment['file_extension'];?></strong>
+
+						<br />
+
+						<?php echo $attachment['description']; ?>
+					</div>
+
+					<div class="jrCol2 jrAttachmentSize"><?php echo $Media->formatFileSize($attachment['filesize']); ?></div>
+
+					<div class="jr-file-extension jrCol2 jrAttachmentType"><?php echo $attachment_type; ?></div>
+
+					<div class="jrCol2 jrAttachmentDownloads"><?php echo $attachment['views']; ?></div>
+
+					<div class="jrCol2 jrAttachmentDownloadButton">
+
+						<?php $Widgets->download($attachment);?>
+
+					</div>
+
+				</div>
+
+			</li>
+
+		<?php endforeach; ?>
+
+	</ul>
+
+</div>

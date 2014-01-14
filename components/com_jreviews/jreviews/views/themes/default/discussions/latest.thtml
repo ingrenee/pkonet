@@ -1,0 +1,67 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ *                                 PAGINATION HELPER
+ **********************************************************************************/
+$Paginator->paginate(
+	array(
+		'current_page'=>$this->page,
+		'items_per_page'=>$this->limit,
+		'items_total'=>$pagination['total']
+	)
+);
+// Add page meta tags - must go after Paginator helper
+echo $this->element('page_meta');
+
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<div class="jrPage jrDiscussion">
+
+	<?php if(isset($page['title'])):?>
+
+	<h1 class="contentheading"><?php echo strip_tags($page['title']);?></h1>
+
+	<?php endif;?>
+
+ 	<?php /* PAGINATION */ ?>
+
+	<?php echo $this->element('pagination',array('position'=>'top'));?>
+
+	<?php /* REVIEW COMMENTS */ ?>
+
+	<?php if($this->Config->review_discussions && !empty($posts)):?>
+
+		<div class="jrPostList jrDataList">
+
+			<?php foreach($posts AS $post):?>
+
+				<div class="jrPost">
+
+					<div class="jrContentTitle"><?php echo $Routes->reviewDiscuss($post['Review']['title'],$post['Review'],array('listing'=>$post));?></div>
+
+					<?php echo $this->renderControllerView('discussions','post_list_layout',array('post'=>$post));?>
+
+				</div>
+
+			<?php endforeach;?>
+
+		</div>
+
+	<?php endif;?>
+
+ 	<?php /* PAGINATION */ ?>
+
+	<?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+</div>

@@ -1,0 +1,29 @@
+<form id="jr-form-claim" name="jr-form-claim" class="jrForm jrClaimForm" action="index.php" method="post">
+
+	<fieldset>
+
+		<div class="jrFieldDiv">
+
+			<label><?php __t("Please provide some information that will allow us to verify your ownership claim.");?></label>
+
+			<textarea id="jr-claim-text" name="data[Claim][claim_text]" rows="10" cols="250" class="jrTextArea"></textarea>
+
+		</div>
+
+	</fieldset>
+
+	<div class="jr-validation jrError jrHidden"></div>
+
+	<input name="data[Claim][listing_id]" type="hidden" value="<?php echo $listing_id;?>" />
+
+	<input type="hidden" name="option" value="com_jreviews" />
+
+	<input type="hidden" name="data[controller]" value="claims" />
+
+	<input type="hidden" name="data[action]" value="_save" />
+
+	<input type="hidden" name="format" value="raw" />
+
+	<?php echo cmsFramework::getTokenInput();?>
+
+</form>

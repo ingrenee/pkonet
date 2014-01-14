@@ -1,0 +1,933 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<div class="jrPageHeading"><?php __a("Media Settings");?></div>
+
+<form id="jr-page-form" class="jrForm" action="index.php" method="post">
+
+	<div class="jrPageToolbar jrRoundedPanel">
+
+        <span id="jr-status" class="jrLeft jrStatus"></span>
+
+        <button class="jr-save-settings jrButton jrGreen">
+
+            <span class="jrIconSave"></span><?php __a("Save");?>
+
+        </button>
+
+	</div>
+
+	<?php
+	// SERVER SETTINGS CHECK
+       $postSize = ini_get('post_max_size');
+       $uploadSize = ini_get('upload_max_filesize');
+ 	?>
+
+ 	<div class="jrWarning">
+
+ 		<span class="jrIconWarning"></span>&nbsp;<?php echo sprintf(__a("IMPORTANT: Your server settings in php.ini allow file uploads up to %s. This limit is set by <strong>post_max_size</strong> and <strong>upload_max_filesize</strong> settings.",true),min($postSize,$uploadSize));?>
+
+ 	</div>
+
+	<div class="jr-tabs jrTabs">
+	    <ul>
+	        <li><a href="#display"><span><?php __a("Display Settings");?></span></a></li>
+	        <li><a href="#photos"><span><?php __a("Photos");?></span></a></li>
+	        <li><a href="#videos"><span><?php __a("Videos");?></span></a></li>
+	        <li><a href="#attachments"><span><?php __a("Attachments");?></span></a></li>
+	        <li><a href="#audio"><span><?php __a("Audio");?></span></a></li>
+	        <li><a href="#storage"><span><?php __a("Storage Settings");?></span></a></li>
+	        <li><a href="#encoding"><span><?php __a("Encoding Settings");?></span></a></li>
+	    </ul>
+
+        <!-- DISPLAY SETTINGS -->
+	    <?php $displayTab = array(
+			/*** NEW HEADER ***/
+			__a("General Settings",true) => array(
+				 array(
+					'label'=>__a("Force use of Catch-All menu for media urls",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_url_catchall',
+					'help'=>__a("You need to create the Catch-All menu for Media. If disabled, JReviews category menu ids will be used if they exist.",true)
+				),
+				 array(
+					'label'=>__a("No Image Path",true),
+					'type'=>'text',
+					'name'=>'media_general_default_image_path',
+					'attributes'=>array('style'=>'width:50em;'),
+					'help'=>''
+				),
+				 array(
+					'label'=>__a("Video Processing Path",true),
+					'type'=>'text',
+					'name'=>'media_general_default_video_path',
+					'attributes'=>array('style'=>'width:50em;'),
+					'help'=>''
+				),
+				 array(
+					'label'=>__a("Thumbnail Quality",true),
+					'type'=>'text',
+					'name'=>'media_general_thumbnail_quality',
+					'attributes'=>array('style'=>'width:5em'),
+					'after'=>'In a scale from 1-100. Default is: 85.'
+				),
+				 array(
+					'label'=>__a("Default Media Order",true),
+					'type'=>'select',
+					'name'=>'media_general_default_order',
+					'options'=>array('newest'=>__a("Newest",true),'liked'=>__a("Most Liked",true),'popular'=>__a("Popular",true)),
+					'help'=>__a("This is the ordering that will be used in media list pages.",true)
+				),
+				 array(
+					'label'=>__a("Default Media Order - Listing Specific",true),
+					'type'=>'select',
+					'name'=>'media_general_default_order_listing',
+					'options'=>array('newest'=>__a("Newest",true),'liked'=>__a("Most Liked",true),'ordering'=>__a("Ordering",true),'popular'=>__a("Popular",true)),
+					'help'=>__a("This is the ordering that will be used in listing detail pages and photo and video galleries for a specific listing.",true)
+				),
+				 array(
+					'label'=>__a("Display Terms & Conditions in upload page",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_general_tos',
+					'after'=>'',
+					'help'=>__a("The terms will not display for the Joomla editor group and above.",true)
+				),
+				 array(
+					'label'=>__a("Add additional link to Submission Guidelines page",true),
+					'type'=>'text',
+					'name'=>'media_general_tos_articleid',
+					'attributes'=>array('style'=>'width:4em'),
+					'help'=>__a("Enter the Joomla Article ID you want to use. You can find the ID in the Joomla Article Manager.",true)
+				)
+			),
+			__a("Media Indicators",true) => array(
+				 array(
+					'label'=>__a("Photo Count",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_photo_show_count'
+				),
+				 array(
+					'label'=>__a("Video Count",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_video_show_count'
+				),
+				 array(
+					'label'=>__a("Attachment Count",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_attachment_show_count'
+				),
+				 array(
+					'label'=>__a("Audio Count",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_audio_show_count'
+				)
+			),
+			/*** NEW HEADER ***/
+			__a("List Pages (results, categories, etc.)",true) => array(
+				 array(
+					'label'=>__a("Show Main Media Thumbnail",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_list_thumbnail',
+				),
+				 array(
+					'label'=>__a("Thumbnail Mode",true),
+					'type'=>'radio',
+					'name'=>'media_list_thumbnail_mode',
+					'options'=>array('scale'=>__a("Scale",true),'crop'=>__a("Crop",true)),
+					'attributes'=>array('div'=>false)
+				),
+				 array(
+					'label'=>__a("Thumbnail Size",true),
+					'type'=>'text',
+					'name'=>'media_list_thumbnail_size',
+					'attributes'=>array('style'=>'width:8em'),
+					'after'=>__a("WIDTHxHEIGHT in pixels",true),
+				),
+				 array(
+					'label'=>__a("Use Category Image",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_list_category_image',
+					'help'=>__a("Used if main media thumbnail is not available.",true)
+				),
+				 array(
+					'label'=>__a("Use Default Image",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_list_default_image',
+					'help'=>__a("Used if both category and main media thumbnails are not available.",true)
+				)
+			),
+			/*** NEW HEADER ***/
+			__a("Detail Pages",true) => array(
+				array(
+					'label'=>__a("Separate Listing Owner and User uploaded media",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_detail_separate_media',
+					'attributes'=>array('div'=>false),
+					'help'=>__a("Photos and video only. Listing Owner media displays in main area of the listing detail page while Review media will appear in individual reviews. Links to view 'All', 'Listing' and 'Users' photos and videos will also be displayed unless lightbox or gallery layouts are used.",true)
+				 ),
+				 array(
+					'label'=>__a("Photo Display Layout",true),
+					'type'=>'select',
+					'name'=>'media_detail_photo_layout',
+					'options'=>array(
+						'contact_lightbox'=>__a("Contact sheet with lightbox",true),
+						'contact_linked'=>__a("Contact sheet linked to separate gallery page",true),
+						'gallery_large'=>__a("Full width gallery without lightbox",true),
+						'gallery_small'=>__a("Small gallery with lightbox",true),
+						'film_lightbox'=>__a("Film strip with lightbox",true),
+						'film_linked'=>__a("Film strip linked to separate gallery page",true)
+					),
+					'help'=>__a("Lightbox and gallery layouts ignore the limit settings below.",true)
+				),
+				 array(
+					'label'=>__a("Video Display Layout",true),
+					'type'=>'select',
+					'name'=>'media_detail_video_layout',
+					'options'=>array(
+						'contact_lightbox'=>__a("Contact sheet with lightbox",true),
+						'contact_linked'=>__a("Contact sheet linked to separate gallery page",true),
+						'video_player'=>__a("Full width video player",true),
+						'film_lightbox'=>__a("Film strip with lightbox",true),
+						'film_linked'=>__a("Film strip linked to separate gallery page",true)
+					),
+					'help'=>__a("Lightbox and gallery layouts ignore the limit settings below.",true)
+				),
+				array(
+					'label'=>__a("Audio Downloads",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_detail_audio_downloads',
+					'attributes'=>array('div'=>false),
+					'help'=>__a("Displays a download button next to each track.",true)
+				 ),
+				array(
+					'label'=>__a("MAIN MEDIA",true),
+					'type'=>'separator'
+				),
+				array(
+					'label'=>__a("Main Media Thumbnail",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_detail_main',
+					'help'=>__a("Enable to display main media thumbnail separately.",true)
+				),
+				array(
+					'label'=>__a("Disable Main Media Link",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_detail_main_lightbox_disable',
+					'help'=>__a("Disable the lightbox for photos when set as main media. Gallery photos will continue opening in a lightbox if Photo Lightbox is enabled.",true)
+				),
+				 array(
+					'label'=>__a("Main Media Thumbnail Mode",true),
+					'type'=>'radio',
+					'name'=>'media_detail_main_thumbnail_mode',
+					'options'=>array('scale'=>__a("Scale",true),'crop'=>__a("Crop",true)),
+					'attributes'=>array('div'=>false)
+				),
+				 array(
+					'label'=>__a("Main Media Thumbnail Size",true),
+					'type'=>'text',
+					'name'=>'media_detail_main_thumbnail_size',
+					'attributes'=>array('style'=>'width:8em'),
+					'after'=>__a("WIDTHxHEIGHT in pixels",true),
+				),
+				array(
+					'label'=>__a("Show category/default image using above settings for List Pages",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_detail_default',
+					'help'=>''
+				),
+				 array(
+					'label'=>__a("Thumbnail alignment",true),
+					'type'=>'radio',
+					'name'=>'media_detail_main_thumbnail_alignment',
+					'options'=>array('left'=>__a("Left",true),'right'=>__a("Right",true)),
+					'attributes'=>array('div'=>false)
+				),
+				array(
+					'label'=>__a("CONTACT AND FILM STRIP LAYOUT",true),
+					'type'=>'separator'
+				),
+				 array(
+					'label'=>__a("Gallery Thumbnail Mode",true),
+					'type'=>'radio',
+					'name'=>'media_detail_gallery_thumbnail_mode',
+					'options'=>array('scale'=>__a("Scale",true),'crop'=>__a("Crop",true)),
+					'attributes'=>array('div'=>false)
+				),
+				 array(
+					'label'=>__a("Gallery Thumbnail Size",true),
+					'type'=>'text',
+					'name'=>'media_detail_gallery_thumbnail_size',
+					'attributes'=>array('style'=>'width:8em'),
+					'after'=>__a("WIDTHxHEIGHT in pixels",true),
+				),
+				array(
+					'label'=>__a("FULL WIDTH PHOTO GALLERY LAYOUT",true),
+					'type'=>'separator'
+				),
+				array(
+					'label'=>__a("Display photo info as overlay on mouseover",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_photo_gallery_overlay',
+					'help'=>''
+				),
+				array(
+					'label'=>__a("LAYOUTS WITH MEDIA LINKING TO SEPARATE GALLERY",true),
+					'type'=>'separator'
+				),
+				 array(
+					'label'=>__a("Photo Limit",true),
+					'type'=>'text',
+					'name'=>'media_detail_photo_limit',
+					'attributes'=>array('style'=>'width:5em'),
+					'help'=>__a("After this number visitors need to go to the gallery page for the listing to view all photos",true),
+				),
+				 array(
+					'label'=>__a("Video Limit",true),
+					'type'=>'text',
+					'name'=>'media_detail_video_limit',
+					'attributes'=>array('style'=>'width:5em'),
+					'help'=>__a("After this number visitors need to go to the gallery page for the listing to view all videos",true),
+				)
+			),
+			/*** NEW HEADER ***/
+			__a("Review Pages/Layout",true) => array(
+				 array(
+					'label'=>__a("Gallery Thumbnail Mode",true),
+					'type'=>'radio',
+					'name'=>'media_review_gallery_thumbnail_mode',
+					'options'=>array('scale'=>__a("Scale",true),'crop'=>__a("Crop",true)),
+					'attributes'=>array('div'=>false)
+				),
+				 array(
+					'label'=>__a("Gallery Thumbnail Size",true),
+					'type'=>'text',
+					'name'=>'media_review_gallery_thumbnail_size',
+					'attributes'=>array('style'=>'width:8em'),
+					'after'=>__a("WIDTHxHEIGHT in pixels",true),
+				),
+				 array(
+					'label'=>__a("Photo Limit",true),
+					'type'=>'text',
+					'name'=>'media_review_photo_limit',
+					'attributes'=>array('style'=>'width:5em'),
+					'help'=>__a("After this number visitors need to go to the gallery page for the listing to view all photos",true),
+				),
+				 array(
+					'label'=>__a("Video Limit",true),
+					'type'=>'text',
+					'name'=>'media_review_video_limit',
+					'attributes'=>array('style'=>'width:5em'),
+					'help'=>__a("After this number visitors need to go to the gallery page for the listing to view all videos",true),
+				)
+			),
+			/*** NEW HEADER ***/
+			__a("Media Pages",true) => array(
+				 array(
+					'label'=>__a("Media List Layout",true),
+					'type'=>'radio',
+					'name'=>'media_list_layout',
+					'options'=>array('grid'=>__a("Grid",true),'masonry'=>__a("Masonry",true)),
+					'attributes'=>array('div'=>false)
+				),
+				 array(
+					'label'=>__a("Thumbnail Mode",true),
+					'type'=>'radio',
+					'name'=>'media_media_thumbnail_mode',
+					'options'=>array('scale'=>__a("Scale",true),'crop'=>__a("Crop",true)),
+					'attributes'=>array('div'=>false)
+				),
+				 array(
+					'label'=>__a("Thumbnail Size",true),
+					'type'=>'text',
+					'name'=>'media_media_thumbnail_size',
+					'attributes'=>array('style'=>'width:8em'),
+					'after'=>__a("WIDTHxHEIGHT in pixels",true),
+				)
+			)
+		);
+
+		$AdminSettings->displayTab('display',$displayTab, '[Config]');
+		?>
+
+        <!-- PHOTOS SETTINGS -->
+	    <?php $photoTab = array(
+			/*** NEW HEADER ***/
+			__a("Filename Settings",true) => array(
+				 array(
+					'label'=>__a("Replace filename with listing title",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_photo_filename_title',
+					'attributes'=>array('div'=>false)
+				),
+				 array(
+					'label'=>__a("Prepend listing id to filename",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_photo_filename_listingid',
+					'attributes'=>array('div'=>false)
+				)
+			),
+			/*** NEW HEADER ***/
+			__a("Upload Settings",true) => array(
+				 array(
+					'label'=>__a("Max Photos per Listing per User",true),
+					'type'=>'text',
+					'name'=>'media_photo_max_uploads_listing',
+					'attributes'=>array('style'=>'width:3em'),
+					'after'=>'',
+					'help'=>__a("Leave blank for no limit. Set to zero to disable uploads.",true)
+				),
+				 array(
+					'label'=>__a("Max Photos per Review per User",true),
+					'type'=>'text',
+					'name'=>'media_photo_max_uploads_review',
+					'attributes'=>array('style'=>'width:3em'),
+					'after'=>'',
+					'help'=>__a("Leave blank for no limit. Set to zero to disable uploads.",true)
+				),
+				 array(
+					'label'=>__a("Maximum Upload Size",true),
+					'type'=>'text',
+					'name'=>'media_photo_max_size',
+					'attributes'=>array('style'=>'width:3em'),
+					'after'=>'MB',
+					'help'=>''
+				),
+				 array(
+					'label'=>__a("Allowed File Extensions",true),
+					'type'=>'text',
+					'name'=>'media_photo_extensions',
+					'attributes'=>array('style'=>'width:20em'),
+					'help'=>__a("Comma list without spaces.",true)
+				),
+				 array(
+					'label'=>__a("Original Resize",true),
+					'type'=>'text',
+					'name'=>'media_photo_resize',
+					'attributes'=>array('style'=>'width:10em'),
+					'after'=>__a("WIDTHxHEIGHT in pixels",true),
+					'help'=>__a("Leave blank for no resizing. Default is: 800x800.",true)
+				),
+				 array(
+					'label'=>__a("Original Resize Quality",true),
+					'type'=>'text',
+					'name'=>'media_photo_resize_quality',
+					'attributes'=>array('style'=>'width:3em'),
+					'help'=>'In a scale from 1-100. Default is: 90.'
+				)
+			)
+		);
+
+		$AdminSettings->displayTab('photos',$photoTab, '[Config]');
+		?>
+
+        <!-- VIDEO SETTINGS -->
+	    <?php $videoTab = array(
+			/*** NEW HEADER ***/
+			__a("Filename Settings",true) => array(
+				 array(
+					'label'=>__a("Replace filename with listing title",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_video_filename_title',
+					'attributes'=>array('div'=>false)
+				),
+				 array(
+					'label'=>__a("Prepend listing id to filename",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_video_filename_listingid',
+					'attributes'=>array('div'=>false)
+				)
+			),
+			/*** NEW HEADER ***/
+			__a("Upload Settings",true) => array(
+				 array(
+					'label'=>__a("Video Upload Methods",true),
+					'type'=>'select',
+					'name'=>'media_video_upload_methods',
+					'options'=>array('all'=>__a("Upload & Link from video sites",true),'upload'=>__a("Upload only",true),'link'=>__a("Link only",true)),
+					'help'=>''
+				),
+				array(
+					'label'=>__a("Video Link Sites",true),
+					'type'=>'checkbox',
+					'name'=>'media_video_link_sites',
+					'options'=>array(
+							'youtube'=>'Youtube',
+							'vimeo'=>'Vimeo',
+							'dailymotion'=>'Dailymotion'
+						),
+					'help'=>''
+				),
+				 array(
+					'label'=>__a("Max Videos per Listing per User",true),
+					'type'=>'text',
+					'name'=>'media_video_max_uploads_listing',
+					'attributes'=>array('style'=>'width:3em'),
+					'after'=>'',
+					'help'=>__a("Leave blank for no limit. Set to zero to disable uploads.",true)
+				),
+				 array(
+					'label'=>__a("Max Videos per Review per User",true),
+					'type'=>'text',
+					'name'=>'media_video_max_uploads_review',
+					'attributes'=>array('style'=>'width:3em'),
+					'after'=>'',
+					'help'=>__a("Leave blank for no limit. Set to zero to disable uploads.",true)
+				),
+				 array(
+					'label'=>__a("Maximum Upload Size",true),
+					'type'=>'text',
+					'name'=>'media_video_max_size',
+					'attributes'=>array('style'=>'width:5em'),
+					'after'=>'MB'
+				),
+				 array(
+					'label'=>__a("Allowed File Extensions",true),
+					'type'=>'text',
+					'name'=>'media_video_extensions',
+					'attributes'=>array('style'=>'width:25em'),
+					'help'=>'Comma list without spaces'
+				)
+			)
+		);
+
+		$AdminSettings->displayTab('videos',$videoTab, '[Config]');
+
+		?>
+
+        <!-- ATTACHMENT SETTINGS -->
+	    <?php $attachmentTab = array(
+			/*** NEW HEADER ***/
+			__a("Filename Settings",true) => array(
+				 array(
+					'label'=>__a("Replace filename with listing title",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_attachment_filename_title',
+					'attributes'=>array('div'=>false)
+				),
+				 array(
+					'label'=>__a("Prepend listing id to filename",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_attachment_filename_listingid',
+					'attributes'=>array('div'=>false)
+				)
+			),
+			/*** NEW HEADER ***/
+			__a("Upload Settings",true) => array(
+				 array(
+					'label'=>__a("Max Attachments per Listing per User",true),
+					'type'=>'text',
+					'name'=>'media_attachment_max_uploads_listing',
+					'attributes'=>array('style'=>'width:3em'),
+					'help'=>__a("Leave blank for no limit. Set to zero to disable uploads.",true)
+				),
+				 array(
+					'label'=>__a("Max Attachments per Review per User",true),
+					'type'=>'text',
+					'name'=>'media_attachment_max_uploads_review',
+					'attributes'=>array('style'=>'width:3em'),
+					'help'=>__a("Leave blank for no limit. Set to zero to disable uploads.",true)
+				),
+				 array(
+					'label'=>__a("Maximum Upload Size",true),
+					'type'=>'text',
+					'name'=>'media_attachment_max_size',
+					'attributes'=>array('style'=>'width:5em'),
+					'after'=>'MB'
+				),
+				 array(
+					'label'=>__a("Allowed File Extensions",true),
+					'type'=>'text',
+					'name'=>'media_attachment_extensions',
+					'attributes'=>array('style'=>'width:20em'),
+					'help'=>'Comma list without spaces'
+				)
+			)
+		);
+
+		$AdminSettings->displayTab('attachments',$attachmentTab, '[Config]');
+		?>
+
+        <!-- AUDIO SETTINGS -->
+	    <?php $audioTab = array(
+			/*** NEW HEADER ***/
+			__a("Filename Settings",true) => array(
+				 array(
+					'label'=>__a("Replace filename with listing title",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_audio_filename_title',
+					'attributes'=>array('div'=>false)
+				),
+				 array(
+					'label'=>__a("Prepend listing id to filename",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_audio_filename_listingid',
+					'attributes'=>array('div'=>false)
+				)
+			),
+			/*** NEW HEADER ***/
+			__a("Upload Settings",true) => array(
+				 array(
+					'label'=>__a("Max Audio per Listing per User",true),
+					'type'=>'text',
+					'name'=>'media_audio_max_uploads_listing',
+					'attributes'=>array('style'=>'width:3em'),
+					'help'=>__a("Leave blank for no limit. Set to zero to disable uploads.",true)
+				),
+				 array(
+					'label'=>__a("Max Audio per Review per User",true),
+					'type'=>'text',
+					'name'=>'media_audio_max_uploads_review',
+					'attributes'=>array('style'=>'width:3em'),
+					'help'=>__a("Leave blank for no limit. Set to zero to disable uploads.",true)
+				),
+				 array(
+					'label'=>__a("Maximum Upload Size",true),
+					'type'=>'text',
+					'name'=>'media_audio_max_size',
+					'attributes'=>array('style'=>'width:5em'),
+					'after'=>'MB'
+				),
+				 array(
+					'label'=>__a("Allowed File Extensions",true),
+					'type'=>'text',
+					'name'=>'media_audio_extensions',
+					'attributes'=>array('style'=>'width:20em'),
+					'help'=>'Comma list without spaces'
+				)
+			)
+		);
+
+		$AdminSettings->displayTab('audio',$audioTab, '[Config]');
+		?>
+
+	    <!-- BEGIN STORAGE TAB -->
+	    <?php $storageTab = array(
+			/*** NEW HEADER ***/
+			__a("Storage Service",true) => array(
+				 array(
+					'label'=>__a("Photos",true),
+					'type'=>'select',
+					'name'=>'media_store_photo',
+					'options'=>array('local'=>'Local','s3'=>'Amazon S3'),
+					'help'=>''
+				),
+				 array(
+					'label'=>__a("Videos",true),
+					'type'=>'select',
+					'name'=>'media_store_video',
+					'options'=>array('s3'=>'Amazon S3'),
+					'help'=>''
+				),
+				 array(
+					'label'=>__a("3rd Party Videos (embedded)",true),
+					'type'=>'select',
+					'name'=>'media_store_video_embed',
+					'options'=>array('local'=>'Local','s3'=>'Amazon S3'),
+					'after'=>__a("For video thumbnail",true)
+				),
+				 array(
+					'label'=>__a("Attachments",true),
+					'type'=>'select',
+					'name'=>'media_store_attachment',
+					 // Can't serve remotely stored files unless it' a direct link or use curl to download to the server first
+					'options'=>array('local'=>'Local','s3'=>'Amazon S3'),
+					'help'=>''
+				),
+				 array(
+					'label'=>__a("Audio",true),
+					'type'=>'select',
+					'name'=>'media_store_audio',
+					'options'=>array('s3'=>'Amazon S3'),
+					'help'=>''
+				)
+			),
+			/*** NEW HEADER ***/
+			__a("Local Storage Settings",true) => array(
+				 array(
+					'label'=>__a("Path",true),
+					'type'=>'text',
+					'name'=>'media_store_local_path',
+					'after'=>__a("Default is: media/reviews/",true)
+				),
+				 array(
+					'label'=>__a("Original media folder name",true),
+					'type'=>'text',
+					'name'=>'media_store_local_original_folder',
+					'after'=>__a("Default is: original",true)
+				),
+				 array(
+					'label'=>__a("Thumbnail media folder name",true),
+					'type'=>'text',
+					'name'=>'media_store_local_thumbnail_folder',
+					'after'=>__a("Default is: thumbnail",true)
+				),
+				 array(
+					'label'=>__a("Photo Folder",true),
+					'type'=>'text',
+					'name'=>'media_store_local_photo',
+					'attributes'=>array('style'=>'width:10em;'),
+					'help'=>''
+				),
+				 array(
+					'label'=>__a("Video Folder",true),
+					'type'=>'text',
+					'name'=>'media_store_local_video',
+					'attributes'=>array('style'=>'width:10em;'),
+					'help'=>''
+				),
+				 array(
+					'label'=>__a("Attachment Folder",true),
+					'type'=>'text',
+					'name'=>'media_store_local_attachment',
+					'attributes'=>array('style'=>'width:10em;'),
+					'help'=>''
+				),
+				 array(
+					'label'=>__a("Audio Folder",true),
+					'type'=>'text',
+					'name'=>'media_store_local_audio',
+					'attributes'=>array('style'=>'width:10em;'),
+					'help'=>''
+				)
+			),
+			__a("Amazon S3 Settings",true) => array(
+				 array(
+					'label'=>__a("API Key",true),
+					'type'=>'text',
+					'name'=>'media_store_amazons3_key',
+					'default'=>'',
+					'attributes'=>array('style'=>'width:40em;'),
+					'help'=>''
+				),
+				 array(
+					'label'=>__a("API Secret",true),
+					'type'=>'text',
+					'name'=>'media_store_amazons3_secret',
+					'default'=>'',
+					'attributes'=>array('style'=>'width:40em;'),
+					'help'=>''
+				),
+				 array(
+					'label'=>__a("Photo Bucket",true),
+					'type'=>'text',
+					'name'=>'media_store_amazons3_photo',
+					'default'=>'',
+					'attributes'=>array('style'=>'width:20em;'),
+					'help'=>__a("Create the bucket using your Amazon Web Services account.",true)
+				),
+				 array(
+					'label'=>__a("Video Bucket",true),
+					'type'=>'text',
+					'name'=>'media_store_amazons3_video',
+					'default'=>'',
+					'attributes'=>array('style'=>'width:20em;'),
+					'help'=>__a("Create the bucket using your Amazon Web Services account.",true)
+				),
+				 array(
+					'label'=>__a("Attachment Bucket",true),
+					'type'=>'text',
+					'name'=>'media_store_amazons3_attachment',
+					'default'=>'',
+					'attributes'=>array('style'=>'width:20em;'),
+					'help'=>__a("Create the bucket using your Amazon Web Services account.",true)
+				),
+				 array(
+					'label'=>__a("Audio Bucket",true),
+					'type'=>'text',
+					'name'=>'media_store_amazons3_audio',
+					'default'=>'',
+					'attributes'=>array('style'=>'width:20em;'),
+					'help'=>__a("Create the bucket using your Amazon Web Services account.",true)
+				)
+			),
+			__a("Replace Amazon S3 URLs with CDN URLs",true) => array(
+				 array(
+					 'type'=>'placeholder',
+					 'text'=>'<div class="jrInfo" style="margin:0!important;"><span class="jrIconInfo"></span>&nbsp;'.
+					 		__a("To use this feature your Amazon S3 bucket names should match the desired CDN domain.",true).' <a class="jrButton" target="_blank" href="http://docs.reviewsforjoomla.com/?title=How_to_set_up_JReviews_with_Amazon_S3_and_CloudFront_CDN"><span class="jrIconPreview"></span> '.__a("Read More",true).'</a></div>'
+				 ),
+				 array(
+					'label'=>__a("Photos",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_store_amazons3_photo_cdn'
+				),
+				 array(
+					'label'=>__a("Videos",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_store_amazons3_video_cdn'
+				),
+				 array(
+					'label'=>__a("Attachments",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_store_amazons3_attachment_cdn'
+				),
+				 array(
+					'label'=>__a("Audio",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_store_amazons3_audio_cdn'
+				)
+			)
+		);
+
+		$AdminSettings->displayTab('storage',$storageTab, '[Config]');
+		?>
+
+
+
+	    <!-- BEGIN ENCODING TAB -->
+	    <?php $encodingTab = array(
+			/*** NEW HEADER ***/
+			__a("General",true) => array(
+				 array(
+					'label'=>__a("Encoding Service",true),
+					'type'=>'select',
+					'name'=>'media_encode_service',
+					'options'=>array(''=>'Select service','transloadit'=>'Transloadit.com','encoding'=>'Encoding.com','zencoder'=>'Zencoder.com'),
+					'help'=>sprintf(__a("Create an account %s",true),'<br /> <a target="_blank" href="https://transloadit.com/r/MDb">Transloadit.com</a>, <a target="_blank" href="http://www.encoding.com/r?id=10905">Encoding.com</a>, <a target="_blank" href="http://www.zencoder.com">Zencoder.com</a>')
+				),
+				 array(
+					'label'=>__a("Video Frame Size",true),
+					'type'=>'text',
+					'name'=>'media_encode_size',
+					'attributes'=>array('style'=>'width:8em;'),
+					'after'=>__a("WIDTHxHEIGHT in pixels",true),
+					'help'=>__a("Default is 854x480",true)
+				),
+				 array(
+					'label'=>__a("Bitrate",true),
+					'type'=>'text',
+					'name'=>'media_encode_bitrate',
+					'attributes'=>array('style'=>'width:4em;'),
+					'after'=>'k',
+					'help'=>__a("Default is 1200",true)
+				)
+			),
+			__a("Transfer Method",true) => array(
+				 array(
+					 'type'=>'placeholder',
+					 'text'=>'<div class="jrInfo" style="margin:0!important;"><span class="jrIconInfo"></span>&nbsp;'.
+					 		__a("The different methods in which the files uploaded to your server will be made available to the encoding service. ftp and sftp can only be used with Encoding.com and Zencoder. For Zencoder you can skip the username and password by setting up the Credentials for the server in your Zencoder account and filling out the Credentials setting below.",true).'</div>'
+				 ),
+				array(
+					'label'=>__a("Transfer Method",true),
+					'type'=>'select',
+					'name'=>'media_encode_transfer_method',
+					'options'=>array('http'=>'http','s3'=>'S3','ftp'=>'ftp','sftp'=>'sftp'),
+					'help'=>sprintf(__a("This method will be used by the encoding service to download the uploaded files from your server. The S3 method uploads the file from your server to S3 to let the encoding service download it from S3. If you choose ftp make sure your server allows enough simultaneous connections.",true))
+				)
+			),
+			__a("(s)ftp Transfer Settings",true) => array(
+				array(
+					'label'=>__a("Host",true),
+					'type'=>'text',
+					'name'=>'media_encode_transfer_host',
+					'attributes'=>array('style'=>'width:20em;'),
+					'help'=>__a("For example: ftp.yourdomain.com",true)
+				),
+				array(
+					'label'=>__a("FTP Username",true),
+					'type'=>'text',
+					'name'=>'media_encode_transfer_username',
+					'attributes'=>array('style'=>'width:20em;'),
+					'help'=>''
+				),
+				array(
+					'label'=>__a("FTP Password",true),
+					'type'=>'text',
+					'name'=>'media_encode_transfer_password',
+					'attributes'=>array('style'=>'width:20em;'),
+					'help'=>__a("Leave empty to keep the current password",true)
+				),
+				array(
+					'label'=>__a("FTP Port",true),
+					'type'=>'text',
+					'name'=>'media_encode_transfer_port',
+					'attributes'=>array('style'=>'width:4em;'),
+					'help'=>''
+				),
+				array(
+					'label'=>__a("FTP path to tmp folder",true),
+					'type'=>'text',
+					'name'=>'media_encode_transfer_tmp_path',
+					'attributes'=>array('style'=>'width:30em;'),
+					'help'=>__a("For example: /public_html/tmp",true)
+				)
+			),
+			/*** NEW HEADER ***/
+			"Zencoder.com" => array(
+				 array(
+					 'label'=>'Setting up Zencoder',
+					 'type'=>'placeholder',
+					 'text'=>'<span class="jrIconWarning"></span> In addition to adding the Zencoder API Key, it is necessary to add a bucket policy for Amazon S3. If you choose to use Zencoder for video encoding follow the <a href="https://app.zencoder.com/docs/guides/getting-started/working-with-s3" target="_blank"><u><strong>instructions in the Zencoder.com documentation</strong></u></a>.'
+				 ),
+				 array(
+					'label'=>'API Key',
+					'type'=>'text',
+					'name'=>'media_encode_zencoder_key',
+					'attributes'=>array('style'=>'width:40em;'),
+					'help'=>''
+				),
+				array(
+					'label'=>'Credentials',
+					'type'=>'text',
+					'name'=>'media_encode_zencoder_credentials',
+					'attributes'=>array('style'=>'width:40em;'),
+					'help'=>''
+				)
+			),
+			"Encoding.com" => array(
+				 array(
+					'label'=>'User ID',
+					'type'=>'text',
+					'name'=>'media_encode_encoding_userid',
+					'attributes'=>array('style'=>'width:40em;'),
+					'help'=>''
+				),
+				 array(
+					'label'=>'API Key',
+					'type'=>'text',
+					'name'=>'media_encode_encoding_key',
+					'attributes'=>array('style'=>'width:40em;'),
+					'help'=>''
+				)
+			),
+			"Transloadit.com" => array(
+				 array(
+					'label'=>'API Key',
+					'type'=>'text',
+					'name'=>'media_encode_transloadit_key',
+					'attributes'=>array('style'=>'width:40em;'),
+					'help'=>''
+				),
+				 array(
+					'label'=>'API Secret',
+					'type'=>'text',
+					'name'=>'media_encode_transloadit_secret',
+					'attributes'=>array('style'=>'width:40em;'),
+					'help'=>''
+				)
+			)
+		);
+
+		$this->Config->media_encode_transfer_password = '';
+
+		$AdminSettings->displayTab('encoding',$encodingTab, '[Config]');
+
+		?>
+
+	</div>
+
+    <input type="hidden" name="data[controller]" value="admin/admin_media" />
+
+    <input type="hidden" name="data[action]" value="_saveConfig" />
+
+</form>

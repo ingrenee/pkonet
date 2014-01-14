@@ -1,0 +1,20 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<?php
+header("HTTP/1.0 404 Not Found");
+cmsFramework::meta('title',__t("404 Not Found"));
+cmsFramework::meta('robots','noindex');
+?>
+
+<h2><?php __t("404 Not Found");?></h2>
+<p style="margin:20px 0 50px 0;"><?php __t("The page you requested was not found.");?></p>

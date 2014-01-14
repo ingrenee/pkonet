@@ -1,0 +1,42 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<?php if(count($categoryList) > 1):?>
+
+<fieldset style="margin: 15px 0;">
+
+	<div class="jrFieldDiv">
+
+		<label><?php __t("Category");?></label>
+
+		<?php echo $Form->select('data[categories]', $categoryList, null, array('class'=>'jrSelect','multiple'=>'multiple','size'=>5));?>
+
+	</div>
+
+</fieldset>
+
+<?php endif;?>
+
+<br />
+
+<?php echo $CustomFields->makeFormFields($searchFields,'listing',1, __t("Select",true));?>
+
+<div class="jrFieldDiv" style="margin-top:15px;">
+
+	<button class="jr-search jrButton"><?php __t("Search");?></button>
+
+	<button class="jr-back jrButton" onclick="history.back();"><?php __t("Cancel");?></button>
+
+</div>

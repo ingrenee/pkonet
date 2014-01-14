@@ -1,0 +1,81 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<div class="jr-everywhere-create">
+
+	<div class="jrWarning">
+
+		<?php __a("Once you assign a listing type to a category you cannot change it and you cannot change the number of rating criteria. First you have to remove all the reviews for listings in that category.");?>
+
+	</div>
+
+	<form action="index.php" method="post" class="jrForm" data-object-type="everywhere">
+
+    	<div class="jrGrid">
+
+    		<div class="jrCol6">
+
+    			<div class="jrFieldDiv">
+
+    				<label><?php __a("Select listing type");?><span class="jrIconRequired"></span></label>
+
+					<?php echo $Form->select(
+						'data[JreviewsCategory][criteriaid]',
+						array_merge(array(array('value'=>null,'text'=>__a("Select listing type",true))),$criteria),
+						null
+					);?>
+
+    			</div>
+
+    		</div>
+
+    		<div class="jrCol6">
+
+				<?php __a("Select one or multiple categories (hold CTRL key)");?>
+
+				<br/><br/>
+
+				<?php if(count($categories) > 0):?>
+
+					<?php echo $Form->select(
+						'data[JreviewsCategory][id]',
+						$categories,
+						null,
+						array(
+							'size'=>20,
+							'multiple'=>'multiple',
+							'style'=>'padding:3px 3px 3px 3px;'
+						)
+					);
+					?>
+
+                <?php else:?>
+
+				    <?php __a("All categories have already been set up");?>
+
+				<?php endif;?>
+
+    		</div>
+
+		</div>
+
+        <div class="jr-validation jrError jrHidden" style="margin-bottom: 15px;"></div>
+
+		<input type="hidden" name="data[JreviewsCategory][option]" value="<?php echo $extension;?>" />
+
+	    <input type="hidden" name="data[controller]" value="admin/admin_everywhere" />
+
+	    <input type="hidden" name="data[action]" value="_save" />
+
+	</form>
+
+</div>

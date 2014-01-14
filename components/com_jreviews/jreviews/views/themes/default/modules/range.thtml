@@ -1,0 +1,94 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION & SETUP
+ **********************************************************************************/
+$display_mode = Sanitize::getString($this->params['module'],'display_mode');
+$before_text = Sanitize::getString($this->params['module'],'before_text');
+$field = Sanitize::getString($this->params['module'],'field');
+$ranges = Sanitize::getString($this->params['module'],'ranges');
+$suffix = Sanitize::getString($this->params['module'],'suffix');
+$prefix = Sanitize::getString($this->params['module'],'prefix');
+$separator = Sanitize::getString($this->params['module'],'separator');
+
+$links = array();
+$listOptions = array();
+$urlSeparator = '_';
+$preselected = '';
+$params = arrayToParams(array('dir'=>$dir_id,'criteria'=>$criteria_id,'cat'=>$category_ids));
+$p5 = $params != '' ? $params .'/' : '';
+$p6 = $custom_params;
+
+// Process user submitted ranges
+$rangeOptions = explode ('+',$ranges);
+$last = 0;
+
+foreach($rangeOptions AS $range){
+	$values = explode ('-',$range);
+	if ( count($values) == 2 ) {
+		$urlParams = $field._PARAM_CHAR. "between" . urlencode($urlSeparator.$values[0].$urlSeparator.$values[1]);
+		$range = $prefix . number_format($values[0]) . $suffix . $separator . $prefix . number_format($values[1]) . $suffix;
+	} else {
+		// This is the last number in the range, without an upper limit
+		$urlParams = $field._PARAM_CHAR."higher".urlencode($urlSeparator.$values[0]);
+		$range = $prefix . number_format($values[0]) . $suffix . '+';
+		$last = 1;
+	}
+	$url = $Routes->search_results($menu_id,'/'.$urlParams.'/'.$p5.$p6);
+	$links[] = $Html->link($range,$url);
+	$listOptions[] = array('value'=>cmsFramework::route($url),'text'=>$range);
+
+	if(!$last && 'between'.$urlSeparator.$values[0].$urlSeparator.$values[1] == Sanitize::getString($this->params,$field)) {
+		$preselected = cmsFramework::route($url.$p5.$p6);
+	} elseif($last && 'higher'.$urlSeparator.$values[0] == Sanitize::getString($this->params,$field)) {
+		$preselected = cmsFramework::route($url.$p5.$p6);
+	}
+}
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<?php if($before_text != ''):?>
+<div><?php echo $before_text;?></div>
+<?php endif;?>
+
+<?php if($display_mode == 'links_horiz'):?>
+<!-- HORIZONTAL LIST -->
+<div class="jrPage jrFieldsModule jrHorizontalLayout">
+	<div class="jrListScope jrRoundedPanel">
+		<ul><li><?php echo implode('</li><li>',$links);?></li></ul>
+	</div>
+</div>
+<?php elseif($display_mode=='links_vert'):?>
+<!-- VERTICAL LIST -->
+<div class="jrPage jrFieldsModule">
+	<ul><li><?php echo implode('</li><li>',$links);?></li></ul>
+</div>
+<?php elseif($display_mode=='tags'):?>
+<!-- Tags -->
+<div class="jrPage jrFieldsModule jrTagsLayout">
+	<ul><li><?php echo implode('</li><li>',$links);?></li></ul>
+</div>
+<?php else:?>
+<!-- DROPDOWN LIST -->
+<div class="jrPage jrFieldsModule">
+	<?php echo $Form->select(
+			$field,
+			array_merge(array('FieldOption'=>array('value'=>'','text'=>__t("Select",true))),$listOptions),
+			$preselected,
+			array(
+				'class'=>'inputbox',
+				'size'=>1,
+				'onchange'=>'window.location=this.value'
+	));?>
+</div>
+<?php endif;?>

@@ -1,0 +1,52 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$listing_id = Sanitize::getInt($this->params,'listing_id');
+$review_id = Sanitize::getInt($this->params,'review_id');
+$post_id = Sanitize::getInt($this->params,'post_id');
+$media_id = Sanitize::getInt($this->params,'media_id');
+$extension = Sanitize::getString($this->params,'extension');
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<form id="jr-form-report" name="jr-form-report" class="jrForm jrReportForm" action="index.php" method="post">
+
+	<fieldset>
+
+		<div class="jrFieldDiv">
+
+			<textarea id="jr-report-text" name="data[Report][report_text]" rows="10" cols="250" class="jrTextArea"></textarea>
+
+		</div>
+
+	</fieldset>
+
+	<div class="jr-validation jrError jrHidden"></div>
+
+	<input type="hidden" name="data[Report][listing_id]" value="<?php echo $listing_id;?>" />
+
+	<input type="hidden" name="data[Report][review_id]" value="<?php echo $review_id;?>" />
+
+	<input type="hidden" name="data[Report][media_id]" value="<?php echo $media_id;?>" />
+
+	<input type="hidden" name="data[Report][post_id]" value="<?php echo $post_id;?>" />
+
+	<input type="hidden" name="data[Report][extension]" value="<?php echo $extension;?>" />
+
+	<input type="hidden" name="data[controller]" value="reports" />
+
+	<input type="hidden" name="data[action]" value="_save" />
+
+	<?php echo cmsFramework::getTokenInput();?>
+
+</form>

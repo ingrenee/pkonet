@@ -1,0 +1,32 @@
+<?php
+/**********************************************************************************
+ *                                 CONFIGURATION AND SETUP
+ **********************************************************************************/
+if(!$json_data) return;
+?>
+
+<script type="text/javascript">
+/* <![CDATA[ */
+jreviews.geomaps.mapData['list'] = <?php echo $json_data;?>;
+/* ]]> */
+</script>
+
+<?php
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+?>
+
+<div id="jr-map-results-wrapper" class="jrMapResultsWrapper">
+
+    <div class="jr-map-resize jrMapResize">
+
+        <a href="javascript:void(0);" class="jr-map-large"><?php __t("&#171; Large Map");?></a>
+
+        <a href="javascript:void(0);" class="jr-map-small jrHidden"><?php __t("Small Map &#187;");?></a>
+
+    </div>
+
+    <div class="jr-map-canvas jrMapList jrMapLoading" data-referrer="list"></div>
+
+</div>

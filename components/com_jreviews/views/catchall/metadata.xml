@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<view title="Catch-All Menus">
+		<message><![CDATA[Used to assign an Itemid to all menus of the same type]]></message>
+	</view>
+</metadata>

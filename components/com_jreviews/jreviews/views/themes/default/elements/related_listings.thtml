@@ -1,0 +1,69 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**
+ * Usage:
+ * In your detail.thtml theme file put the code below
+ * Change the field name from jr_brand to the field name you want to use
+ * Add a suffix so you can customize the /modules/listings.thtml theme for your related listings
+ * <?php echo $this->element('related_listings',array('field'=>'jr_brand','suffix'=>''));?>
+ */
+?>
+
+<?php
+if(!isset($where)) $where = array();
+$fieldValues = $CustomFields->fieldValue($field,$listing);
+
+$isMultipleOption = $CustomFields->isMultipleOption($field,$listing);
+
+if(is_array($fieldValues)) {
+	$field_options = array();
+	foreach($fieldValues AS $fieldValue) {
+		$field_options[] = $isMultipleOption ? "\n $field LIKE '%*".$fieldValue."*%'" : "\n $field = '".$fieldValue."'";
+	}
+	$where[] = '('.implode(' OR ',$field_options).')';
+}
+
+if(!empty($where) && $fieldValues!='')
+{
+	$where[] = "\n Listing.id NOT IN (".$listing['Listing']['listing_id'].")";
+	$custom_where = implode(' AND ',$where);
+
+	$params = array(
+		'module_id'=>rand(1000,10000),
+		'module' => Array
+			(
+				'listing_order' => 'rdate', // Valid options rdate|rating|rrating|reviews
+				'extension' => 'com_content',
+				'custom_where' => $custom_where,
+				'custom_order' => isset($order) ? $order : '',
+				'tmpl_suffix' => isset($suffix) ? $suffix : '', // Theme file suffix. The default theme used is /modules/listings.thtml
+				'module_limit' => isset($limit) ? (int)$limit : 5, // Items shown
+				'module_total' => isset($total) ? (int)$total : 10, // Items shown
+				'columns' => isset($cols) ? (int)$cols : 1, // Number of columns
+				'cat_auto' => isset($cat_auto) ? $cat_auto : 0, // Cateogry auto-detect
+				'dir' => isset($dir_id) ? $dir_id : '', // Directory filter
+				'category' => isset($cat_id) ? $cat_id : '', // Category filter
+				'listing' => '', // Listing filter
+				'tn_show' => isset($tn_show) ? $tn_show : 1, // Show thumbnail
+				'tn_mode' => isset($tn_mode) ? $tn_mode : 'crop', // Thumbnail type. Valid options scale|crop
+				'tn_width' => isset($tn_width) ? $tn_width : 65, // Thumbnail width
+				'orientation' => isset($orientation) ? $orientation : 'horizontal',
+				'slideshow' => isset($slideshow) ? $slideshow: false,
+				'slideshow_interval' => isset($slideshow_interval) ? $slideshow_interval: 6,
+				'nav_position' => isset($nav_position) ? $nav_position: 'side',
+				'moduleclass_sfx' => '' // Module suffix
+			)
+	);
+
+	echo $this->requestAction('module_listings/index',$params);
+}
+?>

@@ -1,0 +1,168 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+$plan_states = array(0=>'jrIconUnpublished',1=>'jrIconPublished');
+
+$langDel = json_encode(array('del_confirm'=>__a("Are you sure you want to delete the selected plan(s)?",true)));
+
+?>
+
+<div class="jr-paid-plans-list">
+
+    <div class="jrPageHeading"><?php __a("Pricing Plans");?></div>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="paidlistings_plans">
+
+        <div class="jrPageToolbar jrRoundedPanel">
+
+            <button class="jr-edit jrButton jrGreen">
+
+                <span class="jrIconNew"></span><?php __a("New");?>
+
+            </button>
+
+            <button class="jr-delete-all jrButton" data-lang='<?php echo $langDel;?>'>
+
+                <span class="jrIconDelete"></span><span><?php __a("Delete");?></span>
+
+            </button>
+
+        </div>
+
+        <div class="jrDataList">
+
+            <div class="jrGrid24 jrDataListHeader">
+
+                <div class="jrCol1"><input class="jr-cb-all" value="" type="checkbox"></div>
+
+                <div class="jrCol1">#</div>
+
+                <div class="jrCol1">ID</div>
+
+                <div class="jrCol6"><?php __a("Name");?></div>
+
+                <div class="jrCol1"><?php __a("State");?></div>
+
+                <div class="jrCol2 jrCenter">
+
+                    <span class="jr-more-info"><?php __a("Create Orders");?></span>
+
+                    <div class="jrPopup jrHidden"><?php __a("Automatically generate and process orders for listings in associated categories.");?></div>
+
+                </div>
+
+                <div class="jrCol2 jrCenter">
+
+                    <span class="jr-more-info"><?php __a("Update Orders");?></span>
+
+                    <div class="jrPopup jrHidden"><?php __a("Push plan changes to all existing orders with this plan.");?></div>
+
+                </div>
+
+                <div class="jrCol3"><?php __a("Plan Type");?></div>
+
+                <div class="jrCol3"><?php __a("Payment Type");?></div>
+
+                <div class="jrCol2"><?php __a("Price");?></div>
+
+                <div class="jrCol1"><span class="jrIconDelete"></span></div>
+
+            </div>
+
+            <?php $i = 1; foreach($plans AS $plan): extract($plan['PaidPlan']);?>
+
+            <div class="jr-layout-outer jrGrid24" data-id="<?php echo $plan_id;?>">
+
+                <div class="jrCol1">
+
+                    <input type="checkbox" class="jr-row-cb" name="cid[]" value="<?php echo $plan_id;?>" />
+
+                </div>
+
+                <div class="jrCol1"><?php echo $i++;?></div>
+
+                <div class="jrCol1"><?php echo $plan_id;?></div>
+
+                <div class="jrCol6">
+
+                    <a class="jr-edit" href="javascript:void(0)" data-id="<?php echo $plan_id;?>" data-key="PaidPlan.plan_name">
+                        <?php echo $plan_name;?>
+                    </a>
+
+                </div>
+
+                <div class="jrCol1">
+
+                    <span data-key="PaidPlan.plan_state"
+                            data-key-type="class"
+                            data-states='<?php echo json_encode($plan_states);?>'
+                            class="<?php echo $plan_states[$plan_state];?>"></span>
+
+                </div>
+
+                <div class="jrCol2 jrCenter">
+
+                    <?php if($plan_type == 0 && $payment_type == 2):?>
+
+                    <button class="jr-plan-create-orders jrButton jrIconOnly"  data-plan-id="<?php echo $plan_id;?>">
+
+                        <span class="jrIconPlus"></span>
+
+                    </button>
+
+                    <?php endif;?>&nbsp;
+
+                </div>
+
+                <div class="jrCol2 jrCenter">
+
+                    <button class="jr-plan-sync-orders jrButton jrIconOnly" data-plan-id="<?php echo $plan_id;?>">
+
+                        <span class="jrIconSync "></span>
+
+                    </button>
+
+                </div>
+
+                <div class="jrCol3">
+
+                    <span data-key="PaidPlan.PlanType"><?php echo $Paid->getPlanTypes($plan_type);?></span>
+
+                </div>
+
+                <div class="jrCol3">
+
+                    <span data-key="PaidPlan.PaymentType"><?php echo $Paid->getPaymentTypes($payment_type);?></span>
+
+                </div>
+
+                <div class="jrCol2">
+
+                    <span data-key="PaidPlan.plan_price"><?php echo $plan_price;?></span>
+
+                </div>
+
+                <div class="jrCol1">
+
+                    <button class="jr-delete jrButton jrIconOnly" data-id="<?php echo $plan_id;?>" data-lang='<?php echo $langDel;?>'>
+
+                        <span class="jrIconDelete"></span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <?php endforeach;?>
+
+        </div>
+
+    </form>
+
+</div>

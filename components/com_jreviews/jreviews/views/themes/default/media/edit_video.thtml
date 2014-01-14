@@ -1,0 +1,52 @@
+<?php
+$videoFrameSize = array(375,211);
+
+// Codecs
+$codecs = array(
+	'mp4'=>'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
+	'webm'=>'video/webm; codecs="vp8, vorbis"',
+	'ogg'=>'video/ogg; codecs="theora, vorbis"'
+);
+
+extract($media['Media']);
+?>
+
+<div class="jr-video-gallery">
+
+	<?php if($embed != ''):
+
+		$embedClass = 'MediaStorage'.Inflector::camelize($embed).'Component';?>
+
+		<div class="video-embed-box">
+
+			<?php echo call_user_func(array($embedClass,'displayEmbed'),$filename,$videoFrameSize);?>
+
+		</div>
+
+	<?php else:?>
+
+		<div class="video-js-box">
+
+			<video id="jr-video-player" class="video-js vjs-default-skin" width="375" height="211" controls="controls" preload="auto" poster="<?php echo $media_info['image']['url'];?>">
+
+				<?php if($embed == ''): foreach($media_info['video'] AS $format=>$row):?>
+
+				<source src="<?php echo $row['url'];?>" type='<?php echo $codecs[$format];?>' />
+
+				<?php endforeach; endif;?>
+
+			</video>
+
+		</div>
+
+	<?php endif;?>
+
+</div>
+
+<div class="jrFieldDiv">
+
+	<label><?php __t("Duration");?></label>
+
+	<?php echo $Time->sToHMS($duration);?>
+
+</div>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="community" method="upgrade">
+    <name>JReviews Activity Stream</name>
+    <author>ClickFWD LLC</author>
+    <creationDate>September 2013</creationDate>
+    <copyright>Copyright (C) 2010-2013. All rights reserved.</copyright>
+    <license>http://www.reviewsforjoomla.com</license>
+    <authorEmail>sales@reviewsforjoomla.com</authorEmail>
+    <authorUrl>www.reviewsforjoomla.com</authorUrl>
+    <version>2.4</version>
+    <isapplication>false</isapplication>
+    <description>Processes JReviews activities that are displayed in the JomSocial stream.</description>
+    <files>
+        <file plugin="jreviews">jreviews.php</file>
+        <folder>jreviews</folder>
+    </files>
+    <languages>
+        <language tag="en-GB">en-GB.plg_community_jreviews.ini</language>
+        <language tag="en-GB">en-GB.plg_community_jreviews.sys.ini</language>
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field type="spacer" label="PLUGIN_HEADER" />
+                <!-- main setup -->
+                <field type="spacer" class="dataListHeader" label="MAIN SETUP" />
+            </fieldset>
+            <fieldset name="advanced">
+                <field name="cache" type="list" default="0" label="Caching" description="Select whether to cache the content of this plugin">
+                    <option value="1">Use global</option>
+                    <option value="0">No caching</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+</extension>

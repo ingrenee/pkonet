@@ -1,0 +1,59 @@
+.jrTotals span {
+     font-weight: bold;
+     font-size: 16px;
+}
+.jrPaidStatLabel {
+     color: #0077CC;
+}
+.jrPaidStatValue {
+    color: #000000;
+}
+.jrDateRange {
+    font-size: 1.2em; float:right; padding: 5px;
+}
+.jrDateRange input {
+    font-size: 1.1em;
+    height: 1.2em;
+    width: 7em;
+    text-align:center;
+}
+.jrPaidIcon, [class^="jrPaidIcon"] {
+    height:16px;
+    width:16px;
+    margin: 0 auto;
+    display:inline-block;
+}
+.jrPaidIconTick {
+    background-image:url(images/tick.png);
+}
+.jrPaidIconCross {
+    background-image:url(images/cross.png);
+}
+.jrPaidIconLock {
+    background-image:url(images/lock.png);
+}
+
+.jrPaidIconActive {
+    background-image:url(images/clock_play.png);
+}
+.jrPaidIconRenewal {
+    background-image:url(images/clock_pause.png);
+}
+.jrPaidIconExpired {
+    background-image:url(images/clock_stop.png);
+}
+.jrPaidIconCancelled {
+    background-image:url(images/clock_red.png);
+}
+div.jrPaidEmailTags {
+    border: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin: 10px;
+}
+div.jrPaidEmailTags li {
+    width: 33%;
+    float:left;
+    list-style: none;
+    font-size: 1.5em;
+}
+

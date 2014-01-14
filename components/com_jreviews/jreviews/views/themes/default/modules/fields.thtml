@@ -1,0 +1,73 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION & SETUP
+ **********************************************************************************/
+$display_mode = Sanitize::getString($this->params['module'],'display_mode');
+$before_text = Sanitize::getString($this->params['module'],'before_text');
+
+$links = array();
+$listOptions = array();
+
+foreach($field_options AS $option){
+	extract(current($option));
+	$url = str_ireplace(array('{optionvalue}'), array(urlencode($value)), $click2searchUrl).$custom_params;
+	$links[] = $Html->link($text,$url);
+	$listOptions[] = array('value'=>cmsFramework::route($url),'text'=>$text);
+}
+
+if(isset($this->params['tag']['field']) &&  $this->params['tag']['field'] == substr($field,3)) {
+	$value = Sanitize::getString($this->params['tag'],'value');
+} else {
+	$value = Sanitize::getString($this->params,$field,'');
+}
+
+$preselected = cmsFramework::route(str_ireplace(array('{optionvalue}'), array(urlencode($value)), $click2searchUrl).$custom_params);
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<?php if($before_text != ''):?>
+<div><?php echo $before_text;?></div>
+<?php endif;?>
+
+<?php if($display_mode == 'links_horiz'):?>
+<!-- HORIZONTAL LIST -->
+<div class="jrPage jrFieldsModule jrHorizontalLayout">
+	<div class="jrListScope jrRoundedPanel">
+		<ul><li><?php echo implode('</li><li>',$links);?></li></ul>
+	</div>
+</div>
+<?php elseif($display_mode=='links_vert'):?>
+<!-- VERTICAL LIST -->
+<div class="jrPage jrFieldsModule">
+	<ul><li><?php echo implode('</li><li>',$links);?></li></ul>
+</div>
+<?php elseif($display_mode=='tags'):?>
+<!-- Tags -->
+<div class="jrPage jrFieldsModule jrTagsLayout">
+	<ul><li><?php echo implode('</li><li>',$links);?></li></ul>
+</div>
+<?php else:?>
+<!-- DROPDOWN LIST -->
+<div class="jrPage jrFieldsModule">
+	<?php echo $Form->select(
+			$field,
+			array_merge(array('FieldOption'=>array('value'=>'','class'=>'jrSelect','text'=>__t("Select",true))),$listOptions),
+			$preselected,
+			array(
+							'class'=>'inputbox',
+							'size'=>1,
+							'onchange'=>'window.location=this.value'
+	));?>
+</div>
+<?php endif;?>

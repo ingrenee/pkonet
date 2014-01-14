@@ -1,0 +1,49 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2009 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<?php echo $Routes->reviewDiscuss('',$review['Review'],array('listing'=>$listing,'return_url'=>true));?>
+
+<br /><br />
+
+<strong><?php __t("User name");?>:</strong>  <?php echo $User->name;?> ( <?php echo $User->id;?> )
+
+<br />
+
+<strong>E-mail:</strong> <?php echo $User->email;?>
+
+<br />
+
+<strong><?php __t("IP Address");?>:</strong> <?php echo s2GetIpAddress();?>
+
+<br />
+
+<strong><?php __t("Comment");?>:</strong>
+
+<br />
+
+<?php echo $post['Discussion']['text'];?>
+
+<br />
+
+<strong><?php __t("Listing title");?>:</strong>  <?php echo $listing['Listing']['title'];?>
+
+<br />
+
+<strong><?php __t("Review title");?>:</strong> <?php echo $review['Review']['title'];?>
+
+<br />
+
+<strong><?php __t("Review");?>:</strong>
+
+<br />
+
+<?php echo $review['Review']['comments'];?>

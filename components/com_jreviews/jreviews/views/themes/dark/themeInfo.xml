@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<theme>
+	<creationDate>March 2010</creationDate>
+	<author>ClickFWD</author>
+	<authorEmail>support@reviewsforjoomla.com</authorEmail>
+	<authorUrl>http://www.reviewsforjoomla.com</authorUrl>
+	<copyright>Copyright (C) 2006-2011 ClickFWD LLC. All rights reserved.</copyright>
+	<license>Proprietary</license>
+	<version>2.3</version>
+	<description>The Dark Theme is a variation of the Default Theme for using with dark Joomla templates</description>
+	<settings>
+		<name>dark</name>
+		<title>Dark Theme</title>
+		<addon>0</addon>
+		<configuration>1</configuration>
+		<fallback>0</fallback>
+	</settings>
+</theme>

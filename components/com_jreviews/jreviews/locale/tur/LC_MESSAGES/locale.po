@@ -1,0 +1,135 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: JReviews 2.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-09-12 11:10-0400\n"
+"PO-Revision-Date: \n"
+"Last-Translator: ClickFWD <support@reviewsforjoomla.com>\n"
+"Language-Team: ClickFWD\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Turkish\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Basepath: F:\\components\\\n"
+"X-Poedit-KeywordsList: __l\n"
+"X-Poedit-Country: TURKEY\n"
+"X-Poedit-SearchPath-0: com_jreviews\\jreviews\\views\n"
+"X-Poedit-SearchPath-1: com_s2framework\\s2framework\\libs\\view\n"
+
+#: com_jreviews\jreviews\views/helpers/custom_fields.php:442
+#: com_jreviews\jreviews\views/helpers/custom_fields.php:446
+#: com_jreviews\jreviews\views/helpers/custom_fields.php:533
+msgid "DECIMAL_SEPARATOR"
+msgstr "."
+
+#: com_jreviews\jreviews\views/helpers/custom_fields.php:442
+#: com_jreviews\jreviews\views/helpers/custom_fields.php:446
+#: com_jreviews\jreviews\views/helpers/custom_fields.php:533
+msgid "THOUSANDS_SEPARATOR"
+msgstr ","
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:114
+msgid "Today"
+msgstr "Bugün"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:116
+msgid "Yesterday"
+msgstr "Dün"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:147
+msgid "Jan"
+msgstr "Oca"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:147
+msgid "January"
+msgstr "Ocak"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:148
+msgid "Feb"
+msgstr "Şub"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:148
+msgid "February"
+msgstr "Şubat"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:149
+msgid "Mar"
+msgstr "Mar"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:149
+msgid "March"
+msgstr "Mart"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:150
+msgid "Apr"
+msgstr "Nis"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:150
+msgid "April"
+msgstr "Nisan"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:151
+msgid "May-Short"
+msgstr "May"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:151
+msgid "May"
+msgstr "Mayıs"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:152
+msgid "Jun"
+msgstr "Haz"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:152
+msgid "June"
+msgstr "Haziran"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:153
+msgid "Jul"
+msgstr "Tem"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:153
+msgid "July"
+msgstr "Temmuz"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:154
+msgid "Aug"
+msgstr "Ağu"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:154
+msgid "August"
+msgstr "Ağustos"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:155
+msgid "Sep"
+msgstr "Eyl"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:155
+msgid "September"
+msgstr "Eylül"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:156
+msgid "Oct"
+msgstr "Ekm"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:156
+msgid "October"
+msgstr "Ekim"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:157
+msgid "Nov"
+msgstr "Kas"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:157
+msgid "November"
+msgstr "Kasım"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:158
+msgid "Dec"
+msgstr "Ara"
+
+#: com_s2framework\s2framework\libs\view/helpers/time.php:158
+msgid "December"
+msgstr "Aralık"
+

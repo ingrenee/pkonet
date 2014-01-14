@@ -1,0 +1,27 @@
+<?php
+ /**********************************************************************************
+ *                                 CONFIGURATION AND SETUP
+ **********************************************************************************/
+$height = Sanitize::getString($this->params['module'],'map_height','400px');
+$height = is_numeric($height) ? $height.'px' : $height;
+/**
+* You can use the $geoLocation array to display info about the user's location gathered via the GeoTargeting service
+* Use prx($geoLocation); to see the available info
+*/
+/**********************************************************************************
+ *                                 JAVASCRIPT & CSS
+ **********************************************************************************/
+?>
+
+<script type="text/javascript">
+/* <![CDATA[ */
+jreviews.geomaps.mapData['module<?php echo $this->params["module_id"];?>'] = <?php echo $json_data;?>;
+/* ]]> */
+</script>
+
+<?php
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+?>
+<div class="jr-page jr-map-canvas jrMapModule jrMapLoading" data-referrer="module<?php echo $this->params['module_id'];?>" style="height:<?php echo $height;?>;"></div>

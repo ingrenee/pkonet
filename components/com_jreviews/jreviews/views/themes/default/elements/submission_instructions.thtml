@@ -1,0 +1,8 @@
+<div class="sub_instrucciones"     >
+<h1 class="contentheading"><?php __t("Submission instructions");?></h1>
+<ul>
+	<li><?php __t("Select the category where you want to submit the new item.");?></li>
+	<li><?php echo sprintf(__t("All form inputs marked %s are required.",true),'<span class="jrIconRequired"></span>');?></li>
+</ul>
+</div>
+<br />

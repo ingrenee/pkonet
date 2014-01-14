@@ -1,0 +1,247 @@
+<?php
+extract($media['Media']);
+$tn_modes = array('c'=>__a("Crop",true),'s'=>__a("Scale",true));
+?>
+
+<div class="jrGrid">
+
+	<div class="jrCol6">
+
+		<?php echo $this->renderControllerView('media','edit_'.$media_type,array('media'=>$media));?>
+
+		<div class="jrDataList">
+
+			<div class="jrGrid jrDataListHeader"><div class="jrCol12"><?php __a("File Information");?></div></div>
+
+			<div class="jrGrid">
+
+				<div class="jrCol2"><?php __a("Filename");?>:</div>
+
+				<div class="jrCol10"><?php echo $media['Media']['filename'];?></div>
+
+			</div>
+
+			<div class="jrGrid">
+
+				<div class="jrCol2"><?php __a("Relative Path");?>:</div>
+
+				<div class="jrCol10"><?php echo $media['Media']['rel_path'];?></div>
+
+			</div>
+
+			<?php if(!empty($mediaEncoding)):?>
+
+				<div class="jrGrid jrDataListHeader"><div class="jrCol12"><?php __a("Encoding Information");?></div></div>
+
+            	<?php
+            		switch($mediaEncoding['MediaEncoding']['status']) {
+
+            			case 'finished':
+            				$status_color = 'jrGreen';
+            			break;
+            			case 'waiting':
+            				$status_color = 'jrPurple';
+            			break;
+            			case 'processing':
+            				$status_color = 'jrOrange';
+            			break;
+            			case 'cancelled':
+            				$status_color = '';
+            			break;
+            			case 'failed':
+            				$status_color = 'jrRed';
+            			break;
+            		}
+            	?>
+
+				<div class="jrGrid">
+
+					<div class="jrCol3"><?php __a("Status");?>:</div>
+
+					<div class="jrCol9"><span class="jrStatusLabel <?php echo $status_color;?>"><?php echo $mediaEncoding['MediaEncoding']['status'];?></span></div>
+
+				</div>
+
+				<div class="jrGrid">
+
+					<div class="jrCol3"><?php __a("API Response");?>:</div>
+
+					<div class="jrCol9">
+
+		            	<?php if($mediaEncoding['MediaEncoding']['response'] != ''):?>
+
+		            		<a class="jrButton jrBlue" target="_blank" href="index.php?option=com_jreviews&amp;url=admin_media_upload/response&id=<?php echo $mediaEncoding['MediaEncoding']['id'];?>"><?php __a("Click to view");?></a>
+
+		            	<?php else:?>
+
+		            		<?php __a("Response is empty");?>
+
+		            	<?php endif;?>
+
+					</div>
+
+				</div>
+
+			<?php endif;?>
+
+		</div><?php /* end jrDataList */?>
+
+		<br />
+
+		<?php if(isset($media_info['thumbnail'])):?>
+
+			<div class="jr-thumbnails jrThumbList jrFieldDiv">
+
+				<label><?php __a("Current Thumbnail Sizes");?></label>
+
+				<div>
+
+					<?php foreach($media_info['thumbnail'] AS $key=>$thumbnail):?>
+
+						<?php
+							$mode_chr = substr($key, -1);
+							$size = substr($key, 0, strlen($key) -1);
+						?>
+
+						<span class="jr-thumb-del jrButton jrThumbSize" data-id="<?php echo $media_id;?>" data-size="<?php echo $key;?>">
+
+							<?php echo $tn_modes[$mode_chr];?>
+							<br />
+							<?php echo $size;?>
+
+						</span>
+
+					<?php endforeach;?>
+
+				</div>
+
+				<div class="jrInfo"><span class="jrIconInfo"></span><?php __a("Deleted thumbnails will be recreated on demand.");?></div>
+
+			</div>
+
+		<?php endif;?>
+
+	</div>
+
+	<div class="jrCol6">
+
+		<form action="index.php" method="post" class="jrForm" data-object-type="media">
+
+			<fieldset>
+
+				<div class="jrFieldDiv jrLeft jrClear" style="margin-right: 10px;">
+
+					<label><?php __a("Published");?></label>
+					<?php echo $Form->radioYesNo( "data[Media][published]", "", $media['Media']['published'] ); ?>
+
+				</div>
+
+				<div class="jrFieldDiv">
+
+					<label><?php __a("View Access");?></label>
+
+					<?php
+						echo $Form->select(
+							'data[Media][access]',
+							$accessLevels,
+							$media['Media']['access']
+						);
+					?>
+
+				</div>
+
+				<div class="jrFieldDiv">
+
+					<label><?php __a("Approved");?></label>
+
+					<?php
+						echo $Form->radio(
+							'data[Media][approved]',
+							array(0=>__a("Pending",true),1=>__a("Approved",true),-1=>__a("Rejected",true)),
+							array('div'=>false,'value'=>$media['Media']['approved'])
+						);
+					?>
+				</div>
+
+			</fieldset>
+
+			<fieldset>
+
+				<div class="jrFieldDiv">
+
+					<label><?php __a("Uploaded");?></label>
+
+					<?php echo $Time->nice($media['Media']['created']);?>
+
+				</div>
+
+				<?php if(in_array($media_type,array('audio','video'))):?>
+
+				<div class="jrFieldDiv">
+
+					<label><?php __t("Duration");?></label>
+
+					<input class="jrInteger" type="text" name="data[Media][duration]" value="<?php echo Sanitize::getString($media['Media'],'duration');?>" /> <?php __a("seconds");?>
+
+				</div>
+
+				<?php endif;?>
+
+                <div class="jrFieldDiv jrLeft jrClear">
+
+                	<label><?php __a("User");?></label>
+
+                    <?php echo $Form->text('jr-owner',array(
+                        'value'=>'',
+                        'placeholder'=>__a("Start typing for suggestions.",true),
+                        'class'=>'jrAutoSuggest jr-user-autocomplete',
+                        'size'=>50,
+                        'maxlength'=>100
+
+                    ));?>
+
+                </div>
+
+				<div class="jrFieldDiv">
+
+                	<label><?php __a("User ID");?></label>
+
+                    <input readonly="readonly" type="text" name="data[Media][user_id]" class="jr-user-id-ac" value="<?php echo $media['Media']['user_id'];?>" style="width:5em;"  />
+
+                </div>
+
+				<div class="jrFieldDiv">
+
+					<label><?php __a("Title");?></label>
+
+					<input class="jrText" type="text" name="data[Media][title]" value="<?php echo Sanitize::getString($media['Media'],'title');?>" />
+
+				</div>
+
+				<?php if($media['Media']['media_type'] != 'photo'):?>
+
+				<div class="jrFieldDiv">
+
+					<label><?php __a("Description");?></label>
+
+					<textarea rows="30" style="width:65%;" name="data[Media][description]"><?php echo Sanitize::getString($media['Media'],'description');?></textarea>
+
+				</div>
+
+				<?php endif;?>
+
+				<input type="hidden" name="data[Media][media_id]" value="<?php echo $media_id;?>" />
+
+				<input type="hidden" name="data[Media][listing_id]" value="<?php echo $listing_id;?>" />
+
+				<input type="hidden" name="data[Media][review_id]" value="<?php echo $review_id;?>" />
+
+				<input type="hidden" name="data[controller]" value="admin/admin_media" />
+
+				<input type="hidden" name="data[action]" value="_save" />
+
+			</fieldset>
+
+		</form>
+
+	</div>

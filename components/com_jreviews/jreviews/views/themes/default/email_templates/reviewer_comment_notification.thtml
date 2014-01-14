@@ -1,0 +1,47 @@
+<?php
+/**********************************************************************************
+ *                                 CONFIGURATION AND SETUP
+ **********************************************************************************/
+$entry_url = $Routes->reviewDiscuss('',$review['Review'],array('listing'=>$listing,'return_url'=>true));
+
+$entry_url = cmsFramework::makeAbsUrl($entry_url,array('sef'=>false));
+
+$entry_title = Sanitize::getString($listing['Listing'],'title');
+
+if($review['Review']['title'] != '') {
+
+	$entry_title .= ' (' . $review['Review']['title'] . ')';
+}
+
+$published = $post['Discussion']['approved'];
+?>
+
+<?php
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+?>
+
+<?php if($isNew): // New review ?>
+	<p>
+	You're receiving this e-mail because you have a review, '<?php echo $entry_title;?>', which has received a new comment. You will find your review at:
+	<br /><br />
+	<?php echo $Html->link($entry_title,$entry_url,array('sef'=>false));?>
+	</p>
+
+	<?php if(!$published):?>
+	<p>We typically moderate review comments and publish them only after they've been verified by our staff. Please check your review later on to find the new comment.</p>
+	<?php endif;?>
+<?php endif;?>
+
+<?php if(!$isNew): // Edited review ?>
+	<p>
+	You're receiving this e-mail because a user has edited his comment for your review, '<?php echo $entry_title;?>'. You will find your review at:
+	<br /><br />
+	<?php echo $Html->link($entry_title,$entry_url,array('sef'=>false));?>
+	</p>
+
+	<?php if(!$published):?>
+	<p>We typically moderate review comments and publish them only after they've been verified by our staff. Please check your review later on to find the new comment.</p>
+	<?php endif;?>
+<?php endif;?>

@@ -1,0 +1,96 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/
+
+// Thumbnail settings
+$galleryThumbnailSize = Sanitize::getString($this->Config,'media_detail_gallery_thumbnail_size');
+
+$galleryThumbnailMode = Sanitize::getString($this->Config,'media_detail_gallery_thumbnail_mode');
+
+$is_mobile = Configure::read('System.isMobileOS');
+
+$photoOverlay = Sanitize::getBool($this->Config,'media_photo_gallery_overlay');
+
+// Calculate the aspect ratio of the first image
+$height = 0.75;
+if (isset($photos[0])) {
+	$dimensions = getimagesize($photos[0]['media_info']['image']['url']);
+	$height = $dimensions[1]/$dimensions[0];
+	if ($height > 1 || $height < 0.3) {
+		$height = 0.75;
+	}
+}
+?>
+
+<script type="text/javascript" charset="utf-8">
+/* <![CDATA[ */
+var data = [];
+<?php foreach($photos AS $photo):
+
+	$mediaTitle = addslashes($photo['title']);
+	?>
+
+data.push({
+	m: '<?php echo $Media->getMediaKey($photo['media_id']);?>',
+	thumb:'<?php echo $Media->thumb($photo,array('return_src'=>true,'size'=>$galleryThumbnailSize,'mode'=>$galleryThumbnailMode));?>',
+	image: '<?php echo $Media->mediaSrc($photo);?>',
+	<?php if(trim($photo['title'])!=''):?>
+	title: '<?php echo $mediaTitle;?>',
+	<?php endif;?>
+	big: '<?php echo $Media->mediaSrc($photo);?>',
+	layer: <?php if(trim($photo['title'])!=''):?>'<div class="jr-photo-caption jrPhotoCaption"><?php echo $mediaTitle;?></div>'+<?php endif;?>
+
+		'<div class="jr-photo-info jrPhotoInfo">'+
+
+			'<div class="jr-media-actions jrMediaActions" data-listing-id="<?php echo $photo['listing_id'];?>" data-review-id="<?php echo $photo['review_id'];?>" data-media-id="<?php echo s2alphaID($photo['media_id'],false,5,cmsFramework::getConfig('secret'));?>" data-extension="<?php echo $photo['extension'];?>">'+
+
+				'<div class="jr-media-actions-right jrRight" style="text-align:right;">'+
+				  '<span class="jr-media-views"><span class="jrIconGraph"></span><?php echo sprintf(__t("%s views",true),$photo['views']);?></span>'+
+				'</div>'+
+
+				<?php if($this->Access->canVoteMedia('photo')):?>
+				'<span class="jr-media-like-dislike jrMediaLikeDislike jrButtonGroup">'+
+
+					'<button class="jr-media-like jrButton jrSmall" title="<?php __t("I like this",false,true);?>" data-like-action="_like"><span class="jrIconThumbUp"></span><span class="jr-count jrButtonText" style="color: green;"><?php echo $photo['likes_up'];?></span></button>'+
+
+					'<button class="jr-media-dislike jrButton jrSmall" title="<?php __t("I dislike this",false,true);?>" data-like-action="_dislike"><span class="jrIconThumbDown"></span><span class="jr-count jrButtonText" style="color: red;"><?php echo $photo['likes_total'] - $photo['likes_up'];?></span></button>'+
+
+				'</span>'+
+				<?php endif;?>
+
+				'<button class="jr-report jrReport jrButton jrSmall" data-listing-id="<?php echo $photo['listing_id'];?>" data-review-id="<?php echo $photo['review_id'];?>" data-media-id="<?php echo s2alphaID($photo['media_id'],false,5,cmsFramework::getConfig('secret'));?>" data-extension="<?php echo $photo['extension'];?>"><span class="jrIconWarning"></span><?php __t("Report as inappropriate");?></button>'+
+
+			 '</div>'+
+
+			'</div>'
+});
+<?php endforeach;?>
+/* ]]> */
+</script>
+
+<?php
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<div class="jr-photo-gallery jrPhotoGallery<?php if(isset($compact)) echo ' jrPhotoGalleryCompact'; ?><?php if(isset($alignment) && $alignment == 'left') echo ' jrMediaLeft';?>">
+
+	<div id="jr-photo-slideshow" class="jrPhotoSlideShow<?php if($is_mobile != 1 && $photoOverlay == 1) echo ' jrPhotoOverlay'; ?>" data-height="<?php echo $height ; ?>"></div>
+
+	<?php if($is_mobile == 1 || $photoOverlay != 1): ?>
+
+		<div id="jr-gallery-description" class="jrMediaDescription"></div>
+
+	<?php endif; ?>
+</div>

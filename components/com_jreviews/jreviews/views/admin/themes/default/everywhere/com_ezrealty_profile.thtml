@@ -1,0 +1,17 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<div class="jrPageDescription">
+To finalize the integration remember to enable it in the EZ Realty Configuration Settings, Miscellaneous tab.
+<br />
+You can use the JReviews listings and reviews modules with EZ Realty. In the listings module you must enter 'com_ezrealty_profile' in the Everywhere Extension parameter.
+</div>

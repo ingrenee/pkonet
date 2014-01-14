@@ -1,0 +1,58 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+//prx($revenue);
+?>
+
+<div class="jr-paid-admin">
+
+    <div class="jrPageToolbar jrRoundedPanel jrClearfix">
+
+        <span id="jr-status" class="jrStatus jrLeft jrHidden"></span>
+
+        <div class="jrDateRange">
+
+            <?php $lastmonth = strtotime("-1 month");?>
+
+            <label for="jr-date-from"><?php __a("From");?></label>
+
+            <input type="text" id="jr-date-from" name="date_from" value="<?php echo date("m/d/Y",$lastmonth);?>" />
+
+            <label for="jr-date-to"><?php __a("To");?></label>
+
+            <input type="text" id="jr-date-to" name="date_to" value="<?php echo date("m/d/Y");?>" />
+
+            <button id="jr-chart-update" class="jrButton jrIconOnly"><span class="jrIconSearch"></span></button>
+
+            <input type="hidden" id="jr-date-from-alt" name="alt_date_from" value="<?php echo date("Y-m-d",$lastmonth);?>" />
+
+            <input type="hidden" id="jr-date-to-alt" name="alt_date_to" value="<?php echo date("Y-m-d");?>" />
+
+        </div>
+
+    </div>
+
+    <div class="jrTotals">
+
+        <span id="jr-total-volume" class="jrPaidStatValue"></span> <span class="jrPaidStatLabel"><?php __a("Orders");?></span>
+
+        &nbsp;&nbsp;
+
+        <span id="jr-total-sales" class="jrPaidStatValue"></span> <span class="jrPaidStatLabel"><?php __a("Sales");?></span>
+
+    </div>
+
+    <div id="jr-sales-chart" data-title="<?php __a("Sales");?>" data-curr-symbol="<?php echo Sanitize::getString($this->Config,'paid.currency_symbol','$');?>" style="margin-top:20px; width:100%; ">
+
+    </div>
+
+    <div id="jr-volume-chart" data-title="<?php __a("Orders");?>" style="margin-top:20px; width:100%;">
+
+    </div>
+
+</div>

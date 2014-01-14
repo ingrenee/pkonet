@@ -1,0 +1,80 @@
+<div id="jr-form-inquiry-outer" class="jrForm jrFormContainer">
+
+	<form id="jr-form-inquiry" class="jrInquiryForm" name="jr-form-inquiry" action="index.php" method="post">
+
+		<fieldset>
+
+			<div class="jrFieldDiv">
+
+				<label for="jr-inquiry-from_name"><?php __t("Your name");?>:<span class="jrIconRequired"></span>
+
+				&nbsp;<span class="jr-validation-input jrValidation jrHidden"><?php __t("Please enter your name.");?></span>
+
+				</label>
+
+				<?php echo $Form->text('data[Inquiry][from_name]',array('id'=>'jr-inquiry-from_name','value'=>$User->name,'class'=>'jrName','size'=>50,'maxlength'=>100)); ?>
+
+			</div>
+
+			<div class="jrFieldDiv">
+
+				<label for="jr-inquiry-from_email"><?php __t("Your email");?>:<span class="jrIconRequired"></span>
+
+				&nbsp;<span class="jr-validation-input jrValidation jrHidden"><?php __t("Please enter your email.");?></span>
+
+				</label>
+
+				<?php echo $Form->email('data[Inquiry][from_email]',array('id'=>'jr-inquiry-from_email','value'=>$User->email,'class'=>'jrEmail','size'=>50,'maxlength'=>100));?>
+
+			</div>
+
+			<div class="jrFieldDiv">
+
+				<label for="jr-inquiry-message"><?php __t("Message");?><span class="jrIconRequired"></span>
+
+				&nbsp;<span class="jr-validation-input jrValidation jrHidden"><?php __t("Please enter your message.");?></span>
+
+				</label>
+
+				<?php echo $Form->textarea('data[Inquiry][message]',array('id'=>'jr-inquiry-message','class'=>'jrTextArea','rows'=>10,'cols'=>100));?>
+
+			</div>
+
+			<?php if($this->Access->showCaptcha()):?>
+
+			<div class="jrWarning jrCaptcha">
+
+				<div class="jr-captcha jrCaptchaImg"></div>
+
+				<div>
+					<input type="text" class="jr-captcha-code jrCaptchaCode" name="data[Captcha][code]" size="5" maxlength="5" />
+					<span class="jrCaptchaText"><?php __t("Please enter the security code.");?></span>
+				</div>
+
+			</div>
+
+			<?php endif;?>
+
+			<div class="jr-validation jrError jrHidden"></div>
+
+			<?php if(!$this->ajaxRequest): // Used only when form is directly embedded in theme file ?>
+
+				<button class="jr-send-inquiry-embedded jrButton"><?php __t("Submit");?></button>
+
+			<?php endif;?>
+
+		</fieldset>
+
+		<input type="hidden" name="data[Inquiry][listing_id]" value="<?php echo $listing['Listing']['listing_id'];?>" />
+
+		<input type="hidden" name="data[controller]" value="inquiry" />
+
+		<input type="hidden" name="data[action]" value="_send" />
+
+		<input type="hidden" name="format" value="raw" />
+
+		<?php echo cmsFramework::getTokenInput();?>
+
+   </form>
+
+</div>

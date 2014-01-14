@@ -1,0 +1,29 @@
+<div class="jrGrid">
+
+  <div class="jrCol4 jrCenter">
+
+    <div class="jrRoundedPanelLt">
+
+  		<?php __a("Remaining Listings");?>
+
+  		<br />
+
+      <span id="jr-listing-count" style="font-size: 40px;"><?php echo $total;?></span>
+
+    </div>
+
+  </div>
+
+  <div class="jrCol8">
+
+    <div class="jrRoundedPanelLt">
+
+         <p><?php __a("Click 'Start' to begin the automatic creation and processing of orders for listings in the associated categories for this plan.");?></p>
+
+         <div class="jrInfo"><?php __a("Once free or trial listings have a base plan, users will be able to upgrade using the plans you've setup for the same categories.");?></div>
+
+    </div>
+
+  </div>
+
+</div>

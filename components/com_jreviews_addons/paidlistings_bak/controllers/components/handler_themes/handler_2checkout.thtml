@@ -1,0 +1,87 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+?>
+
+<form action="index.php" method="post" class="jrForm" data-object-type="paidlistings_handler">
+
+    <div class="jrInfo">
+
+        In the 2checkout website look for the Direct Return setting under Account=>Site Management and select one of these two options:<br /><br />
+        <ul>
+            <li>Given links back to my website</li>
+            <li>Header Redirect (Your URL)</li>
+        </ul>
+        <br />If you select the latter, you should leave the Approved and Pending URL settings further down empty because these are passed directly by the add-on.
+
+    </div>
+
+    <?php
+    $handlerData = array(
+        /*** NEW HEADER ***/
+        __a("General",true) => array(
+            array(
+                'label'=>__a("Name",true),
+                'type'=>'text',
+                'name'=>'data[PaidHandler][name]',
+                'default'=>Sanitize::getString($handler['PaidHandler'],'name','Paypal')
+            ),
+            array(
+                'label'=>__a("State",true),
+                'type'=>'select',
+                'name'=>'data[PaidHandler][state]',
+                'default'=>Sanitize::getInt($handler['PaidHandler'],'state',0),
+                'options'=>array(0=>'Disabled',1=>'Enabled',2=>'Sandbox'),
+            ),
+            array(
+                'label'=>'Vendor ID',
+                'type'=>'text',
+                'name'=>'data[PaidHandler][settings][sid]',
+                'default'=>Sanitize::getString($handler['PaidHandler']['settings'],'sid',''),
+                'attributes'=>array('class'=>'jrInteger')
+            ),
+            array(
+                'label'=>'Secret Word',
+                'type'=>'text',
+                'name'=>'data[PaidHandler][settings][secret_word]',
+                'default'=>Sanitize::getString($handler['PaidHandler']['settings'],'secret_word',''),
+                'attributes'=>array('class'=>'jrInteger'),
+                'help'=>'Can be found under Account=>Site Management in the 2CO site.'
+            )
+        )
+    );
+
+    $AdminSettings->displayTab('handler-edit',$handlerData,'',$handler['PaidHandler']);
+
+    $handlerData = array(
+        /*** NEW HEADER ***/
+        __a("Payment Button",true) => array(
+            array(
+                'label'=>__a("Path to image",true),
+                'type'=>'text',
+                'name'=>'data[PaidHandler][settings][button]',
+                'default'=>Sanitize::getString($handler['PaidHandler']['settings'],'button','/components/com_jreviews_addons/paidlistings/images/2checkout.jpg'),
+                'attributes'=>array('style'=>'width:500px;')
+            )
+        )
+    );
+
+    $AdminSettings->displayTab('handler-edit',$handlerData,'',$handler['PaidHandler']);
+    ?>
+
+    <div class="jr-validation jrError jrHidden"></div>
+
+    <input type="hidden" name="data[PaidHandler][subscriptions]" value="0" />
+
+    <input type="hidden" name="data[PaidHandler][handler_id]" value="<?php echo $handler['PaidHandler']['handler_id'];?>" />
+
+    <input type="hidden" name="data[controller]" value="admin/admin_paidlistings_handlers" />
+
+    <input type="hidden" name="data[action]" value="_save" />
+
+</form>

@@ -1,0 +1,57 @@
+<div class="jrInfo">
+
+  <ul>
+      <li><?php __a("Only listings that have not been geocoded will be processed.");?></li>
+
+      <li><?php __a("Use of the Google Geocoding API is subject to a query limit of 2,500 geolocation requests per day. (User of Google Maps API Premier may perform up to 100,000 requests per day.)");?></li>
+
+  </ul>
+
+</div>
+
+<div class="jrGrid">
+
+  <div class="jrCol4 jrCenter">
+
+    <div class="jrRoundedPanelLt">
+    <?php __a("Remaining");?><br /><span id="jr-geocode-remaining" style="font-size: 40px;"><?php echo $total;?></span>
+    </div>
+
+  </div>
+
+  <div class="jrCol4 jrCenter ">
+
+    <div class="jrRoundedPanelLt">
+    <?php __a("Processed Successfully");?><br /><span id="jr-geocode-successful" style="font-size: 40px;">0</span>
+    </div>
+
+  </div>
+
+  <div class="jrCol4 jrCenter ">
+
+    <div class="jrRoundedPanelLt">
+    <?php __a("Skipped or Errors (*)");?><br /><span id="jr-geocode-error" style="font-size: 40px;">0</span>
+    </div>
+
+  </div>
+
+</div>
+
+<div style="margin: 2px; text-align: center; padding: 3px;">
+
+    <?php __a("Show debug info");?>: <?php echo $Form->radioYesNo( "debug_info", array('id'=>"jr-geocode-debug-show"), 0); ?>
+
+<?php /*    &nbsp;&nbsp;
+    Processing increment: */?><?php echo $Form->hidden('process_increment', array('id'=>"jr-geocode-increment",'value'=>1,'style'=>'width:2em;')); ?>
+
+</div>
+
+<div class="jrPageToolbar jrRoundedPanel">
+
+    <button id="jr-geocode-all-start" class="jrButton"><?php __a("Start");?></button>
+
+    <button id="jr-geocode-all-stop" class="jrButton"><?php __a("Stop");?></button>
+
+</div>
+
+<div class="jrSizeS"><?php __a("(*) Address not found, geocoder error response or request sent too fast.");?></div>
