@@ -1,0 +1,207 @@
+/**************************************************
+  Generic styles
+***************************************************/
+a:link,
+a:visited {
+  color: #008080;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+.dark-bg a:link,
+.dark-bg a:visited {
+  color: #fff;
+}
+.dark-bg a:hover {
+  color: #eee;
+}
+.theme-bg a:link,
+.theme-bg a:visited {
+  color: #fff;
+}
+.theme-bg a:hover {
+  color: #eee;
+}
+/**************************************************
+  Layout styles
+***************************************************/
+.theme-bg {
+  background: #00b3b3;
+  color: #fff;
+}
+.theme-bg.header-wrapper,
+.theme-bg.showcase-top-wrapper {
+  border-bottom: solid 1px #006667;
+}
+.theme-bg.footer-wrapper,
+.theme-bg.showcase-bottom-wrapper {
+  border-top: solid 1px #006667;
+}
+/**************************************************
+  Module styles
+***************************************************/
+.box .mod-inner,
+.box-rounded .mod-inner {
+  color: #eee;
+  background-color: #007a7a;
+  background-image: -moz-linear-gradient(top, #008080, #007171);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#008080), to(#007171));
+  background-image: -webkit-linear-gradient(top, #008080, #007171);
+  background-image: -o-linear-gradient(top, #008080, #007171);
+  background-image: linear-gradient(to bottom, #008080, #007171);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff008080', endColorstr='#ff007171', GradientType=0);
+}
+.box .mod-inner a:link,
+.box .mod-inner a:visited,
+.box-dark .mod-inner a:link,
+.box-dark .mod-inner a:visited,
+.box-rounded .mod-inner a:link,
+.box-rounded .mod-inner a:visited,
+.box-rounded-dark .mod-inner a:link,
+.box-rounded-dark .mod-inner a:visited {
+  color: #fff;
+}
+.box .mod-inner a:hover,
+.box-dark .mod-inner a:hover,
+.box-rounded .mod-inner a:hover,
+.box-rounded-dark .mod-inner a:hover {
+  color: #eee;
+}
+.titlebar .mod-title,
+.titlebar-rounded .mod-title {
+  background: #008080;
+  color: #fff;
+}
+.titlebar-outside .mod-title,
+.titlebar-rounded-outside .mod-title {
+  background: #008080;
+  color: #fff;
+}
+/**************************************************
+  Menu styles
+***************************************************/
+/* Simple Horizontal menu */
+[class^="menu-horiz-simple"] > li.active > a,
+[class^="menu-horiz-simple"] > li > a:hover,
+[class^="menu-horiz-simple"] > li:hover > a {
+  background: #00b3b3;
+}
+/* Horizontal buttons menu */
+[class^="menu-horiz-buttons"] > li > a {
+  background: #00b3b3;
+}
+[class^="menu-horiz-buttons"] > li.active > a,
+[class^="menu-horiz-buttons"] > li > a:hover,
+[class^="menu-horiz-buttons"] > li:hover > a {
+  background: #006667;
+}
+/* Horizontal bar */
+ul[class^="menu-horiz-bar"] {
+  background-color: #00b3b3;
+}
+[class^="menu-horiz-bar"] > li.active > a,
+[class^="menu-horiz-bar"] > li > a:hover,
+[class^="menu-horiz-bar"] > li:hover > a,
+[class^="menu-horiz-bar"] > li:hover ul li:hover > a {
+  background-color: #006667;
+}
+[class^="menu-horiz-bar"] li > ul li {
+  background-color: #00b3b3;
+  border-top: 1px solid #00cccd;
+  border-bottom: 1px solid #006667;
+}
+[class^="menu-horiz-bar"] li:hover > ul li a:hover {
+  background-color: #006667;
+}
+ul[class^="menu-horiz-bar"] .menu-module .menu-module-inner {
+  background-color: #00b3b3;
+}
+/* Horizontal gradient bar */
+ul[class^="menu-horiz-gradientbar"] {
+  background-color: #007f7f;
+  background-image: -moz-linear-gradient(top, #00999a, #005757);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#00999a), to(#005757));
+  background-image: -webkit-linear-gradient(top, #00999a, #005757);
+  background-image: -o-linear-gradient(top, #00999a, #005757);
+  background-image: linear-gradient(to bottom, #00999a, #005757);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff00999a', endColorstr='#ff005757', GradientType=0);
+  border: 1px solid #008080;
+}
+[class^="menu-horiz-gradientbar"] > li.active > a,
+[class^="menu-horiz-gradientbar"] > li > a:hover,
+[class^="menu-horiz-gradientbar"] > li:hover > a {
+  border: 1px solid #004d4d;
+  background-color: #006c6c;
+  background-image: -moz-linear-gradient(top, #004d4d, #00999a);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#004d4d), to(#00999a));
+  background-image: -webkit-linear-gradient(top, #004d4d, #00999a);
+  background-image: -o-linear-gradient(top, #004d4d, #00999a);
+  background-image: linear-gradient(to bottom, #004d4d, #00999a);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff004d4d', endColorstr='#ff00999a', GradientType=0);
+}
+[class^="menu-horiz-gradientbar"] > li:hover ul li:hover > a {
+  background-color: #006667;
+}
+[class^="menu-horiz-gradientbar"] li > ul li {
+  background-color: #00b3b3;
+  border-top: 1px solid #00cccd;
+  border-bottom: 1px solid #006667;
+}
+[class^="menu-horiz-gradientbar"] li:hover > ul li a:hover {
+  background-color: #006667;
+}
+ul[class^="menu-horiz-gradientbar"] .menu-module .menu-module-inner {
+  background-color: #00b3b3;
+}
+/* 2 Row Horizontal menu */
+ul[class^="menu-horiz-tworow"] {
+  background-color: #006667;
+}
+[class^="menu-horiz-tworow"] > li.active > a,
+[class^="menu-horiz-tworow"] > li > a:hover,
+[class^="menu-horiz-tworow"] > li:hover > a,
+[class^="menu-horiz-tworow"] > li:hover ul li:hover > a {
+  background-color: #00b3b3;
+}
+[class^="menu-horiz-tworow"] li > ul {
+  background-color: #00b3b3;
+}
+[class^="menu-horiz-tworow"] li > ul > li {
+  background-color: #00b3b3;
+}
+/* Vertical menu */
+.box .menu-vertical li a:hover,
+.box-rounded .menu-vertical li a:hover {
+  color: #fff;
+  background: #006667;
+}
+.box .menu-vertical li ul li a:hover,
+.box-rounded .menu-vertical li ul li a:hover {
+  background: url("../img/arrow-white.png") no-repeat 5px center #006667;
+}
+.rtl .box .menu-vertical li ul li a:hover,
+.rtl .box-rounded .menu-vertical li ul li a:hover {
+  background: url("../img/arrow-left-white.png") no-repeat right center #006667;
+}
+/* Mobile navigation */
+.mobile-menu-toggle {
+  background: #006667;
+}
+ul.mobile-menu {
+  background: #008080;
+  color: #fff;
+}
+ul.mobile-menu li a:hover {
+  background: #006667;
+  text-decoration: none;
+}
+ul.mobile-menu li ul li a:hover {
+  background: url("../img/arrow-white.png") no-repeat 5px center #006667;
+}
+.rtl ul.mobile-menu li ul li a:hover {
+  background: url("../img/arrow-left-white.png") no-repeat right center #006667;
+}
