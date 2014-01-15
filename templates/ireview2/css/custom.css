@@ -571,3 +571,144 @@ float: left;}
 ,
 .jr-cancel-listing.jrButton:hover
 {background-color: #323232;background-image:none;}
+
+
+/* planes de pago */
+
+.jrNewPlans
+{
+	display: block;
+	width: 100%;
+	text-align:center;
+}
+
+.jrNewPlans div.jr-plan-info
+{
+	width: 40%;
+	display: inline-block;
+	float: inherit;
+	margin:auto;
+	background-color: transparent !important;
+background: none !important;
+border: 1px solid #ccc !important;
+padding: 0px !important;
+}
+
+.jrNewPlans div.jr-plan-info:first-child
+{
+margin-right: 10px;
+width: 30%;
+
+}
+
+.jrNewPlans div.jr-plan-info .jrPlanName
+{
+	background-color: #4d87c8;
+	color: #FFF;
+	font-size: 40px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	-webkit-border-top-left-radius: 6px;
+-webkit-border-top-right-radius: 6px;
+-moz-border-radius-topleft: 6px;
+-moz-border-radius-topright: 6px;
+border-top-left-radius: 6px;
+border-top-right-radius: 6px;
+}
+
+.jrNewPlans div.jr-plan-info .jrPlanDesc
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12.82px;
+	color: #4d87c8;
+	display: block;
+	padding-right: 20px;
+	padding-left: 20px;
+	text-align: left;
+}
+
+.jrNewPlans div.jr-plan-info .jrPlanSubmit
+{
+	background-color: #f3f3f3;
+	display: block;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.jrNewPlans div.jr-plan-info .jrPlanSubmit .jrButton
+{
+	background-image: url(../images/b-black-plan.jpg);
+	border: 1px solid #000;
+	color: #FFF !important;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	font-size: 33px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	width: 60%;
+}
+.jrNewPlans div.jr-plan-info .jrPlanSubmit .jrButton:hover
+{
+	background-color: #5d5d5d;
+	background-image:none;
+}
+.jrNewPlans div.jr-plan-info .jrPlanPrice
+{
+	border: none;
+	background: none;
+	font-size: 62px;
+	font-weight: bold;
+	color: #4d87c8;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+	display: block;
+	}
+	.jrNewPlans div.jr-plan-info .jrPlanDuration
+	{
+	font-size: 18px;
+	color: #000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	text-align: center;
+	display: block;
+}
+
+
+.jrNewPlans div.jr-plan-info:first-child .jrPlanName
+{
+	background-color: #e5e5e5;
+	font-size: 20px;
+	color: #000;
+	height: auto !important;
+}
+
+.jrNewPlans div.jr-plan-info:first-child .jrPlanPrice
+{
+	color: #a6a6a6	;
+	font-variant: normal;
+	text-transform: uppercase;
+	border:none !important;
+	background:none !important;
+}
+.jrNewPlans div.jr-plan-info:first-child .jrPlanSubmit .jrButton
+{
+	background-image: none;
+	border: 1px solid #a6a6a6;
+	color: #FFF !important;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	font-size: 28px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	background-color: #a6a6a6;
+	width: 60%;
+}
+.jrNewPlans div.jr-plan-info:first-child .jrPlanSubmit .jrButton:hover
+{
+	background-color: #9B9B9B;
+	background-image: none;
+}
