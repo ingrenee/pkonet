@@ -1,0 +1,77 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+?>
+
+<form action="index.php" method="post" class="jrForm" data-object-type="paidlistings_handler">
+
+   <?php
+    $handlerData = array(
+        /*** NEW HEADER ***/
+        __a("General",true) => array(
+            array(
+                'label'=>__a("Name",true),
+                'type'=>'text',
+                'name'=>'data[PaidHandler][name]',
+                'default'=>Sanitize::getString($handler['PaidHandler'],'name','Paypal')
+            ),
+            array(
+                'label'=>__a("State",true),
+                'type'=>'select',
+                'name'=>'data[PaidHandler][state]',
+                'default'=>Sanitize::getInt($handler['PaidHandler'],'state',0),
+                'options'=>array(0=>'Disabled',1=>'Enabled'),
+            ),
+            array(
+                'label'=>'Points Exchange rate',
+                'type'=>'text',
+                'name'=>'data[PaidHandler][settings][exchange_rate]',
+                'default'=>Sanitize::getFloat($handler['PaidHandler']['settings'],'exchange_rate','1.00'),
+                'attributes'=>array('class'=>'jrInteger'),
+                'help'=>'You can set exchange rate for users points, for example <strong>10</strong> means that $1 = 10 points. You can use float values, for example $1 = 1.5 points'
+            ),
+            array(
+                'label'=>'Zero Monetary Value',
+                'type'=>'radioYesNo',
+                'name'=>'data[PaidHandler][settings][display_zero]',
+                'default'=>Sanitize::getInt($handler['PaidHandler']['settings'],'display_zero',1),
+                'attributes'=>array('class'=>'jrInteger'),
+                'help'=>'If Yes, transactions will not be displayed on Summary page.'
+            )
+        )
+    );
+
+    $AdminSettings->displayTab('handler-edit',$handlerData,'',$handler['PaidHandler']);
+
+    $handlerData = array(
+        /*** NEW HEADER ***/
+        __a("Payment Button",true) => array(
+            array(
+                'label'=>__a("Path to image",true),
+                'type'=>'text',
+                'name'=>'data[PaidHandler][settings][button]',
+                'default'=>Sanitize::getString($handler['PaidHandler']['settings'],'button','/components/com_jreviews_addons/paidlistings/images/alphauserpoints.jpg'),
+                'attributes'=>array('style'=>'width:500px;')
+            )
+        )
+    );
+
+    $AdminSettings->displayTab('handler-edit',$handlerData,'',$handler['PaidHandler']);
+    ?>
+
+    <div class="jr-validation jrError jrHidden"></div>
+
+    <input type="hidden" name="data[PaidHandler][subscriptions]" value="0" />
+
+    <input type="hidden" name="data[PaidHandler][handler_id]" value="<?php echo $handler['PaidHandler']['handler_id'];?>" />
+
+    <input type="hidden" name="data[controller]" value="admin/admin_paidlistings_handlers" />
+
+    <input type="hidden" name="data[action]" value="_save" />
+
+</form>

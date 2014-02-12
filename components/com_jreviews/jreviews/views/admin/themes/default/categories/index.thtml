@@ -1,0 +1,185 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$app  = JApplication::getInstance('site');
+
+$JMenu = $app->getMenu();
+
+$langDel = json_encode(array(
+    'del_confirm'=>__a("Are you sure you want to remove this category from your setup? It will not be deleted from Joomla.",true,true),
+    'del_error'=>__a('There was a problem removing the category.',true,true)
+    ));
+
+# Initialize paginator helper
+$Paginator->paginate(array('current_page'=>$this->page,'items_per_page'=>$this->limit,'items_total'=>$pagination['total']));
+
+?>
+
+<div class="jr-categories-list">
+
+	<div class="jrPageHeading"><?php __a("Categories Manager");?></div>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="category">
+
+		<div class="jrPageToolbar jrRoundedPanel">
+
+	        <button class="jr-edit jrButton jrGreen" data-id="0">
+
+	            <span class="jrIconNew"></span><?php __a("Setup New");?>
+
+	        </button>
+
+	        &nbsp;
+
+			<button class="jr-delete-all jrButton" data-lang='<?php echo $langDel;?>'>
+
+	            <span class="jrIconNo"></span><?php __a("Remove");?>
+
+			</button>
+
+		</div>
+
+		<div class="jrInfo">
+
+			<span class="jrIconInfo"></span><?php __a("Include all top level and parent categories in your setup. You can use the predefined 'This category will not have listings' Listing Type for them. All subcategories belonging to the same top level category must be assigned to the same directory.");?>
+
+				&nbsp;<a class="jrButton" target="_blank" href="http://docs.reviewsforjoomla.com/?title=Using_JReviews_with_unlimited_levels_of_categories"><span class="jrIconPreview"></span><?php __a("Read more");?></a>
+
+		</div>
+
+	    <div class="jr-filters jrPageFilters jrRoundedPanelLt jrClearfix">
+
+			<?php __a("Category");?>:&nbsp;
+			<?php
+				echo $Form->select(
+					'cat_alias',
+					array_merge(array(array('value'=>null,'text'=>'All')),$categories),
+					$cat_alias
+				);
+			?>
+
+		</div>
+
+        <?php echo $this->element('pagination',array('position'=>'top'));?>
+
+	    <div class="jrDataList">
+
+	        <div class="jrGrid24 jrDataListHeader">
+
+                <div class="jrCol1"><input class="jr-cb-all" value="" type="checkbox"></div>
+
+				<div class="jrCol1">#</div>
+
+                <div class="jrCol1">ID</div>
+
+                <div class="jrCol6"><?php __a("Category");?></div>
+
+                <div class="jrCol5"><?php __a("Directory");?></div>
+
+                <div class="jrCol4"><?php __a("Listing Type");?></div>
+
+                <div class="jrCol5">&nbsp;</div>
+
+                <div class="jrCol1">&nbsp;</div>
+
+            </div>
+
+			<?php $i = $this->page*$this->limit - ($this->limit - 1);
+
+				foreach($rows AS $key=>$row):
+
+					$cat_has_core_menu = false;
+
+			        $menu = $JMenu->getItems(array('link','link'),array('index.php?option=com_content&view=category&layout=blog&id='.$row->id),true);
+
+			        if(!$menu)
+			        {
+			            $menu = $JMenu->getItems(array('link'),array('index.php?option=com_content&view=category&id='.$row->id),true);
+			        }
+
+			        $menu and $cat_has_core_menu = true;
+					?>
+
+            <div class="jr-layout-outer jrGrid24" data-id="<?php echo $row->value;?>">
+
+                <div class="jrCol1">
+
+					<input type="checkbox" class="jr-row-cb" name="cid[]" value="<?php echo $row->value;?>" />
+
+                </div>
+
+				<div class="jrCol1"><?php echo $i++;?></div>
+
+                <div class="jrCol1"><?php echo $row->value;?></div>
+
+                <div class="jrCol6">
+
+					<?php echo $row->level > 1 ? str_repeat('|&mdash;',$row->level) : '';?>
+
+					<a href="javascript:void(0)" class="jr-edit" data-id="<?php echo $row->value;?>">
+
+						<?php echo $row->text;?>
+
+					</a>
+
+                </div>
+
+                <div class="jrCol5">
+
+					<span data-key="Directory.title"><?php echo ($row->dir_title != '' ? $row->dir_title : 'none')?></span>
+
+                </div>
+
+                <div class="jrCol4">
+
+					<?php echo ($row->listing_type_title != '' ? $row->listing_type_title : '*No Listings*')?>
+
+                </div>
+
+                 <div class="jrCol5">
+
+                 	<?php if($cat_has_core_menu):?>
+
+                 		<span class="jrStatusLabel jrGreen"><?php __a("Required menu found");?></span>
+
+                 	<?php else:?>
+
+                 		<a target="_blank" href="http://docs.reviewsforjoomla.com/Creating_Required_Joomla_Menu_Items"><span class="jrStatusLabel jrRed"><?php __a("Required menu not found");?></span></a>
+
+                 	<?php endif;?>
+
+                 </div>
+
+                <div class="jrCol1">
+
+                    <button class="jr-delete jrButton jrSmall jrIconOnly" data-id="<?php echo $row->value;?>" data-lang='<?php echo $langDel;?>'>
+
+                            <span class="jrIconNo"></span><span class="jrHidden"><?php __a("Delete");?></span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+			<?php endforeach;?>
+
+		</div>
+
+        <?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+        <input type="hidden" name="data[controller]" value="admin/categories" />
+
+        <input type="hidden" name="data[action]" value="index" />
+
+	</div>
+
+</form>

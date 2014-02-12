@@ -1,0 +1,130 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ *                                 PAGINATION HELPER
+ **********************************************************************************/
+
+$pagination['total'] and $Paginator->paginate(array('current_page'=>$this->page,'items_per_page'=>$this->limit,'items_total'=>$pagination['total']));
+
+if($pagination['total'] == 0) return;
+?>
+
+<div id="jr-invoices-table" class="jr-page-inner jrMyAccountInvoices">
+
+    <form id="jr-invoices-form" name="jr-invoices-form" type="post" action="index.php">
+
+        <div class="jrDataList">
+
+            <div class="jrGrid jrDataListHeader">
+
+                <div class="jrCol1">&nbsp;</div>
+
+                <div class="jrCol2"><?php __t("Invoice #");?></div>
+
+                <div class="jrCol2"><?php __t("Order #");?></div>
+
+                <div class="jrCol6"><?php __t("Listing & Plan Information");?></div>
+
+                <div class="jrCol1">&nbsp;</div>
+
+            </div>
+
+            <?php foreach($invoices AS $invoice): extract($invoice['PaidOrder']);?>
+
+            <div class="jrGrid">
+
+                <div class="jrCol1">
+
+                    <span class="<?php if($invoice['PaidTxnLog']['txn_success']):?>jrIconYes<?php else:?>jrIconNo<?php endif;?>"></span>
+
+                </div>
+
+                <div class="jrCol2"><?php echo str_pad($invoice['PaidTxnLog']['log_id'], 7, "0", STR_PAD_LEFT);?></div>
+
+                <div class="jrCol2"><?php echo str_pad($invoice['PaidTxnLog']['order_id'], 7, "0", STR_PAD_LEFT);?></div>
+
+                <div class="jrCol6">
+
+                   <ul class="jrNoStyle">
+
+                        <li>
+                            <?php if($listing_info['listing_title'] == ''):?>
+
+                                <?php __t("The listing is no longer available");?>
+
+                            <?php else:?>
+
+                                <a href="<?php echo isset($invoice['Listing']['url']) ? $invoice['Listing']['url'] : $listing_info['listing_url'];?>"><?php echo $listing_info['listing_title'];?></a>
+
+                            <?php endif;?>
+                        </li>
+
+                        <li>
+                            <?php echo $plan_info['plan_name'];?>&nbsp;
+
+                            <?php if($order_active && !$order_never_expires && in_array($payment_type,array(0,2)) && ($daysToExpiration <= $this->Config->{'paid.notify_expiration1_days'})):?>
+
+                            <span class="jrStatusLabel jrRed"><?php __t("Expiring Soon!");?></span>
+
+                            <?php elseif(!$order_active && !$order_never_expires && $daysToExpiration <= 0):?>
+
+                            <span class="jrStatusLabel jrDark"><?php __t("Expired");?></span>
+
+                            <?php endif;?>
+
+                            <?php if($payment_type==1):?>
+
+                            <span class="jrStatusLabel jrBlue"><?php __t("Subscription");?></span>
+
+                            <?php endif;?>
+                        </li>
+
+                        <li>
+                            <?php __t("Created");?>: <?php echo $Time->niceShort($order_created);?>
+
+                            &nbsp;-&nbsp;
+
+                            <?php __t("Expires");?>: <?php echo $order_never_expires ? __t("Never",true) : $Time->niceShort($order_expires);?>
+                        </li>
+                    </ul>
+
+                </div>
+
+                <div class="jrCol1 jrRightAlign">
+
+                    <button class="jr-invoice jrButton jrSmall jrIconOnly" data-url='<?php echo $PaidRoutes->invoice($invoice['PaidTxnLog']['log_id']);?>'>
+
+                        <span class="jrIconPrint"></span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <?php endforeach;?>
+
+        </div>
+
+        <?php /* PAGINATION */ ?>
+
+        <?php echo $this->element('pagination',array('position'=>'bottom','ajax'=>1));?>
+
+        <input type="hidden" name="data[page]" value="<?php echo $this->page;?>" />
+
+        <input type="hidden" name="data[limit]" value="<?php echo $this->limit;?>" />
+
+        <input type="hidden" name="data[controller]" value="paidlistings_invoices" />
+
+        <input type="hidden" name="data[action]" value="index" />
+
+     </form>
+</div>

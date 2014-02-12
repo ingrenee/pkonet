@@ -1,0 +1,191 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+$active_state = array(-1=>'jrPaidIconCancelled',0=>'jrPaidIconExpired',1=>'jrPaidIconActive',2=>'jrPaidIconRenewal');
+
+$active_state_title = array(-1=>__a("Unpaid/Cancelled",true),0=>__a("Expired",true),1=>__a("Active",true),2=>__a("Awaiting Renewal",true));
+
+$filter = Sanitize::getVar($this->params,'filter');
+
+$langDel = json_encode(array('del_confirm'=>__a("Are you sure you want to delete the selected order(s)?",true)));
+?>
+
+<div class="jr-paid-orders-list">
+
+    <div class="jrPageHeading"><?php __a("Orders");?></div>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="paidlistings_orders">
+
+        <div class="jr-filters-search jrPageFilters jrRoundedPanelLt jrClearfix">
+
+            <div class="jrPageToolbar jrRoundedPanel">
+
+                <button class="jr-search jrButton">
+
+                    <span class="jrIconSearch"></span><?php __a("Search");?>
+
+                </button>
+
+            </div>
+
+            <div class="jrGrid24">
+
+                <div class="jrCol3">
+
+                    <label><?php __a("Order #");?></label><br />
+
+                    <?php echo $Form->text('filter[order_id]',array('style'=>'width:6em;','value'=>Sanitize::getString($filter,'order_id')));?>
+
+                </div>
+
+                <div class="jrCol9">
+
+                    <?php
+                    $created = Sanitize::getVar($filter,'order_created');
+
+                    $created_from = Sanitize::getString($created,0);
+
+                    $created_to = Sanitize::getString($created,1);
+                    ?>
+
+                    <label><?php __a("Created");?></label><br />
+
+                    <?php __a("From");?>: <?php echo $Form->text('filter[order_created][]',array('class'=>'jr-date jrDate','value'=>$created_from));?>
+
+                    &nbsp;&nbsp;
+
+                    <?php __a("To");?>: <?php echo $Form->text('filter[order_created][]',array('class'=>'jr-date jrDate','value'=>$created_to));?>
+
+                </div>
+
+                <div class="jrCol7">
+
+                    <label><?php __a("Listing Title");?></label><br />
+
+                    <?php echo $Form->text('title',array('style'=>'width:20em;','value'=>Sanitize::getString($this->params,'title')));?>
+
+                    <?php echo $Form->hidden('filter[listing_id]',array('id'=>'jr_reviewListingid','value'=>Sanitize::getString($filter,'listing_id')));?>
+
+                </div>
+
+                <div class="jrCol5">
+
+                    <label><?php __a("Plan");?></label><br />
+
+                    <?php echo $Form->select('filter[plan_id]',array_merge(array(''=>__a("Select",true)),$plans),Sanitize::getString($filter,'plan_id'));?>
+
+                </div>
+
+
+            </div>
+
+            <br />
+
+            <div class="jrGrid24">
+
+                <div class="jrCol3">
+
+                    <label><?php __a("State");?></label><br />
+
+                    <?php echo $Form->select('filter[order_active]',array(''=>__a("All",true),'1'=>__a("Active",true),'0'=>__a("Expired",true)),Sanitize::getString($filter,'order_active'),array('style'=>'width:7em;'));?></td>
+
+                </div>
+
+                <div class="jrCol9">
+
+                    <?php
+                    $expires = Sanitize::getVar($filter,'order_expires');
+
+                    $expires_from = Sanitize::getString($expires,0);
+
+                    $expires_to = Sanitize::getString($expires,1);
+                    ?>
+
+                    <label><?php __a("Expires");?></label><br />
+
+                    <?php __a("From");?>: <?php echo $Form->text('order_expires[]',array('class'=>'jr-date jrDate','value'=>$expires_from));?>
+
+                    &nbsp;&nbsp;
+
+                    <?php __a("To");?>: <?php echo $Form->text('order_expires[]',array('class'=>'jr-date jrDate','value'=>$expires_to));?>
+
+                </div>
+
+                <div class="jrCol4">
+
+                    <label><?php __a("User");?></label><br />
+
+                    <?php echo $Form->text('user_id',array('class'=>'jr-user-autocomplete','style'=>'width: 10em;','value'=>Sanitize::getString($this->params,'user_id')));?>
+
+                    <?php echo $Form->hidden('filter[user_id]',array('class'=>'jr-user-id-ac','value'=>Sanitize::getString($filter,'user_id')));?>
+
+                </div>
+
+                <div class="jrCol3">
+
+                    <label><?php __a("Coupon");?></label><br />
+
+                    <?php echo $Form->text('filter[coupon_name]',array('style'=>'width: 7em;','value'=>Sanitize::getString($filter,'coupon_name')));?>
+
+                </div>
+
+                <div class="jrCol3">
+
+                    <label><?php __a("Status");?></label><br />
+
+                    <?php echo $Form->select('filter[order_status]',
+                            array(''=>__a("Select",true),'Incomplete'=>__a("Incomplete",true),'Pending'=>__a("Pending",true),'Processing'=>__a("Processing",true),'Complete'=>__a("Complete",true),'Cancelled'=>__a("Cancelled",true),'Fraud'=>__a("Fraud",true),'Failed'=>__a("Failed",true)),
+                            Sanitize::getString($filter,'order_status'));?>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="jrPageToolbar jrRoundedPanel">
+
+            <button class="jr-delete-all jrButton" data-lang='<?php echo $langDel;?>'>
+
+                <span class="jrIconDelete"></span><span><?php __a("Delete");?></span>
+
+            </button>
+
+        </div>
+
+        <div id="jrIconLegeng">
+
+            <span class="<?php echo $active_state[-1];?>"></span>
+
+            <span>&nbsp;<?php echo $active_state_title[-1];?>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+            <span class="<?php echo $active_state[1];?>"></span>
+
+            <span>&nbsp;<?php echo $active_state_title[1];?>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+            <span class="<?php echo $active_state[0];?>"></span>
+
+            <span>&nbsp;<?php echo $active_state_title[0];?>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+            <span class="<?php echo $active_state[2];?>"></span>
+
+            <span>&nbsp;<?php echo $active_state_title[2];?>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+        </div>
+
+        <br />
+
+        <?php echo $this->renderControllerView('paidlistings_orders','orders_table');?>
+
+        <input type="hidden" id="controller" name="data[controller]" value="admin/admin_paidlistings_orders" />
+
+        <input type="hidden" id="action" name="data[action]" value="index" />
+
+    </form>
+
+</div>

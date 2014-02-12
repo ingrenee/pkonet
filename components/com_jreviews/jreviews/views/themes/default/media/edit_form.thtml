@@ -1,0 +1,280 @@
+<?php
+extract($media['Media']);
+
+$tn_modes = array('c'=>__t("Crop",true),'s'=>__t("Scale",true));
+
+$formTokenKeysEdit = array('media_id','media_id','listing_id'=>'listing_id','review_id'=>'review_id','extension'=>'extension','user_id'=>'user_id');
+
+$formToken = cmsFramework::formIntegrityToken($media['Media'],$formTokenKeysEdit,false);
+?>
+
+<div class="jrGrid">
+
+	<div class="jrCol6">
+
+		<?php echo $this->renderControllerView('media','edit_'.$media_type,array('media'=>$media));?>
+
+		<?php if($this->Access->isManager()):?>
+
+			<div class="jrDataList">
+
+				<div class="jrGrid jrDataListHeader"><div class="jrCol12"><?php __a("File Information");?></div></div>
+
+				<div class="jrGrid">
+
+					<div class="jrCol2"><?php __a("Filename");?>:</div>
+
+					<div class="jrCol10"><?php echo $media['Media']['filename'];?></div>
+
+				</div>
+
+				<div class="jrGrid">
+
+					<div class="jrCol2"><?php __a("Relative Path");?>:</div>
+
+					<div class="jrCol10"><?php echo $media['Media']['rel_path'];?></div>
+
+				</div>
+
+				<?php if(!empty($mediaEncoding)):?>
+
+					<div class="jrGrid jrDataListHeader"><div class="jrCol12"><?php __a("Encoding Information");?></div></div>
+
+	            	<?php
+	            		switch($mediaEncoding['MediaEncoding']['status']) {
+
+	            			case 'finished':
+	            				$status_color = 'jrGreen';
+	            			break;
+	            			case 'waiting':
+	            				$status_color = 'jrPurple';
+	            			break;
+	            			case 'processing':
+	            				$status_color = 'jrOrange';
+	            			break;
+	            			case 'cancelled':
+	            				$status_color = '';
+	            			break;
+	            			case 'failed':
+	            				$status_color = 'jrRed';
+	            			break;
+	            		}
+	            	?>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("Status");?>:</div>
+
+						<div class="jrCol9"><span class="jrStatusLabel <?php echo $status_color;?>"><?php echo $mediaEncoding['MediaEncoding']['status'];?></span></div>
+
+					</div>
+
+					<div class="jrGrid">
+
+						<div class="jrCol3"><?php __a("API Response");?>:</div>
+
+						<div class="jrCol9">
+
+			            	<?php if($mediaEncoding['MediaEncoding']['response'] != ''):?>
+
+			            		<a class="jrButton jrBlue" target="_blank" href="index.php?option=com_jreviews&amp;url=media_upload/response&id=<?php echo $mediaEncoding['MediaEncoding']['id'];?>"><?php __a("Click to view");?></a>
+
+			            	<?php else:?>
+
+			            		<?php __a("Response is empty");?>
+
+			            	<?php endif;?>
+
+						</div>
+
+					</div>
+
+				<?php endif;?>
+
+			</div><?php /* end jrDataList */?>
+
+		<?php endif;?>
+
+		<br />
+
+		<?php if($this->Access->isEditor() && isset($media_info['thumbnail'])):?>
+
+			<div class="jr-thumbnails jrThumbList jrFieldDiv">
+
+				<label><?php __a("Current Thumbnail Sizes");?></label>
+
+				<div>
+
+					<?php foreach($media_info['thumbnail'] AS $key=>$thumbnail):?>
+
+						<?php
+							$mode_chr = substr($key, -1);
+							$size = substr($key, 0, strlen($key) -1);
+						?>
+
+						<span class="jr-thumb-del jrButton jrThumbSize"
+
+							data-id="<?php echo $media_id;?>"
+
+							data-token="<?php echo $formToken;?>"
+
+							data-size="<?php echo $key;?>">
+
+							<?php echo $tn_modes[$mode_chr];?>
+							<br />
+							<?php echo $size;?>
+
+						</span>
+
+					<?php endforeach;?>
+
+				</div>
+
+				<div class="jrInfo"><?php __a("Deleted thumbnails will be recreated on demand.");?></div>
+
+			</div>
+
+		<?php endif;?>
+
+	</div>
+
+	<div class="jrCol6">
+
+		<form id="mediaEdit<?php echo $media_id;?>Form" class="jrForm">
+
+			<fieldset>
+
+				<?php if($this->Access->canPublishMedia($media_type,$user_id,$listing_owner_id)):?>
+
+				<div class="jrFieldDiv">
+
+					<label><?php __t("Published");?></label>
+
+					<?php echo $Form->radioYesNo( "data[Media][published]", "", $published ); ?>
+
+				</div>
+
+				<?php endif;?>
+
+				<div class="jrFieldDiv">
+
+					<?php
+					/* Only editors and above can change the approved state in the frontend */
+					if($this->Access->canApproveMedia()):?>
+
+						<label><?php __t("Approved");?></label>
+
+						<?php
+							echo $Form->radio(
+								'data[Media][approved]',
+								array(0=>__t("Pending",true),1=>__t("Approved",true),-1=>__t("Rejected",true)),
+								array('div'=>false,'value'=>$approved)
+							);
+						?>
+
+					<?php else:?>
+
+						<?php if($approved) __t("Approved",true); else __t("Pending Approval",true);?>
+
+					<?php endif;?>
+
+				</div>
+
+			</fieldset>
+
+			<fieldset>
+
+				<div class="jrFieldDiv">
+
+					<label><?php __t("Uploaded");?></label>
+
+					<?php echo $Time->nice($created);?>
+
+				</div>
+
+				<?php if(in_array($media_type,array('audio','video')) && $this->Access->isEditor()):?>
+
+				<div class="jrFieldDiv">
+
+					<label><?php __t("Duration");?></label>
+
+					<input class="jrInteger" type="text" name="data[Media][duration]" value="<?php echo Sanitize::getString($media['Media'],'duration');?>" /> <?php __t("seconds");?>
+
+				</div>
+
+				<?php endif;?>
+
+				<?php if($this->Access->isEditor()):?>
+
+                <div class="jrFieldDiv jrLeft jrClear">
+
+                	<label><?php __a("User");?></label>
+
+                    <?php echo $Form->text('jr-owner',array(
+                        'value'=>'',
+                        'placeholder'=>__a("Start typing for suggestions.",true),
+                        'class'=>'jrAutoSuggest jr-user-autocomplete',
+                        'size'=>50,
+                        'maxlength'=>100
+
+                    ));?>
+
+                </div>
+
+				<div class="jrFieldDiv">
+
+                	<label><?php __a("User ID");?></label>
+
+                    <input readonly="readonly" type="text" name="data[Media][user_id]" class="jr-user-id-ac" value="<?php echo $media['Media']['user_id'];?>" style="width:5em;"  />
+
+                </div>
+
+            	<?php endif;?>
+
+				<div class="jrFieldDiv">
+
+					<label><?php __t("Title");?></label>
+
+					<?php if($this->Access->canEditMedia($media_type,$user_id,$listing_owner_id)):?>
+
+						<input class="jrText" type="text" name="data[Media][title]" value="<?php echo Sanitize::getString($media['Media'],'title');?>" />
+
+					<?php else:?>
+
+						<?php echo $title;?>
+
+					<?php endif;?>
+
+				</div>
+
+				<?php if($media_type != 'photo'):?>
+
+					<div class="jrFieldDiv">
+
+						<label><?php __t("Description");?></label>
+
+						<textarea rows="30" style="width:90%;" name="data[Media][description]"><?php echo $description;?></textarea>
+
+					</div>
+
+				<?php endif;?>
+
+				<input type="hidden" name="data[Media][media_id]" value="<?php echo $media_id;?>" />
+
+				<input type="hidden" name="data[controller]" value="media" />
+
+				<input type="hidden" name="data[action]" value="_saveEdit" />
+
+				<input type="hidden" name="format" value="raw" />
+
+				<?php echo cmsFramework::getTokenInput();?>
+
+				<?php echo cmsFramework::formIntegrityToken($media['Media'],$formTokenKeys);?>
+
+			</fieldset>
+
+		</form>
+
+	</div>
+
+</div>

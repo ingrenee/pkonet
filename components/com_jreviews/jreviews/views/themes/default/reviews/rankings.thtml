@@ -1,0 +1,110 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								PAGINATION HELPER
+ **********************************************************************************/
+$Paginator->paginate(array(
+		'current_page'=>$this->page,
+		'items_per_page'=>$this->limit,
+		'items_total'=>$pagination['total'],
+));
+
+/**********************************************************************************
+ * 								META DATA
+ **********************************************************************************/
+echo $this->element('page_meta');
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<div class="jr-page jrPage jrReviewerRank">
+
+	<?php if(isset($page['title']) && $page['show_title']):?>
+
+	<div class="jrPageHeader">
+
+		<?php if (isset($page['title']) && $page['show_title']):?>
+
+			<h1 class="contentheading"><?php echo $page['title'];?></h1>
+
+		<?php endif;?>
+
+		<div class="jrClear">&nbsp;</div>
+
+	</div>
+
+	<?php endif;?>
+
+ 	<?php /* PAGINATION */ ?>
+
+	<?php echo $this->element('pagination',array('position'=>'top'));?>
+
+	<table width="100%" cellpadding="0" cellspacing="0" border="0" class="jrDataTable">
+
+		<tr>
+
+			<th style="text-align:center;"><?php __t("Rank");?></th>
+
+		   <th><?php __t("Reviewer");?></th>
+
+		   <th>&nbsp;</th>
+
+		</tr>
+
+		<?php $i = $this->page*$this->limit - ($this->limit - 1);?>
+
+		<?php foreach($rankings AS $rank):?>
+
+		<tr>
+
+			<td id="user-<?php echo $rank['User']['user_id'];?>" style="text-align:center;"><?php echo $i++;?></td>
+
+			<td>
+
+				<?php echo $Community->screenName($rank);?><br />
+
+				<?php __t("Number of reviews written:");?> <?php echo $rank['Review']['count'];?>
+
+				<!-- BEGIN VIEW MY REVIEWS -->
+
+				- <?php echo $Routes->myReviews(__t("View all my reviews",true), $rank['User']);?>
+
+				<!-- END VIEW MY REVIEWS -->
+
+				<br />
+
+				<?php __t("Percentage helpful votes");?>: <?php echo $rank['Vote']['helpful']*100;?>% (<?php echo (int)$rank['Vote']['count'];?> <?php __t("votes");?>)
+
+			</td>
+
+			<td>
+
+				<?php if(isset($rank['Community']['avatar_path'])):?>
+
+					<?php echo $Community->avatar($rank);?>
+
+				<?php endif;?>
+
+			</td>
+
+		</tr>
+
+		<?php endforeach;?>
+
+	</table>
+
+ 	<?php /* PAGINATION */ ?>
+
+	<?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+</div>

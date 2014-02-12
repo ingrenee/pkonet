@@ -1,0 +1,93 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+?>
+
+<form action="index.php" method="post" class="jrForm" data-object-type="paidlistings_handler">
+
+<form action="index.php" method="post" class="jrForm" data-object-type="paidlistings_handler">
+
+    <?php
+    $handlerData = array(
+        /*** NEW HEADER ***/
+        __a("General",true) => array(
+            array(
+                'label'=>__a("Name",true),
+                'type'=>'text',
+                'name'=>'data[PaidHandler][name]',
+                'default'=>Sanitize::getString($handler['PaidHandler'],'name','Paypal')
+            ),
+            array(
+                'label'=>__a("State",true),
+                'type'=>'select',
+                'name'=>'data[PaidHandler][state]',
+                'default'=>Sanitize::getInt($handler['PaidHandler'],'state',0),
+                'options'=>array(0=>'Disabled',1=>'Enabled',2=>'Sandbox'),
+            ),
+            array(
+                'label'=>__a("Use Test Gateway",true),
+                'type'=>'radioYesNo',
+                'name'=>'data[PaidHandler][settings][test_gateway]',
+                'default'=>Sanitize::getInt($handler['PaidHandler']['settings'],'test_gateway',0),
+                'attributes'=>array('div'=>false),
+                'help'=>'Testing can be done with the production or test gateways. For the test gateway you need an Authorize.net developer account, but if Sandbox is selected above you can still perform test transaction on the production gateway.'
+            ),
+            array(
+                'label'=>'API Login',
+                'type'=>'text',
+                'name'=>'data[PaidHandler][settings][api_login]',
+                'default'=>Sanitize::getString($handler['PaidHandler']['settings'],'api_login',''),
+                'attributes'=>array('class'=>'jrText')
+            ),
+            array(
+                'label'=>'Transaction Key',
+                'type'=>'text',
+                'name'=>'data[PaidHandler][settings][transaction_key]',
+                'default'=>Sanitize::getString($handler['PaidHandler']['settings'],'transaction_key',''),
+                'attributes'=>array('class'=>'jrText')
+            ),
+            array(
+                'label'=>'MD5 Hash (Secret Word)',
+                'type'=>'text',
+                'name'=>'data[PaidHandler][settings][secret_word]',
+                'default'=>Sanitize::getString($handler['PaidHandler']['settings'],'secret_word',''),
+                'attributes'=>array('class'=>'jrText'),
+                'help'=>'Configurable value in the Authorize.net Account Settings under Security. Required for authentication. Leave empty for development accounts.'
+            )
+        )
+    );
+
+    $AdminSettings->displayTab('handler-edit',$handlerData,'',$handler['PaidHandler']);
+
+    $handlerData = array(
+        /*** NEW HEADER ***/
+        __a("Payment Button",true) => array(
+            array(
+                'label'=>__a("Path to image",true),
+                'type'=>'text',
+                'name'=>'data[PaidHandler][settings][button]',
+                'default'=>Sanitize::getString($handler['PaidHandler']['settings'],'button','/components/com_jreviews_addons/paidlistings/images/authorize-net.gif'),
+                'attributes'=>array('style'=>'width:500px;')
+            )
+        )
+    );
+
+    $AdminSettings->displayTab('handler-edit',$handlerData,'',$handler['PaidHandler']);
+    ?>
+
+    <div class="jr-validation jrError jrHidden"></div>
+
+    <input type="hidden" name="data[PaidHandler][subscriptions]" value="0" />
+
+    <input type="hidden" name="data[PaidHandler][handler_id]" value="<?php echo $handler['PaidHandler']['handler_id'];?>" />
+
+    <input type="hidden" name="data[controller]" value="admin/admin_paidlistings_handlers" />
+
+    <input type="hidden" name="data[action]" value="_save" />
+
+</form>

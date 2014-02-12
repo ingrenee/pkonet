@@ -1,0 +1,232 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**
+ * This view is used in the list pages blogview,tableview and thumbview
+ * It shows the page header with pathway, title, image description and the
+ * scope area containing category box, alphaindex and search widgets
+ * You can copy/cut anything from this page directly into the list pages
+ */
+$index = Sanitize::getString($this->params,'index');
+
+$dir_id = isset($directory) && !empty($directory) ? (int)$directory['Directory']['dir_id'] : null;
+
+if(!isset($page['top_description'])) $page['top_description'] = Sanitize::getString($page,'description');
+
+$page_description = Sanitize::getString($page,'top_description');
+
+$page_title = Sanitize::getString($page,'title');
+
+$page_image = Sanitize::getString($page,'image');
+
+$show_description = $page_description && Sanitize::getBool($page,'show_description');
+
+$show_title = $page_title && Sanitize::getBool($page,'show_title');
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<?php if(($this->Config->dir_show_breadcrumb && in_array($this->action,array('section','category','alphaindex')))
+		|| ($this->Config->rss_enable)
+		|| $show_title
+		|| ($page_image || $show_description)):?>
+
+	<div class="jrPageHeader">
+
+		<?php echo $this->element('breadcrumbs',array('index'=>$index));?>
+
+		<?php /* BEGIN RSS FEED */ ?>
+
+		<?php if($this->Config->rss_enable):?>
+
+		<div class="jrRSS">
+
+			<ul class="jrFeeds">
+
+				<li><?php echo $Routes->listingsFeed($page_title);?></li>
+
+				<?php if($this->action == 'category'):?>
+
+				<li><?php echo $Routes->rssCategory($category);?></li>
+
+				<?php elseif($this->action == 'section'):?>
+
+				<li><?php echo $Routes->rssSection($section);?></li>
+
+				<?php endif;?>
+
+			</ul>
+
+		</div>
+
+		<?php endif;?>
+
+		<?php /* PAGE TITLE & DESCRIPTION */ ?>
+
+		<?php if($show_title):?>
+
+			<h1 class="contentheading"><?php echo $page_title;?></h1>
+
+		<?php endif;?>
+
+		<?php if($page_image || $show_description):?>
+
+			<div class="jrPageDescription">
+
+				<?php if($page_image):?>
+
+					<?php echo $Html->image($page_image,array('class'=>'jrLeft'))?>
+
+				<?php endif;?>
+
+				<?php echo $page_description;?>
+
+			</div>
+
+		<?php endif;?>
+
+	</div>
+
+<?php endif;?>
+
+<div class="jrClear"></div>
+
+
+<?php if(($this->Config->dir_show_alphaindex && $this->action == 'alphaindex') ||
+		$this->Config->list_show_searchbox ||
+		($this->action=='section' && $this->Config->list_show_categories_section) ||
+		($this->action=='category' && $this->Config->list_show_categories)):?>
+
+	<?php $categoryList=array_merge(array(),$categories);// Reset array keys so it starts from 0?>
+
+	<div class="jrListScope jrRoundedPanel">
+
+		<?php /* ALPHA INDEX */ ?>
+
+		<?php if($this->Config->dir_show_alphaindex && $this->action == 'alphaindex'):?>
+
+			<?php echo $this->element('alphaindex')?>
+
+		<?php endif;?>
+
+		<?php if(($this->action=='section' && $this->Config->list_show_categories_section) || ($this->action=='category' && $this->Config->list_show_categories)):?>
+
+		<?php /* CATEGORY BOX */ ?>
+
+		<table width="95%" border="0" cellpadding="0" cellspacing="0">
+
+		<?php
+		$currentCategory = current($categoryList); //  Get the first category
+
+		for($i=1;$i<=ceil(count($categoryList)/$this->Config->cat_columns);$i++):
+		?>
+
+		<tr>
+
+		<?php for($j=1;$j<=$this->Config->cat_columns;$j++): // Loops through rows?>
+
+			<?php if($currentCategory && (!$this->Config->dir_category_hide_empty || $this->Config->dir_category_hide_empty && $currentCategory['Category']['listing_count']>0)): // Loops through columns?>
+
+			<td style="width:<?php echo round(100/$this->Config->cat_columns);?>%;">
+
+				<?php echo $Routes->category($directory,$section['Section'],$currentCategory['Category']);?>
+
+				<?php if($this->Config->dir_cat_num_entries):?>&nbsp;(<?php echo (int)$currentCategory['Category']['listing_count'];?>)<?php endif;?>
+
+			</td>
+
+			<?php endif;?>
+
+		<?php
+
+		$currentCategory = next($categoryList); // Get the next category
+
+		endfor;?>
+		</tr>
+
+		<?php endfor;?>
+
+		</table>
+
+		<?php endif;?>
+
+		<?php /* SIMPLE SEARCH */ ?>
+
+		<?php if($this->Config->list_show_searchbox):?>
+
+		<div class="jrListSearch">
+
+			<form class="jr-simple-search" action="index.php" method="post">
+
+				<input class="jrText" type="text" name="data[keywords]" placeholder="<?php __t("Search")?>" />
+
+				<button class="jr-search jrButton"><span class="jrIconSearch"></span><?php __t("Search");?></button>
+
+				&nbsp;<?php echo $Routes->search(__t("Advanced search",true));?>
+
+				<input type="hidden" name="option" value="com_jreviews" />
+
+				<?php if(isset($this->params['lang'])):?><input type="hidden" name="lang" value="<?php echo $this->params['lang'];?>" /><?php endif;?>
+
+				<input type="hidden" name="data[simple_search]" value="1" />
+
+				<input type="hidden" name="data[dir]" value="<?php echo Sanitize::getVar($this->params,'dir',$dir_id);?>" />
+
+				<input type="hidden" name="data[controller]" value="search" />
+
+				<input type="hidden" name="data[action]" value="_process" />
+
+				<input type="hidden" name="data[menu_id]" value="<?php echo $search_itemid;?>" />
+
+				<?php if($this->Config->search_cat_filter):?>
+
+					<?php if($cat_id = Sanitize::getInt($this->params,'cat')):?>
+
+					<input type="hidden" name="data[cat]" value="<?php echo $cat_id;?>" />
+
+					<?php elseif($section_id = Sanitize::getInt($this->params,'section')):?>
+
+					<input type="hidden" name="data[section]" value="<?php echo $section_id;?>" />
+
+					<?php endif;?>
+
+					<?php if($this->viewSuffix != ''):?>
+
+					<input type="hidden" name="data[tmpl_suffix]" value="<?php echo $this->viewSuffix;?>" />
+
+					<?php endif;?>
+
+				<?php endif;?>
+
+			</form>
+
+		</div>
+
+		<?php endif;?>
+
+	</div>
+
+<?php endif;?>
+
+<?php if($Config->list_show_addnew && $this->Access->canAddListing() && $this->action == 'category'):?>
+
+<?php /* ADD NEW LISTING */ ?>
+
+<div class="jrAddListing jrButton">
+
+	<span class="jrIconAddListing"></span><?php echo $Routes->listingNew(__t("Add new listing",true));?>
+
+</div>
+
+<div class="jrClear">&nbsp;</div>
+
+<?php endif;?>

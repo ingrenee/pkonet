@@ -1,0 +1,69 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+?>
+
+<form action="index.php" method="post" class="jrForm" data-object-type="paidlistings_handler">
+
+    <?php
+    $handlerData = array(
+        /*** NEW HEADER ***/
+        __a("General",true) => array(
+            array(
+                'label'=>__a("Name",true),
+                'type'=>'text',
+                'name'=>'data[PaidHandler][name]',
+                'default'=>Sanitize::getString($handler['PaidHandler'],'name','Paypal')
+            ),
+            array(
+                'label'=>__a("State",true),
+                'type'=>'select',
+                'name'=>'data[PaidHandler][state]',
+                'default'=>Sanitize::getString($handler['PaidHandler'],'state',0),
+                'options'=>array(0=>'Disabled',1=>'Enabled'),
+            ),
+            array(
+                'label'=>'Payment Instructions',
+                'type'=>'textarea',
+                'name'=>'data[PaidHandler][settings][offline]',
+                'default'=>Sanitize::getString($handler['PaidHandler']['settings'],'offline',''),
+                'attributes'=>array('style'=>'width:95%;'),
+                'help'=>'Provide bank account, contact info and any other relevant information for users to complete their payments offline.'
+            )
+        )
+    );
+
+    $AdminSettings->displayTab('handler-edit',$handlerData,'',$handler['PaidHandler']);
+
+    $handlerData = array(
+        /*** NEW HEADER ***/
+        __a("Payment Button",true) => array(
+            array(
+                'label'=>__a("Path to image",true),
+                'type'=>'text',
+                'name'=>'data[PaidHandler][settings][button]',
+                'default'=>Sanitize::getString($handler['PaidHandler']['settings'],'button','/components/com_jreviews_addons/paidlistings/images/offline.jpg'),
+                'attributes'=>array('style'=>'width:500px;')
+            )
+        )
+    );
+
+    $AdminSettings->displayTab('handler-edit',$handlerData,'',$handler['PaidHandler']);
+    ?>
+
+    <div class="jr-validation jrError jrHidden"></div>
+
+    <input type="hidden" name="data[PaidHandler][subscriptions]" value="0" />
+
+    <input type="hidden" name="data[PaidHandler][handler_id]" value="<?php echo $handler['PaidHandler']['handler_id'];?>" />
+
+    <input type="hidden" name="data[controller]" value="admin/admin_paidlistings_handlers" />
+
+    <input type="hidden" name="data[action]" value="_save" />
+
+</form>

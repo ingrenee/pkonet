@@ -1,0 +1,180 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/
+
+$module_id = Sanitize::getVar($this->params,'module_id','');
+
+extract($this->params['module']);
+
+$fields = explode(",", $fields);
+
+$page_count = ceil($total/$limit);
+
+!isset($tn_size) and $tn_size = $tn_width.'x'.$tn_width;
+
+// calculations for item width
+$item_padding = number_format(1.428571429, 9, '.', '');
+$item_width = (100-($columns * $item_padding))/$columns;
+$item_width = number_format($item_width, 9, '.', '');
+
+if(empty($listings)) { __t("No entries were found") . '<br /><br />'; return; }
+
+$settings = json_encode(compact('module_id','columns','orientation','slideshow','slideshow_interval','nav_position','page_count'));
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<div class="jr-module-slider jrModuleSlider jrSliderSinglePage" data-options='<?php echo $settings;?>'>
+
+	<?php /* root element for the items */ ?>
+	<div class="jrModuleItems <?php echo $orientation . ' jrThumbnail'.ucfirst($tn_position); ?>">
+
+		<?php /* new page starts here */
+			$pages = array_chunk($listings,$limit);
+			$j=0;
+			foreach($pages AS $page):
+			?>
+
+		<div class="jr-results jrResults jrModuleContainer jrListingsModule">
+
+			<?php $i=0;
+				  while(!empty($page)):
+					$i++; $j++; $listing = array_shift($page); ?>
+
+				<?php $tn_show and $mainMediaThumb = $Media->thumb(Sanitize::getVar($listing,'MainMedia'),array('listing'=>$listing,'size'=>$tn_size,'mode'=>$tn_mode,'css_size'=>true)); ?>
+
+				<?php $featured = Sanitize::getInt($listing['Listing'],'featured') ? ' jrFeatured' : ''; ?>
+
+				<?php $lastItem = ($i == $columns) ? ' jrLastItem' : ''; ?>
+
+				<div class="jrModuleItem<?php echo $featured.$lastItem; ?>" style="width: <?php echo $item_width; ?>%; padding-right: <?php echo $item_padding; ?>%;">
+
+					<?php if($show_numbers):?><div class="jrModuleItemNumber"><?php echo $j;?>.</div><?php endif;?>
+
+					<?php if($tn_show && $mainMediaThumb && $tn_position != 'bottom'):?>
+
+						<!-- Listing Thumbnail -->
+						<div class="jrModuleItemThumbnail">
+
+							<?php echo $Html->sefLink($mainMediaThumb,$listing['Listing']['url']);?>
+
+							<?php if($compare):?>
+
+								<?php $Widgets->compareCheckbox($listing, 'mod'); ?>
+
+							<?php endif;?>
+
+						</div>
+
+					<?php endif;?>
+
+					<div class="jrModuleItemContent">
+
+						<!-- Listing Title -->
+						<div class="jrModuleItemTitle">
+							<?php echo $Html->sefLink($listing['Listing']['title'],$listing['Listing']['url']);?>
+						</div>
+
+						<?php if($show_category && Sanitize::getString($listing['Listing'],'extension')=='com_content'): // Only for core articles?>
+
+							<!-- Category -->
+							<div class="jrModuleItemCategory"> <?php __t("Category");?>: <?php echo $Routes->category($listing,$listing['Category']);?> </div>
+
+						<?php endif;?>
+
+						<?php
+							$distance_value = $CustomFields->field('jr_gm_distance', $listing);
+							if($fields || ($distance && $distance_value && $listing_order == 'proximity')):
+						?>
+
+						<!-- Custom Fields -->
+						<div class="jrModuleFields">
+
+							<?php if($distance && $distance_value && $listing_order == 'proximity'): ?>
+							<div class="jrModuleFieldDiv jrDistance">
+								<span class="jrModuleFieldTitle"><?php echo $CustomFields->label('jr_gm_distance', $listing); ?>: </span>
+								<span class="jrModuleFieldValue"><?php echo $distance_value; ?></span>
+							</div>
+							<?php endif;?>
+
+							<?php if($fields):
+								foreach ($fields as $field):
+								$field = trim($field);
+								$field_value = $CustomFields->field($field,$listing);
+							?>
+							<?php if($field_value != ''):?>
+							<div class="jrModuleFieldDiv <?php echo lcfirst(Inflector::camelize($field)); ?>">
+								<span class="jrModuleFieldTitle"><?php echo $CustomFields->label($field, $listing); ?>: </span>
+								<span class="jrModuleFieldValue"><?php echo $field_value; ?></span>
+							</div>
+							<?php endif;?>
+
+							<?php endforeach; endif;?>
+
+						</div>
+
+						<?php endif;?>
+
+						<?php if($summary):?>
+
+							<!-- Summary Text -->
+							<div class="jrModuleItemInfo">
+								<?php echo $Text->truncateWords(Sanitize::getString($listing['Listing'],'summary'),$summary_words);?>
+							</div>
+
+						<?php endif;?>
+
+						<!-- Overall Ratings -->
+						<?php echo $Rating->overallRatings($listing, 'module'); ?>
+
+					</div>
+
+					<?php if($tn_show && $mainMediaThumb && $tn_position == 'bottom'):?>
+
+						<!-- Listing Thumbnail -->
+						<div class="jrModuleItemThumbnail">
+
+							<?php echo $Html->sefLink($mainMediaThumb,$listing['Listing']['url']);?>
+
+							<?php if($compare):?>
+
+								<?php $Widgets->compareCheckbox($listing, 'mod'); ?>
+
+							<?php endif;?>
+
+						</div>
+
+					<?php endif;?>
+
+				</div>
+
+				<?php  /* end of row , start new row */
+
+					if(!empty($page) && ($i == $columns || $total == $j)):?>
+
+						<div class="jrDivider"></div>
+
+					<?php $i=0; endif;?>
+
+			<?php endwhile;?>
+
+		</div>
+
+		<?php endforeach; /* new page ends here */?>
+
+	</div><?php /* end items root element */?>
+
+</div><?php /* end scrollable root element */?>
+
+<div class="jrClear"></div>

@@ -1,0 +1,43 @@
+<?php
+/**********************************************************************************
+ *                                 CONFIGURATION AND SETUP
+ **********************************************************************************/
+
+$entry_url = $Routes->reviewDiscuss('',$review['Review'],array('listing'=>$listing,'return_url'=>true));
+
+$entry_url = cmsFramework::makeAbsUrl($entry_url,array('sef'=>false));
+
+$entry_title = Sanitize::getString($listing['Listing'],'title');
+
+$published = $post['Discussion']['approved'];
+?>
+
+<?php
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+?>
+
+<?php if($isNew): // New review comment ?>
+	<p>
+	You're receiving this e-mail because you have a listing, '<?php echo $entry_title;?>', which has received a new review comment. You will find the review and comments at:
+	<br /><br />
+	<?php echo $Html->link($entry_title,$entry_url,array('sef'=>false));?>
+	</p>
+
+	<?php if(!$published):?>
+	<p>We typically moderate review comments and publish them only after they've been verified by our staff. Please check the above link later on to find the new comment.</p>
+	<?php endif;?>
+<?php endif;?>
+
+<?php if(!$isNew): // Edited review comment ?>
+	<p>
+	You're receiving this e-mail because a user has edited his comment for a review in your listing, '<?php echo $entry_title;?>'. You will find the review and comments at:
+	<br /><br />
+	<?php echo $Html->link($entry_title,$entry_url,array('sef'=>false));?>
+	</p>
+
+	<?php if(!$published):?>
+	<p>We typically moderate review comments and publish them only after they've been verified by our staff. Please check above link later on to find the new comment.</p>
+	<?php endif;?>
+<?php endif;?>

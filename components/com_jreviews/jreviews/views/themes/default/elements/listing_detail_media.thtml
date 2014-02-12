@@ -1,0 +1,601 @@
+<?php
+/*****************************************************************************
+ *										SETUP 								 *
+ *****************************************************************************/?>
+
+<?php
+/* Make sure this part runs just once even if the element is included several times on the same theme */
+if(!isset($mediaInit)) {
+
+	$mediaInit = true;
+
+	$photoGallery = null;
+
+	$videoGallery = null;
+
+	$is_mobile = Configure::read('System.isMobileOS');
+
+	$separate_owner_media = Sanitize::getBool($this->Config,'media_detail_separate_media');
+
+	$mediaSetup = array(
+		'disable_main_media_lightbox' 	=> Sanitize::getBool($this->Config,'media_detail_main_lightbox_disable'),
+		'show_main_media' 				=> Sanitize::getString($this->Config,'media_detail_main'),
+		'main_media_alignment' 			=> Sanitize::getString($this->Config,'media_detail_main_thumbnail_alignment'),
+		'main_media_tn_size' 			=> Sanitize::getString($this->Config,'media_detail_main_thumbnail_size'),
+		'main_media_tn_mode' 			=> Sanitize::getString($this->Config,'media_detail_main_thumbnail_mode'),
+		'main_media_by'					=> null,
+		'gallery_tn_size' 				=> Sanitize::getString($this->Config,'media_detail_gallery_thumbnail_size'),
+		'gallery_tn_mode' 				=> Sanitize::getString($this->Config,'media_detail_gallery_thumbnail_mode'),
+		'photo_layout'					=> Sanitize::getString($this->Config,'media_detail_photo_layout'),
+		'video_layout'					=> Sanitize::getString($this->Config,'media_detail_video_layout')
+	);
+
+	$mediaSetup['media_by'] 			= $separate_owner_media ? 'owner' : null;
+
+	if($separate_owner_media && $mainMedia && $mediaSetup['disable_main_media_lightbox']) {
+
+		$mediaSetup['main_media_by'] = $listing['User']['user_id'] == $mainMedia['user_id'] ? 'owner' : 'users';
+	}
+
+	extract($mediaSetup);
+
+	$photoGallery = isset($listing['Media']['photo']) ? $listing['Media']['photo'] : array();
+
+	if($mainMedia && $mainMedia['media_type'] == 'photo' && !$show_main_media) {
+
+		$photoGallery = isset($mainMedia['media_info']) ? array_merge(array($mainMedia),$photoGallery) : $photoGallery;
+
+		$mainMedia = $mainMediaThumb = null;
+
+		// Ensures photo count is not decreased in view all [media] buttons because main media is included in gallery
+		$disable_main_media_lightbox = false;
+	}
+
+	$videoGallery = !empty($listing['Media']['video']) ? $listing['Media']['video'] : array();
+
+	if($mainMedia && $mainMedia['media_type'] == 'video' && (!$show_main_media || ($show_main_media && $video_layout == 'video_player'))) {
+
+		$videoGallery = array_merge(array($mainMedia),$videoGallery);
+
+		if($video_layout != 'video_player') {
+
+			$mainMedia = $mainMediaThumb = null;
+
+			// Ensures photo count is not decreased in view all [media] buttons because main media is included in gallery
+			$disable_main_media_lightbox = false;
+		}
+		else {
+
+			$disable_main_media_lightbox = true;
+		}
+	}
+
+	$mainMediaThumb = $Media->thumb($mainMedia,array('lightbox'=>($mainMedia['media_type'] == 'photo' && !$disable_main_media_lightbox) && in_array($photo_layout, array('contact_lightbox','film_lightbox','gallery_large','gallery_small')),'size'=>$main_media_tn_size,'mode'=>$main_media_tn_mode));
+}
+?>
+
+<?php
+/*****************************************************************************
+ *		RENDERS MAIN MEDIA AND CONTACT SHEET PHOTO/VIDEO GALLERY 			 *
+ *****************************************************************************/?>
+
+<?php if($position == 'top'):?>
+
+	<?php if(($show_main_media && $mainMedia) || (in_array($photo_layout, array('contact_lightbox','contact_linked')) && !empty($photoGallery)) ) : ?>
+
+		<?php // set a width for the main media container
+
+		$mainThumbnailUrl = $Media->thumb($mainMedia,array('size'=>$main_media_tn_size,'mode'=>$main_media_tn_mode,'return_src'=>true));
+
+		$mainThumbnailSettingWidth = explode('x',$main_media_tn_size);
+
+		if($mainThumbnailUrl != '') {
+
+			$dimensions = getimagesize($mainThumbnailUrl);
+
+			if ($dimensions[0] > 0 && $dimensions[0] <= $mainThumbnailSettingWidth[0]) {
+
+				$mainThumbnailWidth = $dimensions;
+
+			}
+		}
+		else {
+
+			$mainThumbnailWidth = $mainThumbnailSettingWidth;
+
+		}
+
+		?>
+
+		<div class="jrListingMainImage<?php if($main_media_alignment == 'left') : ?> jrMediaLeft<?php endif;?>" style="max-width: <?php echo $mainThumbnailWidth[0] + 4; ?>px;">
+
+			<?php if($mainMediaThumb && $show_main_media):?>
+
+				<?php echo (!isset($mainMedia['media_info']) || $disable_main_media_lightbox) || (
+							(in_array($photo_layout, array('contact_lightbox','film_lightbox','gallery_large','gallery_small')) && $mainMedia['media_type'] == 'photo')
+							||
+							(in_array($video_layout, array('video_player')) && $mainMedia['media_type'] == 'video')
+							)
+						?
+						$mainMediaThumb
+						:
+						$Routes->mediaDetail($mainMediaThumb, array('media_by'=>$main_media_by,'media'=>$mainMedia,'listing'=>$listing),array('class'=>$mainMedia['media_type'] == 'video' && (in_array($video_layout, array('contact_lightbox','film_lightbox'))) ? 'fancyvideo' : '')); ?>
+
+			<?php endif;?>
+
+			<?php if((in_array($photo_layout, array('contact_lightbox','contact_linked')) && !empty($photoGallery)) || (in_array($video_layout, array('contact_lightbox','contact_linked')) && !empty($videoGallery))): ?>
+
+				<div class="jrCompactGallery jrClearfix">
+
+					<?php if(!empty($photoGallery) && in_array($photo_layout, array('contact_lightbox','contact_linked'))): ?>
+
+						<?php foreach($photoGallery AS $media):?>
+
+							<div class="jrMediaThumb">
+
+							<?php
+							$thumb = $Media->thumb($media,array('lightbox'=>($photo_layout == 'contact_lightbox'),'size'=>$gallery_tn_size,'mode'=>$gallery_tn_mode));
+
+							echo $photo_layout == 'contact_lightbox' ? $thumb : $Routes->mediaDetail($thumb, compact('media_by','media','listing'));
+							?>
+
+							</div>
+
+						<?php endforeach;?>
+
+					<?php endif;?>
+
+					<?php if(!empty($videoGallery) && in_array($video_layout, array('contact_lightbox','contact_linked'))): ?>
+
+						<?php foreach($videoGallery AS $media):?>
+
+							<?php $duration = $media['duration']; ?>
+
+							<div class="jrMediaThumb jrVideo" <?php if ($duration != 0): ?> data-duration="<?php echo $Time->sToHMS($duration); ?>"<?php endif;?>>
+
+							<?php
+								$thumb = $Media->thumb($media,array('size'=>$gallery_tn_size,'mode'=>$gallery_tn_mode));
+
+								echo $Routes->mediaDetail($thumb, compact('media_by','media','listing'),array('class'=>($video_layout == 'contact_lightbox') ? 'fancyvideo' : ''));
+							?>
+
+							</div>
+
+						<?php endforeach;?>
+
+					<?php endif;?>
+
+				</div>
+
+			<?php endif;?>
+
+		</div>
+
+	<?php endif;?>
+
+	<?php /* Small gallery with lightbox */ ?>
+
+	<?php if($photo_layout == 'gallery_small' && !empty($photoGallery)):
+
+		echo $this->renderControllerView('media','photo_gallery_detail',array('photos'=>array_merge($photoGallery),'compact'=>true, 'alignment'=>$main_media_alignment ));
+
+	elseif($photo_layout == 'gallery_small' && empty($photoGallery) && !$show_main_media): // Ensures default image works with small gallery with lightbox when main media is disabled ?>
+
+		<?php $mainThumbnailWidth = explode('x',$main_media_tn_size); ?>
+
+		<div class="jrListingMainImage<?php if($main_media_alignment == 'left') : ?> jrMediaLeft<?php endif;?>" style="max-width: <?php echo $mainThumbnailWidth[0] + 4; ?>px;">
+
+			<?php echo $mainMediaThumb; ?>
+
+		</div>
+
+	<?php endif;?>
+
+	<?php /* Links to separate photo and video galeries if media separation is enabled */ ?>
+
+	<?php if($separate_owner_media):?>
+
+	<div class="jrMediaButtons jrButtonGroup<?php if($main_media_alignment == 'left') : ?> jrMediaLeft<?php endif;?>">
+
+		<?php
+
+		$photo_count_user = $main_media_by == 'user' ? --$listing['Listing']['photo_count_user'] : $listing['Listing']['photo_count_user'];
+
+		if($photo_count_user > 0) echo $Routes->mediaDetail(sprintf(__t("User Photos (%s)",true),$photo_count_user),array('media_by'=>'users','media_type'=>'photo','listing'=>$listing),array('class'=>'jrButton jrUserMediaLink'));
+
+		if($listing['Listing']['video_count_user']) echo $Routes->mediaDetail(sprintf(__t("User Videos (%s)",true),$listing['Listing']['video_count_user']),array('media_by'=>'users','media_type'=>'video','listing'=>$listing),array('class'=>'jrButton jrUserMediaLink'));
+
+		?>
+
+	</div>
+
+	<?php endif;?>
+
+
+	<?php /* Video contact lightbox/linked when small photo gallery is used */ ?>
+
+	<?php if($photo_layout == 'gallery_small' && (!empty($videoGallery) && in_array($video_layout, array('contact_lightbox','contact_linked')))): ?>
+
+		<div class="jrContactVideo jrClearfix">
+
+			<?php if(!empty($videoGallery) && in_array($video_layout, array('contact_lightbox','contact_linked'))): ?>
+
+				<?php foreach($videoGallery AS $media):?>
+
+					<?php $duration = $media['duration']; ?>
+
+					<div class="jrMediaThumb jrVideo" <?php if ($duration != 0): ?> data-duration="<?php echo $Time->sToHMS($duration); ?>"<?php endif;?>>
+
+					<?php
+						$thumb = $Media->thumb($media,array('size'=>$gallery_tn_size,'mode'=>$gallery_tn_mode));
+
+						echo $Routes->mediaDetail($thumb, compact('media_by','media','listing'),array('class'=>($video_layout == 'contact_lightbox') ? 'fancyvideo' : ''));
+					?>
+
+					</div>
+
+				<?php endforeach;?>
+
+			<?php endif;?>
+
+		</div>
+
+	<?php endif;?>
+
+<?php endif;?>
+
+<?php
+/*****************************************************************************
+ *	    	  RENDERS FULL WIDTH PHOTO GALLERY AND VIDEO PLAYER				 *
+ *****************************************************************************/?>
+<?php if($position == 'bottom'):?>
+
+	<div class="jrClear"></div>
+
+	<?php /* PHOTO GALLERY */ ?>
+
+	<?php if($photo_layout == 'gallery_large' && !empty($photoGallery)): ?>
+
+		<?php echo $this->renderControllerView('media','photo_gallery_detail',array('photos'=>array_merge($photoGallery))); ?>
+
+		<div class="jrClear"></div>
+
+	<?php endif; ?>
+
+	<?php /* VIDEO PLAYER */ ?>
+
+	<?php if($video_layout == 'video_player' && !empty($videoGallery)): ?>
+
+		<?php echo $this->renderControllerView('media','video_gallery_detail',array('videos'=>array_merge($videoGallery))); ?>
+
+		<div class="jrClear"></div>
+
+	<?php endif; ?>
+
+<?php endif;?>
+
+<?php
+/*****************************************************************************
+ *				RENDERS FILM STRIP PHOTO/VIDEO LAYOUTS		   			 	 *
+ *****************************************************************************/?>
+
+<?php if($position == 'bottom'):?>
+
+	<?php if(!empty($photoGallery) && in_array($photo_layout, array('film_lightbox','film_linked'))):?>
+
+		<div class="jrMediaContainer jrPhotos jrClearfix">
+
+			<h3 class="jrHeading">
+
+				<span class="jrIconPhoto"></span>
+
+				<span class="jrHeadingText">
+
+					<?php __t("Photos");?>
+
+					<?php if($photo_layout == 'film_linked'):?>
+
+					<span class="jrMediaLinks jrButtonGroup">
+
+						<?php
+						$photo_count = $disable_main_media_lightbox ? --$listing['Listing']['photo_count'] : $listing['Listing']['photo_count'];
+
+						echo $Routes->mediaDetail(sprintf(__t("All Photos (%s)",true),$photo_count),array('media_type'=>'photo','listing'=>$listing),array('class'=>'jrButton jrAllMediaLink jrSmall'));
+						?>
+
+						<?php if($separate_owner_media):?>
+
+							<?php
+
+							$photo_count_owner = $main_media_by == 'owner' ? --$listing['Listing']['photo_count_owner'] : $listing['Listing']['photo_count_owner'];
+
+							if($photo_count_owner > 0) echo $Routes->mediaDetail(sprintf(__t("Listing Photos (%s)",true),$photo_count_owner),array('media_by'=>'owner','media_type'=>'photo','listing'=>$listing),array('class'=>'jrButton jrOwnerMediaLink jrSmall'));
+
+							$photo_count_user = $main_media_by == 'user' ? --$listing['Listing']['photo_count_user'] : $listing['Listing']['photo_count_user'];
+
+							if($photo_count_user > 0) echo $Routes->mediaDetail(sprintf(__t("User Photos (%s)",true),$photo_count_user),array('media_by'=>'users','media_type'=>'photo','listing'=>$listing),array('class'=>'jrButton jrUserMediaLink jrSmall'));?>
+
+						<?php endif;?>
+
+					</span>
+
+					<?php endif;?>
+
+				</span>
+
+			</h3>
+
+			<?php foreach($photoGallery AS $media):?>
+
+				<div class="jrMediaThumbs">
+
+				<?php
+					$thumb = $Media->thumb($media,array('lightbox'=>($photo_layout == 'film_lightbox'),'size'=>$gallery_tn_size,'mode'=>$gallery_tn_mode));
+
+					echo $photo_layout == 'film_lightbox' ? $thumb : $Routes->mediaDetail($thumb, compact('media',' listing'));
+				?>
+
+				</div>
+
+			<?php endforeach;?>
+
+		</div>
+
+	<?php endif;?>
+
+	<?php if(!empty($videoGallery) && in_array($video_layout, array('film_lightbox','film_linked'))):?>
+
+		<?php $video_count = (int)$listing['Listing']['video_count']; ?>
+
+		<div class="jrMediaContainer jrVideos jrClearfix">
+
+			<h3 class="jrHeading">
+
+				<span class="jrIconVideo"></span>
+
+				<span class="jrHeadingText">
+
+					<?php __t("Videos");?>
+
+					<?php if($video_layout == 'film_linked'):?>
+
+					<span class="jrMediaLinks jrButtonGroup">
+
+						<?php echo $Routes->mediaDetail(sprintf(__t("All Videos (%s)",true),$listing['Listing']['video_count']),array('media_type'=>'video','listing'=>$listing),array('class'=>'jrButton jrAllMediaLink jrSmall'));?>
+
+						<?php if($separate_owner_media):?>
+
+							<?php if($listing['Listing']['video_count_owner']) echo $Routes->mediaDetail(sprintf(__t("Listing Videos (%s)",true),$listing['Listing']['video_count_owner']),array('media_by'=>'owner','media_type'=>'video','listing'=>$listing),array('class'=>'jrButton jrOwnerMediaLink jrSmall'));?>
+
+							<?php if($listing['Listing']['video_count_user']) echo $Routes->mediaDetail(sprintf(__t("User Videos (%s)",true),$listing['Listing']['video_count_user']),array('media_by'=>'users','media_type'=>'video','listing'=>$listing),array('class'=>'jrButton jrUserMediaLink jrSmall'));?>
+
+						<?php endif;?>
+
+					</span>
+
+					<?php endif;?>
+
+				</span>
+
+
+			</h3>
+
+			<?php foreach($videoGallery AS $media):?>
+
+				<?php $duration = $media['duration']; ?>
+
+				<div class="jrMediaThumbs" <?php if ($duration != 0): ?> data-duration="<?php echo $Time->sToHMS($duration); ?>"<?php endif;?>>
+
+				<?php
+					$thumb = $Media->thumb($media,array('size'=>$gallery_tn_size,'mode'=>$gallery_tn_mode));
+
+					echo $Routes->mediaDetail($thumb, compact('media',' listing'),array('class'=>(($video_layout == 'film_lightbox') && !$is_mobile) ? 'fancyvideo' : ''));
+				?>
+
+				</div>
+
+			<?php endforeach;?>
+
+		</div>
+
+	<?php endif;?>
+
+	<?php /* ATTACHMENTS */ ?>
+
+	<?php if(!empty($listing['Media']['attachment'])):?>
+
+		<h3 class="jrHeading">
+
+			<span class="jrIconAttachment"></span>
+
+			<span class="jrHeadingText"><?php __t("Attachments");?></span>
+
+		</h3>
+
+		<?php echo $this->renderControllerView('media','attachment',array('listing'=>$listing)); ?>
+
+	<?php endif;?>
+
+	<?php /* AUDIO PLAYER */ ?>
+
+	<?php if(!empty($listing['Media']['audio'])):?>
+
+		<h3 class="jrHeading">
+
+			<span class="jrIconAudio"></span>
+
+			<span class="jrHeadingText"><?php __t("Audio");?></span>
+
+		</h3>
+
+		<?php echo $this->renderControllerView('media','audio',array('id'=>'listing'.$listing['Listing']['listing_id'],'listing'=>$listing)); ?>
+
+	<?php endif;?>
+
+<?php endif;?>
+
+<?php
+/*****************************************************************************
+ *					RENDERS PHOTO/VIDEO LAYOUTS IN TABS                      *
+ *****************************************************************************/?>
+
+<?php if($position == 'bottom-tabs'):?>
+
+	<?php /* PHOTO GALLERY */ ?>
+
+	<?php if($photo_layout == 'gallery_large' && !empty($photoGallery)): ?>
+
+	<div id="photoTab">
+
+		<?php echo $this->renderControllerView('media','photo_gallery_detail',array('photos'=>array_merge($photoGallery))); ?>
+
+	</div>
+
+	<?php endif; ?>
+
+
+	<?php /* VIDEO GALLERY */ ?>
+
+	<?php if($video_layout == 'video_player' && !empty($videoGallery)): ?>
+
+	<div id="videoTab">
+
+		<?php echo $this->renderControllerView('media','video_gallery_detail',array('videos'=>array_merge($videoGallery))); ?>
+
+	</div>
+
+	<?php endif; ?>
+
+
+	<?php if(!empty($photoGallery) && in_array($photo_layout, array('film_lightbox','film_linked'))):?>
+
+		<div id="photoTab">
+
+			<div class="jrMediaContainer jrPhotos jrClearfix">
+
+				<?php if($photo_layout == 'film_linked'):?>
+
+					<div class="jrClearfix">
+
+						<span class="jrMediaLinks jrButtonGroup">
+
+							<?php
+							$photo_count = $disable_main_media_lightbox ? --$listing['Listing']['photo_count'] : $listing['Listing']['photo_count'];
+
+							echo $Routes->mediaDetail(sprintf(__t("All Photos (%s)",true),$photo_count),array('media_type'=>'photo','listing'=>$listing),array('class'=>'jrButton jrAllMediaLink jrSmall'));
+							?>
+
+							<?php if($separate_owner_media):?>
+
+								<?php
+
+								$photo_count_owner = $main_media_by == 'owner' ? --$listing['Listing']['photo_count_owner'] : $listing['Listing']['photo_count_owner'];
+
+								if($photo_count_owner > 0) echo $Routes->mediaDetail(sprintf(__t("Listing Photos (%s)",true),$photo_count_owner),array('media_by'=>'owner','media_type'=>'photo','listing'=>$listing),array('class'=>'jrButton jrOwnerMediaLink jrSmall'));
+
+								$photo_count_user = $main_media_by == 'user' ? --$listing['Listing']['photo_count_user'] : $listing['Listing']['photo_count_user'];
+
+								if($photo_count_user > 0) echo $Routes->mediaDetail(sprintf(__t("User Photos (%s)",true),$photo_count_user),array('media_by'=>'users','media_type'=>'photo','listing'=>$listing),array('class'=>'jrButton jrUserMediaLink jrSmall'));?>
+
+							<?php endif;?>
+
+						</span>
+				</div>
+
+				<?php endif;?>
+
+				<?php foreach($photoGallery AS $media):?>
+
+					<div class="jrMediaThumbs">
+
+					<?php
+						$thumb = $Media->thumb($media,array('lightbox'=>($photo_layout == 'film_lightbox'),'size'=>$gallery_tn_size,'mode'=>$gallery_tn_mode));
+						echo $Routes->mediaDetail($thumb, compact('media',' listing'));
+					?>
+
+					</div>
+
+				<?php endforeach;?>
+
+			</div>
+
+		</div>
+
+	<?php endif;?>
+
+	<?php if(!empty($videoGallery) && in_array($video_layout, array('film_lightbox','film_linked'))):?>
+
+			<div id="videoTab">
+
+			<?php $video_count = (int)$listing['Listing']['video_count']; ?>
+
+			<div class="jrMediaContainer jrVideos jrClearfix">
+
+				<?php if($video_layout == 'film_linked'):?>
+
+				<div class="jrClearfix">
+
+					<span class="jrMediaLinks jrButtonGroup">
+
+						<?php echo $Routes->mediaDetail(sprintf(__t("All Videos (%s)",true),$listing['Listing']['video_count']),array('media_type'=>'video','listing'=>$listing),array('class'=>'jrButton jrAllMediaLink jrSmall'));?>
+
+						<?php if($separate_owner_media):?>
+
+							<?php echo $Routes->mediaDetail(sprintf(__t("Listing Videos (%s)",true),$listing['Listing']['video_count_owner']),array('media_by'=>'owner','media_type'=>'video','listing'=>$listing),array('class'=>'jrButton jrOwnerMediaLink jrSmall'));?>
+
+							<?php echo $Routes->mediaDetail(sprintf(__t("User Videos (%s)",true),$listing['Listing']['video_count_user']),array('media_by'=>'users','media_type'=>'video','listing'=>$listing),array('class'=>'jrButton jrUserMediaLink jrSmall'));?>
+
+						<?php endif;?>
+
+					</span>
+
+				</div>
+
+				<?php endif;?>
+
+				<?php foreach($videoGallery AS $media):?>
+
+					<?php $duration = $media['duration']; ?>
+
+					<div class="jrMediaThumbs" <?php if ($duration != 0): ?> data-duration="<?php echo $Time->sToHMS($duration); ?>"<?php endif;?>>
+
+					<?php
+						$thumb = $Media->thumb($media,array('size'=>$gallery_tn_size,'mode'=>$gallery_tn_mode));
+						echo $Routes->mediaDetail($thumb, compact('media',' listing'),array('class'=>(($video_layout == 'film_lightbox') && !$is_mobile) ? 'fancyvideo' : ''));
+					?>
+
+					</div>
+
+				<?php endforeach;?>
+
+			</div>
+
+		</div>
+
+	<?php endif;?>
+
+	<?php /* ATTACHMENTS */ ?>
+
+	<?php if(!empty($listing['Media']['attachment'])):?>
+
+		<div id="attachmentTab">
+
+			<?php echo $this->renderControllerView('media','attachment',array('listing'=>$listing)); ?>
+
+		</div>
+
+	<?php endif;?>
+
+	<?php /* AUDIO PLAYER */ ?>
+
+	<?php if(!empty($listing['Media']['audio'])):?>
+
+		<div id="audioTab">
+
+			<?php echo $this->renderControllerView('media','audio',array('id'=>'listing'.$listing['Listing']['listing_id'],'listing'=>$listing)); ?>
+
+		</div>
+
+	<?php endif;?>
+
+<?php endif;?>

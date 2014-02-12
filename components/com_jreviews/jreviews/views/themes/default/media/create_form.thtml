@@ -1,0 +1,611 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+// Listing detail page: used in core articles and in "view all reviews" page for a listing
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/
+$is_IE =Configure::read('System.isIE');
+
+$is_mobile_OS = Configure::read('System.isMobileOS');
+
+$is_iOS = Configure::read('System.isiOS');
+
+$is_androidOS = Configure::read('System.isAndroidOS');
+
+if($tos_id = Sanitize::getInt($this->Config,'media_general_tos_articleid')) {
+	$tos_url = $Routes->article($tos_article,array('return_url'=>true));
+}
+
+$show_tos = !$this->Access->isEditor() && Sanitize::getBool($this->Config,'media_general_tos');
+
+$video_upload_types = Sanitize::getString($this->Config,'media_video_upload_methods');
+
+$video_link_sites = Sanitize::getVar($this->Config,'media_video_link_sites');
+
+$video_link_sites_array = array('youtube'=>'Youtube','vimeo'=>'Vimeo','dailymotion'=>'Dailymotion');
+
+$register_guests = isset($register_guests) ? $register_guests : false;
+
+$user_name_state = $this->Config->mediaform_name;
+
+$user_email_state = $this->Config->mediaform_email;
+
+$user_session = !empty($user_session) ? $user_session : array();
+
+$user_name = Sanitize::getString($user_session,'name');
+
+$user_username = Sanitize::getString($user_session,'username');
+
+$user_email = Sanitize::getString($user_session,'email');
+
+$user_disabled = !empty($user_session) && $register_guests ? ' disabled="disabled" ' : '';
+
+$goToListingButton = isset($listing) && $listing['Listing']['state'] ? $Html->sefLink(__t("Go to listing",true),$listing['Listing']['url'], array('class'=>'jrButton')) : '';
+
+$myMediaButton = $Routes->myMedia(__t("My Media",true),$User->id,array('class'=>'jrButton'));
+
+$myListingsButton = $Routes->myListings(__t("My Listings",true),$User->id,array('class'=>'jrButton'));
+
+$uploads_allowed = 0;
+
+$media_type_validation = $limits = array();
+
+$media_types = array(
+	'video'=>'<span class="jrIconVideo"></span>',
+	'photo'=>'<span class="jrIconPhoto"></span>',
+	'attachment'=>'<span class="jrIconAttachment"></span>',
+	'audio'=>'<span class="jrIconAudio"></span>'
+);
+
+// Skip types for which the user doesn't have submit access
+$media_types = array_intersect_key($media_types, array_flip($allowed_types));
+
+foreach($media_types AS $media_type=>$label)
+{
+	$media_type_validation[$media_type]['max'] = Sanitize::getString($this->Config, 'media_'.$media_type.'_max_uploads_' . $upload_object);
+
+	$media_type_validation[$media_type]['count'] = isset($user_media_counts[$media_type]) ? $user_media_counts[$media_type]['count']: 0;
+
+	$uploads_allowed += (int) ($media_type_validation[$media_type]['max'] > 0 || $media_type_validation[$media_type]['max'] === '');
+
+	if($media_type_validation[$media_type]['max'] !== '0')
+	{
+		$limits[$media_type] = $media_types[$media_type]
+					. ' '
+					. (int) $media_type_validation[$media_type]['count']
+					. '/'
+					. ($media_type_validation[$media_type]['max'] === '' ? '&infin;' : $media_type_validation[$media_type]['max'])
+					. ' &#149; ';
+
+		if($media_type == 'video' && $video_upload_types == 'link') {
+
+			$limits[$media_type] .= __t("Only linking allowed",true);
+		}
+		else {
+
+			$limits[$media_type] .= Sanitize::getString($this->Config,"media_{$media_type}_max_size") . 'MB';
+		}
+
+		$limits[$media_type] .= '';
+	}
+
+	$allowedExtensions = explode(',',Sanitize::getString($this->Config,'media_'.$media_type.'_extensions'));
+
+	$sizeLimit = Sanitize::getString($this->Config, 'media_'.$media_type.'_max_size');
+
+	$ext = array();
+
+	foreach($allowedExtensions AS $allowedExtension) {
+		$ext[] = $allowedExtension;
+	}
+
+	$fileValidation[] = array(
+			'allowedExtensions'=>$ext,
+			'sizeLimit'=>$sizeLimit*1024*1024
+		);
+
+}
+
+$only_video_uploads_allowed = count($limits) == 1 && isset($limits['video']);
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<?php if(!$uploads_allowed):?>
+
+<div><?php __t("You are not allowed to upload or have reached your upload limit.");?></div>
+
+<?php return; endif;?>
+
+<div class="jr-page jr-media-upload jrForm jrPage jrMediaForm">
+
+	<?php if($this->Access->isGuest() && ($register_guests || $user_name_state != 'hidden' || $$user_email_state != 'hidden')):?>
+
+	<form id="jr-user-info" action="" class="jrForm">
+
+		<fieldset>
+
+			<?php if($register_guests || in_array($user_name_state,array('required','optional'))):?>
+
+			<div class="jrFieldDiv jrLeft">
+
+				<label>
+
+					<?php __t("Name");?>
+
+					<?php if($user_name_state=='required'):?><span class="jrIconRequired"></span><?php endif;?>
+
+				</label>
+
+				<input type="text" class="jr-user-name jrName" name="data[Media][name]" value="<?php echo $user_name;?>" data-required='<?php echo (int) ($user_name_state == 'required');?>' <?php echo $user_disabled;?> maxlength="50" />
+
+			</div>
+
+			<?php endif;?>
+
+			<?php if($register_guests):?>
+
+			<div class="jrFieldDiv jrLeft">
+
+				<label class="jrLabel">
+
+					<?php __t("Username");?><span class="jrIconInfo jr-more-info jr-ready"></span>
+
+					<div class="jrPopup jrHidden"><?php __t("Create an account to be able to manage all of your submissions. After you submit the form we'll email you an activation link with a temporary password.");?></div>
+
+				</label>
+
+				<input type="text" class="jr-user-username jrName" name="data[username]" value="<?php echo $user_username;?>" <?php echo $user_username != '' ? $user_disabled : '';?> maxlength="25" placeholder="<?php __t("Fill in to create an account");?>" />
+
+			</div>
+
+			<?php endif;?>
+
+			<?php if($register_guests || in_array($user_email_state,array('required','optional'))):?>
+
+			<div class="jrClear"></div>
+
+			<div class="jrFieldDiv">
+
+				<label class="jrLabel">
+
+					<?php __t("Email");?>
+
+					<?php if($user_email_state == 'required'):?><span class="jrIconRequired"></span><?php endif;?>
+
+				</label>
+
+				<input type="email" class="jr-user-email jrEmail" name="data[Media][email]" value="<?php echo $user_email;?>" data-required='<?php echo (int)($user_email_state == 'required');?>' <?php echo $user_disabled;?> size="50" maxlength="100" />
+
+			</div>
+
+			<?php endif;?>
+
+			<input type="hidden" id="jr-user-id-session" name="data[user_id_session]" value="0" />
+
+		</fieldset>
+
+	</form>
+
+	<?php endif;?>
+
+	<ul class="jr-media-message jrMediaMessage jrError jrHidden"></ul>
+
+	<div class="jr-tabs jrTabs">
+
+		<ul>
+
+			<?php if(!$only_video_uploads_allowed || ($only_video_uploads_allowed && $video_upload_types != 'link')):?>
+
+			<li><a href="#jr-upload-tab"><?php __t("Upload Media");?></a></li>
+
+			<?php endif;?>
+
+			<?php if($this->Access->canAddMediaFromUrl($upload_object) && !($only_video_uploads_allowed && $video_upload_types == 'link')):?>
+
+			<li><a href="#jr-upload-url-tab"><?php __t("Upload from URL");?></a></li>
+
+			<?php endif;?>
+
+			<?php if(isset($limits['video']) && in_array($video_upload_types,array('all','link'))):?>
+
+			<li><a href="#jr-embed-tab"><?php __t("Link Video");?></a></li>
+
+			<?php endif;?>
+
+		</ul>
+
+		<?php if(!$only_video_uploads_allowed || ($only_video_uploads_allowed && $video_upload_types != 'link')):?>
+
+		<div id="jr-upload-tab">
+
+			<span class="jrMediaLimits jrClearfix">
+
+				<ul>
+
+					<li><?php __t("Upload Limits:");?></li>
+
+					<li><?php echo implode('</li>&nbsp;&nbsp;<li>',$limits);?></li>
+
+				</ul>
+
+			</span>
+
+			<form id="jr-form-media-upload" class="jrForm" action="index.php" method="post" onsubmit="return false;" data-file-validation='<?php echo json_encode($fileValidation);?>'>
+
+				<div id="mediaUploader">
+
+					<div class="jrFieldDiv">
+
+						<div id="jr-media-uploader" data-android="<?php echo (int)$is_androidOS;?>"></div>
+
+					</div>
+
+					<div class="jrClear"></div>
+
+				</div>
+
+				<input type="hidden" name="data[controller]" value="media_upload" />
+
+				<input type="hidden" name="data[action]" value="_save" />
+
+				<input type="hidden" name="data[Media][listing_id]" value="<?php echo $listing_id;?>" />
+
+				<input type="hidden" name="data[Media][review_id]" value="<?php echo $review_id;?>" />
+
+				<input type="hidden" name="data[Media][extension]" value="<?php echo $extension;?>" />
+
+				<?php echo cmsFramework::getTokenInput();?>
+
+				<?php echo cmsFramework::formIntegrityToken(array('listing_id'=>$listing_id,'review_id'=>$review_id,'extension'=>$extension),$formTokenKeys);?>
+
+				<?php if($show_tos):?>
+
+				<div class="jrRoundedPanel jrMediaTerms">
+
+					<legend><?php __t("Terms &amp; Conditions");?></legend>
+
+					<?php __t("Before uploading media, please accept our Terms &amp; Conditions. All uploads must be family friendly, original non-copyrighted, non-commercial and virus-free.");?>
+
+					<?php if($tos_id > 0):?>
+
+					<a target="_blank" href="<?php echo $tos_url;?>"><?php __t("Read our complete submission guidelines.");?></a>
+
+					<?php endif;?>
+
+					<div class="jrMediaTermsCheckbox">
+
+						<input type="checkbox" id="jr-terms-checkbox-upload" name="jr-terms-checkbox">
+
+						<label class="jrMediaTermsCheckboxLabel" for="jr-terms-checkbox-upload"><?php __t("I accept the Terms & Conditions.");?></label>
+
+					</div>
+
+				</div>
+
+				<?php endif;?>
+
+			</form>
+
+			<div class="jr-upload-complete-actions jrHidden jrSuccess">
+
+				<span class="jrMediaUploadSuccess"><?php __t("Upload Successful. Continue with uploads or leave this page.");?></span>
+
+				<?php if($goToListingButton || $myMediaButton || $myListingsButton):?><br /><?php endif;?>
+
+				<?php echo $goToListingButton;?>
+
+				<?php echo $myMediaButton;?>
+
+				<?php echo $myListingsButton;?>
+
+			</div>
+
+			<fieldset class="media-file-list jrHidden">
+
+				<legend><?php __t("Uploaded Media");?></legend>
+
+			</fieldset>
+
+		</div>
+
+		<?php endif;?>
+
+		<?php if($this->Access->canAddMediaFromUrl($upload_object) && !($only_video_uploads_allowed && $video_upload_types == 'link')):?>
+
+		<div id="jr-upload-url-tab">
+
+			<span class="jrMediaLimits jrClearfix">
+
+				<ul>
+
+					<li><?php __t("Upload Limits:");?></li>
+
+					<li><?php echo implode('</li>&nbsp;&nbsp;<li>',$limits);?></li>
+
+				</ul>
+
+			</span>
+
+			<form id="jr-form-media-upload-url" class="jrForm" action="index.php" method="post" onsubmit="return false;">
+
+				<label><?php __t("URL to media file");?></label>
+
+				<div style="margin-top:10px;">
+
+					<div class="jrFieldDiv">
+
+						<?php echo $Form->text('data[upload_url]',array(
+								'id'=>'jr-upload-url',
+								'value'=>'',//$media['Media']['caption'],
+								'style'=>'min-width:60%;'
+						));?>
+
+						<button id="jr-upload-url-submit" class="jrButton jrUpload"><?php __t("Submit");?></button>
+
+					</div>
+
+				</div>
+
+				<input type="hidden" name="data[Media][listing_id]" value="<?php echo $listing_id;?>" />
+
+				<input type="hidden" name="data[Media][review_id]" value="<?php echo $review_id;?>" />
+
+				<input type="hidden" name="data[Media][extension]" value="<?php echo $extension;?>" />
+
+				<?php echo cmsFramework::getTokenInput();?>
+
+				<?php echo cmsFramework::formIntegrityToken(array('listing_id'=>$listing_id,'review_id'=>$review_id,'extension'=>$extension),$formTokenKeys);?>
+
+				<?php if($show_tos):?>
+
+				<br />
+
+				<div class="jrRoundedPanel jrMediaTerms">
+
+					<legend><?php __t("Terms &amp; Conditions");?></legend>
+
+					<?php __t("Before uploading media, please accept our Terms &amp; Conditions. All uploads must be family friendly, original non-copyrighted, non-commercial and virus-free.");?>
+
+					<?php if($tos_id > 0):?>
+
+					<a target="_blank" href="<?php echo $tos_url;?>"><?php __t("Read our complete submission guidelines.");?></a>
+
+					<?php endif;?>
+
+					<div class="jrMediaTermsCheckbox">
+
+						<input type="checkbox" id="jr-terms-checkbox-url" name="jr-terms-checkbox">
+
+						<label class="jrMediaTermsCheckboxLabel" for="jr-terms-checkbox-url"><?php __t("I accept the Terms & Conditions.");?></label>
+
+					</div>
+
+				</div>
+
+				<?php endif;?>
+
+			</form>
+
+			<div class="jr-upload-url-complete-actions jrHidden jrSuccess">
+
+				<span class="jrMediaUploadSuccess"><?php __t("Upload Successful. Continue with uploads or leave this page.");?></span>
+
+				<?php if($goToListingButton || $myMediaButton || $myListingsButton):?><br /><?php endif;?>
+
+				<?php echo $goToListingButton;?>
+
+				<?php echo $myMediaButton;?>
+
+				<?php echo $myListingsButton;?>
+
+			</div>
+
+			<fieldset class="media-file-list-url jrHidden">
+
+				<legend><?php __t("Uploaded Media");?></legend>
+
+			</fieldset>
+
+		</div>
+
+		<?php endif;?>
+
+		<?php if(isset($limits['video']) && in_array($video_upload_types,array('all','link'))):?>
+
+		<div id="jr-embed-tab">
+
+			<span class="jrMediaLimits jrClearfix">
+
+				<ul>
+
+					<li><?php __t("Upload Limits:");?></li>
+
+					<li><?php echo $limits['video'];?></li>
+
+				</ul>
+
+			</span>
+
+			<form id="jr-form-media-embed" class="jrForm" action="index.php" method="post" onsubmit="return false;">
+
+				<label><?php __t("URL to video page");?> (<?php echo implode(', ',array_values(array_intersect_key($video_link_sites_array,array_flip($video_link_sites))));?>)</label>
+
+				<div style="margin-top:10px;">
+
+					<div class="jrFieldDiv">
+
+						<?php echo $Form->text('data[embed_url]',array(
+								'id'=>'jr-embed-url',
+								'value'=>'',//$media['Media']['caption'],
+								'style'=>'min-width:60%;'
+						));?>
+
+						<button id="jr-embed-submit" class="jrButton jrUpload"><?php __t("Submit");?></button>
+
+					</div>
+
+				</div>
+
+				<input type="hidden" name="data[Media][listing_id]" value="<?php echo $listing_id;?>" />
+
+				<input type="hidden" name="data[Media][review_id]" value="<?php echo $review_id;?>" />
+
+				<input type="hidden" name="data[Media][extension]" value="<?php echo $extension;?>" />
+
+				<?php echo cmsFramework::getTokenInput();?>
+
+				<?php echo cmsFramework::formIntegrityToken(array('listing_id'=>$listing_id,'review_id'=>$review_id,'extension'=>$extension,'session_id'=>$session_id),$formTokenKeys);?>
+
+				<?php if($show_tos):?>
+
+				<br />
+
+				<div class="jrRoundedPanel jrMediaTerms">
+
+					<legend><?php __t("Terms &amp; Conditions");?></legend>
+
+					<?php __t("Before uploading media, please accept our Terms &amp; Conditions. All uploads must be family friendly, original non-copyrighted, non-commercial and virus-free.");?>
+
+					<?php if($tos_id > 0):?>
+
+					<a target="_blank" href="<?php echo $tos_url;?>"><?php __t("Read our complete submission guidelines.");?></a>
+
+					<?php endif;?>
+
+					<div class="jrMediaTermsCheckbox">
+
+						<input type="checkbox" id="jr-terms-checkbox-link" name="jr-terms-checkbox">
+
+						<label class="jrMediaTermsCheckboxLabel" for="jr-terms-checkbox-link"><?php __t("I accept the Terms & Conditions.");?></label>
+
+					</div>
+
+				</div>
+
+				<?php endif;?>
+
+			</form>
+
+			<div class="jr-embed-complete-actions jrHidden jrSuccess">
+
+				<span class="jrMediaUploadSuccess"><?php __t("Upload Successful. Continue with uploads or leave this page.");?></span>
+
+				<?php if($goToListingButton || $myMediaButton || $myListingsButton):?><br /><?php endif;?>
+
+				<?php echo $goToListingButton;?>
+
+				<?php echo $myMediaButton;?>
+
+				<?php echo $myListingsButton;?>
+
+			</div>
+
+			<fieldset class="media-linked-videos jrHidden">
+
+				<legend><?php __t("Linked Videos");?></legend>
+
+			</fieldset>
+
+		</div>
+
+		<?php endif;?>
+
+	</div>
+
+</div>
+
+<script id="jr-uploader-template" type="text/x-file-uploader">
+<div class="jr-uploader">
+
+	<div class="jrGrid">
+		<div class="jrCol12 jrClearfix" style="margin-top: 10px;">
+			<div class="jr-upload-button jrUpload jrButton jrLeft" style="margin-right:10px;">
+				<span class="jrIconArrowUp"></span><?php echo $is_mobile_OS ? __t("Upload",true) : __t("Select Files",true);?>
+			</div>
+			<?php if(!$is_IE && !$is_mobile_OS): /* IE doesn't support file drag and drop */ ?>
+			<div class="jrLeft"><?php __t("Select or Drag & Drop your files to automatically start the upload process");?></div>
+			<?php endif;?>
+			<?php if($is_iOS):?>
+			<div class="jrLeft">
+				<select class="jr-upload-mobile-options">
+					<option value=""><?php __t("Select");?></option>
+					<option value="camera" data-icon="jrIconCamera"><?php __t("Use Camera");?></option>
+					<option value="multiple" data-icon="jrIconAddMedia"><?php __t("Choose Existing");?></option>
+				</select>
+			</div>
+			<?php endif;?>
+		</div>
+	</div>
+	<div class="jrGrid">
+		<div class="jrCol12">
+			<div class="jr-upload-drop-area jrDropArea jrShadowBox"><span><?php __t("Drop files here");?></span></div>
+		</div>
+	</div>
+	<div id="mediaGallery" class="jr-file-list"></div>
+</div>
+</script>
+
+<script id="jr-progress-template" type="text/x-file-uploader">
+<div class="jrMediaDiv">
+	<div class="jrGrid">
+		<div class="jrCol3"><span class="jr-upload-file">&nbsp;</span></div>
+		<div class="jrCol5"><div style="height:15px;" class="jr-upload-progress"></div></div>
+		<div class="jrCol2"><span class="jr-upload-size"></span>&nbsp;</div>
+		<div class="jrCol2">
+			<span class="jr-upload-cancel jrButton jrHidden" style="padding:0 4px;"><span class="jrIconCancel"></span><?php __t("Cancel");?></span>
+			<span class="jrHidden jr-upload-failed-text"><?php __t("Failed");?></span>
+			<span class="jrHidden"><span class="jr-upload-spinner"></span></span>
+			&nbsp;
+		</div>
+	</div>
+</div>
+</script>
+
+<script id="jr-media-template" type="text/x-file-uploader">
+<form class="jrForm">
+	<div class="jrGrid">
+			<div class="jrCol2 jr-media-thumb jrMediaThumb">
+				<span class="jr-encoding-progress jrHidden jrLoadingMedium"></span><span>&nbsp;</span>
+			</div>
+			<div class="jrCol7 jrMediaDetails">
+				<div class="jrFieldDiv">
+					<label><?php __t("Title");?></label>
+					<input class="jr-media-input-title jrTitleMedium" type="text" name="data[Media][title]" value="" />
+				</div>
+				<div class="jrFieldDiv">
+					<label><?php __t("Description");?></label>
+					<textarea rows="3" cols="40" class="jr-media-input-description" name="data[Media][description]"></textarea>
+				</div>
+				<div class="jrFieldDiv">
+					<button class="jr-media-update jrButton"><?php __t("Update Information");?></button>
+					<span class="jr-media-spinner jrLoadingSmall jrHidden"></span>
+				</div>
+			</div>
+			<div class="jrCol3 jrMediaInfo">
+				<div class="jr-media-filename jrMediaFilename"></div>
+				<span class="jr-media-approved jrStatusLabel jrGreen jrHidden"><?php __t("Approved");?></span>
+				<span class="jr-media-pending jrStatusLabel jrOrange jrHidden"><?php __t("Pending Moderation");?></span>
+				<span class="jr-media-encoding-failed jrStatusLabel jrRed jrHidden"><?php __t("Processing Failed");?></span>
+				<span class="jr-media-encoding-cancelled jrStatusLabel jrRed jrHidden"><?php __t("Processing Cancelled");?></span>
+				<div class="jr-encoding-info jrWarning jrHidden" style="margin-top:5px;padding:5px;text-align:center;">
+					<?php __t("We are processing the file and this can take several minutes. You can wait or we will send you a notification when it is done");?>
+				</div>
+			</div>
+	</div>
+	<button class="jr-media-delete-upload jrMediaDelete jrButton"><span class="jrIconDelete"></span><?php __t("Delete");?></button>
+	<input class="jr-media-media-id" type="hidden" name="data[Media][media_id]" value="" />
+	<input class="jr-media-token" type="hidden" name="token" value="1" />
+	<?php echo cmsFramework::getTokenInput();?>
+	<input type="hidden" name="data[referrer]" value="create" />
+</form>
+</script>

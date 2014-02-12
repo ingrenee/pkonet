@@ -1,0 +1,75 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/
+$showCategoryLinks = Sanitize::getBool($this->params['module'],'cat_links',true);
+$showDirectoryLinks = Sanitize::getBool($this->params['module'],'dir_links',true);
+$showListingCount = $this->Config->dir_cat_num_entries;
+$hideEmpty = $this->Config->dir_category_hide_empty;
+$dirCount = count($directories);
+$module_id = Sanitize::getInt($this->params,'module_id',rand());
+$dir_id = '';
+
+// Find out which directory should be expanded based on the current section id
+if(!empty($directories)) {
+	foreach($directories AS $directory) {
+		foreach($directory['Sections'] AS $section) {
+			if($section['section_id'] == $section_id) {
+				$dir_id = $directory['Directory']['dir_id'];
+				break;
+			}
+		}
+	}
+}
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<?php if(!empty($directories)):?>
+	<!-- BEGIN DIRECTORY -->
+	<?php if($dirCount>1):?><ul class="jr-directory-tree filetree"><?php endif;?>
+
+	<?php foreach ($directories AS $directory):?>
+
+		<?php if($showDirectoryLinks):?>
+
+		<?php if($dirCount>1):?><li <?php if($dir_id!=$directory['Directory']['dir_id']):?>class="closed"<?php else:?>class="active"<?php endif;?>><?php endif;?>
+		<span class="folder"><?php echo $Routes->directory($directory);?></span>
+
+		<?php endif;?>
+
+		<ul <?php if($dirCount==1):?>class="jr-directory-tree filetree"<?php endif;?>>
+		<?php
+			$sectionNumber = count($directory['Sections']);
+			foreach($directory['Sections'] AS $section):?>
+			<li <?php if($section_id!=$section['section_id']):?>class="closed"<?php else:?>class="active"<?php endif;?>><span class="folder">&nbsp;<?php echo $Routes->section($directory,$section)?><?php echo $showListingCount ? ' ('.$section['listing_count'].')' : '';?></span>
+				<?php if($showCategoryLinks):?>
+				<ul>
+					<?php $c=-1;foreach ($section['Categories'] AS $category):; // Loop through currect section's categories?>
+					<!-- BEGIN CATEGORIES -->
+					<?php if(!$hideEmpty || ($hideEmpty && $category['listing_count'] > 0)): $c++?>
+					<li <?php if($cat_id!=$category['cat_id']):?>class="closed"<?php else:?>class="active"<?php endif;?>><span class="folder">&nbsp;<?php echo $Routes->category($directory,$section,$category);?><?php if($showListingCount):?>&nbsp;(<?php echo $category['listing_count'];?>)<?php endif;?></span></li>
+					<?php endif;?>
+					<!-- END CATEGORIES -->
+					<?php endforeach;?>
+				</ul>
+				<?php endif;?>
+			</li>
+		<?php endforeach;;?>
+		</ul>
+		<?php if($dirCount>1):?></li><?php endif;?>
+	<?php endforeach;?>
+	<?php if($dirCount>1):?></ul><?php endif;?>
+	<!-- END DIRECTORY -->
+<?php endif;?>

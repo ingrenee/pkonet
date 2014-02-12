@@ -1,0 +1,34 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$attributes = array('class'=>'jr-cat-select jrSelect','size'=>'1');
+
+$default = array(array('value'=>0,'text'=>'- ' . __t("Select Category",true) . ' -'));
+
+// Listing edit
+if(isset($listing_id) && !empty($listing_id))
+{
+	echo $Form->select('data[Listing][catid][]', array_merge($default,$categories), $cat_id, $attributes);
+}
+// Pre-selected cat
+elseif($cat_id)
+{
+	foreach($categories AS $selected=>$list)
+	{
+
+		echo $Form->select('data[Listing][catid][]', array($list[$selected]), $selected, $attributes);
+	}
+}
+// No pre-selected cat
+else {
+
+	echo $Form->select('data[Listing][catid][]', array_merge($default,$categories), 0, $attributes);
+}

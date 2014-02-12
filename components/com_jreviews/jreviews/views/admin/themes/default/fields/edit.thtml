@@ -1,0 +1,649 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$accessGroupsGuest = $accessGroups;
+
+$accessGroupsNoGuest = array_slice($accessGroups,1);
+
+if($db_version[0] >= 5 && $db_version[1] >= 0 && $db_version[2] >= 3) {
+    $varCharForOptionFields = true;
+	$varchar = "1 to 65535";
+}
+else {
+    $varCharForOptionFields = false;
+	$varchar = "1 to 255";
+}
+
+$fieldLocation = $location;
+
+$control_field_id = 0;
+
+extract($field['Field']);
+
+$isNew = $fieldid ? false : true;
+
+if(!$isNew && isset($field['ControlValues'][0])) {
+    $control_field_id = $field['ControlValues'][0]['fieldid'];
+}
+
+?>
+
+<div class="jr-fields-edit">
+
+    <div class="jrPageHeading"><?php __a("Custom Field");?></div>
+
+    <form id="jr-form-field" action="index.php" method="post" class="jrForm" data-id="<?php echo $fieldid;?>" data-varchar="<?php echo $varCharForOptionFields;?>" data-location="<?php echo $fieldLocation;?>" data-model="Field" data-object-type="field">
+
+    	<div class="jr-buttons jrPageToolbar jrRoundedPanel">
+
+            <span id="jr-status" class="jrStatus jrLeft jrHidden"></span>
+
+            <button class="jr-save jrButton jrGreen">
+
+                <span class="jrIconSave"></span><?php __a("Save");?>
+
+            </button>
+
+            <?php if($fieldid > 0):?>
+
+                &nbsp;
+
+                <button class="jr-apply jrButton">
+
+                    <span class="jrIconApply"></span><?php __a("Apply");?>
+
+                </button>
+
+                <?php if(in_array($type,array("select","selectmultiple","checkboxes","radiobuttons"))):?>
+
+                    &nbsp;
+
+                    <button class="jr-edit-fieldoptions jrButton" data-id="<?php echo $fieldid;?>">
+
+                        <span class="jrIconPlus"></span><?php __a("Field Options");?>
+
+                    </button>
+
+    		    <?php endif;?>
+
+            <?php endif;?>
+
+            &nbsp;
+
+            <button class="jr-cancel jrButton">
+
+                <span class="jrIconPrev"></span><?php __a("Back");?>
+
+            </button>
+
+    	</div>
+
+        <div class="jr-validation jrError jrHidden" style="margin-bottom: 15px;"></div>
+
+        <div class="jrGrid jrSideLabel">
+
+            <div class="jrCol6">
+
+               <fieldset class="jrFieldsetMargin">
+
+                    <legend><?php __a("Basic Setup");?></legend>
+
+                    <div class="jrFieldDiv">
+
+                        <label for="location" class="jrInlineLabel"><?php __a("Location");?><span class="jrIconRequired">&nbsp;</span></label>
+
+                        <span id="jr-group-type-label" class="jrStatusLabel jrBlue jrSizeM"><?php echo $fieldLocation == 'content' ? 'Listing' : Inflector::camelize($fieldLocation);?></span>
+
+                        <input type="hidden" class="jr-field-location" value="<?php echo $fieldLocation == 'content' ? 'Listing' : Inflector::camelize($fieldLocation);?>" />
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <label for="title"><?php __a("Title");?><span class="jrIconRequired"></span></label>
+
+                        <div >
+                            <?php echo $Form->text('data[Field][title]',array('class'=>'jr-title','data-key'=>'Field.title','data-slug'=>'jr-name','data-slug-space'=>'','maxlength'=>'200','value'=>$title,'placeholder'=>__a("Visible on the site",true)));?>
+                        </div>
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <label for="name"><?php __a("Name");?><span class="jrIconRequired"></span></label>
+
+                        <div>
+                             <input type="text" class="jr-name" name="data[Field][name]" <?php echo ($name ?"READONLY":'');?> size="25" maxlength="47" value="<?php echo $name; ?>" placeholder="<?php __a("Reference value, used in urls");?>" />
+                        </div>
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <label for="type"><?php __a("Type");?><span class="jrIconRequired"></span></label>
+
+                        <div>
+                            <?php
+                                $optionFields = array('select','selectmultiple','radiobuttons','checkboxes');
+                                $textFields = array('text');
+                                $varCharFields = array('email','website');
+                                $mediumTextFields = array('textarea','code');
+                                $integerFields = array('integer','relatedlisting');
+                                $fieldTypes = array_merge($optionFields, $integerFields, $mediumTextFields, $varCharFields);
+
+                                $disabled = $type != '' && !in_array($type,array_merge($fieldTypes)) ? ' disabled="disabled" ' : '';
+                            ?>
+
+                            <?php if($disabled != ''):?>
+
+                            <input type="hidden" name="data[Field][type]" value="<?php echo $type;?>" />
+
+                            <?php endif;?>
+
+                            <select id="jr-type" name="data[Field][type]" <?php echo $disabled;?>>
+
+                                <?php if($type == ''):?>
+
+                                    <option value="">-- <?php __a("Select field type");?> --</option>
+
+                                <?php endif;?>
+
+                                <?php if(empty($type) || in_array($type,$textFields)):?>
+
+                                    <option value="text" <?php echo ($type=='text'? "SELECTED" : "");?>><?php __a("Text");?></option>
+
+                                <?php endif;?>
+
+
+                                <?php if(empty($type) || in_array($type,$mediumTextFields)):?>
+
+                                    <option value="textarea" <?php echo ($type=='textarea'? "SELECTED" : "");?>><?php __a("Text area");?></option>
+
+                                    <?php if($demo == 0):?>
+                                    <option value="code" <?php echo ($type=='code'? "SELECTED" : "");?>><?php __a("Code enabled text area");?></option>
+                                    <?php endif;?>
+
+                                <?php endif;?>
+
+
+                                <?php if(empty($type) || in_array($type,$varCharFields)):?>
+
+                                    <option value="email" <?php echo ($type=='email'? "SELECTED" : "");?>><?php __a("Email address");?></option>
+
+                                    <option value="website" <?php echo ($type=='website'? "SELECTED" : "");?>><?php __a("Website url");?></option>
+
+                                <?php endif;?>
+
+                                <?php if(empty($type) || (!empty($type) && !in_array($type,array_merge($optionFields,$textFields,$varCharFields,$mediumTextFields,$integerFields)))):?>
+
+                                    <option value="banner" <?php echo ($type=='banner'? "SELECTED" : "");?>><?php __a("Banner (no user input)");?></option>
+
+                                    <option value="date" <?php echo ($type=='date'? "SELECTED" : "");?>><?php __a("Date");?></option>
+
+                                    <option value="decimal" <?php echo ($type=='decimal'? "SELECTED" : "");?>><?php __a("Decimal number");?></option>
+
+                                <?php endif;?>
+
+                                <?php if(empty($type) || in_array($type,array_merge($integerFields))):?>
+
+
+                                    <option value="integer" <?php echo ($type == 'integer'? "SELECTED" : "");?>><?php __a("Integer number");?></option>
+
+                                <?php endif;?>
+
+                                <?php if(empty($type) || in_array($type,$optionFields)):?>
+
+                                    <option value="select" <?php echo ($type=='select'? "SELECTED" : "");?>><?php __a("Single select list");?></option>
+
+                                    <option value="selectmultiple" <?php echo ($type=='selectmultiple'? "SELECTED" : "");?>><?php __a("Multiple select list");?></option>
+
+                                    <option value="checkboxes" <?php echo ($type=='checkboxes'? "SELECTED" : "");?>><?php __a("Checkboxes");?></option>
+
+                                    <option value="radiobuttons" <?php echo ($type=='radiobuttons'? "SELECTED" : "");?>><?php __a("Radio buttons");?></option>
+
+                                <?php endif;?>
+
+                                <?php if($fieldLocation != 'review' && (empty($type) || in_array($type,$integerFields))):?>
+
+                                    <option value="relatedlisting" <?php echo ($type=='relatedlisting'? "SELECTED" : "");?>><?php __a("Related Listing");?></option>
+
+                                <?php endif;?>
+
+                            </select>
+
+                            <div id="jr-code-description" class="jrWarning jrHidden">
+                                <?php __a("Allows javascript code. Set to admin submit/edit access.");?>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                            <div id="jr-box-varchar" <?php if(!in_array($type,array_merge($optionFields,$textFields))):?>class="jrHidden"<?php endif;?>>
+
+                                <label for="name" class="jr-more-info"><?php __a("Maximum Characters");?><span class="jrIconRequired"></span></label>
+
+                                <div class="jrPopup">
+                                    <?php __a("Limits the number of characters allowed for this field. For multiple select and checkbox fields keep in mind that the selected options are all stored in the same input so the length should accomodate all the selected options and would be longer than your typical single and radio button fields.");?>
+                                </div>
+
+                                <div>
+                                    <?php if($fieldid > 0):?>
+
+                                        <span id="max-length-value" style="font-size:1.3em;margin:0px;">
+                                            <?php echo $maxlength > 0 ? $maxlength : __a("Not Set");?>
+                                        </span>
+
+                                        &nbsp;
+
+                                        <button class="jr-field-length jrButton" data-id="<?php echo $fieldid;?>" style="color:#3a87ad;">
+                                            <span class="jrIconEdit"></span><?php echo sprintf(__a("Max Data Length: %s",true),$data_maxlength);?>
+                                        </button>
+
+                                    <?php elseif($fieldid == 0):?>
+
+                                     <input type="text" name="data[Field][maxlength]" size="6" maxlength="6" value="<?php echo Sanitize::getInt($field['Field'],'maxlength',255); ?>" /> &nbsp; <?php echo $varchar;?>
+
+                                     <?php endif;?>
+
+                                </div>
+
+                            </div>
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <div id="jr-autocomplete" class="jrHidden">
+
+                            <label><?php __a("Use Auto Complete UI");?></label>
+
+                            <div>
+                                <?php echo $Form->radioYesNo("data[Field][params][autocomplete]", "", Sanitize::getVar($fieldParams,'autocomplete',0)); ?>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <label for="group"><?php __a("Field Group");?><span class="jrIconRequired"></span></label>
+
+                        <div id="groupList">
+                            <?php
+                                echo $Form->select(
+                                    'data[Field][groupid]',
+                                    array_merge(array(array('value'=>'','text'=>'Select field group')),$fieldGroups),
+                                    $groupid,
+                                    array('id'=>'groupid')
+                                );
+                            ?>
+                        </div>
+                    </div>
+
+                    <div id="jr-box-required" class="jrFieldDiv">
+
+                        <label><?php __a("Required");?><span class="jrIconRequired">&nbsp;</span></label>
+
+                        <div>
+                            <?php echo $Form->radioYesNo( "data[Field][required]", "", (isset($required) ? $required : 0));?>
+                        </div>
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <label><?php __a("Enabled");?><span class="jrIconRequired">&nbsp;</span></label>
+
+                        <div>
+                            <?php echo $Form->radioYesNo( "data[Field][published]", "", (isset($published) ? $published : 1)); ?>
+                        </div>
+
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="jrFieldsetMargin">
+
+                    <legend><?php __a("Display Settings");?></legend>
+
+                    <div class="jrFieldDiv">
+
+                        <label for="show_title"><?php __a("Show title");?></label>
+
+                        <div>
+                            <?php echo $Form->radioYesNo( "data[Field][showtitle]", "", (isset($field['Field']['showtitle']) ? $field['Field']['showtitle'] : 1));?>
+                        </div>
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <label for="detail_view"><?php __a("Show in Detail View");?></label>
+
+                        <div>
+                            <?php echo $Form->radioYesNo("data[Field][contentview]", "", (isset($field['Field']['contentview']) ? $field['Field']['contentview']: 1));?>
+                        </div>
+
+                    </div>
+
+                    <?php if ($fieldLocation == 'content'):?>
+
+                    <div class="jrFieldDiv">
+
+                        <label for="list_view"><?php __a("Show in List View");?></label>
+
+                        <div>
+                            <?php echo $Form->radioYesNo( "data[Field][listview]", "", (isset($field['Field']['listview']) ? $field['Field']['listview']: 0));?>
+                        </div>
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <label for="list_view"><?php __a("Show in Compare View");?></label>
+
+                        <div>
+                            <?php echo $Form->radioYesNo( "data[Field][compareview]", "", (isset($field['Field']['compareview']) ? $field['Field']['compareview']: 1));?>
+                        </div>
+
+                    </div>
+
+                    <div id="jr-box-listsort" class="jrFieldDiv">
+
+                        <label for="list_view"><?php __a("Enable for ordering");?></label>
+
+                        <div>
+                            <span id="jr_sortlist"><?php __a("Shows in ordering list");?></span><br />
+                            <?php echo $Form->radioYesNo( "data[Field][listsort]", "", (@$field['Field']['listsort'] ? $field['Field']['listsort'] : 0));?>
+                        </div>
+
+                    </div>
+
+                    <div id="jr-box-click2search" class="jrFieldDiv">
+
+                        <label for="list_view"><?php __a("Click2Search");?></label>
+
+                        <div>
+                            <span id="jr_click2search"><?php __a("Click field for quick searches");?></span><br />
+                            <?php echo $Form->radioYesNo( "data[Field][params][click2search]", '', Sanitize::getVar($fieldParams,'click2search',0));?>
+                        </div>
+
+                    </div>
+
+                    <div id="jr-box-click2add" class="jrFieldDiv">
+
+                        <label for="list_view"><?php __a("Click2Add");?></label>
+
+                        <div>
+                           <?php __a("Add options while submitting a listing");?><br />
+                            <?php echo $Form->radioYesNo( "data[Field][params][click2add]", '', Sanitize::getVar($fieldParams,'click2add',0));?>
+                        </div>
+
+                    </div>
+
+                    <?php endif;?>
+
+                </fieldset>
+
+            </div>
+
+            <div class="jrCol6">
+
+                <?php if($fieldLocation != 'review' ):?>
+                <fieldset id="jr-box-relatedlistings" class="jrFieldsetMargin">
+
+                    <legend><?php __a("Related Listings");?></legend>
+
+                    <div class="jrFieldDiv">
+
+                        <label for="group" class="jr-more-info"><?php __a("Listing Type Filter");?></label>
+
+                        <div class="jrPopup">
+                            <?php __a("Select the listing types that will be used to filter the listing suggestions shown for this field.");?>
+                        </div>
+
+                        <div id="listingTypeList">
+                            <?php
+                                echo $Form->select(
+                                    'data[Field][params][listing_type]',
+                                    $listingTypes,
+                                    explode(',',Sanitize::getVar($fieldParams,'listing_type','')),
+                                    array('id'=>'listing_type','multiple'=>'multiple','class'=>'jr-multiselect')
+                                );
+                            ?>
+                        </div>
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <label for="group" class="jr-more-info"><?php __a("Current user only");?></label>
+
+                        <div class="jrPopup">
+                            <?php __a("Limits suggestions to listings owned by the current user. Editors and above will get suggestions for all listings.");?>
+                        </div>
+
+                        <div>
+                            <?php echo $Form->radioYesNo("data[Field][params][listing_type_owner]", "", Sanitize::getVar($fieldParams,'listing_type_owner',0)); ?>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <?php endif;?>
+
+                <fieldset id="jr-box-banner" class="jrHidden jrFieldsetMargin">
+
+                    <legend><?php __a("Banner Code");?></legend>
+
+                    <div>
+                        <?php echo sprintf(__a("Enter any text and valid tags: %s. If you want the value of the field without the output format or click2search then use %s",true),'{title}, {alias), {category}, {jr_fieldname}','{jr_fieldname|value}, {jr_fieldname|valuenoimage}');?>
+                    </div>
+
+                    <textarea style="width:100%;height:10em;" name="data[Field][description]"><?php echo $field['Field']['description'];?></textarea>
+
+                </fieldset>
+
+                <fieldset id="jr-box-controlfield" class="jrFieldsetMargin">
+
+                    <legend><?php __a("Controlled By");?></legend>
+
+                    <div class="jrWarning jrHidden">
+
+                        <?php echo sprintf(__a("This field has %s options that are controlled by another field. You should not use the Controlled By setup in this page until you remove the relationship in the Field Options page. It is only possible to use one of the two setups, FieldOption to FieldOption or FieldOption to Field, at a time.",true),'<span style="font-weight:bold;" id="jr-fieldoption-count"></span>');?>
+                        </a>
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <label><?php __a("Control Field");?></label>
+
+                        <div>
+
+                            <?php echo $Form->text('data[Field][control_field]',array('value'=>Sanitize::getString($field['Field'],'control_field'),'data-fieldid'=>$control_field_id,'class'=>'jr-control-field-search jrText','placeholder'=>__a("Type for suggestions",true)));?>
+
+                        </div>
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <label><?php __a("Control Value");?></label>
+
+                        <div class="jrLeft">
+
+                            <?php echo $Form->text('control_value',array('class'=>'jr-control-value-search jrText','placeholder'=>__a("Add a field, then type for suggestions",true)));?>
+
+                        </div>
+
+                       <div class="jr-control-value-div">
+
+                            <?php if(!empty($field['ControlValues'])):?>
+
+                                <?php
+
+                                $checked = array();
+
+                                foreach($field['ControlValues'] AS $key=>$o):
+
+                                    $checked[] = $o['value'];
+
+                                endforeach;?>
+
+                                <?php echo $Form->checkbox('data[Field][control_value]',$field['ControlValues'],array('value'=>$checked,'label'=>array('style'=>'text-align:left;')));?>
+
+                            <?php endif;?>
+
+                        </div>
+
+                    </div>
+
+                </fieldset>
+
+                <fieldset id="jr-box-description" class="jrFieldsetMargin">
+
+                    <legend><?php __a("Description");?></legend>
+
+                    <div class="jrFieldDiv" style="white-space:normal;">
+
+                        <?php
+                            $desc_options = $Form->select(
+                                'data[Field][params][description_position]',
+                                array(1=>__a("a tooltip next to title",true),2=>__a("text above the input",true),3=>__a("text below the input",true)),
+                                Sanitize::getVar($fieldParams,'description_position',1),
+                                array('id'=>'description_position')
+                            );
+                        ?>
+
+                        <?php echo sprintf(__a("Displayed as %s to assist users in filling out the form.",true),$desc_options);?><br />
+
+                        <textarea cols="15" rows="1" name="data[Field][description]" style="width:100%;"><?php echo $field['Field']['description'];?></textarea>
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="jrFieldsetMargin">
+
+                    <legend><?php __a("Access Settings");?></legend>
+
+                    <div class="jrGrid">
+
+                        <div class="jrCol6">
+
+                            <div id="jr-box-submitaccess">
+
+                                <div class="jrClearfix" style="margin-bottom:5px;">
+
+                                    <label class="jr-more-info"><?php __a("Submit/Edit Access");?></label>
+
+                                    <div class="jrPopup">
+                                        <?php __a("The selected groups will see this field when submitting/editing a new entry. Edit access is set in the Access Settings menu.");?>
+                                    </div>
+
+                                </div>
+
+                                <?php echo $Form->select(
+                                        'data[Field][access]',
+                                        $accessGroupsGuest,
+                                        ($field['Field']['access'] !='none' && $field['Field']['access'] !='' ? explode(',',$field['Field']['access']) : $accessGroupsGuest),
+                                        array('id'=>'access_new','multiple'=>'multiple','size'=>12, 'style'=>'width:150px;','class'=>'jr-multiselect')
+                                    );
+                                ?>
+
+                                </div>&nbsp;
+
+                        </div>
+
+                        <div class="jrCol6">
+
+                            <div class="jrClearfix" style="margin-bottom:5px;">
+
+                                <label class="jr-more-info"><?php __a("View/Search Access");?></label>
+
+                                <div class="jrPopup">
+                                    <?php __a("The selected groups will be able to see/search this field. You could use them to display certain fields only to a certain group.");?>
+                                </div>
+
+                            </div>
+
+                            <?php echo $Form->select(
+                                    'data[Field][access_view]',
+                                    $accessGroupsGuest,
+                                    ($field['Field']['access_view']!='none' && $field['Field']['access'] !='' ? explode(',',$field['Field']['access_view']) : $accessGroupsGuest),
+                                    array('id'=>'access_view','multiple'=>'multiple','size'=>12, 'style'=>'width:150px;','class'=>'jr-multiselect')
+                                );
+                            ?>
+
+                        </div>
+
+                    </div>
+
+                </fieldset>
+
+                <fieldset id="jr-autocomplete-settings" class="jrHidden jrFieldsetMargin">
+
+                    <legend><?php __a("AutoComplete UI Settings");?></legend>
+
+                    <div class="jrFieldDiv">
+
+                        <label><?php __a("Enable in search");?></label>
+
+                        <div>
+                            <?php echo $Form->radioYesNo( "data[Field][params][autocomplete.search]", '', array('value'=>Sanitize::getVar($fieldParams,'autocomplete.search',0))); ?>
+                        </div>
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <label><?php __a("Option type");?></label>
+                        <div>
+                            <?php echo $Form->radio( "data[Field][params][autocomplete.option_type]", array('link'=>'Link','checkbox'=>'Checkbox'), array('div'=>false,'value'=>Sanitize::getVar($fieldParams,'autocomplete.option_type','link'))); ?>
+                        </div>
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <label><?php __a("Option position");?></label>
+                        <div>
+                            <?php echo $Form->radio( "data[Field][params][autocomplete.option_pos]", array('before'=>'Above input','after'=>'Below input'), array('div'=>false,'value'=>Sanitize::getVar($fieldParams,'autocomplete.option_pos','after'))); ?>
+                        </div>
+
+                    </div>
+
+                </fieldset>
+
+            </div>
+
+        </div>
+
+        <div id="jr-box-advancedoptions" class="jrHidden jrFieldsetMargin">
+
+            <h2><?php __a("Advanced Options");?></h2>
+
+            <div id="jr-advancedoptions" style="margin-top:5px;"></div>
+
+        </div>
+
+        <input type="hidden" name="data[Field][location]" value="<?php echo $fieldLocation; ?>" />
+
+        <input type="hidden" name="data[Field][fieldid]" value="<?php echo $fieldid; ?>" />
+
+        <input type="hidden" name="data[controller]" value="admin/fields" />
+
+        <input type="hidden" name="data[action]" value="_save" />
+
+    </form>
+
+</div>

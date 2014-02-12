@@ -1,0 +1,66 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$listing_id = Sanitize::getString($listing['Listing'],'listing_id');
+
+$cat_id = Sanitize::getInt($listing['Listing'],'cat_id');
+?>
+
+<div class="jrForm">
+
+	<form id="jr-form-listing" action="index.php" method="post" data-listing-id="<?php echo $listing_id;?>" data-cat-id="<?php echo $cat_id;?>" data-object-type="listings">
+
+        <div class="jr-buttons jrPageToolbar jrRoundedPanel">
+
+            <button class="jr-save jrButton jrGreen"><span class="jrIconSave"></span><?php __a("Save");?></button>
+
+            <button class="jr-new jrButton"><span class="jrIconPlus"></span><?php __a("Save As New");?></button>
+
+            <button class="jr-cancel jrButton"><span class="jrIconCancel"></span><?php __a("Cancel");?></button>
+
+        </div>
+
+        <div class="jrInfo"><span class="jrIconInfo"></span><?php __a("[Save As New] will ignore current listing media. You also need to change the title alias to make it unique.");?></div>
+
+        <div class="jr-validation jrError jrHidden" style="margin-bottom: 15px;"></div>
+
+        <div class="jr-form-categories-outer jrFormChooser">
+
+            <?php __t("Category");?>&nbsp;
+
+            <span class="jr-form-categories jrCategories">
+
+                <?php echo $this->element('category_list',compact('listing_id','cat_id'));?>
+
+            </span>
+
+        </div>
+
+		<?php echo $this->renderControllerView('listings','create_form');?>
+
+        <input type="hidden" id="referrer" name="data[referrer]" value="<?php echo $referrer;?>" />
+
+		<?php if(isset($this->params['lang'])):?>
+		<input type="hidden" name="lang" value="<?php echo $this->params['lang'];?>" />
+		<?php endif;?>
+
+        <input type="hidden" id="parent_category" name="data[parent_category]" value="" />
+
+        <input type="hidden" id="category" name="data[category]" value="<?php echo $listing_id ? $listing['Category']['title'] : '';?>" />
+
+        <input type="hidden" id="listing_id" name="data[Listing][id]" value="<?php echo $listing_id;?>" />
+
+        <input type="hidden" name="data[controller]" value="admin/admin_listings" />
+
+        <input type="hidden" name="data[action]" value="_save" />
+
+	</form>
+</div>

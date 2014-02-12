@@ -1,0 +1,40 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$entry_url = cmsFramework::makeAbsUrl($listing['Listing']['url'],array('sef'=>true));
+$entry_title = Sanitize::getString($listing['Listing'],'title') . " [$extension]"
+?>
+
+<?php echo $Routes->reviewDiscuss('',$review['Review'],array('listing'=>$listing,'return_url'=>true));?>
+
+<br />
+
+<strong><?php __t("Reviewer");?>:</strong> <?php echo $review['User']['name']?>  <?php echo (!$User->id ? ' (Guest)' : " ({$User->id})");?>
+
+<br />
+
+<strong>E-mail:</strong> <?php echo $review['User']['email'];?>
+
+<br />
+
+<strong><?php __t("IP address");?>:</strong> <?php echo $review['User']['ipaddress'];?>
+
+<br />
+
+<strong><?php __t("Entry");?>:</strong> <?php echo $Html->link($entry_title,$entry_url,array('sef'=>false));?>
+
+<br />
+
+<strong><?php __t("Title");?>:</strong> <?php echo $review['Review']['title'];?>
+
+<br />
+
+<strong><?php __t("Comments");?>:</strong><br /> <?php echo $review['Review']['comments'];?>

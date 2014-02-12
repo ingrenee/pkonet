@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<theme>
+	<creationDate>March 2010</creationDate>
+	<author>ClickFWD</author>
+	<authorEmail>support@reviewsforjoomla.com</authorEmail>
+	<authorUrl>http://www.reviewsforjoomla.com</authorUrl>
+	<copyright>Copyright (C) 2006-2011 ClickFWD LLC. All rights reserved.</copyright>
+	<license>Proprietary</license>
+	<version>2.3</version>
+	<description>The Mobile Theme contains layouts for mobile devices like iPhone, Android, Windows Phone 7, ...</description>
+	<settings>
+		<name>mobile</name>
+		<title>Mobile Theme</title>
+		<addon>0</addon>
+		<configuration>1</configuration>
+		<mobile>1</mobile>
+		<fallback>0</fallback>
+	</settings>
+</theme>

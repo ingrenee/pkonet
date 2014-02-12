@@ -1,0 +1,19 @@
+<?php if($this->action == 'search'):?>
+
+		<?php __t("Your search did not return any results. Try adjusting your search values.<br /><br /><a href=\"javascript:window.history.go(-1)\">Click here to go back.</a>");?>
+
+<?php elseif($this->action == 'favorites'):?>
+
+		<?php __t("Your favorites list is empty.");?>
+
+<?php elseif($this->action == 'category'):?>
+
+		<?php if($this->Config->list_show_child_listings):?>
+			<?php __t("No entries were found");?>
+		<?php endif;?>
+
+<?php else:?>
+
+		<?php __t("No entries were found");?>
+
+<?php endif;?>

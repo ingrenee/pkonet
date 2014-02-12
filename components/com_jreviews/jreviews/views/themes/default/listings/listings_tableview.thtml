@@ -1,0 +1,246 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+// Custom fields that will be displayed in columns, uncomment the line below and replace field names in the array
+// $columnFields = array('jr_country'=>'Country', 'jr_city'=>'City');
+
+/**********************************************************************************
+ * 								PAGINATION HELPER
+ **********************************************************************************/
+$Paginator->paginate(array(
+		'current_page'=>$this->page,
+		'items_per_page'=>$this->limit,
+		'items_total'=>$pagination['total'],
+));
+
+// Add page meta tags - must go after Paginator helper
+echo $this->element('page_meta');
+
+// Check if at least one listing has reviews enabled
+$reviews_enabled = 0;
+
+foreach ($listings as $listing) {
+	if ($listing['Criteria']['state'] == 1) {
+		$reviews_enabled++;
+	}
+}
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+ <div class="jr-page jrPage jrListings jrTableview">
+
+ 	<?php /* PAGE HEADER */ ?>
+
+	<?php echo $this->renderControllerView('listings','listings_header');?>
+
+ 	<?php /* PAGINATION */ ?>
+
+	<?php echo $this->element('pagination',array('position'=>'top','orderList'=>$order_list));?>
+
+	<?php if(!empty($listings)):?>
+
+		<table class="jrResults" width="100%" border="0" cellpadding="0" cellspacing="0">
+
+			<tr>
+				<?php if($this->Config->media_list_thumbnail):?>
+
+				<th class="jrTableColumnFirst"></th>
+
+				<?php endif;?>
+
+				<th class="jrTableColumnMain"><?php __t("Details");?></th>
+
+				<?php if(isset($columnFields)):?>
+
+					<?php foreach($columnFields as $fieldName => $fieldLabel):?>
+
+					<th class="jrTableColumnField"><?php echo $fieldLabel; ?></th>
+
+					<?php endforeach;?>
+
+				<?php endif;?>
+
+				<?php if($this->Config->list_show_user_rating && $reviews_enabled):?>
+
+				<th class="jrTableColumnLast"><?php __t("Ratings");?></th>
+
+				<?php endif;?>
+
+			</tr>
+
+			<?php $i = 2; $j = 0; foreach($listings AS $listing): $i = $i == 2 ? 1 : 2; $j++;?>
+
+				<?php
+				/***************************************************************
+				************ SET CONFIG OVERRIDES FOR EACH LISTING ************
+				***************************************************************/
+
+				$featured = ($listing['Listing']['featured']) ? ' jrFeatured' : '';
+
+				$tn_size = $this->Config->getOverride('media_list_thumbnail_size',$listing['ListingType']['config']);
+
+				$tn_mode = $this->Config->getOverride('media_list_thumbnail_mode',$listing['ListingType']['config']);
+				?>
+
+				<tr class="row<?php echo $i;?><?php echo $featured; ?>">
+
+					<?php if($this->Config->media_list_thumbnail):?>
+
+					<td class="jrTableColumnFirst">
+
+						<?php if($mainMediaThumb = $Media->thumb(Sanitize::getVar($listing,'MainMedia'),array('listing'=> &$listing,'size'=>$tn_size,'mode'=>$tn_mode))):?>
+
+						<div class="jrListingThumbnail">
+
+							<?php echo $Routes->content($mainMediaThumb,$listing);?>
+
+						</div>
+
+						<?php endif;?>
+
+					</td>
+
+					<?php endif;?>
+
+					<td class="jr-listing-outer jrTableColumnMain">
+
+						<div class="jrContentTitle"><?php echo $Routes->content($listing['Listing']['title'],$listing)?>
+
+							<?php /* LISTING STATUS LABELS */ ?>
+
+							<?php $Jreviews->listingStatusLabels($listing);?>
+
+						</div>
+
+						<div class="jrListingInfo">
+
+							<?php if($this->action!='category'):?>
+
+								<?php /* CATEGORY */ ?>
+
+								<?php echo $listing['Category']['title'];?><br />
+
+							<?php endif;?>
+
+							<?php /* LISTING OWNER */ ?>
+
+							<?php if($this->Config->getOverride('list_show_author',$listing['ListingType']['config'])):?><?php __t("Written by");?> <?php echo $Community->screenName($listing);?>&nbsp;&nbsp;&nbsp;&nbsp;<?php endif;?>
+
+							<?php if($this->Config->getOverride('list_show_date',$listing['ListingType']['config'])):?><?php echo $Time->nice($listing['Listing']['created']);?>&nbsp;&nbsp;&nbsp;&nbsp;<?php endif;?>
+
+							<?php /* LISTING INFO ICONS */ ?>
+
+							<?php $Jreviews->listingInfoIcons($listing);?>
+
+						</div>
+
+						<?php echo $CustomFields->displayAll($listing,'list');?>
+
+						<?php
+						$list_show_abstract = $listing['Listing']['summary'] != '' && $this->Config->getOverride('list_show_abstract',$listing['ListingType']['config']);
+
+						$list_abstract_trim = $this->Config->getOverride('list_abstract_trim',$listing['ListingType']['config']);
+
+						if($list_show_abstract && ($list_abstract_trim != '' || $list_abstract_trim > 0)):?>
+
+							<?php /* SUMMARY */ ?>
+
+							<div class="jrListingSummary">
+
+								<?php echo $Text->truncateWords($listing['Listing']['summary'],$list_abstract_trim);?>
+
+							</div>
+
+						<?php elseif($list_show_abstract == 1):?>
+
+							<div class="jrListingSummary">
+
+								<?php echo $listing['Listing']['summary'];?>
+
+							</div>
+
+						<?php endif;?>
+
+						<?php /* LISTING ACTIONS BUTTONS */ ?>
+
+						<div class="jrListingActions">
+
+							<?php $Widgets->listPageButtons($listing);?>
+
+						</div>
+
+					</td>
+
+					<?php if(isset($columnFields)):?>
+
+						<?php foreach($columnFields as $fieldName => $fieldLabel):?>
+
+						<td class="jrTableColumnField"><?php echo $CustomFields->field($fieldName, $listing); ?></td>
+
+						<?php endforeach;?>
+
+					<?php endif;?>
+
+
+					<?php if($this->Config->list_show_user_rating && $reviews_enabled):?>
+
+					<td class="jrTableColumnLast">
+
+						<?php /* OVERALL RATINGS */ ?>
+
+						<?php echo $Rating->overallRatings($listing, 'list');?>
+
+					</td>
+
+					<?php endif;?>
+
+				</tr>
+
+				<?php if ($j == 1): ?>
+
+						<?php /* CUSTOM MODULE POSITION - jr-tableview-below-listing1 */ ?>
+
+						<?php $Jreviews->loadModulePosition('jr-tableview-below-listing1', 'tr'); ?>
+
+				<?php endif; ?>
+
+				<?php if ($j == 2): ?>
+
+						<?php /* CUSTOM MODULE POSITION - jr-tableview-below-listing2 */ ?>
+
+						<?php $Jreviews->loadModulePosition('jr-tableview-below-listing2', 'tr'); ?>
+
+				<?php endif; ?>
+
+				<?php if ($j == 3): ?>
+
+						<?php /* CUSTOM MODULE POSITION - jr-tableview-below-listing3 */ ?>
+
+						<?php $Jreviews->loadModulePosition('jr-tableview-below-listing3', 'tr'); ?>
+
+				<?php endif; ?>
+
+			<?php endforeach;?>
+
+		</table>
+
+		<div class="jrClear"></div>
+
+	<?php endif;?>
+
+ 	<?php /* PAGINATION */ ?>
+
+	<?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+</div>
+
+<?php if(empty($listings)) { echo $this->renderControllerView('listings','listings_noresults'); } ?>

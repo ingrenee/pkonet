@@ -1,0 +1,51 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$entry_url = cmsFramework::makeAbsUrl($listing['Listing']['url'],array('sef'=>true));
+?>
+
+<?php if($listing['Listing']['state'] == 0):?>
+<?php __t("The listing is not published and you will find it in the moderation queue.");?>
+<?php else:?>
+<?php __t("The listing is published and you will find it in the listing browse admin menu.");?>
+<?php endif;?>
+
+<br /><br />
+
+<strong><?php __t("Author");?>:</strong> <?php echo $listing['User']['name'];?> ( <?php echo $listing['User']['user_id'];?> )
+
+<br />
+
+<strong>E-mail:</strong> <?php echo Sanitize::getString($listing['User'],'email');?>
+
+<br />
+
+<strong><?php __t("IP address");?>:</strong> <?php echo s2GetIpAddress();?>
+
+<br />
+
+<strong><?php __t("Listing");?>:</strong> <?php echo $Html->link(Sanitize::getString($listing['Listing'],'title'),$entry_url,array('sef'=>false));?>
+
+<br />
+
+<strong><?php __t("Category");?>:</strong> <?php echo Sanitize::getString($listing['Category'],'title');?>
+
+<br />
+
+<strong><?php __t("Summary");?>:</strong>
+
+<br /><?php echo Sanitize::getString($listing['Listing'],'summary');?>
+
+<br />
+
+<strong><?php __t("Description");?>:</strong>
+
+<br /><?php echo Sanitize::getString($listing['Listing'],'description');?>

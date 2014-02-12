@@ -1,0 +1,171 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/
+ // Image settings
+$mediaThumbnailSize = Sanitize::getString($this->Config,'media_media_thumbnail_size');
+
+$mediaThumbnailMode = Sanitize::getString($this->Config,'media_media_thumbnail_mode');
+
+$prev_media_type = '';
+
+$counter = 0;
+
+$detail_page_ordering = $this->Config->media_general_default_order_listing;
+
+// Add page meta tags - must go after Paginator helper
+echo $this->element('page_meta');
+?>
+
+<div class="jr-page jrPage jr-listing-media jrListingMedia">
+
+	<div class="jrPageHeader">
+
+		<?php if (isset($page['title']) && $page['title'] != '' && $page['show_title']):?>
+
+			<h1 class="contentheading "><?php echo $page['title'];?></h1>
+
+		<?php endif;?>
+
+		<div style="margin-bottom: 10px;">
+
+			<?php echo $Html->sefLink('<span class="jrIconPrev"></span>'.$listing['Listing']['title'],$listing['Listing']['url'], array('class'=>'jrButton'));?>
+
+			<?php echo $Routes->mediaCreate('<span class="jrIconAddMedia"></span>' . __t("Add Media",true),$listing,array('class'=>'jrButton'));?>
+
+		</div>
+
+	</div>
+
+	<?php if($detail_page_ordering != 'ordering' && $this->Access->isAdmin()):?>
+	<div class="jrInfo">
+
+		<?php __t("Admin message: users will be able to re-order media only if the 'Default Media Order - Listing Specific' media setting is set to 'ordering'.");?>
+
+	</div>
+	<?php endif;?>
+
+	<div class="jr-tabs-media jrTabs">
+
+		<ul>
+			<li class="jrHidden"><a href="#photo"><span class="jrIconPhoto"></span><?php __t("Photos");?></a></li>
+			<li class="jrHidden"><a href="#photo_owner"><span class="jrIconPhoto"></span><?php __t("Listing Owner Photos");?></a></li>
+			<li class="jrHidden"><a href="#photo_user"><span class="jrIconPhoto"></span><?php __t("User Photos");?></a></li>
+			<li class="jrHidden"><a href="#video"><span class="jrIconVideo"></span><?php __t("Videos");?></a></li>
+			<li class="jrHidden"><a href="#video_owner"><span class="jrIconVideo"></span><?php __t("Listing Owner Videos");?></a></li>
+			<li class="jrHidden"><a href="#video_user"><span class="jrIconVideo"></span><?php __t("User Videos");?></a></li>
+			<li class="jrHidden"><a href="#attachment"><span class="jrIconAttachment"></span><?php __t("Attachments");?></a></li>
+			<li class="jrHidden"><a href="#audio"><span class="jrIconAudio"></span><?php __t("Audio");?></a></li>
+		</ul>
+
+		<?php while ($m = array_shift($media)): extract($m['Media']); ?>
+
+			<?php if($counter == 0 || ($media_type_by != $prev_media_type_by)):?>
+
+			<div id="<?php echo $media_type_by;?>"><?php /* Open tab div */?>
+
+				<div id="jrSortable<?php echo ucfirst($media_type_by);?>" class="jr-media-sortable jrDataList" data-media-type="<?php echo $media_type;?>"  data-listing-id="<?php echo $listing['Listing']['listing_id'];?>" data-extension="<?php echo $listing['Listing']['extension'];?>" data-token-s="<?php echo cmsFramework::getToken();?>" data-token-i="<?php echo cmsFramework::getCustomToken($listing['Listing']['listing_id'].$listing['Listing']['extension']);?>">
+
+			<?php endif;?>
+
+			<?php
+				$prev_media_type_by = $media_type_by;
+
+				if(count($media) > 0)
+				{
+					$next_media = reset($media);
+
+					$next_media_type_by = $next_media['Media']['media_type_by'];
+				}
+
+				$counter++;
+
+				$thumb = $Media->thumb($m,array('size'=>$mediaThumbnailSize,'mode'=>$mediaThumbnailMode),array('style'=>'width: 70px; height: auto;'));
+
+				$duration = $m['Media']['duration'];
+
+				$description = $m['Media']['description'];
+			?>
+
+			<div id="<?php echo $media_id;?>media" class="jr-layout-outer jrMediaSort">
+
+				<div class="jr-layout-inner jrGrid">
+
+					<div class="jrCol2">
+
+						<?php if($detail_page_ordering == 'ordering'):?>
+						<div class="jr-sort-handle jrSortHandle">
+
+							<span class="jrIconSort"></span>
+
+						</div>
+						<?php endif;?>
+
+						<div class="jrMediaThumbnail">
+
+							<?php echo $Routes->mediaDetail($thumb, array('media'=>$m, 'listing'=>$m));?>
+
+						</div>
+
+					</div>
+
+					<div class="jrCol5">
+
+						<span class="jr-media-title">
+
+							<?php echo $Routes->mediaDetail($title, array('media'=>$m, 'listing'=>$m));?>&nbsp;
+
+						</span>
+
+						<?php if($this->Access->canManageMedia($media_type, $user_id) && $approved < 1):?>
+
+							<div><span class="jrStatusLabel jrOrange"><?php __t("Pending Moderation");?></span></div>
+
+						<?php endif;?>
+
+					</div>
+
+					<div class="jrCol3">
+
+						<?php $Widgets->mediaManagerListing($listing, $m);?>
+
+					</div>
+
+					<div class="jrCol2">
+
+						<span class="jrMediaCreated"><?php echo $Time->nice($created);?></span>
+
+						<span class="jrMediaFrom"><?php echo $Community->screenName($m);?></span>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<?php
+			if(count($media) == 0 || ($counter >= 1 && $media_type_by != $next_media_type_by)):
+
+				?>
+
+				</div><?php /* Close tab div */?>
+
+			</div> <?php // close sortable div?>
+
+			<?php endif;?>
+
+		<?php endwhile; ?>
+
+	</div>
+
+</div>

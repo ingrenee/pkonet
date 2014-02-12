@@ -1,0 +1,261 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+$renewal_input = $moderation_input = array();
+
+$offline_payment = '';
+
+extract($order['PaidOrder']);
+
+if($offline && $order_status != "Complete") {
+
+    $offline_payment = '&nbsp;'
+        .'<label for="offline"><input id="offline" name="data[offline]" type="checkbox" value="1" />'
+        .__a("Successful OFFLINE payment",true).'</label>';
+}
+
+// Show moderation for New Listing Plans only
+if($plan_type == 0) {
+
+    $moderation_input = array(
+        'label'=>__a("Moderation",true),
+        'type'=>'radioYesNo',
+        'name'=>'data[PaidOrder][plan_info][plan_array][moderation]',
+        'default'=>Sanitize::getString($plan_info['plan_array'],'moderation',0),
+        'attributes'=>array('div'=>false)
+    );
+}
+
+$user_id = $Form->hidden('data[PaidOrder][user_id]',array('value'=>$user_id,'class'=>'jr-user-id-ac'));
+
+$username = $Form->hidden('data[PaidOrder][listing_info][owner_username]',array('value'=>$listing_info['owner_name'],'class'=>'jr-user-username-ac'));
+?>
+
+<div class="jrForm">
+
+    <form id="jr-form-order" action="index.php" method="post" data-order-id="<?php echo $order_id;?>">
+
+        <div class="jrGrid24">
+
+            <div class="jrCol15">
+
+                <div class="jr-tabs jrTabs">
+
+                    <ul>
+
+                        <li><a href="#order-general"><?php __a("General");?></a></li>
+
+                        <li><a href="#order-fields"><?php __a("Custom Fields");?></a></li>
+
+                        <li><a href="#order-media"><?php __a("Media");?></a></li>
+
+                    </ul>
+
+                    <div id="order-general">
+
+                        <?php
+                        if($order_renewal != _NULL_DATE) {
+
+                            $renewal_input = array(
+                                    'label'=>__a("Renewal",true),
+                                    'type'=>'text',
+                                    'name'=>'data[PaidOrder][order_renewal]',
+                                    'default'=>Sanitize::getVar($order['PaidOrder'],'order_renewal'),
+                                    'attributes'=>array('class'=>'jr-date jrDate')
+                                );
+
+                        }
+
+                        $orderData = array(
+                            /*** NEW HEADER ***/
+                            '' => array(
+                                 array(
+                                    'label'=>__a("Order #",true),
+                                    'text'=>str_pad($order_id, 7, "0", STR_PAD_LEFT),
+                                    'type'=>'placeholder'
+                                ),
+                                array(
+                                    'label'=>__a("Order Active",true),
+                                    'type'=>'radioYesNo',
+                                    'name'=>'data[PaidOrder][order_active]',
+                                    'default'=>Sanitize::getVar($order['PaidOrder'],'order_active'),
+                                    'attributes'=>array('div'=>false),
+                                    'help'=>__a("Leave inactive for renewals",true)
+                                ),
+                                array(
+                                    'label'=>__a("Order Status",true),
+                                    'type'=>'select',
+                                    'name'=>'data[PaidOrder][order_status]',
+                                    'default'=>Sanitize::getVar($order['PaidOrder'],'order_status'),
+                                    'options'=>array('Incomplete'=>__a("Incomplete",true),'Pending'=>__a("Pending",true),'Processing'=>__a("Processing",true),'Complete'=>__a("Complete",true),'Cancelled'=>__a("Cancelled",true),'Fraud'=>__a("Fraud",true),'Failed'=>__a("Failed",true)),
+                                    'before'=>$offline_payment.'<br />'
+                                ),
+                                array(
+                                    'label'=>__a("Created",true),
+                                    'type'=>'text',
+                                    'name'=>'data[PaidOrder][order_created]',
+                                    'default'=>Sanitize::getVar($order['PaidOrder'],'order_created'),
+                                    'attributes'=>array('class'=>'jr-date jrDate')
+                                ),
+                                $renewal_input,
+                                array(
+                                    'label'=>__a("Expires",true),
+                                    'type'=>'text',
+                                    'name'=>'data[PaidOrder][order_expires]',
+                                    'default'=>Sanitize::getVar($order['PaidOrder'],'order_expires'),
+                                    'attributes'=>array('class'=>'jr-date jrDate')
+                                ),
+                                array(
+                                    'label'=>__a("Never Expires",true),
+                                    'type'=>'radioYesNo',
+                                    'name'=>'data[PaidOrder][order_never_expires]',
+                                    'default'=>Sanitize::getVar($order['PaidOrder'],'order_never_expires'),
+                                    'help'=>__a("Ignores expires date",true),
+                                    'attributes'=>array('div'=>false)
+                                ),
+                                array(
+                                    'label'=>__a("User",true),
+                                    'type'=>'text',
+                                    'name'=>'data[PaidOrder][listing_info][owner_name]',
+                                    'default'=>Sanitize::getVar($order['PaidOrder']['listing_info'],'owner_name'),
+                                    'attributes'=>array('class'=>'jr-user-autocomplete'),
+                                    'after'=>$user_id . $username
+                                ),
+                                 array(
+                                    'label'=>__a("Listing",true),
+                                    'text'=>$listing_info['listing_title'] . '(' . $listing_id . ')',
+                                    'type'=>'placeholder'
+                                ),
+                                array(
+                                    'label'=>__a("Published",true),
+                                    'type'=>'radioYesNo',
+                                    'name'=>'data[Listing][state]',
+                                    'default'=>Sanitize::getString($listing['Listing'],'state',0),
+                                    'attributes'=>array('div'=>false)
+                                ),
+                                array(
+                                    'label'=>__a("Order Amount",true),
+                                    'type'=>'text',
+                                    'name'=>'data[PaidOrder][order_amount]',
+                                    'default'=>Sanitize::getVar($order['PaidOrder'],'order_amount'),
+                                    'attributes'=>array('style'=>'width:65px;'),
+                                    'help'=>__a("Includes discounts and taxes",true)
+                                ),
+                                 array(
+                                    'label'=>__a("Plan",true),
+                                    'text'=>$plan_info['plan_name'],
+                                    'type'=>'placeholder'
+                                ),
+                                array(
+                                    'label'=>__a("Price",true),
+                                    'type'=>'text',
+                                    'name'=>'data[PaidOrder][plan_info][plan_price]',
+                                    'default'=>Sanitize::getVar($plan_info,'plan_price'),
+                                    'attributes'=>array('style'=>'width:150px;')
+                                ),
+                                $moderation_input,
+                                array(
+                                    'label'=>__a("Featured",true),
+                                    'type'=>'radioYesNo',
+                                    'name'=>'data[PaidOrder][plan_info][plan_featured]',
+                                    'default'=>Sanitize::getString($plan_info,'plan_featured'),
+                                    'attributes'=>array('div'=>false)
+                                )
+                            )
+                        );
+
+                        $AdminSettings->displayTab('order-edit',$orderData,'',$order['PaidOrder']);
+                        ?>
+
+                    </div>
+
+                    <div id="order-fields">
+
+                        <button class="jr-field-tree-toggle jrButton"><?php __a("Expand/Collapse");?></button>
+
+                        <div id="jr-field-tree" data-cat-id="<?php echo $listing['Category']['cat_id'];?>"></div>
+
+                    </div>
+
+                   <?php
+                    $orderMedia = array(
+                        /*** NEW HEADER ***/
+                        '' => array(
+                            array(
+                                'label'=>__a("Photos",true),
+                                'type'=>'text',
+                                'name'=>'data[PaidOrder][plan_info][photo]',
+                                'default'=>Sanitize::getString($plan_info,'photo',''),
+                                'attributes'=>array('class'=>'jrInteger')
+                            ),
+                            array(
+                                'label'=>__a("Videos",true),
+                                'type'=>'text',
+                                'name'=>'data[PaidOrder][plan_info][video]',
+                                'default'=>Sanitize::getString($plan_info,'video',''),
+                                'attributes'=>array('class'=>'jrInteger')
+                            ),
+                            array(
+                                'label'=>__a("Attachments",true),
+                                'type'=>'text',
+                                'name'=>'data[PaidOrder][plan_info][attachment]',
+                                'default'=>Sanitize::getString($plan_info,'attachment',''),
+                                'attributes'=>array('class'=>'jrInteger')
+                            ),
+                            array(
+                                'label'=>__a("Audio",true),
+                                'type'=>'text',
+                                'name'=>'data[PaidOrder][plan_info][audio]',
+                                'default'=>Sanitize::getString($plan_info,'audio',''),
+                                'attributes'=>array('class'=>'jrInteger')
+                            )
+                        )
+                    );
+
+                    $AdminSettings->displayTab('order-media',$orderMedia,'',$order['PaidOrder']);
+                    ?>
+
+                </div>
+
+            </div>
+
+            <div class="jrCol9">
+
+                <div class="jr-tabs jrTabs">
+
+                    <ul><li><a href="#admin-notes"><?php __a("Admin Notes");?></li></ul>
+
+                    <div id="admin-notes">
+
+                        <textarea name="data[PaidOrder][admin_notes]" style="width:98%;height:10em;"><?php echo $admin_notes;?></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <input type="hidden" name="data[PaidOrder][order_id]" value="<?php echo $order_id;?>" />
+
+        <input type="hidden" name="data[controller]" value="admin/admin_paidlistings_orders" />
+
+        <input type="hidden" name="data[action]" value="_save" />
+
+        <input type="hidden" id="curr_plan_field_ids" name="curr_plan_fields" value="<?php echo implode(",",Sanitize::getVar($plan_info['plan_array'],'fields'));?>" />
+
+        <input type="hidden" id="curr_plan_group_ids" name="curr_plan_group_ids" value="<?php echo $listing['ListingType']['group_id'];?>" />
+
+        <input type="hidden" id="cat_ids" name="data[cat_ids]" value="" />
+
+        <input type="hidden" id="field_names" name="data[field_names]" value="" />
+
+    </form>
+
+</div>

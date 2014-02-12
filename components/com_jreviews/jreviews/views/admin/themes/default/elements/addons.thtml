@@ -1,0 +1,38 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<?php if(!empty($JreviewsAddons)):?>
+
+<div class="jrGrid">
+
+    <div class="jrCol12 jrHeader"><?php __a("Add-ons");?></div>
+
+    <div class="jrCol12">
+
+        <ul>
+
+            <?php foreach($JreviewsAddons AS $title=>$addon):?>
+
+                <li>
+
+                    <a href="javascript:void(0)" id="<?php echo $addon;?>" class="jr-menu-addon" data-controller="admin_<?php echo $addon;?>" data-action="index"><?php echo $title;?></a>
+
+                </li>
+
+            <?php endforeach;?>
+
+        </ul>
+
+    </div>
+
+</div>
+
+<?php endif;?>

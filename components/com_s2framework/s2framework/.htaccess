@@ -1,0 +1,9 @@
+# Disable directory browsing when index.html is missing
+Options All -Indexes
+
+# Prevent viewing code in theme files
+<Files ~ "\.(thtml)$">
+  order allow,deny
+  deny from all
+</Files>
+

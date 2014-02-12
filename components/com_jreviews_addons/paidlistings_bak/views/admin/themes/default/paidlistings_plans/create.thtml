@@ -1,0 +1,335 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+$plan_id = Sanitize::getInt($plan['PaidPlan'],'plan_id');
+?>
+
+<div class="jr-paid-plan-edit">
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post">
+
+        <div class="jrPageHeading"><?php __a("Pricing Plan");?></div>
+
+            <div class="jrPageToolbar jrRoundedPanel">
+
+                <button class="jr-save jrButton jrGreen" data-id="<?php echo $plan_id;?>">
+
+                    <span class="jrIconSave"></span><?php __a("Save");?>
+
+                </button>
+
+                <button class="jr-cancel jrButton">
+
+                    <span class="jrIconCancel"></span><?php __a("Cancel");?>
+
+                </button>
+
+        </div>
+
+        <div class="jr-validation jrError jrHidden"></div>
+
+        <div class="jr-tabs">
+
+            <ul>
+
+                <li><a href="#jr-plan-general"><?php __a("General");?></a></li>
+
+                <li><a href="#jr-plan-listings"><?php __a("Listing Settings");?></a></li>
+
+                <li><a href="#jr-plan-media"><?php __a("Media Settings");?></a></li>
+
+                <li><a href="#jr-plan-advanced"><?php __a("Advanced");?></a></li>
+
+            </ul>
+
+            <?php
+            $planGeneral = array(
+                /*** NEW HEADER ***/
+                '' => array(
+                    array(
+                        'label'=>__a("Name",true),
+                        'type'=>'text',
+                        'name'=>'data[PaidPlan][plan_name]',
+                        'default'=>Sanitize::getString($plan['PaidPlan'],'plan_name',''),
+                        'attributes'=>array('class'=>'jrText')
+                    ),
+                    array(
+                        'label'=>__a("Enable",true),
+                        'type'=>'radioYesNo',
+                        'name'=>'data[PaidPlan][plan_state]',
+                        'default'=>Sanitize::getString($plan['PaidPlan'],'plan_state',0),
+                        'attributes'=>array('div'=>false)
+                    ),
+                    array(
+                        'label'=>__a("Show in submit form",true),
+                        'type'=>'radioYesNo',
+                        'name'=>'data[PaidPlan][plan_array][submit_form]',
+                        'default'=>Sanitize::getString($plan['PaidPlan']['plan_array'],'submit_form',1),
+                        'attributes'=>array('div'=>false),
+                        'help'=>__a("Allows you to hide plans from the list that appears after category selection. Can be useful in implementations where new listings are free.",true)
+                    ),
+                    array(
+                        'label'=>__a("Default Plan",true),
+                        'type'=>'radioYesNo',
+                        'name'=>'data[PaidPlan][plan_default]',
+                        'default'=>Sanitize::getInt($plan['PaidPlan'],'plan_default',0),
+                        'attributes'=>array('div'=>false),
+                        'help'=>__a("Default plans appear pre-selected in the order page. There can be only one default plan of the same type (new or upgrade) per category.",true)
+                    ),
+                    array(
+                        'label'=>__a("Plan Type",true),
+                        'type'=>'select',
+                        'options'=>$Paid->getPlanTypes(),
+                        'name'=>'data[PaidPlan][plan_type]',
+                        'default'=>Sanitize::getInt($plan['PaidPlan'],'plan_type',0),
+                        'attributes'=>array('class'=>'jr-plan-type jrSelect'),
+                    ),
+                    array(
+                        'label'=>__a("Plan is exclusive?",true),
+                        'type'=>'radioYesNo',
+                        'name'=>'data[PaidPlan][plan_upgrade_exclusive]',
+                        'default'=>Sanitize::getString($plan['PaidPlan'],'plan_upgrade_exclusive',0),
+                        'attributes'=>array('div'=>false),
+                        'help'=>__a("Cannot be combined with other upgrades.",true)
+                    ),
+                    array(
+                        'label'=>__a("Payment Type",true),
+                        'type'=>'select',
+                        'options'=>$Paid->getPaymentTypes(),
+                        'name'=>'data[PaidPlan][payment_type]',
+                        'default'=>Sanitize::getString($plan['PaidPlan'],'payment_type',0),
+                        'attributes'=>array('class'=>'jrSelect'),
+                        'help'=>'<div id="jr-paid-type-msg" class="jrWarning">'.__a("When adding a free or trial plan with an expiration remember to setup a paid plan for the same categories so users can keep their listings published.",true).'</div>'
+                    ),
+                    array(
+                        'label'=>__a("Free/Trial Limit",true),
+                        'type'=>'text',
+                        'name'=>'data[PaidPlan][plan_array][trial_limit]',
+                        'default'=>Sanitize::getString($plan['PaidPlan']['plan_array'],'trial_limit',''),
+                        'attributes'=>array('class'=>'jr-trial-limit jrInteger'),
+                        'help'=>__a("Limits the number of times the plan can be used by a single user. Leave empty for no limit.",true)
+                    ),
+                    array(
+                        'label'=>sprintf(__a("Price (%s)",true),$this->Config->{'paid.currency'}),
+                        'type'=>'text',
+                        'name'=>'data[PaidPlan][plan_price]',
+                        'default'=>Sanitize::getString($plan['PaidPlan'],'plan_price',''),
+                        'attributes'=>array('class'=>'jr-plan-price jrInteger')
+                    ),
+                    array(
+                        'label'=>__a("Duration",true),
+                        'type'=>'text',
+                        'name'=>'data[PaidPlan][plan_array][duration_number]',
+                        'default'=>Sanitize::getString($plan['PaidPlan']['plan_array'],'duration_number',''),
+                        'attributes'=>array('class'=>'jr-plan-duration jrInteger'),
+                        'after'=>'&nbsp;'.$Form->select('data[PaidPlan][plan_array][duration_period]',$Paid->getDurationPeriods(),Sanitize::getString($plan['PaidPlan']['plan_array'],'duration_period','months'),array('class'=>'jr-plan-period jrSelect')),
+                        'help'=>'<div id="jr-paid-upgrade-msg" class="jrWarning">'.__a("Upgrade plan available only for listings with a never expiring base plan. Select 'One Time Payment' and 'Never Expires' to make upgrade plan available in all listings.",true).'</div>'
+                    ),
+                    array(
+                        'label'=>__a("Description",true),
+                        'type'=>'textarea',
+                        'name'=>'data[PaidPlan][plan_array][description]',
+                        'default'=>Sanitize::getString($plan['PaidPlan']['plan_array'],'description'),
+                        'attributes'=>array('class'=>'jrTextArea')
+                    )
+                )
+            );
+
+            $AdminSettings->displayTab('jr-plan-general',$planGeneral,'',$plan['PaidPlan']);
+
+            $planListing = array(
+                /*** NEW HEADER ***/
+                '' => array(
+                    array(
+                        'label'=>__a("Moderation",true),
+                        'type'=>'radioYesNo',
+                        'name'=>'data[PaidPlan][plan_array][moderation]',
+                        'default'=>Sanitize::getString($plan['PaidPlan']['plan_array'],'moderation',0),
+                        'attributes'=>array('div'=>false),
+                        'help'=>__a("Overrides global and listing type moderation settings.",true)
+                    ),
+                    array(
+                        'label'=>__a("Featured",true),
+                        'type'=>'radioYesNo',
+                        'name'=>'data[PaidPlan][plan_featured]',
+                        'default'=>Sanitize::getInt($plan['PaidPlan'],'plan_featured',0),
+                        'attributes'=>array('div'=>false)
+                    )
+                )
+            );
+
+            ?>
+
+            <div id="jr-plan-listings">
+
+                <?php
+                $AdminSettings->displayTab('jr-listing-settings-inner',$planListing,'',$plan['PaidPlan']);
+
+                $text = array();
+                ?>
+
+                <div class="jrDataList">
+
+                    <div class="jrGrid jrDataListHeader">
+
+                        <div class="jrCol12"><?php __a("Category & Custom Field Assignments");?></div>
+
+                    </div>
+
+                    <div class="jrGrid">
+
+                        <div class="jrCol6">
+
+                            <div style="margin-bottom: 10px;">
+
+                                <button class="jr-cat-tree-toggle jrButton"><?php __a("Expand/Collapse Categories");?></button>
+
+                            </div>
+
+                            <div id="jr-cat-tree"></div>
+
+                        </div>
+
+                        <div class="jrCol6">
+
+                            <div>
+
+                                <button class="jr-field-tree-toggle jrButton"><?php __a("Expand/Collapse Field Groups");?></button>
+
+                             </div>
+
+                            <div class="jrInfo">
+
+                                <span class="jrIconInfo"></span>
+
+                                <?php __a("For Upgrades check incremental fields not already checked in the base plan.");?>
+
+                            </div>
+
+                            <div id="jr-field-tree" data-plan-id="<?php echo Sanitize::getInt($plan['PaidPlan'],'plan_id',null);?>"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="jr-plan-media">
+
+                <div class="jrInfo">
+
+                    <span class="jrIconInfo"></span>
+
+                    <?php __a("Fill out the maximum (not incremental) media limits for each media type. Leave empty to use the global media count setting for each media type or to default to the base plan setting if this is an upgrade plan.");?>
+
+                </div>
+
+                <?php
+                $planMedia = array(
+                    /*** NEW HEADER ***/
+                    '' => array(
+                        array(
+                            'label'=>__a("Photos",true),
+                            'type'=>'text',
+                            'name'=>'data[PaidPlan][photo]',
+                            'default'=>Sanitize::getString($plan['PaidPlan'],'photo',''),
+                            'attributes'=>array('class'=>'jrInteger')
+                        ),
+                        array(
+                            'label'=>__a("Videos",true),
+                            'type'=>'text',
+                            'name'=>'data[PaidPlan][video]',
+                            'default'=>Sanitize::getString($plan['PaidPlan'],'video',''),
+                            'attributes'=>array('class'=>'jrInteger')
+                        ),
+                        array(
+                            'label'=>__a("Attachments",true),
+                            'type'=>'text',
+                            'name'=>'data[PaidPlan][attachment]',
+                            'default'=>Sanitize::getString($plan['PaidPlan'],'attachment',''),
+                            'attributes'=>array('class'=>'jrInteger')
+                        ),
+                        array(
+                            'label'=>__a("Audio",true),
+                            'type'=>'text',
+                            'name'=>'data[PaidPlan][audio]',
+                            'default'=>Sanitize::getString($plan['PaidPlan'],'audio',''),
+                            'attributes'=>array('class'=>'jrInteger')
+                        ),
+                    )
+                );
+
+                $AdminSettings->displayTab('jr-plan-media',$planMedia,'',$plan['PaidPlan']);
+                ?>
+
+            </div>
+
+            <div id="jr-plan-advanced">
+
+                <?php
+                if(!empty($plan['PaidPlan']['plan_array']['custom_vars']))
+                {
+                    foreach($plan['PaidPlan']['plan_array']['custom_vars'] AS $var=>$value)
+                    {
+                        $text[] = $var.'|'.$value;
+                    }
+                }
+
+                $custom_vars = implode("\n",$text);
+                ?>
+
+                <div class="jrDataList">
+
+                    <div class="jrGrid jrDataListHeader">
+
+                        <div class="jrCol12"><?php __a("Custom Variables");?></div>
+
+                    </div>
+
+                    <div class="jrGrid">
+
+                        <div class="jrCol4">
+
+                            <?php echo $Form->textarea('data[PaidPlan][plan_array][custom_vars]',array('value'=>$custom_vars,'style'=>'width:100%;height:7em;'));?>
+
+                        </div>
+
+                        <div class="jrCol8">
+
+                            <?php __a("Custom variables provide additional flexibility to your pricing plans. The variables are made available in the theme files so you can use them for customizations. For example, you can have a custom variable that you use to enable the inquiry form in listings. <br />To add custom variables enter one in each line in the following format:<br />var1|value1<br />var2|value2<br />To access the custom variables in themes use: <strong>&lt;?php echo \$Paid-?&gt;getVar('var1',\$listing);?&gt;</strong>");?>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <input type="hidden" name="data[PaidPlan][plan_id]" value="<?php echo Sanitize::getVar($plan['PaidPlan'],'plan_id');?>" />
+
+        <input type="hidden" name="data[controller]" value="admin/admin_paidlistings_plans" />
+
+        <input type="hidden" name="data[action]" value="_save" />
+
+        <input type="hidden" id="curr_plan_field_ids" name="curr_plan_fields" value="<?php echo implode(",",Sanitize::getVar($plan['PaidPlan']['plan_array'],'fields'));?>" />
+
+        <input type="hidden" id="curr_plan_cat_ids" name="curr_plan_cat_ids" value="<?php echo implode(",",Sanitize::getVar($plan['PaidPlanCategory'],'cat_id'));?>" />
+
+        <input type="hidden" id="curr_plan_group_ids" name="curr_plan_group_ids" value="<?php echo implode(",",$group_ids);?>" />
+
+        <input type="hidden" id="cat_ids" name="data[cat_ids]" value="" />
+
+        <input type="hidden" id="field_names" name="data[field_names]" value="" />
+
+    </form>
+</div>
+

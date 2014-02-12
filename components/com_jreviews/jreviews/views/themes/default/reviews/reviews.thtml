@@ -1,0 +1,126 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$reviewTypeParam = Sanitize::getString($this->params,'reviewtype');
+
+$reviewType = $reviewTypeParam ? $reviewTypeParam : (isset($reviewType) ? $reviewType : '');
+
+$show_pagination = in_array($this->action,array('myreviews','latest','detail'));
+
+if(isset($page)) {
+
+	$page_description = Sanitize::getString($page,'top_description');
+
+	$show_description = $page_description != '';
+}
+
+/**********************************************************************************
+ * 								PAGINATION HELPER
+ **********************************************************************************/
+
+if($show_pagination)
+{
+	$Paginator->paginate(
+		array(
+			'current_page'=>$this->page,
+			'items_per_page'=>$this->limit,
+			'items_total'=>$pagination['total']
+		)
+	);
+	// Add page meta tags - must go after Paginator helper
+	echo $this->element('page_meta');
+}
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<?php if($show_pagination):?>
+
+<div class="jr-page jrPage jrListingDetail jrReviews">
+
+	<?php if(isset($page['title'])):?>
+
+	<h1 class="contentheading"><?php echo strip_tags($page['title']);?></h1>
+
+	<?php endif;?>
+
+	<?php if($show_description):?>
+
+		<div class="jrPageDescription"><?php echo $page_description;?></div>
+
+	<?php endif;?>
+
+ 	<?php /* PAGINATION */ ?>
+
+	<?php echo $this->element('pagination',array('position'=>'top'));?>
+
+<?php endif;?>
+
+<?php if(in_array($this->action,array('index'/*everywhere addon*/,'com_content_view','review','_save','_edit','detail'))):?>
+
+	<?php $i = 0; foreach($reviews AS $review): $i++; ?>
+
+		<?php /* REVIEW LAYOUT */ ?>
+
+		<?php echo $this->renderControllerView('reviews','review_layout',array('listing'=>isset($listing) ? $listing : $review,'review'=>$review,'reviewType'=>$reviewType));?>
+
+		<?php if ($i == 1 && $reviewType != 'editor'): ?>
+
+				<?php /* CUSTOM MODULE POSITION - jr-detail-below-review1 */ ?>
+
+				<?php $Jreviews->loadModulePosition('jr-detail-below-review1'); ?>
+
+		<?php endif; ?>
+
+		<?php if ($i == 2 && $reviewType != 'editor'): ?>
+
+				<?php /* CUSTOM MODULE POSITION - jr-detail-below-review2 */ ?>
+
+				<?php $Jreviews->loadModulePosition('jr-detail-below-review2'); ?>
+
+		<?php endif; ?>
+
+		<?php if ($i == 3 && $reviewType != 'editor'): ?>
+
+				<?php /* CUSTOM MODULE POSITION - jr-detail-below-review3 */ ?>
+
+				<?php $Jreviews->loadModulePosition('jr-detail-below-review3'); ?>
+
+		<?php endif; ?>
+
+	<?php endforeach;?>
+
+<?php else: ?>
+
+	<div class="jrReviewList jrDataList">
+		<?php foreach($reviews AS $review):?>
+
+		<?php /* REVIEW LIST LAYOUT */ ?>
+
+		<?php echo $this->renderControllerView('reviews','review_list_layout',array('listing'=>isset($listing) ? $listing : $review,'review'=>$review,'reviewType'=>$reviewType));?>
+
+		<?php endforeach;?>
+	</div>
+
+<?php endif;?>
+
+<?php if($show_pagination):?>
+
+ 	<?php /* PAGINATION */ ?>
+
+	<?php echo $this->element('pagination',array('position'=>'top'));?>
+
+</div>
+
+<?php endif;?>
+
+<?php if(empty($reviews)) echo $this->renderControllerView('reviews','reviews_noresults'); ?>

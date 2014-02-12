@@ -1,0 +1,280 @@
+<?php
+$criteria_id = Sanitize::getInt($criteria['Criteria'],'criteria_id');
+
+$edit = $criteria_id > 0;
+
+$relatedWidget = array(
+
+    __a("Widget Settings",true) => array(
+
+        array(
+            'label'=>__a("Enable",true),
+            'type'=>'radioYesNo',
+            'name'=>'enable',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'enable', 0) : 0,
+            'after'=>''
+        ),
+        array(
+            'label'=>__a("Title",true),
+            'type'=>'text',
+            'name'=>'title',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'title') : '',
+            'help'=>__a("Use the {title} tag to add the current listing title",true)
+        ),
+        array(
+            'label'=>__a("Target Element ID",true),
+            'type'=>'text',
+            'name'=>'target_id',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'target_id','jrRelatedListings') : 'jrRelatedListings',
+            'help'=>__a("Output rendered in html element with this id. Default is \"jrRelatedListings\"",true)
+        ),
+        array(
+            'label'=>__a("Target Element Class",true),
+            'type'=>'text',
+            'name'=>'target_class',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'target_class') : '',
+            'help'=>__a("Output rendered in html element with this class. Used instead of target id.",true)
+        )
+    ),
+
+     __a("Main Setup",true) => array(
+
+        array(
+            'label'=>__a("Field Name",true),
+            'type'=>'text',
+            'name'=>'curr_fname',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'curr_fname') : '',
+        ),
+        array(
+            'label'=>__a("Find Listings Where",true),
+            'type'=>'select',
+            'name'=>'match',
+            'options'=>array(
+                            'id'=>'The specified field matches current listing id (Related Listing Field)',
+                            'about'=>'The listing id matches the value of the specified field (About Related Listing)',
+                            'field'=>'The specified field matches the current listing field of the same name',
+                            'title'=>'The specified field matches the current listing title',
+                            'diff_field'=>'The specified field (above) matches the current listing field (below)',
+                            'owner'=>'The listing owner matches the current listing owner',
+                            'listing_type'=>'The Listing Types checked below match that of the current listing',
+                            'cat_auto'=>'The category is the same as the current listing category'
+                        ),
+            'attributes'=>array('class'=>'jr-field-matches'),
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'match') : '',
+        ),
+        array(
+            'label'=>__a("Match Field Name",true),
+            'type'=>'text',
+            'name'=>'match_fname',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'match_fname') : ''
+        ),
+        array(
+            'label'=>__a("Listing Types Filter",true),
+            'type'=>'selectmultiple',
+            'name'=>'criteria',
+            'options'=>$listingTypes,
+            'attributes'=>array('class'=>'jr-multiselect'),
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'criteria') : '',
+        ),
+        array(
+            'label'=>__a("Listings Ordering",true),
+            'type'=>'select',
+            'name'=>'listing_order',
+            'options'=>array(
+                            'rdate'=>__a("Most Recent",true),
+                            'rating'=>__a("Top User Rated",true),
+                            'rrating'=>__a("Worst User Rated",true),
+                            'topratededitor'=>__a("Top Editor Rated",true),
+                            'reviews'=>__a("Most Reviewed",true),
+                            'featured'=>__a("Featured",true),
+                            'rhits'=>__a("Popular",true),
+                            'proximity'=>__a("Proximity (Requires GeoMaps Add-on)",true)
+                        ),
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'listing_order','rdate') : 'rdate'
+        ),
+        array(
+            'label'=>__a("Radius for Proximity Ordering",true),
+            'type'=>'text',
+            'name'=>'radius',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'radius') : ''
+        ),
+        array(
+            'label'=>__a("Show Distance for Proximity Ordering",true),
+            'type'=>'radioYesNo',
+            'name'=>'distance',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'distance', 1) : 1,
+            'after'=>''
+        ),
+        array(
+            'label'=>__a("Theme Suffix",true),
+            'type'=>'text',
+            'name'=>'tmpl_suffix',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'tmpl_suffix') : ''
+        ),
+        array(
+            'label'=>__a("Max. Number of Results",true),
+            'type'=>'text',
+            'name'=>'module_total',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'module_total','12') : 12
+        ),
+        array(
+            'label'=>__a("Results per Page",true),
+            'type'=>'text',
+            'name'=>'module_limit',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'module_limit','6') : 6
+        ),
+         array(
+            'label'=>__a("Columns",true),
+            'type'=>'text',
+            'name'=>'columns',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'columns','3') : 3
+        )
+    ),
+
+    __a("Advanced Filters",true) => array(
+
+        array(
+            'label'=>__a("Custom WHERE",true),
+            'type'=>'textarea',
+            'name'=>'custom_where',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'custom_where', '') : '',
+            'attributes'=>array('style'=>'width:100%;height:5em;')
+        ),
+         array(
+            'label'=>__a("Custom ORDER BY",true),
+            'type'=>'textarea',
+            'name'=>'custom_order',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'custom_order','') : '',
+            'attributes'=>array('style'=>'width:100%;height:2em;')
+        )
+    ),
+
+    __a("Listing Settings",true) => array(
+
+        array(
+            'label'=>__a("Show Summary",true),
+            'type'=>'radioYesNo',
+            'name'=>'summary',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'summary', 0) : 0,
+            'after'=>''
+        ),
+         array(
+            'label'=>__a("Summary Words",true),
+            'type'=>'text',
+            'name'=>'summary_words',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'summary_words','10') : '10'
+        ),
+        array(
+            'label'=>__a("Show Listing Category",true),
+            'type'=>'radioYesNo',
+            'name'=>'show_category',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'show_category', 1) : 1,
+            'after'=>''
+        ),
+        array(
+            'label'=>__a("Comma separated list of custom fields to show (i.e. jr_state,jr_city)",true),
+            'type'=>'textarea',
+            'name'=>'fields',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'fields', '') : '',
+            'attributes'=>array('style'=>'width:100%;height:3em;')
+        ),
+        array(
+            'label'=>__a("Show Editor Rating",true),
+            'type'=>'radioYesNo',
+            'name'=>'editor_rating',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'editor_rating', 1) : 1,
+            'after'=>''
+        ),
+        array(
+            'label'=>__a("Show User Rating",true),
+            'type'=>'radioYesNo',
+            'name'=>'user_rating',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'user_rating', 1) : 1,
+            'after'=>''
+        )
+    ),
+
+    __a("Thumbnail Settings",true) => array(
+
+        array(
+            'label'=>__a("Show Thumbnail",true),
+            'type'=>'radioYesNo',
+            'name'=>'tn_show',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'tn_show', 1) : 1,
+            'after'=>''
+        ),
+        array(
+            'label'=>__a("Thumbnail Position",true),
+            'type'=>'select',
+            'name'=>'tn_position',
+            'options'=>array(
+                            'left'=>__a("Left",true),
+                            'right'=>__a("Right",true),
+                            'top'=>__a("Top",true),
+                            'bottom'=>__a("Bottom",true)
+                        ),
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'tn_position','rdate') : 'rdate'
+        ),
+        array(
+            'label'=>__a("Thumbnail Type",true),
+            'type'=>'radio',
+            'name'=>'tn_mode',
+            'options'=>array('crop'=>'Crop','scale'=>'Scale'),
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'tn_mode','crop') : 'crop',
+            'after'=>''
+        ),
+         array(
+            'label'=>__a("Thumbnail Dimensions (px)",true),
+            'type'=>'text',
+            'name'=>'tn_size',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'tn_size','100x100') : '100x100'
+        )
+    ),
+
+    __a("Comparison",true) => array(
+
+        array(
+            'label'=>__a("Enable Compare Button",true),
+            'type'=>'radioYesNo',
+            'name'=>'compare',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'compare', 0) : 0,
+            'after'=>''
+        )
+    ),
+
+    __a("Pagination & Slideshow",true) => array(
+
+        array(
+            'label'=>__a("Pagination Position",true),
+            'type'=>'radio',
+            'name'=>'nav_position',
+            'options'=>array('bottom'=>__a("Bottom",true),'side'=>__a("Sides",true)),
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'nav_position','side') : 'side',
+            'after'=>''
+        ),
+        array(
+            'label'=>__a("Module Orientation",true),
+            'type'=>'radio',
+            'name'=>'orientation',
+            'options'=>array('horizontal'=>__a("Horizontal",true),'vertical'=>__a("Vertical",true),'fade'=>__a("Fade",true)),
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'orientation','horizontal') : 'horizontal',
+            'after'=>''
+        ),
+        array(
+            'label'=>__a("Enable Slideshow",true),
+            'type'=>'radioYesNo',
+            'name'=>'slideshow',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'slideshow', 0) : 0,
+            'after'=>''
+        ),
+         array(
+            'label'=>__a("Slideshow Interval",true),
+            'type'=>'text',
+            'name'=>'slideshow_interval',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['relatedlistings'][$i],'slideshow_interval','6') : 6
+        )
+    )
+ );
+
+$AdminSettings->displayTab('listing-type-relatedlistings'.$i,$relatedWidget,'[Criteria][config][relatedlistings]['.$i.']',$criteria['ListingType']['config']);
+

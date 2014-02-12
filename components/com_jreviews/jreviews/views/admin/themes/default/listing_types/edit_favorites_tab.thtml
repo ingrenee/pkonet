@@ -1,0 +1,133 @@
+<?php
+$criteria_id = Sanitize::getInt($criteria['Criteria'],'criteria_id');
+
+$edit = $criteria_id > 0;
+
+$favoritesWidget = array(
+
+    __a("Widget Settings",true) => array(
+
+        array(
+            'label'=>__a("Enable",true),
+            'type'=>'radioYesNo',
+            'name'=>'enable',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'enable', 0) : 0,
+            'after'=>''
+        ),
+        array(
+            'label'=>__a("Title",true),
+            'type'=>'text',
+            'name'=>'title',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'title') : '',
+            'help'=>__a("Use the {title} tag to add the current listing title",true)
+        ),
+        array(
+            'label'=>__a("Target Element ID",true),
+            'type'=>'text',
+            'name'=>'target_id',
+            'default'=>$edit ?  Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'target_id','jrRelatedListings') : 'jrRelatedListings',
+            'help'=>__a("Output rendered in html element with this id. Default is \"jrRelatedListings\"",true)
+        ),
+        array(
+            'label'=>__a("Target Element Class",true),
+            'type'=>'text',
+            'name'=>'target_class',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'target_class') : '',
+            'help'=>__a("Output rendered in html element with this class. Used instead of target id.",true)
+        )
+    ),
+
+     __a("Main Setup",true) => array(
+
+        array(
+            'label'=>__a("Only Users with Avatars",true),
+            'type'=>'radioYesNo',
+            'name'=>'avatar',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'avatar',0) : 0,
+        ),
+        array(
+            'label'=>__a("Theme Suffix",true),
+            'type'=>'text',
+            'name'=>'tmpl_suffix',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'tmpl_suffix') : ''
+        ),
+        array(
+            'label'=>__a("Max. Number of Results",true),
+            'type'=>'text',
+            'name'=>'module_total',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'module_total','12') : 12
+        ),
+        array(
+            'label'=>__a("Results per Page",true),
+            'type'=>'text',
+            'name'=>'module_limit',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'module_limit','6') : 6
+        ),
+         array(
+            'label'=>__a("Columns",true),
+            'type'=>'text',
+            'name'=>'columns',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'columns','3') : 3
+        )
+    ),
+
+    __a("Thumbnail Settings",true) => array(
+
+        array(
+            'label'=>__a("Show Thumbnail",true),
+            'type'=>'radioYesNo',
+            'name'=>'tn_show',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'tn_show', 1) : 1,
+            'after'=>''
+        ),
+        array(
+            'label'=>__a("Thumbnail Type",true),
+            'type'=>'radio',
+            'name'=>'tn_mode',
+            'options'=>array('crop'=>'Crop','scale'=>'Scale'),
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'tn_mode','crop') : 'crop',
+            'after'=>''
+        ),
+         array(
+            'label'=>__a("Thumbnail Dimensions (px)",true),
+            'type'=>'text',
+            'name'=>'tn_size',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'tn_size','100x100') : '100x100'
+        )
+    ),
+
+    __a("Pagination & Slideshow",true) => array(
+
+        array(
+            'label'=>__a("Pagination Position",true),
+            'type'=>'radio',
+            'name'=>'nav_position',
+            'options'=>array('bottom'=>__a("Bottom",true),'side'=>__a("Sides",true)),
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'nav_position','side') : 'side',
+            'after'=>''
+        ),
+        array(
+            'label'=>__a("Page transition",true),
+            'type'=>'radio',
+            'name'=>'orientation',
+            'options'=>array('horizontal'=>__a("Horizontal",true),'vertical'=>__a("Vertical",true),'fade'=>__a("Fade",true)),
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'orientation','horizontal') : 'horizontal',
+            'after'=>''
+        ),
+        array(
+            'label'=>__a("Enable Slideshow",true),
+            'type'=>'radioYesNo',
+            'name'=>'slideshow',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'slideshow', 0) : 0,
+            'after'=>''
+        ),
+         array(
+            'label'=>__a("Slideshow Interval",true),
+            'type'=>'text',
+            'name'=>'slideshow_interval',
+            'default'=>$edit ? Sanitize::getVar($criteria['ListingType']['config']['userfavorites'],'slideshow_interval','6') : 6
+        )
+    )
+ );
+
+$AdminSettings->displayTab('listing-type-user-favorites',$favoritesWidget,'[Criteria][config][userfavorites]',$criteria['ListingType']['config']);

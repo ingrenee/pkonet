@@ -1,0 +1,72 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+extract($account['PaidAccount']);
+
+$name = $name != '' ? $name : $User->name;
+?>
+
+<form id="jr-form-account-details" class="jrForm jrAccountDetails" type="post" action="index.php">
+
+    <fieldset>
+
+        <div class="jrFieldDiv">
+
+            <label><?php __t("Name");?></label>
+
+            <?php echo $Form->text('data[PaidAccount][name]',array('value'=>$name,'class'=>'jrName'));?>
+
+        </div>
+
+        <div class="jrFieldDiv">
+
+            <label><?php __t("Business");?></label>
+
+            <?php echo $Form->text('data[PaidAccount][business]',array('value'=>$business,'class'=>'jrText'));?>
+
+        </div>
+
+        <div class="jrFieldDiv">
+
+            <label><?php __t("Address");?></label>
+
+            <?php echo $Form->textarea('data[PaidAccount][address]',array('value'=>$address,'class'=>'jrTextArea '));?>
+
+        </div>
+
+        <div class="jrFieldDiv">
+
+            <label><?php __t("Country");?></label>
+
+            <?php echo $Form->text('data[PaidAccount][country]',array('value'=>$country,'class'=>'jrText'));?>
+
+        </div>
+
+        <div class="jrFieldDiv">
+
+            <label><?php __t("Tax ID");?></label>
+
+            <?php echo $Form->text('data[PaidAccount][tax_id]',array('value'=>$tax_id,'class'=>'jrText'));?>
+
+        </div>
+
+        <button class="jr-save jrButton"><?php __t("Submit");?></button>
+
+        <span class="jrLoadingSmall jrHidden"></span>
+
+    </fieldset>
+
+    <div class="jr-validation jrError jrHidden"></div>
+
+    <?php echo $Form->hidden('data[controller]',array('value'=>'paidlistings_accounts'));?>
+
+    <?php echo $Form->hidden('data[action]',array('value'=>'_save'));?>
+
+</form>

@@ -1,0 +1,131 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+$coupon_states = array(0=>'jrIconNo',1=>'jrIconYes');
+
+$Paginator->paginate(array('current_page'=>$this->page,'items_per_page'=>$this->limit,'items_total'=>$pagination['total']));
+
+$langDel = json_encode(array('del_confirm'=>__a("Are you sure you want to delete the selected coupon(s)?",true)));
+?>
+
+<div class="jr-paid-coupons-list">
+
+    <div class="jrPageHeading"><?php __a("Coupons");?></div>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="paidlistings_coupons">
+
+        <div class="jrPageToolbar jrRoundedPanel">
+
+            <button class="jr-edit jrButton jrGreen" data-id="0">
+
+                <span class="jrIconNew"></span><span><?php __a("New");?></span>
+
+            </button>
+
+            <button class="jr-delete-all jrButton" data-lang='<?php echo $langDel;?>'>
+
+                <span class="jrIconDelete"></span><span><?php __a("Delete");?></span>
+
+            </button>
+
+        </div>
+
+        <div class="jrDataList">
+
+            <div class="jrGrid24 jrDataListHeader">
+
+                <div class="jrCol1"><input class="jr-cb-all" value="" type="checkbox"></div>
+
+                <div class="jrCol1">#</div>
+
+                <div class="jrCol1">ID</div>
+
+                <div class="jrCol9"><?php __a("Coupon");?></div>
+
+                <div class="jrCol4"><?php __a("Expires");?></div>
+
+                <div class="jrCol5"><?php __a("Discount");?></div>
+
+                <div class="jrCol2"><?php __a("State");?></div>
+
+                <div class="jrCol1"><span class="jrIconDelete"></span></div>
+
+            </div>
+
+            <?php $i = 1; foreach($coupons AS $coupon): extract($coupon['PaidCoupon']);?>
+
+            <div class="jr-layout-outer jrGrid24" data-id="<?php echo $coupon_id;?>">
+
+                <div class="jrCol1">
+
+                    <input type="checkbox" class="jr-row-cb" name="cid[]" value="<?php echo $coupon_id;?>" />
+
+                </div>
+
+                <div class="jrCol1"><?php echo $i++;?></div>
+
+                <div class="jrCol1"><?php echo $coupon_id;?></div>
+
+                <div class="jrCol9">
+
+                    <a href="javascript:void(0)" class="jr-edit" data-id="<?php echo $coupon_id;?>" data-key="PaidCoupon.coupon_name">
+
+                        <?php echo $coupon_name;?>
+
+                    </a>
+
+                </div>
+
+                <div class="jrCol4"><span data-key="PaidCoupon.coupon_ends">
+
+                    <?php echo $coupon_ends != NULL_DATE ? $Time->niceShort($coupon_ends) : '';?></span>&nbsp;
+
+                </div>
+
+                <div class="jrCol5">
+
+                    <span data-key="PaidCoupon.coupon_discount"><?php echo $coupon_discount;?></span>%
+
+                </div>
+
+                <div class="jrCol2">
+
+                    <span data-key="PaidCoupon.coupon_state"
+                            data-key-type="class"
+                            data-states='<?php echo json_encode($coupon_states);?>'
+                            class="<?php echo $coupon_states[$coupon_state];?>"></span>
+
+                </div>
+
+                <div class="jrCol1">
+
+                    <button class="jr-delete jrButton jrIconOnly" data-id="<?php echo $coupon_id;?>" data-lang='<?php echo $langDel;?>'>
+
+                        <span class="jrIconDelete"></span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <?php endforeach;?>
+
+        </div>
+
+        <?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+        <input type="hidden" id="controller" name="data[controller]" value="admin/admin_paidlistings_coupons" />
+
+        <input type="hidden" id="action" name="data[action]" value="index" />
+
+        <input type="hidden" id="search" name="data[search]" value="0" />
+
+    </form>
+</div>

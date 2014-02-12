@@ -1,0 +1,326 @@
+/*************************************
+RTL styles
+*************************************/
+/* JReviews */
+.jrPage {
+  text-align: right;
+}
+.jrDropdown .jrDropdownMenu li a {
+  text-align: right;
+}
+[class^="jrIcon"] {
+  margin-right: 0;
+  margin-left: 5px;
+}
+.jrListings .jrListingStatus [class^="jrIcon"] {
+  margin-right: 5px;
+  margin-left: 0;
+}
+.jrDirview .jrDirectoryColumn {
+  float: right;
+  margin: 0 0 0 3%;
+}
+.jrDirview ul li div.jrListingThumbnail {
+  float: right;
+  margin: 0 0 10px 10px;
+}
+.jrDirview ul li div.jrContentDiv {
+  float: right;
+}
+.jrDirview ul li.jrCatLevel1 {
+  float: right;
+}
+.jrDirview.jrFormatComma ul li.jrCatLevel2 {
+  float: right;
+}
+.jrDirview .jrRSS {
+  float: left;
+}
+[class*="jrListColumn"] .jrListItem,
+.jrListColumn4 .jrListItem {
+  float: right;
+  margin: 0 0 1.428571429% 1.428571429%;
+}
+.jrMasonry .jrResults .jrListItem {
+  float: right;
+}
+.jrPagenavResults {
+  direction: ltr;
+}
+.jrAddListing.jrButton {
+  float: left;
+  background-position: right center;
+}
+.jrListingDetail table.floatRight {
+  float: left;
+}
+.jrListingDetail div.jrListingInfo {
+  float: none;
+}
+div.jrPageHeader .contentheading {
+  clear: right;
+}
+.jrRatingTable {
+  direction: ltr;
+}
+td.jrRatingLabel {
+  padding: 3px 0 2px 5px;
+  text-align: right !important;
+}
+td.jrRatingValue {
+  padding: 2px 5px 2px 15px;
+  text-align: right;
+}
+.jrRatingStarsUser,
+.jrRatingStarsEditor {
+  direction: rtl;
+}
+.jrListingDetail div.jrListingInfo img.jrAvatar {
+  float: right;
+  margin: 0 0 0 10px;
+}
+div.jrPage .jr_listingManager a,
+div.jrPage .jr_postManager a {
+  margin-right: 0;
+  margin-left: 8px;
+}
+div.jrPage div.jrPathway {
+  float: right;
+  padding: 0 0 0 15px;
+}
+.jrPathway a {
+  background: url(images/breadcrumb-rtl.png) no-repeat center left;
+  padding-right: 0;
+  margin-right: 0;
+  padding-left: 15px;
+  margin-left: 3px;
+  float: right;
+}
+div.jrPage div.jrOverallRatings {
+  float: left;
+}
+div.jrPage div.jrListingMainImage {
+  float: left;
+  margin: 0 10px 30px 0;
+}
+div.jrListingDetail div.jrCustomFields {
+  clear: right;
+}
+div.jrListingWidgets {
+  float: right;
+  margin: 0 0 15px;
+}
+div.jrCustomFields div.jrFieldGroup div.jrFieldLabel {
+  float: right;
+  text-align: right;
+}
+div.jrCustomFields div.jrFieldGroup div.jrFieldValue {
+  margin: 0 120px 0 0;
+}
+ul.jrFieldValueList li {
+  margin: 0 0 0 5px !important;
+  float: right;
+  display: block;
+}
+ul.jrFieldValueList li:after {
+  content: '\2022';
+  padding: 0 5px 0 0;
+}
+ul.jrFieldValueList li:last-child:after {
+  content: '';
+}
+ul.jrFieldValueList li:last-child:after {
+  content: '';
+}
+.jrUserReviewsTitle {
+  background-position: right top;
+  padding-left: 0;
+  padding-right: 18px;
+}
+div.jrReviewSummary .jr_addReview {
+  float: right;
+}
+div.itemImages {
+  float: left;
+  margin: 0 10px 30px 0;
+}
+div.jrReviewSummarySidebar {
+  float: left;
+  margin: 0 15px 15px 20px;
+}
+.jrForm {
+  text-align: right;
+}
+.jrForm legend {
+  left: auto;
+  right: 0;
+}
+.jrForm .jrFieldDiv {
+  clear: right;
+}
+.jrForm .jrFieldDiv .jrFieldOption {
+  float: right;
+  margin: 0 0 0 20px;
+}
+.jrForm input,
+.jrForm select option {
+  padding-right: 0;
+}
+.jrForm input[type="text"],
+.jrForm input[type="email"],
+.jrForm input[type="url"],
+.jrForm input[type="number"],
+.jrForm input[type="password"],
+.jrForm select option {
+  padding: 3px 2px 3px 10px;
+  margin: 0 0 0 5px;
+}
+.jrAutoSuggest {
+  float: right !important;
+}
+.ui-helper-hidden-accessible {
+  right: 7em;
+  left: auto;
+}
+.jrForm fieldset {
+  padding: 10px 12px 3px 10px;
+}
+div.jrBlogview table.jrRatingTable {
+  float: left;
+}
+div.jrPage a.jr_readon,
+div.jrPage a.jr_rateit {
+  background-position: right center;
+  padding-right: 15px;
+  padding-left: 0;
+}
+div.jrUserInfo img {
+  float: right;
+  margin-right: 0;
+  margin-left: 10px;
+}
+div.jrPage div.jrRatingInfo {
+  float: left;
+}
+.jrListingDetail .jrCustomFields {
+  clear: none;
+}
+.jrCompareview .jrCompareHeader {
+  float: right;
+  text-align: right;
+}
+.jrRSS {
+  top: 0;
+  left: 0;
+  right: auto;
+}
+.jrRSS li {
+  background: none;
+}
+div.jrBlogview div.jrListingThumbnail {
+  clear: right;
+  float: right;
+}
+div.jrRatingStarsEditor div {
+  -moz-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: fliph;
+}
+div.jrRatingStarsUser div {
+  -moz-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: fliph;
+}
+table.jr_ratingsTable .ui-stars-star,
+table.jr_ratingsTable .ui-stars-cancel {
+  text-indent: 999em;
+}
+.jrFavoriteButton {
+  display: inline;
+}
+.jrFavoriteWidget {
+  display: inline-block;
+}
+div.jrPage .jrManager .jrIcon {
+  right: 0;
+}
+div.jrPage .jrManager a {
+  margin: 0 22px 0 2px;
+}
+.jrCompareTabs .ui-tabs-panel .jrCompareScroll {
+  direction: ltr;
+}
+div.jrModuleItems div.jrOverallRatings {
+  direction: rtl !important;
+}
+.jrCompareview div.jrComparisonHeader {
+  float: right;
+  text-align: right;
+}
+.jrReviewContainer .jrUserInfo img {
+  float: right;
+  margin: 0 0 10px 10px;
+}
+.jrReviewContainer .jrReviewActions .jrReviewComments {
+  float: right;
+  margin-left: 5px;
+}
+.jrReviewContainer .jrReviewVoting {
+  float: left;
+}
+.jrReviewContainer .jrReviewVoting .jrReviewHelpful {
+  margin-left: 10px;
+  float: right;
+}
+.jrReviewContainer .jrReviewVoting .jrHelpfulTitle {
+  float: right;
+}
+.jrReviewContainer .jrLeft,
+.jrReviewSummary .jrLeft,
+.jrReviewForm .jrLeft {
+  float: right;
+}
+.jrReviewContainer .jrRight,
+.jrReviewSummary .jrRight {
+  float: left;
+}
+ul.jrRatingsSubmission,
+ul.jrRatingsSubmission li {
+  float: right;
+}
+.jrRatingsSubmission .jrRatingCriteria,
+.jrRatingsSubmission .jrRatingStars,
+.jrRatingsSubmission .jrRatingCaption {
+  float: left;
+}
+.jrRatingsSubmission .jrRatingCriteria {
+  text-align: right;
+}
+.jrRatingsSubmission .jrRatingCaption {
+  text-align: left;
+}
+.jr-directory-tree.treeview {
+  direction: ltr;
+}
+.jrCaptchaImg {
+  float: right;
+  margin-left: 10px;
+  margin-right: 0;
+}
+.jrFieldsModule.jrTagsLayout ul {
+  text-align: right;
+}
+/* Geomaps */
+.jrMapColumn {
+  left: 0;
+  right: auto;
+  float: left;
+}
+.jrListingColumn {
+  float: right;
+}
+.jrMapResultsLinks {
+  text-align: left;
+}

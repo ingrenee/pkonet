@@ -1,0 +1,100 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<div class="jr-categories-create">
+
+	<div class="jrWarning">
+
+		<?php __a("Once you assign a listing type to a category you cannot change it and you cannot change the number of rating criteria. First you have to remove all the reviews for listings in that category.");?>
+
+	</div>
+
+    <form action="index.php" method="post" class="jrForm" data-object-type="category">
+
+    	<div class="jrGrid">
+
+    		<div class="jrCol6">
+
+    			<div class="jrFieldDiv">
+
+    				<label><?php __a("Select listing type");?><span class="jrIconRequired"></span></label>
+
+					<?php
+					echo $Form->select(
+						'data[Category][criteriaid]',
+						array_merge(
+                            array(
+                                array('value'=>'','text'=>__a("Select listing type",true)), /*J16*/
+                                array('value'=>0,'text'=>__a("This category will not have listings",true))
+                            ),
+                            $criterias
+                        ),
+						null
+					);
+					?>
+
+    			</div>
+
+    			<div class="jrFieldDiv">
+
+    				<label><?php __a("Directory");?><span class="jrIconRequired"></span></label>
+
+					<?php
+					echo $Form->select(
+						'data[Category][dirid]',
+						array_merge(array(array('value'=>0,'text'=>__a("Select directory",true))),$directories),
+						null,
+						array('class'=>"inputbox",'size'=>"1")
+					);
+					?>
+
+    			</div>
+
+    		</div>
+
+    		<div class="jrCol6">
+
+				<?php __a("Select one or multiple categories (hold CTRL key)");?>
+
+				<br/><br/>
+
+				<?php if(count($categories)>0):?>
+
+	                <select name="data[Category][id][]" multiple="multiple" size="18" class="inputbox" style="min-width:300px;">
+
+	                    <?php foreach($categories AS $category):?>
+	                    <option <?php if(in_array($category->value,$review_categories)):?>disabled="disabled"<?php endif;?> value="<?php echo $category->value;?>"><?php echo ($category->level > 1 ? str_repeat('- ',$category->level-1) : '') . $category->text;?></option>
+	                    <?php endforeach;?>
+
+	                </select>
+
+                <?php else:?>
+
+				    <strong><?php __a("All categories have already been set up");?></strong>
+
+				<?php endif;?>
+
+    		</div>
+
+		</div>
+
+        <div class="jr-validation jrError jrHidden" style="margin-bottom: 15px;"></div>
+
+		<input type="hidden" name="data[sectionid]" value="<?php echo $sectionid; ?>" />
+
+	    <input type="hidden" name="data[controller]" value="admin/categories" />
+
+	    <input type="hidden" name="data[action]" value="_save" />
+
+	</form>
+
+</div>

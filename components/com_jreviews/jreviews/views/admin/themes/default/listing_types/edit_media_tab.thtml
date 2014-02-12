@@ -1,0 +1,779 @@
+<?php
+
+$accessGroupsGuest = $accessGroups;
+$accessGroupsNoGuest = array_slice($accessGroups,1);
+
+$ConfigOverrides = isset($criteria['ListingType']) ? $criteria['ListingType']['config'] : null;
+//prx($ConfigOverrides);
+?>
+
+<ul>
+	<li><a href="#display"><span><?php __a("Display Settings");?></span></a></li>
+	<li><a href="#access"><span><?php __a("Access Settings");?></span></a></li>
+	<li><a href="#photos"><span><?php __a("Photos");?></span></a></li>
+	<li><a href="#videos"><span><?php __a("Videos");?></span></a></li>
+	<li><a href="#attachments"><span><?php __a("Attachments");?></span></a></li>
+	<li><a href="#audio"><span><?php __a("Audio");?></span></a></li>
+</ul>
+
+<!-- DISPLAY SETTINGS -->
+<?php $displayTab = array(
+	/*** NEW HEADER ***/
+	__a("General Settings",true) => array(
+		 array(
+			'label'=>__a("No Image Path",true),
+			'type'=>'text',
+			'name'=>'media_general_default_image_path',
+			'default'=>'components/com_jreviews/jreviews/views/themes/default/theme_images/nophoto.png',
+			'attributes'=>array('style'=>'font-size:10px!important;width:50em;'),
+			'help'=>'',
+			'global'=>true
+		),
+		array(
+			'label'=>__a("Default Media Order - Listing Specific",true),
+			'type'=>'select',
+			'name'=>'media_general_default_order_listing',
+			'options'=>array('newest'=>__a("Newest",true),'liked'=>__a("Most Liked",true),'ordering'=>__a("Ordering",true),'popular'=>__a("Popular",true)),
+			'help'=>__a("This is the ordering that will be used in listing detail pages and photo and video galleries for a specific listing.",true),
+			'global'=>true
+		)
+	),
+	__a("Media Indicators",true) => array(
+		 array(
+			'label'=>__a("Photo Count",true),
+			'type'=>'radioYesNo',
+			'name'=>'media_photo_show_count',
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Video Count",true),
+			'type'=>'radioYesNo',
+			'name'=>'media_video_show_count',
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Attachment Count",true),
+			'type'=>'radioYesNo',
+			'name'=>'media_attachment_show_count',
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Audio Count",true),
+			'type'=>'radioYesNo',
+			'name'=>'media_audio_show_count',
+			'global'=>true
+		)
+	),
+	/*** NEW HEADER ***/
+	__a("List Pages (results, categories, etc.)",true) => array(
+		 array(
+			'label'=>__a("Show Main Media Thumbnail",true),
+			'type'=>'radioYesNo',
+			'name'=>'media_list_thumbnail',
+			'default'=>1,
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Thumbnail Mode",true),
+			'type'=>'radio',
+			'name'=>'media_list_thumbnail_mode',
+			'default'=>'crop',
+			'options'=>array('scale'=>__a("Scale",true),'crop'=>__a("Crop",true)),
+			'attributes'=>array('div'=>false),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Thumbnail Size",true),
+			'type'=>'text',
+			'name'=>'media_list_thumbnail_size',
+			'default'=>'120x120',
+			'attributes'=>array('style'=>'width:8em'),
+			'help'=>'WIDTHxHEIGHT in pixels.',
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Use Category Image",true),
+			'type'=>'radioYesNo',
+			'name'=>'media_list_category_image',
+			'default'=>1,
+			'help'=>__a("Used if main media thumbnail is not available.",true),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Use Default Image",true),
+			'type'=>'radioYesNo',
+			'name'=>'media_list_default_image',
+			'default'=>1,
+			'help'=>__a("Used if both category and main media thumbnails are not available.",true),
+			'global'=>true
+		)
+	),
+	/*** NEW HEADER ***/
+	__a("Detail Pages",true) => array(
+		array(
+			'label'=>__a("Separate Listing Owner and User uploaded media",true),
+			'type'=>'radioYesNo',
+			'name'=>'media_detail_separate_media',
+			'default'=>0,
+			'attributes'=>array('div'=>false),
+			'help'=>__a("Photos and video only. Listing Owner media displays in main area of the listing detail page while Review media will appear in individual reviews. Links to view 'All', 'Listing' and 'Users' photos and videos will also be displayed unless lightbox or gallery layouts are used.",true),
+			'global'=>true
+		 ),
+		 array(
+			'label'=>__a("Photo Display Layout",true),
+			'type'=>'select',
+			'name'=>'media_detail_photo_layout',
+			'default'=>'contact_lightbox',
+			'options'=>array(
+				'contact_lightbox'=>__a("Contact sheet with lightbox",true),
+				'contact_linked'=>__a("Contact sheet linked to separate gallery page",true),
+				'gallery_large'=>__a("Full width gallery without lightbox",true),
+				'gallery_small'=>__a("Small gallery with lightbox",true),
+				'film_lightbox'=>__a("Film strip with lightbox",true),
+				'film_linked'=>__a("Film strip linked to separate gallery page",true)
+			),
+			'help'=>__a("Lightbox and gallery layouts ignore the limit settings below.",true),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Video Display Layout",true),
+			'type'=>'select',
+			'name'=>'media_detail_video_layout',
+			'default'=>'film_linked',
+			'options'=>array(
+				'contact_lightbox'=>__a("Contact sheet with lightbox",true),
+				'contact_linked'=>__a("Contact sheet linked to separate gallery page",true),
+				'video_player'=>__a("Full width video player",true),
+				'film_lightbox'=>__a("Film strip with lightbox",true),
+				'film_linked'=>__a("Film strip linked to separate gallery page",true)
+			),
+			'help'=>__a("Lightbox and gallery layouts ignore the limit settings below.",true),
+			'global'=>true
+		),
+		array(
+			'label'=>__a("Audio Downloads",true),
+			'type'=>'radioYesNo',
+			'name'=>'media_detail_audio_downloads',
+			'default'=>0,
+			'attributes'=>array('div'=>false),
+			'help'=>__a("Displays a download button next to each track.",true),
+			'global'=>true
+		 ),
+		array(
+			'label'=>__a("MAIN MEDIA",true),
+			'type'=>'separator'
+		),
+		array(
+			'label'=>__a("Main Media Thumbnail",true),
+			'type'=>'radioYesNo',
+			'name'=>'media_detail_main',
+			'default'=>1,
+			'help'=>__a("Enable to display main media thumbnail separately.",true),
+			'global'=>true
+		),
+		array(
+			'label'=>__a("Disable Main Media Link",true),
+			'type'=>'radioYesNo',
+			'name'=>'media_detail_main_lightbox_disable',
+			'help'=>__a("Disable the lightbox for photos when set as main media. Gallery photos will continue opening in a lightbox if Photo Lightbox is enabled.",true),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Main Media Thumbnail Mode",true),
+			'type'=>'radio',
+			'name'=>'media_detail_main_thumbnail_mode',
+			'default'=>'scale',
+			'options'=>array('scale'=>__a("Scale",true),'crop'=>__a("Crop",true)),
+			'attributes'=>array('div'=>false),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Main Media Thumbnail Size",true),
+			'type'=>'text',
+			'name'=>'media_detail_main_thumbnail_size',
+			'default'=>'200x200',
+			'attributes'=>array('style'=>'width:8em'),
+			'help'=>'WIDTHxHEIGHT in pixels.',
+			'global'=>true
+		),
+		array(
+			'label'=>__a("Show category/default image using above settings for List Pages.",true),
+			'type'=>'radioYesNo',
+			'name'=>'media_detail_default',
+			'default'=>0,
+			'help'=>'',
+			'global'=>true
+		),
+		array(
+			'label'=>__a("Thumbnail alignment",true),
+			'type'=>'radio',
+			'name'=>'media_detail_main_thumbnail_alignment',
+			'options'=>array('left'=>__a("Left",true),'right'=>__a("Right",true)),
+			'attributes'=>array('div'=>false),
+			'global'=>true
+		),
+		array(
+			'label'=>__a("CONTACT AND FILM STRIP LAYOUT",true),
+			'type'=>'separator'
+		),
+		 array(
+			'label'=>__a("Gallery Thumbnail Mode",true),
+			'type'=>'radio',
+			'name'=>'media_detail_gallery_thumbnail_mode',
+			'default'=>'scale',
+			'options'=>array('scale'=>__a("Scale",true),'crop'=>__a("Crop",true)),
+			'attributes'=>array('div'=>false),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Gallery Thumbnail Size",true),
+			'type'=>'text',
+			'name'=>'media_detail_gallery_thumbnail_size',
+			'default'=>'65x65',
+			'attributes'=>array('style'=>'width:8em'),
+			'help'=>'WIDTHxHEIGHT in pixels.',
+			'global'=>true
+		),
+		array(
+			'label'=>__a("FULL WIDTH PHOTO GALLERY LAYOUT",true),
+			'type'=>'separator'
+		),
+		array(
+			'label'=>__a("Display photo info as overlay on mouseover",true),
+			'type'=>'radioYesNo',
+			'name'=>'media_photo_gallery_overlay',
+			'global'=>true,
+			'default'=>0,
+			'help'=>''
+		),
+		array(
+			'label'=>__a("LAYOUTS WITH MEDIA LINKING TO SEPARATE GALLERY",true),
+			'type'=>'separator'
+		),
+		 array(
+			'label'=>__a("Photo Limit",true),
+			'type'=>'text',
+			'name'=>'media_detail_photo_limit',
+			'default'=>6,
+			'attributes'=>array('style'=>'width:5em'),
+			'help'=>__a("After this number visitors need to go to the gallery page for the listing to view all photos",true),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Video Limit",true),
+			'type'=>'text',
+			'name'=>'media_detail_video_limit',
+			'default'=>6,
+			'attributes'=>array('style'=>'width:5em'),
+			'help'=>__a("After this number visitors need to go to the gallery page for the listing to view all videos",true),
+			'global'=>true
+		)
+	)
+);
+
+$AdminSettings->displayTab('display',$displayTab, '[Criteria][config]',$ConfigOverrides);
+?>
+
+
+<!-- ACCESS SETTINGS -->
+<?php $accessTab = array(
+	/*** NEW HEADER ***/
+			__a("Default View Access Level for LISTINGS Media",true) => array(
+				 array(
+					'text'=>'<div class="jrInfo">'.__a("The media count totals will  reflect the count for media that is not accessible to the current user. This is because totals are pre-calculated for improved performance.",true).'</div>',
+					'type'=>'separator'
+				),
+				 array(
+					'label'=>__a("Photos",true),
+					'type'=>'select',
+					'name'=>'media_access_view_photo_listing',
+					'options'=>$accessLevels,
+					'attributes'=>array('class'=>"jrSelect"),
+					'help'=>__a("Only the selected access level will be able to view/play/download media.",true)
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Videos",true),
+					'type'=>'select',
+					'name'=>'media_access_view_video_listing',
+					'options'=>$accessLevels,
+					'attributes'=>array('class'=>"jrSelect"),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Attachments",true),
+					'type'=>'select',
+					'name'=>'media_access_view_attachment_listing',
+					'options'=>$accessLevels,
+					'attributes'=>array('class'=>"jrSelect"),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Audio",true),
+					'type'=>'select',
+					'name'=>'media_access_view_audio_listing',
+					'options'=>$accessLevels,
+					'attributes'=>array('class'=>"jrSelect"),
+					'help'=>""
+					,'global'=>true
+				)
+			),
+			__a("Default View Access Level for REVIEWS Media",true) => array(
+				 array(
+					'text'=>'<div class="jrInfo">'.__a("The media count totals will reflect the count for media that is not accessible to the current user. This is because totals are pre-calculated for improved performance.",true).'</div>',
+					'type'=>'separator'
+				),
+				 array(
+					'label'=>__a("Photos",true),
+					'type'=>'select',
+					'name'=>'media_access_view_photo_review',
+					'options'=>$accessLevels,
+					'attributes'=>array('class'=>"jrSelect"),
+					'help'=>__a("Only the selected access level will be able to view/play/download media.",true)
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Videos",true),
+					'type'=>'select',
+					'name'=>'media_access_view_video_review',
+					'options'=>$accessLevels,
+					'attributes'=>array('class'=>"jrSelect"),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Attachments",true),
+					'type'=>'select',
+					'name'=>'media_access_view_attachment_review',
+					'options'=>$accessLevels,
+					'attributes'=>array('class'=>"jrSelect"),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Audio",true),
+					'type'=>'select',
+					'name'=>'media_access_view_audio_review',
+					'options'=>$accessLevels,
+					'attributes'=>array('class'=>"jrSelect"),
+					'help'=>""
+					,'global'=>true
+				)
+			),
+			__a("Uploads for LISTINGS",true) => array(
+				 array(
+					'label'=>__a("Allow Uploads from URL",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_upload_url_listing',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Photos",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_submit_photo_listing',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>'&nbsp;&nbsp;&nbsp;'.__a("Registered Group",true),
+					'type'=>'radio',
+					'name'=>'media_access_submit_photo_listing_owner',
+					'options'=>array(1=>__a("Listing Owner",true),0=>__a("All",true)),
+					'default'=>0,
+					'attributes'=>array('div'=>false),
+					'help'=>__a("Select ALL to allow uploads by any registered user without the need to submit a review.",true)
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Videos",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_submit_video_listing',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>'&nbsp;&nbsp;&nbsp;'.__a("Registered Group",true),
+					'type'=>'radio',
+					'name'=>'media_access_submit_video_listing_owner',
+					'options'=>array(1=>__a("Listing Owner",true),0=>__a("All",true)),
+					'default'=>0,
+					'attributes'=>array('div'=>false),
+					'help'=>__a("Select ALL to allow uploads by any registered user without the need to submit a review.",true)
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Attachments",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_submit_attachment_listing',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>'&nbsp;&nbsp;&nbsp;'.__a("Registered Group",true),
+					'type'=>'radio',
+					'name'=>'media_access_submit_attachment_listing_owner',
+					'options'=>array(1=>__a("Listing Owner",true),0=>__a("All",true)),
+					'default'=>0,
+					'attributes'=>array('div'=>false),
+					'help'=>__a("Select ALL to allow uploads by any registered user without the need to submit a review.",true)
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Audio",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_submit_audio_listing',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>'&nbsp;&nbsp;&nbsp;'.__a("Registered Group",true),
+					'type'=>'radio',
+					'name'=>'media_access_submit_audio_listing_owner',
+					'options'=>array(1=>__a("Listing Owner",true),0=>__a("All",true)),
+					'default'=>0,
+					'attributes'=>array('div'=>false),
+					'help'=>__a("Select ALL to allow uploads by any registered user without the need to submit a review.",true)
+					,'global'=>true
+				)
+			),
+			/*** NEW HEADER ***/
+			__a("Uploads for REVIEWS",true) => array(
+				 array(
+					'label'=>__a("Allow Uploads from URL",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_upload_url_review',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Photos",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_submit_photo_review',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Videos",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_submit_video_review',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Attachments",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_submit_attachment_review',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Audio",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_submit_audio_review',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				)
+			),
+			/*** NEW HEADER ***/
+			__a("Moderate (Hold for approval)",true) => array(
+				 array(
+					'label'=>__a("New Photos",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_moderate_photo',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("New Videos",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_moderate_video',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("New Attachments",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_moderate_attachment',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("New Audio",true),
+					'type'=>'selectmultiple',
+					'name'=>'media_access_moderate_audio',
+					'options'=>$accessGroupsGuest,
+					'attributes'=>array('class'=>'jr-multiselect'),
+					'help'=>""
+					,'global'=>true
+				),
+				 array(
+					'label'=>__a("Edited Media",true),
+					'type'=>'radioYesNo',
+					'name'=>'media_access_moderate_edit',
+					'default'=>0,
+					'help'=>__a("Media will be sent back to the moderation queue and held for approval when edited via the frontend.",true)
+					,'global'=>true
+				)
+			)
+	);
+
+$AdminSettings->displayTab('access',$accessTab, '[Criteria][config]',$ConfigOverrides);
+?>
+
+
+<!-- PHOTOS SETTINGS -->
+<?php $photoTab = array(
+	/*** NEW HEADER ***/
+	__a("Upload Settings",true) => array(
+		 array(
+			'label'=>__a("Max Photos per Listing per User",true),
+			'type'=>'text',
+			'name'=>'media_photo_max_uploads_listing',
+			'default'=>'',
+			'attributes'=>array('style'=>'width:3em'),
+			'after'=>'',
+			'help'=>__a("Leave blank for no limit.",true),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Max Photos per Review per User",true),
+			'type'=>'text',
+			'name'=>'media_photo_max_uploads_review',
+			'default'=>'',
+			'attributes'=>array('style'=>'width:3em'),
+			'after'=>'',
+			'help'=>__a("Leave blank for no limit.",true),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Maximum Upload Size",true),
+			'type'=>'text',
+			'name'=>'media_photo_max_size',
+			'default'=>'0.5',
+			'attributes'=>array('style'=>'width:3em'),
+			'after'=>'MB',
+			'help'=>'',
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Allowed File Extensions",true),
+			'type'=>'text',
+			'name'=>'media_photo_extensions',
+			'default'=>'jpg,jpeg,gif,png',
+			'attributes'=>array('style'=>'font-size:10px!important;width:20em;'),
+			'help'=>__a("Comma list without spaces.",true),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Original Resize",true),
+			'type'=>'text',
+			'name'=>'media_photo_resize',
+			'default'=>'800x800',
+			'attributes'=>array('style'=>'width:10em'),
+			'help'=>'Maximum WIDTHxHEIGHT in pixels. Leave blank for no resizing. Default is: 800x800.',
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Original Resize Quality",true),
+			'type'=>'text',
+			'name'=>'media_photo_resize_quality',
+			'default'=>'90',
+			'attributes'=>array('style'=>'width:3em'),
+			'help'=>'In a scale from 1-100. Default is: 90.',
+			'global'=>true
+		)
+	)
+);
+
+$AdminSettings->displayTab('photos',$photoTab, '[Criteria][config]',$ConfigOverrides);
+?>
+
+<!-- VIDEO SETTINGS -->
+<?php $videoTab = array(
+	/*** NEW HEADER ***/
+	__a("Upload Settings",true) => array(
+		 array(
+			'label'=>__a("Video Upload Methods",true),
+			'type'=>'select',
+			'name'=>'media_video_upload_methods',
+			'options'=>array('all'=>__a("Upload & Link from video sites",true),'upload'=>__a("Upload only",true),'link'=>__a("Link only",true)),
+			'default'=>'all',
+			'global'=>true
+		),
+		array(
+			'label'=>__a("Video Link Sites",true),
+			'type'=>'checkbox',
+			'name'=>'media_video_link_sites',
+			'options'=>array(
+					'youtube'=>'Youtube',
+					'vimeo'=>'Vimeo',
+					'dailymotion'=>'Dailymotion'
+				),
+			'default'=>array('youtube','vimeo','dailymotion'),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Max Videos per Listing per User",true),
+			'type'=>'text',
+			'name'=>'media_video_max_uploads_listing',
+			'default'=>'',
+			'attributes'=>array('style'=>'width:3em'),
+			'after'=>'',
+			'help'=>__a("Leave blank for no limit.",true),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Max Videos per Review per User",true),
+			'type'=>'text',
+			'name'=>'media_video_max_uploads_review',
+			'default'=>'',
+			'attributes'=>array('style'=>'width:3em'),
+			'after'=>'',
+			'help'=>__a("Leave blank for no limit.",true),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Maximum Upload Size",true),
+			'type'=>'text',
+			'name'=>'media_video_max_size',
+			'default'=>'10',
+			'attributes'=>array('style'=>'width:5em'),
+			'after'=>'MB',
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Allowed File Extensions",true),
+			'type'=>'text',
+			'name'=>'media_video_extensions',
+			'default'=>'swf,avi,mp4,mpg,mpeg,mov,flv,ogg',
+			'attributes'=>array('style'=>'font-size:10px!important;width:20em;'),
+			'help'=>'Comma list without spaces',
+			'global'=>true
+		)
+	)
+);
+
+$AdminSettings->displayTab('videos',$videoTab, '[Criteria][config]',$ConfigOverrides);
+
+?>
+
+<!-- ATTACHMENT SETTINGS -->
+<?php $attachmentTab = array(
+	/*** NEW HEADER ***/
+	__a("Upload Settings",true) => array(
+		 array(
+			'label'=>__a("Max Attachments per Listing per User",true),
+			'type'=>'text',
+			'name'=>'media_attachment_max_uploads_listing',
+			'default'=>'',
+			'attributes'=>array('style'=>'width:3em'),
+			'help'=>__a("Leave blank for no limit.",true),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Max Attachments per Review per User",true),
+			'type'=>'text',
+			'name'=>'media_attachment_max_uploads_review',
+			'default'=>'',
+			'attributes'=>array('style'=>'width:3em'),
+			'help'=>__a("Leave blank for no limit.",true),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Maximum Upload Size",true),
+			'type'=>'text',
+			'name'=>'media_attachment_max_size',
+			'default'=>'5',
+			'attributes'=>array('style'=>'width:5em'),
+			'after'=>'MB',
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Allowed File Extensions",true),
+			'type'=>'text',
+			'name'=>'media_attachment_extensions',
+			'default'=>'zip,pdf',
+			'attributes'=>array('style'=>'font-size:10px!important;width:20em;'),
+			'help'=>'Comma list without spaces',
+			'global'=>true
+		)
+	)
+);
+
+$AdminSettings->displayTab('attachments',$attachmentTab, '[Criteria][config]',$ConfigOverrides);
+?>
+
+<!-- AUDIO SETTINGS -->
+<?php $audioTab = array(
+	/*** NEW HEADER ***/
+	__a("Upload Settings",true) => array(
+		 array(
+			'label'=>__a("Max Audio files per Listing per User",true),
+			'type'=>'text',
+			'name'=>'media_audio_max_uploads_listing',
+			'default'=>'',
+			'attributes'=>array('style'=>'width:3em'),
+			'help'=>__a("Leave blank for no limit.",true),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Max Audio files per Review per User",true),
+			'type'=>'text',
+			'name'=>'media_audio_max_uploads_review',
+			'default'=>'',
+			'attributes'=>array('style'=>'width:3em'),
+			'help'=>__a("Leave blank for no limit.",true),
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Maximum Upload Size",true),
+			'type'=>'text',
+			'name'=>'media_audio_max_size',
+			'default'=>'5',
+			'attributes'=>array('style'=>'width:5em'),
+			'after'=>'MB',
+			'global'=>true
+		),
+		 array(
+			'label'=>__a("Allowed File Extensions",true),
+			'type'=>'text',
+			'name'=>'media_audio_extensions',
+			'default'=>'mp3,m4a,aac',
+			'attributes'=>array('style'=>'font-size:10px!important;width:20em;'),
+			'help'=>'Comma list without spaces',
+			'global'=>true
+		)
+	)
+);
+
+$AdminSettings->displayTab('audio',$audioTab, '[Criteria][config]',$ConfigOverrides);
+?>

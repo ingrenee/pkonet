@@ -1,0 +1,129 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+# Initialize paginator helper
+$Paginator->paginate(array('current_page'=>$this->page,'items_per_page'=>$this->limit,'items_total'=>$pagination['total']));
+?>
+
+<div class="jr-theme-list">
+
+	<div class="jrPageHeading"><?php __a("Category Theme Manager");?></div>
+
+	<form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="theme">
+
+			<div class="jrPageToolbar jrRoundedPanel">
+
+		    	<span id="jr-status" class="jrLeft jrStatus"></span>
+
+			    <button class="jr-menu jrButton" data-controller="themes" data-action="sections">
+
+			    	<?php __a("Section Themes");?>
+
+			    </button>
+
+			    <button class="jr-save-theme-settings jrButton jrGreen">
+
+			        <span class="jrIconSave"></span><?php __a("Save");?>
+
+			    </button>
+
+			</div>
+
+		    <div class="jr-filters jrPageFilters jrRoundedPanelLt jrClearfix">
+
+
+				<?php
+					echo $Form->select(
+						'sectionid',
+						array_merge(array(array('value'=>null,'text'=>'-- '.__a("Sections",true) . '--')),$sections),
+						$sectionid
+					);
+				?>
+			</div>
+
+    	<?php echo $this->element('pagination',array('position'=>'top'));?>
+
+		<div class="jr-table jrDataList">
+
+	        <div class="jrGrid24 jrHeader">
+
+        		<div class="jrCol1">#</div>
+
+        		<div class="jrCol1 jrSizeS">ID</div>
+
+        		<div class="jrCol5"><?php __a("Section");?></div>
+
+        		<div class="jrCol5"><?php __a("Category");?></div>
+
+        		<div class="jrCol8"><?php __a("Page Layout");?></div>
+
+        		<div class="jrCol4"><?php __a("Theme Suffix");?></div>
+
+        	</div>
+
+			<?php $j = 1; foreach($rows AS $key=>$row):?>
+
+	        <div class="jrGrid24">
+
+        		<div class="jrCol1"><?php echo ($this->page-1)*$this->limit + $j++;?></div>
+
+        		<div class="jrCol1"><?php echo $row->id?></div>
+
+        		<div class="jrCol5"><?php echo $row->section;?></div>
+
+        		<div class="jrCol5"><?php echo $row->cat;?></div>
+
+        		<div class="jrCol8">
+
+						<input name="data[tmpl][<?php echo $row->id?>][name]" id="tmpl[<?php echo $row->id?>][name]3" <?php echo ($row->tmpl=='' ? 'checked="checked"' : '')?> value="" type="radio">
+
+						<label for="tmpl[<?php echo $row->id?>][name]3"><?php __a("Global");?></label>
+
+						<input name="data[tmpl][<?php echo $row->id?>][name]" id="tmpl[<?php echo $row->id?>][name]0" <?php echo ($row->tmpl=='tableview' ? 'checked="checked"' : '')?> value="tableview" type="radio">
+
+						<label for="tmpl[<?php echo $row->id?>][name]0"><?php __a("Tableview");?></label>
+
+						<input name="data[tmpl][<?php echo $row->id?>][name]" id="tmpl[<?php echo $row->id?>][name]1" <?php echo ($row->tmpl=='blogview' ? 'checked="checked"' : '')?> value="blogview" type="radio">
+
+						<label for="tmpl[<?php echo $row->id?>][name]1"><?php __a("Blogview");?></label>
+
+						<input name="data[tmpl][<?php echo $row->id?>][name]" id="tmpl[<?php echo $row->id?>][name]2" <?php echo ($row->tmpl=='thumbview' ? 'checked="checked"' : '')?> value="thumbview" type="radio">
+
+						<label for="tmpl[<?php echo $row->id?>][name]2"><?php __a("Thumbview");?></label>
+
+						<input name="data[tmpl][<?php echo $row->value?>][name]" id="tmpl[<?php echo $row->value?>][name]3" <?php echo ($row->tmpl=='masonry' ? 'checked="checked"' : '')?> value="masonry" type="radio">
+
+						<label for="tmpl[<?php echo $row->value?>][name]2"><?php __a("Masonry");?></label>
+
+        		</div>
+
+        		<div class="jrCol4">
+
+					<input name="data[tmpl][<?php echo $row->id?>][suffix]" type="text" size="10" maxsize="20" value="<?php echo $row->tmpl_suffix?>" />
+
+        		</div>
+
+        	</div>
+
+			<?php endforeach;?>
+
+        </div>
+
+		<?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+		<input type="hidden" id="controller" name="data[controller]" value="admin/themes" />
+
+		<input type="hidden" id="action" name="data[action]" value="categories" />
+
+
+	</form>
+
+</div>

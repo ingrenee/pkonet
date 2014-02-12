@@ -1,0 +1,53 @@
+<s2:nocache>
+<?php
+
+$sitename = cmsFramework::getConfig('sitename');
+
+$sitename_pagetitle = cmsFramework::getConfig('sitename_pagetitles');
+
+/**********************************************************************************
+ *                                 META DATA
+ **********************************************************************************/
+if(isset($Paginator)) {
+	$Paginator->addPrevNextUrls($page);
+}
+
+if(isset($page)) {
+
+	if(isset($page['canonical']) && $page['canonical'] != '') cmsFramework::addScript('<link rel="canonical" href="'.cmsFramework::makeAbsUrl($page['canonical']).'" />');
+
+	if(isset($page['robots'])) cmsFramework::meta('robots',$page['robots']);
+
+	if(isset($page['title_seo']) && $this->page > 1) $page['title_seo'] = sprintf(__t("%s - Page %s",true),$page['title_seo'],$this->page);
+
+	// Set page title
+	if(isset($page['title_seo'])) {
+
+		if($sitename && $sitename_pagetitle > 0) {
+
+			if($sitename_pagetitle == 1) {
+
+				$page['title_seo'] = $sitename . ' - ' . $page['title_seo'];
+			}
+			elseif($sitename_pagetitle == 2) {
+
+				$page['title_seo'] .= ' - ' . $sitename;
+			}
+		}
+
+		cmsFramework::meta('title', $page['title_seo']);
+	}
+
+	if(isset($page['keywords'])) cmsFramework::meta('keywords',$page['keywords']); // Set meta keywords
+
+	if(isset($page['description']))cmsFramework::meta('description',$page['description']); // Set meta description
+
+	// http://googlewebmastercentral.blogspot.com/2011/09/pagination-with-relnext-and-relprev.html
+
+	if(isset($page['prev_url'])) cmsFramework::addScript('<link rel="prev" href="'.$page['prev_url'].'" />');
+
+	if(isset($page['next_url'])) cmsFramework::addScript('<link rel="next" href="'.$page['next_url'].'" />');
+}
+
+?>
+</s2:nocache>

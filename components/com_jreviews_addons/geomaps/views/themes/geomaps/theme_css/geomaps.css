@@ -1,0 +1,360 @@
+/****************************************************
+Map Detail
+****************************************************/
+.jrMapLayoutDetail {
+	width: 100%;
+}
+.jrMapDetail {
+	border: 1px solid #ccc;
+	width: 100%;
+	height: 300px;
+}
+.jrStreetviewDetail {
+	border: 1px solid #ccc;
+	width: 49%;
+	height: 300px;
+}
+.jrMapModule {
+	border: 1px solid #ccc;
+	width: 100%;
+}
+.jrMapList {
+	width: 300px;
+	height: 300px;
+}
+/* Fix for Google Maps when using Twitter Bootstrap */
+.jrMapDetail img,
+.jrMapModule img,
+.jrMapList img,
+.jrMapItCanvas img,
+.jrStreetviewDetail img {
+	max-width : none !important;
+}
+.jrMapThumbnail img {
+	max-width: 100%;
+}
+.jrMapDetail label,
+.jrMapModule label,
+.jrMapList label,
+.jrMapItCanvas label {
+	display:inline;
+}
+/****************************************************
+Loading
+****************************************************/
+.jrMapLoading {
+	position: relative;
+}
+.jrMapLoading:after,
+.jrLoading::after {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: url('images/loading.gif') center center no-repeat #eee;
+	content: "";
+}
+/*************************************
+Infowindow
+*************************************/
+.jrInfowindow .jrMapThumbnail {
+	float:right;
+	border: 0;
+	width:70px;
+	height:70px;
+	overflow:hidden;
+}
+.jrInfowindow .jrMapThumbnail img {
+	width: 70px;
+	height:auto;
+}
+.jrInfowindow .jrOverallRatings {
+	float: none;
+	margin: 5px 0;
+}
+.jrInfowindow .jrListingTitle {
+	font-size:13px;
+	margin:0;
+	width:90%;
+}
+.jrInfowindow .jrRatingValue {
+	font-size: 10px;
+}
+.jrInfowindow .jrContent { margin-bottom:5px; }
+.jrMapCallout .jrMapThumbnail,
+.jrMapGoogle .jrMapThumbnail {
+	margin:15px -10px;
+}
+.jrMapCustom .jrMapThumbnail {
+	margin:15px -20px;
+}
+/*************************************
+Callout infowindow
+*************************************/
+.jrMapCallout {
+	background: url(images/map_callout_s.png) no-repeat;
+	width:314px;
+	height: 240px;
+	left: -275px;
+	top: -5px;
+	position:relative;
+	z-index: 9999;
+}
+.jrMapCallout .jrInner {
+	margin: 50px 0 0 15px;
+	width: 275px;
+}
+.jrMapCallout .jrClose {
+	position:relative;
+	top:45px;
+	right:12px;
+	float:right;
+}
+.jrMapCallout .jrClose a {
+	text-decoration:none;
+}
+/*************************************
+Custom infowindow
+*************************************/
+div.jrMapCustom {
+	color: #fff;
+	font-size: 12px;
+	font-weight: normal;
+	white-space: normal;
+	word-wrap: break-word;
+	padding: 10px !important;
+	border: 1px solid #222;
+	background-color: #474747;
+	background-image: -moz-linear-gradient(top, #555555, #333333);
+	background-image: -ms-linear-gradient(top, #555555, #333333);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#555555), to(#333333));
+	background-image: -webkit-linear-gradient(top, #555555, #333333);
+	background-image: -o-linear-gradient(top, #555555, #333333);
+	background-image: linear-gradient(top, #555555, #333333);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#555555', endColorstr='#333333', GradientType=0);
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	line-height: 1.4em;
+	min-height: 105px;
+	padding: 10px;
+	text-align: left;
+	left: -140px;
+	top: 0;
+	position:relative;
+	z-index: 9999;
+}
+.jrMapCustom:after,
+.jrMapCustom:before {
+	bottom: 100%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+}
+.jrMapCustom:after {
+	border-bottom-color: #555;
+	border-width: 12px;
+	left: 50%;
+	margin-left: -12px;
+}
+.jrMapCustom:before {
+	border-bottom-color: #222;
+	border-width: 13px;
+	left: 50%;
+	margin-left: -13px;
+}
+.jrMapCustom [class^="jrIcon"]:before {
+	color: #fff;
+}
+.jrMapCustom a {
+	color: #fff !important;
+	text-decoration: underline !important;
+}
+.jrMapCustom a:hover {
+	color: #ccc !important;
+}
+.jrMapCustom .jrRatingStarsUser,
+.jrMapCustom .jrRatingStarsEditor,
+.jrMapCustom .jrRatingStarsUser div,
+.jrMapCustom .jrRatingStarsEditor div {
+	background-image: url(images/rating_stars_dark.png);
+}
+.jrMapCustom .ui-stars-star a {
+	background-image: url(images/rating_stars_dark.png);
+}
+.jrMapCustom .jrOverallRatings {
+	color: #ddd;
+}
+.jrMapCustom .jrInner {
+	margin: 0;
+	width: 250px;
+}
+.jrMapCustom .jrClose {
+	position:relative;
+	top:-5px;
+	right:-5px;
+	float:right;
+}
+.jrMapCustom .jrClose a {
+	text-decoration:none;
+}
+/*************************************
+Get directions form and layout
+*************************************/
+.jrDirectionsAddress {
+	margin-bottom: 10px;
+}
+.jrDirectionsAddress label {
+	display: block;
+	font-size: 13px;
+	font-weight: bold;
+}
+.jrDirectionsAddress input {
+	font-size: 13px;
+	margin-top: 2px;
+	padding: 0.1em;
+	width: 99%;
+	background: #fff;
+	color: #444;
+	vertical-align: middle;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #aaa #ccc #ccc #aaa;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+.jrDirectionsAddress input:focus {
+	outline: none;
+	background: #fff;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #777 #aaa #aaa #777;
+}
+.jrDirectionsAddress select {
+	padding: 0.1em;
+	font-size: 1em;
+	width: auto;
+}
+.jrDirectionsAddress button {
+	margin-top: 18px;
+}
+.jrDirectionsAddress .jrError {
+	margin-top: 10px;
+}
+.jrDirections {
+	margin-top:10px;
+}
+/*************************************
+Results page map
+*************************************/
+.jrMapResultsWrapper {
+	border: 1px solid #ccc;
+	z-index: 1000;
+	right: auto;
+}
+.jrMapResultsWrapper.top {
+	position: absolute;
+	top: 0;
+	right: auto !important;
+}
+.jrMapResultsWrapper.fixed {
+	position: fixed;
+	top: 0;
+	z-index: 1001;
+}
+.jrMapResultsWrapper.bottom {
+	position: absolute;
+	bottom: 5px;
+	right: auto !important;
+}
+.jrMapResize {
+	border-bottom:1px solid #ccc;
+	background-color:#f2f2f2;
+	font-size: 13px;
+	line-height:16px;
+	padding:1px 0 1px 0;
+	font-weight:bold;
+	padding-left:5px;
+}
+.jrMapResize label {
+	display:inline-block;
+	line-height:18px;
+	margin:0 0 0 10px;
+	padding:0 4px 0 20px;
+	position:relative;
+}
+.jrMapResultsStreetview {
+	display:none;
+	overflow:hidden;
+	background-color:#000;
+	color:#fff;
+}
+.jrResults {
+	position:relative;
+	display:block;
+	width:100%;
+}
+.jrListingColumn {
+	border-right: 1px solid #ccc;
+	padding: 0 5px;
+	width: 380px;
+	float: left;
+	display: inline;
+}
+.jrMapColumn {
+	position:absolute;
+	top:0;
+	right:0;
+	height:100%;
+	float:right;
+}
+/*************************************
+Module search control
+*************************************/
+.jrMapAddressBar {
+	margin-top: 5px;
+	padding: 8px !important;
+}
+.jrMapAddressBar input[type="text"] {
+	width:200px;
+	margin-right: 5px;
+}
+
+.jrMapItCanvas {
+	width: 700px;
+	height: 400px;
+}
+
+/*************************************
+Map following disabled for iPad
+*************************************/
+@media only screen and (device-width: 768px) {
+	.jrMapWrapper.fixed {
+		position: absolute;
+		top: 0;
+		right: auto !important;
+	}
+	.jrMapWrapper.bottom {
+		position: absolute;
+		top: 0;
+	}
+}
+/*************************************
+Map following disabled for iPhone
+*************************************/
+@media only screen and (max-device-width: 480px) {
+	.jrMapWrapper.fixed {
+		position: absolute;
+		top: 0;
+		right: auto !important;
+	}
+	.jrMapWrapper.bottom {
+		position: absolute;
+		top: 0;
+	}
+}

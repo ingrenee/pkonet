@@ -1,0 +1,57 @@
+<?php
+/**
+ * jReviews - Reviews Extension
+ * Copyright (C) 2010-2012 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<div class="jrGrid">
+
+    <button class="jr-main-menu jrButton"><span class="jrIconPrev"></span><?php __a("Back to JReviews");?></button>
+
+    <div class="jrCol12 jrHeader"><?php __a("GeoMaps Add-on");?></div>
+
+    <div class="jrCol12">
+
+        <ul>
+
+            <li>
+
+            	<a href="javascript:void(0)" class="jr-menu" data-controller="admin_geomaps" data-action="index">
+
+            		<?php __a("Configuration");?>
+
+            	</a>
+
+            </li>
+
+            <li>
+
+            	<a href="javascript:void(0)" class="jr-menu" data-controller="admin_geomaps" data-action="geocode">
+
+            		<?php __a("Geocode Addresses");?>
+
+            	</a>
+
+            </li>
+
+            <li>
+
+            	<a href="javascript:void(0)" class="jr-menu" data-controller="admin_geomaps" data-action="markers">
+
+            		<?php __a("Assign Custom Markers");?>
+
+            	</a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>

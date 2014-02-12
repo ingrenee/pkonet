@@ -1,0 +1,93 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$langDel = json_encode(array(
+    'del_confirm'=>__a("Are you sure you want to delete this directory?",true,true),
+    'del_error'=>__a('There was a problem deleting the directory.',true,true)
+    ));
+?>
+
+<div class="jr-directories-list">
+
+	<div class="jrPageHeading"><?php __a("Directories Manager");?></div>
+
+    <?php echo $this->renderControllerView('directories','edit');?>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="directory">
+
+        <div id="jr-directorytable" class="jrDataList">
+
+            <div class="jrGrid24 jrDataListHeader">
+
+                <div class="jrCol1">#</div>
+
+                <div class="jrCol1">ID</div>
+
+                <div class="jrCol11"><?php __a("Title");?></div>
+
+                <div class="jrCol10"><?php __a("Name");?></div>
+
+                <div class="jrCol1">&nbsp;</div>
+
+            </div>
+
+            <?php $i = 1; foreach($rows AS $key=>$row): extract($row['Directory']);?>
+
+            <div class="jr-layout-outer jrGrid24" data-id="<?php echo $dir_id;?>">
+
+                <div class="jrCol1">
+
+                    <input type="checkbox" class="jr-row-cb jrHidden" name="cid[]" value="<?php echo $dir_id;?>" />
+                    <?php echo $i++;?>
+
+                </div>
+
+                <div class="jrCol1"><?php echo $dir_id;?></div>
+
+                <div class="jrCol11">
+
+                    <a href="javascript:void(0)" class="jr-edit" data-id="<?php echo $dir_id;?>">
+
+                        <span data-key="Directory.title"><?php echo $title?></span>
+
+                    </a>
+
+                </div>
+
+                <div class="jrCol10">
+
+                    <a href="javascript:void(0)" class="jr-edit" data-id="<?php echo $dir_id;?>">
+
+                        <span data-key="Directory.name"><?php echo $name?></span>
+
+                    </a>
+
+                </div>
+
+                <div class="jrCol1">
+
+                    <button class="jr-delete jrButton jrSmall jrIconOnly" data-id="<?php echo $dir_id;?>" data-lang='<?php echo $langDel;?>'>
+
+                            <span class="jrIconDelete"></span><span class="jrHidden"><?php __a("Delete");?></span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <?php endforeach;?>
+
+        </div>
+
+    </form>
+
+</div>

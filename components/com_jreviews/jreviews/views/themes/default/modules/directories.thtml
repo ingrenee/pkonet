@@ -1,0 +1,77 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/
+
+$showDirectoryLinks = Sanitize::getBool($this->params['module'],'dir_links',true);
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<?php if(!empty($directories)):?>
+
+	<?php if($showDirectoryLinks):?>
+
+		<ul class="jr-directory-tree" data-cat-id="<?php echo $cat_id;?>" data-dir-id="<?php echo $dir_id;?>" data-show-dir="<?php echo $showDirectoryLinks;?>">
+
+	<?php else:?>
+
+		<div class="jr-directory-tree" data-cat-id="<?php echo $cat_id;?>" data-dir-id="<?php echo $dir_id;?>" data-show-dir="<?php echo $showDirectoryLinks;?>">
+
+	<?php endif;?>
+
+	<?php foreach ($directories AS $categories):?>
+
+		<?php
+		$directory = current($categories);
+
+		$current_dir = !empty($cat_id) && isset($categories[$cat_id]);
+		?>
+
+		<?php if($showDirectoryLinks):?>
+
+		<li class="jr-tree-dir-<?php echo $directory['Directory']['dir_id'];?> closed">
+
+			<?php echo $Routes->directory($directory);?>
+
+		<?php endif;?>
+
+			<?php
+			$attributes = array(
+				'current_dir'=>$current_dir,
+				'cat_id'=>$cat_id
+			);
+			?>
+
+			<?php echo $Tree->renderTree($categories, $attributes);?>
+
+		<?php if($showDirectoryLinks):?>
+
+		</li>
+
+		<?php endif;?>
+
+	<?php endforeach;?>
+
+	<?php if($showDirectoryLinks):?>
+
+		</ul>
+
+	<?php else:?>
+
+		</div>
+
+	<?php endif;?>
+
+<?php endif;?>

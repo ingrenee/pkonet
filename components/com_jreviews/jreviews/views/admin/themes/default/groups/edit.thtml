@@ -1,0 +1,142 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$control_field_id = 0;
+
+if(!$isNew && isset($row['ControlValues'][0])) {
+    $control_field_id = $row['ControlValues'][0]['fieldid'];
+}
+$edit = $this->action == 'edit';
+?>
+
+<form action="index.php" method="post" class="jrForm" data-object-type="group"
+        data-model="Group"
+        data-fieldid="<?php echo $edit && !empty($row['ControlValues']) ? $row['ControlValues'][0]['fieldid'] : 0;?>"
+        data-location="<?php echo $edit ? Sanitize::getString($row['Group'],'type','content') : 'content';?>">
+
+    <fieldset>
+
+        <div class="jrGrid">
+
+            <div class="jrCol5">
+
+                <?php if($isNew):?>
+
+                <div style="padding-bottom: 10px;">
+
+                    <label class="jrInlineLabel"><?php __a("Location");?></label>:&nbsp;&nbsp;<span id="jr-group-type-label" class="jrStatusLabel jrBlue jrSizeM"></span>
+
+                </div>
+
+                <?php endif;?>
+
+                <div class="jrFieldDiv">
+
+                    <label><?php __a("Title");?><span class="jrIconRequired"></span></label>
+
+                    <div>
+                        <?php echo $Form->text('data[Group][title]',array('value'=>$edit ? Sanitize::getString($row['Group'],'title') : '','max_size'=>'50','class'=>'jr-title jrText','data-slug'=>'jr-name','placeholder'=>__a("Visible on the site",true)));?>
+                    </div>
+                </div>
+
+                <div class="jrFieldDiv">
+
+                    <label><?php __a("Name");?><span class="jrIconRequired"></span></label>
+
+                    <div>
+                        <?php echo $Form->text('data[Group][name]',array('value'=>$edit? Sanitize::getString($row['Group'],'name') : '','max_size'=>'50','class'=>'jr-name jrText','placeholder'=>__a("Reference value",true)));?>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="jrCol5">
+
+                <div id="control-field-check" class="jrWarning jrHidden">
+                    <?php __a("This field is already Controlled By a Field Option. You should not use the Controlled By setup for Field Options in this page until you remove the relationship in the Field Edit page. It is only possible to use one of the two setups, FieldOption to FieldOption or FieldOption to Field, at a time.");?>
+                </div>
+
+                <div class="jrFieldDiv">
+
+                    <label><?php __a("Control Field");?></label>
+
+                    <div>
+
+                        <?php echo $Form->text('data[Group][control_field]',array('value'=>$edit ? Sanitize::getString($row['Group'],'control_field') : '','data-fieldid'=>$control_field_id,'class'=>'jr-control-field-search jrText','placeholder'=>__a("Type for suggestions",true)));?>
+
+                    </div>
+
+                </div>
+
+                <div class="jrFieldDiv">
+
+                    <label><?php __a("Control Value");?></label>
+
+                    <div class="jrLeft">
+
+                        <?php echo $Form->text('control_value',array('class'=>'jr-control-value-search jrText','placeholder'=>__a("Add a field, then type for suggestions",true)));?>
+
+                    </div>
+
+                </div>
+
+                <div class="jr-control-value-div">
+
+                    <?php if($edit && !empty($row['ControlValues'])):?>
+
+                        <?php
+
+                        $checked = array();
+
+                        foreach($row['ControlValues'] AS $key=>$o):
+
+                            $checked[] = $o['value'];
+
+                        endforeach;?>
+
+                        <?php echo $Form->checkbox('data[Group][control_value]',$row['ControlValues'],array('value'=>$checked,'label'=>array('style'=>'text-align:left;')));?>
+
+                    <?php endif;?>
+
+                </div>
+
+            </div>
+
+            <div class="jrCol2">
+
+                <?php if($isNew):?>
+                 <div class="jrRight">
+
+                    <button class="jr-edit jrButton jrSmall jrGreen"><span class="jrIconNew"></span><?php __a("Add");?></button>
+
+                    <button class="jr-clear jrButton jrSmall"><span class="jrIconCancel"></span><?php __a("Clear");?></button>
+
+                </div>
+                <?php endif;?>&nbsp;
+
+            </div>
+
+        </div>
+
+    </fieldset>
+
+    <div class="jr-validation jrError jrHidden" style="margin-bottom: 15px;"></div>
+
+    <input id="jr-group-type-hidden" type="hidden" name="data[Group][type]" value="<?php echo $isNew ? 'content' : Sanitize::getString($row['Group'],'type','content');?>" />
+
+    <input type="hidden" name="data[Group][groupid]" value="<?php echo $isNew ? 0 : Sanitize::getInt($row['Group'],'group_id');?>" />
+
+    <input type="hidden" name="data[controller]" value="admin/groups" />
+
+    <input type="hidden" name="data[action]" value="_save" />
+
+</form>

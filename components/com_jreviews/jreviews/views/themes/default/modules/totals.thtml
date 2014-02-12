@@ -1,0 +1,1 @@
+<?php echo sprintf(__t("There are %s listings and %s reviews.",true),$listing_count,$review_count);?>

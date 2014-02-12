@@ -1,0 +1,709 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install PUBLIC "-//Joomla! 2.5//DTD template 1.0//EN" "http://www.joomla.org/xml/dtd/2.5/template-install.dtd">
+<extension version="2.5" type="template" client="site" method="upgrade">
+	<name>iReview2</name>
+	<creationDate>July 2013</creationDate>
+	<author>ClickFWD LLC</author>
+	<authorEmail>sales@reviewsforjoomla.com</authorEmail>
+	<authorUrl>www.reviewsforjoomla.com</authorUrl>
+	<copyright>Copyright (C) 2010-2013 ClickFWD LLC. All rights reserved.</copyright>
+	<license>Commercial</license>
+	<version>2.1.1</version>
+	<description><![CDATA[<link rel='stylesheet' type='text/css' href='../templates/ireview2/css/params.css' /><h2>iReview 2</h2><strong>iReview 2 is a very light and fast responsive template for Joomla 2.5 and 3.x.</strong><br /><br /><h2>Module styles</h2>There are 6 different module styles that can be enabled by adding their class names in “Module Class Suffix” parameter. For more info, take a look at the available <a href="../templates/ireview2/images/template-info/module-styles.png">module class names</a>.<br /><br /><h2>Module positions</h2>The template comes with 38 different <a href="../templates/ireview2/images/template-info/module-positions.png">module positions</a>.<br /><br /><h2>Menu styles</h2>The template comes with 7 different menu styles which can be enabled by adding their class names in Menu Class Suffix” parameter. For more info, take a look at the available <a href="../templates/ireview2/images/template-info/menu-styles.png">horizontal menu</a> and <a href="../templates/ireview2/images/template-info/menu-styles-vertical.png">vertical menu</a> class names.<br /><br /><h2>Documentation</h2>For more information, download the <a href="http://docs.reviewsforjoomla.com/downloads/ireview/iReview2Manual.pdf">iReview 2 manual</a>]]></description>
+	<files>
+		<filename>error.php</filename>
+		<filename>grids.php</filename>
+		<filename>index.php</filename>
+		<filename>offline.php</filename>
+		<filename>parameters.php</filename>
+		<filename>template_preview.png</filename>
+		<filename>template_thumbnail.png</filename>
+		<filename>templateDetails.xml</filename>
+		<folder>css</folder>
+		<folder>html</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+		<folder>language</folder>
+	</files>
+	<positions>
+		<position>position-0</position>
+		<position>position-1</position>
+		<position>position-2</position>
+		<position>position-3</position>
+		<position>position-4</position>
+		<position>position-5</position>
+		<position>position-5b</position>
+		<position>position-6</position>
+		<position>position-6b</position>
+		<position>position-7</position>
+		<position>position-7b</position>
+		<position>position-8</position>
+		<position>position-9</position>
+		<position>position-10</position>
+		<position>position-11</position>
+		<position>position-12</position>
+		<position>position-13</position>
+		<position>position-14</position>
+		<position>position-15</position>
+		<position>position-16</position>
+		<position>position-17</position>
+		<position>position-18</position>
+		<position>position-19</position>
+		<position>position-20</position>
+		<position>position-21</position>
+		<position>position-22</position>
+		<position>position-23</position>
+		<position>position-24</position>
+		<position>position-nav</position>
+		<position>header-top</position>
+		<position>header-bottom</position>
+		<position>showcase-top</position>
+		<position>showcase-bottom</position>
+		<position>content-top</position>
+		<position>content-bottom</position>
+		<position>component-top</position>
+		<position>component-bottom</position>
+		<position>footer-top</position>
+		<position>footer-bottom</position>
+	</positions>
+	<config>
+		<fields name="params">
+			<fieldset name="layout" label="Layout">
+				<field type="spacer" class="dataListHeader" label="Responsive Layout"/>
+				<field
+					name="responsiveLayout"
+					type="radio"
+					default="1"
+					class="btn-group"
+					label="Enable responsive layout"
+					description="If enabled, the layout will adapt to different devices.">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field
+					name="maximumWidth"
+					type="list"
+					default="960"
+					label="Maximum width"
+					description="Choose maximum width of the content area.">
+					<option	value="960">960px</option>
+					<option	value="1200">1200px</option>
+				</field>
+				<field
+					name="responsiveIE"
+					type="radio"
+					default="0"
+					class="btn-group"
+					label="Load respond.js for IE8 and below"
+					description="Respond.js is a polyfill for min/max-width CSS3 Media Queries. If enabled, responsive design will work on IE8 and below as well">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field type="spacer" class="dataListHeader" label="Mobile Menu"/>
+				<field
+					name="convertMenu"
+					type="radio"
+					default="1"
+					class="btn-group"
+					label="Convert horizontal navigation to vertical dropdown on mobile devices"
+					description="">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field
+					name="convertMenuWidth"
+					type="text"
+					default="480"
+					label="Browser width below which to convert to mobile menu"
+					description=""
+					filter="string" />
+				<field
+					name="mobileMenu"
+					type="text"
+					default="top-menu"
+					label="Name of the menu to convert"
+					description="If you want to convert more than one menu on mobile devices, enter menu names separated by commas."
+					filter="string" />
+				<field
+					name="mobileMenuTitle"
+					type="text"
+					default="Menu"
+					label="Title of the mobile dropdown"
+					description=""
+					filter="string" />
+				<field type="spacer" class="dataListHeader" label="Sidebars"/>
+				<field
+					name="sidebarsFixed"
+					type="radio"
+					default="0"
+					label="Sidebar dimensions"
+					description="Use x number of grid columns for dimensions of sidebar or fixed width.">
+					<option	value="0">Grid columns</option>
+					<option	value="1">Fixed width</option>
+				</field>
+				<field type="spacer" class="dataListHeader" label="Primary Sidebar" description="Primary sidebar displays modules assigned to position5, position6 or position7"/>
+				<field
+					name="primarySidebarPosition"
+					type="list"
+					default="left"
+					label="Primary sidebar position"
+					description="Choose the position of the primary sidebar.">
+					<option	value="left">Left</option>
+					<option	value="right">Right</option>
+				</field>
+				<field
+					name="primarySidebarColumns"
+					type="list"
+					default="3"
+					label="Primary sidebar columns"
+					description="Choose the number of grid columns used for the primary sidebar (the rest of the 12 columns will be used for main content).">
+					<option	value="2">2</option>
+					<option	value="3">3</option>
+					<option	value="4">4</option>
+					<option	value="5">5</option>
+					<option	value="6">6</option>
+				</field>
+				<field
+					name="primarySidebarFixedWidth"
+					type="list"
+					default="220"
+					label="Primary sidebar fixed width"
+					description="Choose a fixed width for the primary sidebar.">
+					<option	value="120">120px</option>
+					<option	value="130">130px</option>
+					<option	value="140">140px</option>
+					<option	value="150">150px</option>
+					<option	value="160">160px</option>
+					<option	value="170">170px</option>
+					<option	value="180">180px</option>
+					<option	value="190">190px</option>
+					<option	value="200">200px</option>
+					<option	value="210">210px</option>
+					<option	value="220">220px</option>
+					<option	value="230">230px</option>
+					<option	value="240">240px</option>
+					<option	value="250">250px</option>
+					<option	value="260">260px</option>
+					<option	value="270">270px</option>
+					<option	value="280">280px</option>
+					<option	value="290">290px</option>
+					<option	value="300">300px</option>
+					<option	value="310">310px</option>
+					<option	value="320">320px</option>
+					<option	value="330">330px</option>
+					<option	value="340">340px</option>
+					<option	value="350">350px</option>
+					<option	value="360">360px</option>
+					<option	value="370">370px</option>
+					<option	value="380">380px</option>
+					<option	value="390">390px</option>
+					<option	value="400">400px</option>
+				</field>
+				<field
+					name="primarySidebarSmartphones"
+					type="radio"
+					default="showBelow"
+					label="Primary sidebar on smarthones"
+					description="Choose how to show the primary sidebar on smartphones.">
+					<option	value="showBelow">Show below main content</option>
+					<option	value="hide">Hide</option>
+				</field>
+				<field type="spacer" class="dataListHeader" label="Secondary Sidebar" description="Secondary sidebar displays modules assigned to position5b, position6b or position7b"/>
+				<field
+					name="secondarySidebarPosition"
+					type="list"
+					default="right"
+					label="Secondary sidebar position"
+					description="Choose the position of the secondary sidebar.">
+					<option	value="left">Left</option>
+					<option	value="right">Right</option>
+				</field>
+				<field
+					name="secondarySidebarColumns"
+					type="list"
+					default="2"
+					label="Secondary sidebar columns"
+					description="Choose the number of grid columns used for the secondary sidebar (the rest of the columns will be used for component area).">
+					<option	value="2">2</option>
+					<option	value="3">3</option>
+					<option	value="4">4</option>
+				</field>
+				<field
+					name="secondarySidebarFixedWidth"
+					type="list"
+					default="150"
+					label="Secondary sidebar fixed width"
+					description="Choose a fixed width for the secondary sidebar.">
+					<option	value="120">120px</option>
+					<option	value="130">130px</option>
+					<option	value="140">140px</option>
+					<option	value="150">150px</option>
+					<option	value="160">160px</option>
+					<option	value="170">170px</option>
+					<option	value="180">180px</option>
+					<option	value="190">190px</option>
+					<option	value="200">200px</option>
+					<option	value="210">210px</option>
+					<option	value="220">220px</option>
+					<option	value="230">230px</option>
+					<option	value="240">240px</option>
+					<option	value="250">250px</option>
+					<option	value="260">260px</option>
+				</field>
+				<field
+					name="secondarySidebarTablets"
+					type="radio"
+					default="showBelow"
+					label="Secondary sidebar on portrait tablets"
+					description="Choose how to show the secondary sidebar on portrait tablets.">
+					<option	value="showBelow">Show below main content</option>
+					<option	value="hide">Hide</option>
+				</field>
+				<field
+					name="secondarySidebarSmartphones"
+					type="radio"
+					default="showBelow"
+					label="Secondary sidebar on smarthones"
+					description="Choose how to show the secondary sidebar on smartphones.">
+					<option	value="showBelow">Show below main content</option>
+					<option	value="hide">Hide</option>
+				</field>
+			</fieldset>
+			<fieldset name="styles" label="Styles">
+				<field type="spacer" class="dataListHeader" label="Site Color Theme"/>
+				<field
+					name="colorTheme"
+					type="list"
+					default="blue"
+					label="Color theme"
+					description="Select the main color theme for the site.">
+					<option	value="blue">Blue</option>
+					<option	value="green">Green</option>
+					<option	value="red">Red</option>
+					<option	value="orange">Orange</option>
+					<option	value="brown">Brown</option>
+					<option	value="purple">Purple</option>
+					<option	value="pink">Pink</option>
+					<option	value="olive">Olive</option>
+					<option	value="teal">Teal</option>
+					<option	value="maroon">Maroon</option>
+				</field>
+				<field type="spacer" class="dataListHeader" label="Header Wrapper"/>
+				<field
+					name="headerBg"
+					type="radio"
+					default="light"
+					label="Header wrapper background"
+					description="Choose the background style for the header wrapper.">
+					<option value="no">None</option>
+					<option value="light">Light</option>
+					<option value="dark">Dark</option>
+					<option value="theme">Theme color</option>
+				</field>
+				<field
+					name="headerFixed"
+					type="radio"
+					default="0"
+					class="btn-group"
+					label="Header wrapper always on top"
+					description="If enabled, header wrapper will always be fixed on top of the page.">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field type="spacer" class="dataListHeader" label="Top Showcase Wrapper"/>
+				<field
+					name="showcaseTopBg"
+					type="radio"
+					default="light"
+					label="Top showcase background"
+					description="Choose the background style for the top showcase wrapper.">
+					<option value="no">None</option>
+					<option value="light">Light</option>
+					<option value="dark">Dark</option>
+					<option value="theme">Theme color</option>
+				</field>
+				<field type="spacer" class="dataListHeader" label="Bottom Showcase Wrapper"/>
+				<field
+					name="showcaseBottomBg"
+					type="radio"
+					default="dark"
+					label="Bottom showcase background"
+					description="Choose the background style for the bottom showcase wrapper.">
+					<option value="no">None</option>
+					<option value="light">Light</option>
+					<option value="dark">Dark</option>
+					<option value="theme">Theme color</option>
+				</field>
+				<field type="spacer" class="dataListHeader" label="Footer Wrapper"/>
+				<field
+					name="footerBg"
+					type="radio"
+					default="dark"
+					label="Footer wrapper background"
+					description="Choose the background style for the footer wrapper.">
+					<option value="no">None</option>
+					<option value="light">Light</option>
+					<option value="dark">Dark</option>
+					<option value="theme">Theme color</option>
+				</field>
+			</fieldset>
+			<fieldset name="general" label="General settings">
+				<field type="spacer" class="dataListHeader" label="Logo"/>
+				<field
+					name="showLogo"
+					type="radio"
+					default="1"
+					class="btn-group"
+					label="Show logo"
+					description="If disabled, the whole row will be assigned to 'position-0' module position.">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field
+					name="logoColumns"
+					type="list"
+					default="5"
+					label="How many grid columns will be reserved for logo"
+					description="The rest of the grid columns will be assigned to 'position-0' module position.">
+					<option	value="1">1/12</option>
+					<option	value="2">2/12</option>
+					<option	value="3">3/12</option>
+					<option	value="4">4/12</option>
+					<option	value="5">5/12</option>
+					<option	value="6">6/12</option>
+					<option	value="7">7/12</option>
+					<option	value="8">8/12</option>
+					<option	value="9">9/12</option>
+					<option	value="10">10/12</option>
+					<option	value="11">11/12</option>
+					<option	value="12">12/12 (Full row width)</option>
+				</field>
+				<field
+					name="logo"
+					type="media"
+					label="Choose logo image"
+					description="Without an image, site name will be displayed." />
+				<field type="spacer" class="dataListHeader" label="Copyright"/>
+				<field
+					name="showCopyright"
+					type="radio"
+					default="1"
+					class="btn-group"
+					label="Show copyright text"
+					description="If disabled, the whole row will be assigned to 'position-15' module position.">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field
+					name="copyrightColumns"
+					type="list"
+					default="5"
+					label="How many grid columns will be reserved for copyright text"
+					description="The rest of the grid columns will be assigned to 'position-15' module position.">
+					<option	value="1">1/12</option>
+					<option	value="2">2/12</option>
+					<option	value="3">3/12</option>
+					<option	value="4">4/12</option>
+					<option	value="5">5/12</option>
+					<option	value="6">6/12</option>
+					<option	value="7">7/12</option>
+					<option	value="8">8/12</option>
+					<option	value="9">9/12</option>
+					<option	value="10">10/12</option>
+					<option	value="11">11/12</option>
+					<option	value="12">12/12 (Full row width)</option>
+				</field>
+				<field
+					name="copyright"
+					type="text"
+					default="© 2013"
+					label="Copyright Text"
+					description="Enter copyright text that will be displayed in the footer"
+					filter="string" />
+				<field type="spacer" class="dataListHeader" label="Web Fonts"/>
+				<field
+					name="googleFonts"
+					type="radio"
+					default="1"
+					class="btn-group"
+					label="Use Google Fonts"
+					description="">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field
+					name="bodyFont"
+					type="list"
+					default="Open+Sans"
+					label="Body text font"
+					description="Choose the font for body text.">
+					<option	value="Abel">Abel</option>
+					<option	value="Asap">Asap</option>
+					<option	value="Cabin">Cabin</option>
+					<option	value="Dosis">Dosis</option>
+					<option	value="Droid+Sans">Droid Sans</option>
+					<option	value="Droid+Serif">Droid Serif</option>
+					<option	value="Gudea">Gudea</option>
+					<option	value="Lato">Lato</option>
+					<option	value="Lora">Lora (serif)</option>
+					<option	value="Noticia+Text">Noticia (Serif)</option>
+					<option	value="Open+Sans">Open Sans</option>
+					<option	value="Poly">Poly (serif)</option>
+					<option	value="PT+Sans">PT Sans</option>
+					<option	value="PT+Serif">PT Serif</option>
+					<option	value="Rokkitt">Rokkitt (serif)</option>
+					<option	value="Source+Sans+Pro">Source Sans Pro</option>
+					<option	value="Sintony:400,700">Sintony</option>
+					
+					<option	value="Varela">Varela</option>
+				</field>
+				<field
+					name="headingsFont"
+					type="list"
+					default="Lato"
+					label="Headings font"
+					description="Choose the font for h1-h6 headings.">
+					<option	value="Abel">Abel</option>
+					<option	value="Asap">Asap</option>
+					<option	value="Cabin">Cabin</option>
+					<option	value="Dosis">Dosis</option>
+					<option	value="Droid+Sans">Droid Sans</option>
+					<option	value="Droid+Serif">Droid Serif</option>
+					<option	value="Gudea">Gudea</option>
+					<option	value="Lato">Lato</option>
+					<option	value="Lora">Lora (serif)</option>
+					<option	value="Noticia+Text">Noticia (Serif)</option>
+					<option	value="Open+Sans">Open Sans</option>
+					<option	value="Poly">Poly (serif)</option>
+					<option	value="PT+Sans">PT Sans</option>
+					<option	value="PT+Serif">PT Serif</option>
+					<option	value="Rokkitt">Rokkitt (serif)</option>
+					<option	value="Source+Sans+Pro">Source Sans Pro</option><option	value="Sintony:400,700">Sintony</option>
+					<option	value="Varela">Varela</option>
+				</field>
+				<field
+					name="logoFont"
+					type="list"
+					default="PT+Serif"
+					label="Logo font"
+					description="Choose the font for logo (used only if you didn't select a logo image).">
+					<option	value="Abel">Abel</option>
+					<option	value="Asap">Asap</option>
+					<option	value="Cabin">Cabin</option>
+					<option	value="Dosis">Dosis</option>
+					<option	value="Droid+Sans">Droid Sans</option>
+					<option	value="Droid+Serif">Droid Serif</option>
+					<option	value="Gudea">Gudea</option>
+					<option	value="Lato">Lato</option>
+					<option	value="Lora">Lora (serif)</option>
+					<option	value="Noticia+Text">Noticia (Serif)</option>
+					<option	value="Open+Sans">Open Sans</option>
+					<option	value="Poly">Poly (serif)</option>
+					<option	value="PT+Sans">PT Sans</option>
+					<option	value="PT+Serif">PT Serif</option>
+					<option	value="Source+Sans+Pro">Source Sans Pro</option><option	value="Sintony:400,700">Sintony</option>
+					<option	value="Varela">Varela</option>
+				</field>
+				<field type="spacer" class="dataListHeader" label="Google Analytics"/>
+				<field
+					name="googleAnalytics"
+					type="radio"
+					default="0"
+					class="btn-group"
+					label="Enable Google Analytics"
+					description="If enabled, Google Analitycs tracking code will be added at the bottom of the template using your ID entered below">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field
+					name="googleAnalyticsID"
+					type="text"
+					default=""
+					label="Analytics UA code (format: UA-XXXXXX-X)"
+					description="You can find this code in your Google Analitycs account"
+					filter="string" />
+			</fieldset>
+			<fieldset name="scripts" label="Scripts">
+				<field type="spacer" class="dataListHeader" label="jQuery"/>
+				<field
+					name="jqueryCDN"
+					type="radio"
+					default="1"
+					class="btn-group"
+					label="Load jQuery from Google CDN"
+					description="If you enable this, make sure none of your extensions also load jQuery.">
+					<option	value="0">No</option>
+					<option	value="1">Yes</option>
+				</field>
+				<field
+					name="jqueryVersion"
+					type="text"
+					default="1.8.3"
+					label="jQuery version"
+					description="Enter version of jQuery that will be loaded if enabled above."
+					filter="string" />
+				<field type="spacer" class="dataListHeader" label="jQuery UI"/>
+				<field
+					name="jqueryUICDN"
+					type="radio"
+					default="0"
+					class="btn-group"
+					label="Load jQuery UI from Google CDN"
+					description="If you enable this, make sure none of your extensions also load jQuery UI.">
+					<option	value="0">No</option>
+					<option	value="1">Yes</option>
+				</field>
+				<field
+					name="jqueryUIVersion"
+					type="text"
+					default="1.8.24"
+					label="jQuery UI version"
+					description="Enter version of jQuery UI that will be loaded if enabled above."
+					filter="string" />
+				<field
+					name="jqueryUITheme"
+					type="list"
+					default="smoothness"
+					label="jQuery UI theme"
+					description="Choose jQuery UI Theme to load from Google CDN.">
+					<option	value="black-tie">Black Tie</option>
+					<option	value="blitzer">Blitzer</option>
+					<option	value="cupertino">Cupertino</option>
+					<option	value="dark-hive">Dark Hive</option>
+					<option	value="dot-luv">Dot Luv</option>
+					<option	value="eggplant">Eggplant</option>
+					<option	value="excite-bike">Excite Bike</option>
+					<option	value="flick">Flick</option>
+					<option	value="hot-sneaks">Hot Sneaks</option>
+					<option	value="humanity">Humanity</option>
+					<option	value="le-frog">Le Frog</option>
+					<option	value="mint-choc">Mint Choc</option>
+					<option	value="overcast">Overcast</option>
+					<option	value="pepper-grinder">Pepper Grinder</option>
+					<option	value="redmond">Redmond</option>
+					<option	value="smoothness">Smoothness (default)</option>
+					<option	value="south-street">South Street</option>
+					<option	value="start">Start</option>
+					<option	value="sunny">Sunny</option>
+					<option	value="swanky-purse">Swanky Purse</option>
+					<option	value="trontastic">Trontastic</option>
+					<option	value="ui-darkness">UI Darkness</option>
+					<option	value="ui-lightness">UI Lightness</option>
+					<option	value="vader">Vader</option>
+				</field>
+			</fieldset>
+			<fieldset name="socialmedia" label="Social Media">
+				<field type="spacer" class="dataListHeader" label="Twitter"/>
+				<field
+					name="twitterIcon"
+					type="radio"
+					default="0"
+					class="btn-group"
+					label="Display Twitter icon"
+					description="If you enable this, small Twitter icon with a link to your Twitter profile will be displayed in the header">
+					<option	value="0">No</option>
+					<option	value="1">Yes</option>
+				</field>
+				<field
+					name="twitterURL"
+					type="text"
+					default=""
+					label="Link to Twitter profile"
+					description=""
+					filter="string" />
+				<field
+					name="twitterTitle"
+					type="text"
+					default="Follow us on Twitter"
+					label="Twitter Icon Title (Tooltip)"
+					description=""
+					filter="string" />
+				<field type="spacer" class="dataListHeader" label="Facebook"/>
+				<field
+					name="facebookIcon"
+					type="radio"
+					default="0"
+					class="btn-group"
+					label="Display Facebook Icon"
+					description="If you enable this, small Facebook icon with a link to your Facebook profile will be displayed in the header">
+					<option	value="0">No</option>
+					<option	value="1">Yes</option>
+				</field>
+				<field
+					name="facebookURL"
+					type="text"
+					default=""
+					label="Link to Facebook profile"
+					description=""
+					filter="string" />
+				<field
+					name="facebookTitle"
+					type="text"
+					default="Become a Fan on Facebook"
+					label="Facebook icon title (tooltip)"
+					description=""
+					filter="string" />
+				<field type="spacer" class="dataListHeader" label="Google+"/>
+				<field
+					name="googlePlusIcon"
+					type="radio"
+					default="0"
+					class="btn-group"
+					label="Display Google+ icon"
+					description="If you enable this, small Google+ icon with a link to your Google+ profile will be displayed in the header">
+					<option	value="0">No</option>
+					<option	value="1">Yes</option>
+				</field>
+				<field
+					name="googlePlusURL"
+					type="text"
+					default=""
+					label="Link to Google+ profile"
+					description=""
+					filter="string" />
+				<field
+					name="googlePlusTitle"
+					type="text"
+					default="Follow us on Google+"
+					label="Google+ icon title (tooltip)"
+					description=""
+					filter="string" />
+				<field type="spacer" class="dataListHeader" label="RSS"/>
+				<field
+					name="rssIcon"
+					type="radio"
+					default="0"
+					class="btn-group"
+					label="Display RSS icon"
+					description="If you enable this, small RSS icon will be displayed in the header">
+					<option	value="0">No</option>
+					<option	value="1">Yes</option>
+				</field>
+				<field
+					name="rssURL"
+					type="text"
+					default=""
+					label="Link to the main RSS feed"
+					description=""
+					filter="string" />
+				<field
+					name="rssTitle"
+					type="text"
+					default="Get updates via RSS"
+					label="RSS icon title (tooltip)"
+					description=""
+					filter="string" />
+				<field type="spacer" class="dataListHeader" label="Displaying options"/>
+				<field
+					name="socialNewWindow"
+					type="radio"
+					default="1"
+					class="btn-group"
+					label="Open links in new tab/window">
+					<option	value="0">No</option>
+					<option	value="1">Yes</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

@@ -1,0 +1,60 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+$landDel = json_encode(array('del_confirm'=>__a("Are you sure you want to delete this transaction log?",true)));
+?>
+
+<div class="jrDataList">
+
+    <div class="jrGrid24 jrDataListHeader">
+
+        <div class="jrCol2"><?php __a("Order #");?></div>
+
+        <div class="jrCol3"><?php __a("Txn ID");?></div>
+
+        <div class="jrCol2"><?php __a("Created");?></div>
+
+        <div class="jrCol2"><?php __a("Handler");?></div>
+
+        <div class="jrCol8"><?php __a("Txn Data");?></div>
+
+        <div class="jrCol7"><?php __a("Txn Note");?></div>
+
+    </div>
+
+    <?php foreach($txns AS $txn): extract($txn['PaidTxnLog']);?>
+
+
+    <div class="jr-layout-outer jrGrid24">
+
+        <div class="jrCol2 jrSizeS">
+
+            <?php echo str_pad($order_id, 7, "0", STR_PAD_LEFT);?>
+
+        </div>
+
+        <div class="jrCol3 jrSizeS"><?php echo $txn_id;?>&nbsp;</div>
+
+        <div class="jrCol2"><?php echo $Time->niceShort($txn_date);?></div>
+
+        <div class="jrCol2"><?php echo $handler_id;?></div>
+
+        <div class="jrCol8">
+
+            <textarea style="width:98%;height: 100px;"><?php print_r(json_decode($txn_data,true));?></textarea>
+
+        </div>
+
+        <div class="jrCol7"><?php echo nl2br($log_note);?></div>
+
+    </div>
+
+    <?php endforeach;?>
+
+</div>

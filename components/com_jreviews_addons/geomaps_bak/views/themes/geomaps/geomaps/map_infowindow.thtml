@@ -1,0 +1,71 @@
+<?php
+switch($iwTheme) {
+    case 'google':
+        $iwClass = 'jrMapGoogle';
+    break;
+    case 'callout':
+        $iwClass = 'jrMapCallout';
+    break;
+    case 'custom':
+        $iwClass = 'jrMapCustom';
+    break;
+}
+?>
+
+<div class="jrInfowindow <?php echo $iwClass;?> jrClearfix">
+
+    <?php if($iwTheme != 'google'):?>
+    <div class="jrClose"><a class="jr-close" href="javascript:void(0);"><span class="jrIconCancel"></span></a></div>
+    <?php endif;?>
+
+    <div class="jrInner">
+
+        <div class="jr-map-image jrMapThumbnail"></div>
+
+        <div class="jrContent">
+
+            <span class="jrListingTitle"><a class="jr-map-title" href="#"></a></span>
+
+            <div class="jrOverallRatings">
+
+                <div class="jrOverallEditor" title="<?php  __t("Editor rating"); ?>">
+
+                    <span class="jrIconEditor jrRatingLabel"></span>
+
+                    <div class="jrRatingStars jrRatingStarsEditor"><div class="jr-map-editor-rating" style="width: 0%;"> </div></div>
+
+                    <span class="jrRatingValue"><span class="jr-map-editor-rating-val"></span></span>
+
+                </div>
+
+                <div class="jrOverallUser" title="<?php  __t("User rating"); ?>">
+
+                    <span class="jrIconUsers jrRatingLabel"></span>
+
+                    <div class="jrRatingStars jrRatingStarsUser"><div class="jr-map-user-rating" style="width: 0%;"> </div></div>
+
+                    <span class="jrRatingValue">
+
+                        <span class="jr-map-user-rating-val"></span>
+
+                        <span class="jrUserRatingCount">&nbsp;(<span class="jr-map-user-rating-count"></span>)</span>
+
+                    </span>
+
+                </div>
+
+           </div>
+
+            <?php /*
+            EXAMPLE: Adding custom fields
+            <span class="jr-map-jr_address"></span>
+            <span class="jr-map-jr_phone"></span>
+            */?>
+
+            <div class="jrClear"></div>
+
+        </div>
+
+    </div>
+
+</div>

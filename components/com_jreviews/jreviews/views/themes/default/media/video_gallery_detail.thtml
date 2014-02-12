@@ -1,0 +1,152 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/
+
+// Thumbnail settings
+$galleryThumbnailSize = Sanitize::getString($this->Config,'media_media_thumbnail_size');
+
+$galleryThumbnailMode = Sanitize::getString($this->Config,'media_media_thumbnail_mode');
+
+$videoFrameSize = explode('x',Sanitize::getString($this->Config,'media_encode_size'));
+
+/**
+ * Get the first video
+ */
+$playVideo = isset($media_id) ? $videos[$media_id] : reset($videos);
+
+if(!isset($m)) {
+	$m = s2alphaID($playVideo['media_id'],false,5,cmsFramework::getConfig('secret'));
+}
+
+if(isset($playVideo['Media'])) $playVideo = $playVideo['Media'];
+
+$embed = Sanitize::getString($playVideo,'embed');
+?>
+
+<div class="jr-video-gallery jrVideoGallery<?php echo ($this->action == 'videoGallery') ? ' jrVideoLightbox' : ''; ?>">
+
+	<div class="jrVideo">
+
+		<?php
+		/*****************************
+		 *	VIDEO PLAYER
+		 ****************************/
+		?>
+
+		<div class="video-player-outer">
+
+			<div class="jr-video-embed-player jrHidden" data-embed="<?php echo $playVideo['embed'];?>"></div>
+
+			<div class="video-js-box">
+
+				<video id="jr-video-player" class="video-js vjs-default-skin" data-width="<?php echo $videoFrameSize[0];?>" data-height="<?php echo $videoFrameSize[1];?>" controls="controls" preload="auto" poster="<?php echo $playVideo['media_info']['image']['url'];?>">
+				</video>
+
+			</div>
+
+			<div class="jrVideoInfo">
+
+				<?php if($this->action == 'videoGallery'): ?>
+				<div class="jrMediaTitle"><?php echo $playVideo['title'];?></div>
+				<?php endif; ?>
+
+				<span class="jrMediaCreated"><?php echo $Time->nice($playVideo['created']);?></span>
+
+				- <span class="jrMediaDuration"><?php echo $Time->sToHMS($playVideo['duration']);?></span>
+
+			</div>
+
+			<?php $Media->mediaActions($playVideo);?>
+
+			<?php if($this->action != 'videoGallery'): ?>
+
+			<div id="jr-video-current-info" class="jrVideoCurrentInfo jrRoundedPanel">
+
+				<div class="jrMediaTitle"><?php echo $playVideo['title'];?></div>
+
+				<div class="jrMediaDescription"><?php echo $playVideo['description'];?></div>
+
+			</div>
+
+			<?php endif; ?>
+
+		</div>
+
+	</div>
+
+	<?php
+	/*****************************
+	 *	VIDEO LIST
+	 ****************************/
+	?>
+
+	<div id="jr-video-slider" class="jrMediaList jrVideoSlider" <?php if($m):?>data-media-id="<?php echo $m;?>"<?php endif;?>>
+
+		<div class="jrVideoList">
+
+			<?php foreach($videos AS $video):?>
+
+					<?php if(isset($video['Media'])) $video = $video['Media'];?>
+
+					<?php $duration = $video['duration']; ?>
+
+					<div class="jr-slider-item jrVideoListItem jrMediaThumb" <?php if ($duration != 0): ?> data-duration="<?php echo $Time->sToHMS($duration); ?>"<?php endif;?>>
+
+						<?php
+						$videoThumb = $Media->thumb($video,array('size'=>$galleryThumbnailSize,'mode'=>$galleryThumbnailMode));
+						$embed_attr = '';
+
+						if($video['embed'] != '') {
+
+							$embedClass = 'MediaStorage'.Inflector::camelize($video['embed']).'Component';
+
+							$embed_attr =  call_user_func(array($embedClass,'displayEmbed'),$video['filename'],$videoFrameSize,array('return_attr'=>true));
+
+						}
+
+						echo $Routes->mediaDetail($videoThumb, array('media'=>$video),
+							array(
+								'data-path'=>Sanitize::getString($video,'media_path'),
+								'data-listing-id'=>$video['listing_id'],
+								'data-review-id'=>$video['review_id'],
+								'data-media-id'=>s2alphaID($video['media_id'],false,5,cmsFramework::getConfig('secret')),
+								'data-media-extension'=>$video['extension'],
+								'data-embed'=>$video['embed'],
+								'data-embed-attr'=>$embed_attr,
+								'data-likes'=>$video['likes_up'],
+								'data-dislikes'=>$video['likes_total'] - $video['likes_up']
+							)
+						);
+						?>
+
+						<div class="jr-media-info jrMediaInfo jrHidden">
+
+							<div class="jrMediaTitle"><?php echo $video['title'];?></div>
+
+							<div class="jrMediaDescription"><?php echo $video['description'];?></div>
+
+						</div>
+
+
+					</div>
+
+			<?php endforeach; ?>
+
+		</div>
+
+	</div>
+
+	<div class="jrClear"></div>
+
+</div>

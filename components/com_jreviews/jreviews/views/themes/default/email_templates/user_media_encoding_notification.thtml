@@ -1,0 +1,25 @@
+<?php
+/**********************************************************************************
+ *                                 CONFIGURATION AND SETUP
+ **********************************************************************************/
+$entry_url = cmsFramework::makeAbsUrl($Routes->myMedia('',$media['User']['user_id'],array('return_url'=>true)));
+$entry_title = $media['Media']['title'] != '' ? $media['Media']['title'] : __t("[Without a title]",true);
+$approved = $media['Media']['approved'];
+?>
+
+<?php
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+?>
+
+	<p>
+	Thank you for submitting your <?php echo $media['Media']['media_type'];?> titled <?php echo $entry_title;?>. We have finished processing and you can find it in your media page at:
+	<br /><br />
+	<?php echo $Html->link($entry_title,$entry_url,array('sef'=>false));?>
+	</p>
+
+	<?php if(!$approved):?>
+	<p>We typically moderate new videos and approve them only after they've been verified by our staff. Please be patient while approve yours.</p>
+	<?php endif;?>
+

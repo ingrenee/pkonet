@@ -1,0 +1,184 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2009 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ *                                 META DATA
+ **********************************************************************************/
+echo $this->element('page_meta');
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<div class="jr-page jrPage jrAdvSearchPage">
+
+	<?php if(isset($page['title']) && $page['show_title']):?>
+
+	<div class="jrPageHeader clearfix">
+
+		<?php if (isset($page['title']) && $page['show_title']):?>
+
+			<h1 class="contentheading"><?php echo $page['title'];?></h1>
+
+		<?php endif;?>
+
+	</div>
+
+	<?php endif;?>
+
+	<div class="jrFormContainer jrForm">
+
+		<form id="jr-form-adv-search" name="jr-form-adv-search" action="<?php echo WWW_ROOT;?>index.php?option=com_jreviews<?php echo isset($this->params['lang'])? "&amp;lang=".$this->params['lang'] : '';?>" method="post">
+
+			<fieldset>
+
+				<div class="jrFieldDiv">
+
+					<div class="jrFieldOption">
+
+						<input name="data[contentoptions][]" id="title" type="checkbox" value="title" checked="checked" /><?php __t("Listing title");?>
+
+					</div>
+
+					<?php if($this->Config->content_summary != 'hidden'):?>
+
+					<div class="jrFieldOption">
+
+						<input name="data[contentoptions][]" id="introtext" type="checkbox" value="introtext" checked="checked" /><?php __t("Listing summary");?>
+
+					</div>
+
+					<?php endif;?>
+
+				   <?php if($this->Config->content_description != 'hidden'):?>
+
+					<div class="jrFieldOption">
+
+						<input name="data[contentoptions][]" id="fulltext" type="checkbox" value="fulltext" checked="checked" /><?php __t("Listing description");?>
+
+					</div>
+
+					<?php endif;?>
+
+					<?php if($this->Config->user_reviews || $this->Config->author_review):?>
+
+					<div class="jrFieldOption">
+
+						<input name="data[contentoptions][]" id="reviews" type="checkbox" value="reviews" /><?php __t("Review comments");?>
+
+					</div>
+
+					<?php endif;?>
+
+				</div>
+
+				<div class="jrFieldDiv">
+
+					<input type="text" id="keywords" name="data[keywords]" class="jrTitle" value="" />
+
+				</div>
+
+				<div class="jrFieldDiv">
+
+					<div class="jrFieldOption">
+
+						<input name="data[search_query_type]" id="search_query_1" type="radio" value="any" checked="checked" /><?php __t("Any");?>
+
+					</div>
+
+					<div class="jrFieldOption">
+
+						<input name="data[search_query_type]" id="search_query_2" type="radio" value="all" /><?php __t("All");?>
+
+					</div>
+
+					<div class="jrFieldOption">
+
+						<input name="data[search_query_type]" id="search_query_3" type="radio" value="exact" /><?php __t("Exact");?>
+
+					</div>
+
+				</div>
+
+				<?php if ($this->Config->search_item_author):?>
+
+				<div class="jrFieldDiv">
+
+					<label for="author"><?php __t("Listing author");?></label>
+
+					<input type="text" id="author" name="data[author]" class="jrText" value="" />
+
+				</div>
+
+				<?php endif;?>
+
+				<div class="jrFieldDiv">
+
+					<button class="jr-search jrButton"><?php __t("Search");?></button>
+
+					<button class="jr-back jrButton" onclick="history.back();"><?php __t("Cancel");?></button>
+
+					<span id="spinner" class="jrLoadingSmall jrHidden"></span>
+
+				</div>
+
+			</fieldset>
+
+			<?php if(isset($criterias)):?>
+
+
+			<div class="jr-listing-type-outer jrFormChooser">
+
+				<div class="jrFieldDiv">
+
+				<?php __t("Advanced search");?>:
+
+					<?php echo $Form->select(
+						'data[Search][criteria_id]',
+						array_merge(array(array('value'=>0,'text'=>__t("Select",true))),$criterias),
+						0, // Selected
+						array('class'=>"jr-listing-type jrSelect"));
+						?>
+				</div>
+
+			</div>
+
+			<?php endif;?>
+
+			<div id="jr-search-fields" class="jr-search-fields jrHidden">
+
+				<?php if(isset($searchFields)):?>
+					<?php echo $this->renderControllerView('search','advanced_form');?>
+				<?php endif;?>
+
+			</div>
+
+			<input type="hidden" name="option" value="com_jreviews" />
+
+			<input type="hidden" name="data[controller]" value="search" />
+
+			<input type="hidden" name="data[action]" value="_process" />
+
+			<input type="hidden" name="Itemid" value="<?php echo $public_menu_id;?>" />
+
+			<input type="hidden" name="data[menu_id]" value="<?php echo $search_itemid;?>" />
+
+			<?php if(isset($criteria_id)):?>
+
+				<input class="jr-listing-type" name="data[Search][criteria_id]" type="hidden" value="<?php echo $criteria_id?>" />
+
+			<?php endif;?>
+
+		</form>
+
+	</div>
+
+</div>

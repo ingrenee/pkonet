@@ -1,0 +1,69 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+//prx($category);
+empty($criteria) and $criteria['text'] = '*No Listings*';
+?>
+
+<div class="jr-categories-edit">
+
+    <form action="index.php" method="post" class="jrForm" data-object-type="category">
+
+        <fieldset>
+
+            <div class="jrGrid">
+
+                <div class="jrCol6">
+
+                    <div class="jrFieldDiv">
+
+                        <label><?php __a("Listing Type");?><span class"required">*</span></label>
+
+                        <div>
+
+							<?php echo $criteria['text'];?>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="jrCol6">
+
+                    <div class="jrFieldDiv">
+
+                        <label><?php __a("Directory");?><span class"required">*</span></label>
+
+						<?php
+		                echo $Form->select(
+			                'data[Category][dirid]',
+			                array_merge(array(array('value'=>0,'text'=>__a("Select directory",true))),$directories),
+			                $category['Directory']['dir_id']
+		                );
+		                ?>
+
+                    </div>
+
+                </div>
+
+        </fieldset>
+
+		<input type="hidden" name="data[Category][criteriaid]" value="<?php echo $category['Category']['criteria_id'];?>" />
+
+		<input type="hidden" name="data[Category][id][]" value="<?php echo $category['Category']['cat_id']; ?>" />
+
+	    <input type="hidden" name="data[controller]" value="admin/categories" />
+
+	    <input type="hidden" name="data[action]" value="_save" />
+
+    </form>
+
+</div>

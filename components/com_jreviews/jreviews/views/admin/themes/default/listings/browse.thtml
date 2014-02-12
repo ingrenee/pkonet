@@ -1,0 +1,423 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$nullDate = '0000-00-00 00:00:00';
+
+$langDel = json_encode(array(
+	'del_confirm'=>__a("This action will delete the listing(s) and associated media, reviews and review comments. Are you sure you want to continue?",true,true),
+	'del_error'=>__a('There was a problem deleting the listing.',true,true)
+	));
+
+$langAccess = array(1=>__a("Public",true,true),2=>__a("Registered",true,true),3=>__a("Special",true,true));
+
+$accessStates = array(1=>'jrPublic',2=>'jrRegistered',3=>'jrSpecial');
+
+$publishStates = array(0=>'jrIconUnpublished',1=>'jrIconPublished',-2=>'jrIconRejected',
+     -3=>'jrIconExpired');
+
+$featureStates = json_encode(array(0=>'jrIconNotFeatured',1=>'jrIconFeatured'));
+
+$claimStates = array(''=>'',-1=>'jrRed',0=>'jrOrange',1=>'jrGreen');
+
+$categoryFilter = array_merge(array(array('value'=>0,'text'=>__a("Select Category",true))),$categories);
+
+$authorsFilter = array_merge(array(array('value'=>0,'text'=>__a("Select Owner",true))),$authors);
+
+$stateFilter = array(
+			        0=>__a("Filter by",true),
+	//							    'published'=>'Published',
+			        'unpublished'=>__a("Unpublished",true),
+			        'featured'=>__a("Featured",true),
+					'media_count'=>__a("With media",true),
+					'rejected'=>__a("Rejected",true)
+				);
+
+$now = date('Y-m-d H:i:s');
+
+# Initialize paginator helper
+$pagination['total'] and $Paginator->paginate(array('current_page'=>$this->page,'items_per_page'=>$this->limit,'items_total'=>$pagination['total']));
+?>
+
+<div class="jr-listings-list ">
+
+	<div class="jrPageHeading"><?php __a("Browse Listings");?></div>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="listing">
+
+		<div class="jrPageToolbar jrRoundedPanel">
+
+			<button class="jr-delete-all jrButton" data-lang='<?php echo $langDel;?>'>
+
+				<span class="jrIconDelete"></span><span><?php __a("Delete");?></span>
+
+			</button>
+
+		</div>
+
+	    <div class="jr-filters jrPageFilters jrRoundedPanelLt jrClearfix">
+
+		        <div class="jrLeft"><?php echo $Form->select('filter[catid]',$categoryFilter,Sanitize::getInt($filters,'catid'));?></div>
+
+		        <div class="jrLeft"><?php echo $Form->select('filter[authorid]',$authorsFilter,Sanitize::getInt($filters,'authorid'));?></div>
+
+		        <div class="jrLeft"><?php echo $Form->select('filter[state]',$stateFilter,Sanitize::getString($filters,'state'));?></div>
+
+		        <div class="jrLeft">
+
+		        	<input type="text" name="filter[title]" placeholder="<?php __a("Title");?>" value="<?php echo Sanitize::getString($filters,'title');?>" />
+
+		        </div>
+
+        </div>
+
+        <div class="jrMediaIconLegend">
+
+            <span class="jrIconPublished"></span> <?php __a("Published");?>
+
+            &nbsp;&nbsp;
+
+            <span class="jrIconUnpublished"></span> <?php __a("Unpublished");?>
+
+            &nbsp;&nbsp;
+
+            <span class="jrIconRejected"></span> <?php __a("Rejected");?>
+
+            &nbsp;&nbsp;
+
+            <span class="jrIconExpired"></span> <?php __a("Expired");?>
+
+        </div>
+
+        <?php echo $this->element('pagination',array('position'=>'top'));?>
+
+        <div class="jrDataList">
+
+	        <div class="jrGrid24 jrDataListHeader">
+
+        		<div class="jrCol1"><input class="jr-cb-all" value="" type="checkbox"></div>
+
+        		<div class="jrCol1">#</div>
+
+        		<div class="jrCol1 jrSizeS">ID</div>
+
+        		<div class="jrCol5"><?php __a("Title");?></div>
+
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconPublished jr-more-info"></span>
+        			<div class="jrPopup jrHidden"><?php __a("Published");?></div>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconFeatured jr-more-info"></span>
+        			<div class="jrPopup jrHidden"><?php __a("Featured");?></div>
+
+        		</div>
+
+                <div class="jrCol1">
+
+                    <span class="jrIconClaim jr-more-info"></span>
+                    <div class="jrPopup jrHidden"><?php __a("Claim Status");?></div>
+
+                </div>
+
+        		<?php /*<div class="jrCol1 jrSizeS"><?php __a("Featured Joomla");?></div>*/?>
+
+        		<div class="jrCol2 jrCenter">
+
+        			<span class="jrIconManage jr-more-info"></span>
+        			<div class="jrPopup jrHidden"><?php __a("Access");?></div>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconEditor jr-more-info"></span>
+        			<div class="jrPopup jrHidden"><?php __a("Editor reviews");?></div>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconUsers jr-more-info"></span>
+        			<div class="jrPopup jrHidden"><?php __a("User reviews");?></div>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconPhoto jr-more-info"></span>
+        			<div class="jrPopup jrHidden"><?php __a("Media");?></div>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconAddMedia jr-more-info"></span>
+        			<div class="jrPopup jrHidden"><?php __a("Add Media");?></div>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+        			<?php if(Configure::read('PaidListings.enabled')):?>
+
+        			<span class="jrIconCart jr-more-info"></span>
+        			<div class="jrPopup jrHidden"><?php __a("Transactions");?></div>
+
+        			<?php else:?>&nbsp;<?php endif;?>
+
+        		</div>
+
+    			<div class="jrCol1"><span class="jrIconMessage"></span></div><?php /* EMAIL */?>
+
+        		<div class="jrCol3"><?php __a("Date & Author");?></div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconGraph jr-more-info"></span>
+        			<div class="jrPopup jrHidden"><?php __a("Views");?></div>
+
+        		</div>
+
+    			<div class="jrCol1">&nbsp;</div>
+
+	        </div>
+
+			<?php $j = 0; foreach($listings AS $listing): $j++; extract($listing['Listing']);?>
+
+			<?php
+		    if ($publish_down != $nullDate && $now > $publish_down ) {
+			    $state = -3;
+		    }
+			?>
+
+	        <div class="jr-layout-outer jrGrid24" data-id="<?php echo $listing_id;?>">
+
+        		<div class="jrCol1"><input type="checkbox" class="jr-row-cb" name="cid[]" value="<?php echo $listing_id;?>" /></div>
+
+        		<div class="jrCol1"><?php echo ($this->page-1)*$this->limit + $j++;?></div>
+
+        		<div class="jrCol1" style="font-size:9px;"><?php echo $listing_id;?></div>
+
+        		<div class="jrCol5"><?php /** TITLE **/?>
+
+					<a href="javascript:void(0)" class="jr-edit" data-id="<?php echo $listing_id;?>" data-referrer="browse">
+                        <span data-key="Listing.title"><?php echo $title;?></span>
+                    </a>
+
+                    <br />
+
+					<span data-key="Category.title"><?php echo $listing['Category']['title'];?></span>
+
+						<?php if(isset($listing['PaidPlanCategory']) && $listing['PaidPlanCategory']['cat_id']):?>
+
+	                        <?php
+	                        if(isset($listing['PaidOrder'])):
+
+	                        	$last_order = array_shift($listing['PaidOrder']);
+
+		                        switch($last_order['order_status']) {
+		                        	case 'Complete':
+		                        		$orderLabel = 'jrGreen';
+		                        		break;
+		                        	default:
+		                        		$orderLabel = 'jrOrange';
+		                        		break;
+		                        }
+	                        ?>
+		                        <span class="jrStatusLabel <?php echo $orderLabel;?>"><?php echo $last_order['order_status'];?></span>
+
+		                    <?php else:?>
+
+		                        <span class="jrStatusLabel jrLightGrey"><?php __a("Without Order");?></span>
+
+		                    <?php endif;?>
+
+					<?php endif;?>
+
+        		</div>
+
+
+        		<div class="jrCol1"><?php /** PUBLISHED **/?>
+
+                    <?php if($state == -3):?>
+
+                        <span class="<?php echo $publishStates[$state];?>"></span>
+
+                    <?php else:?>
+
+    					<button class="jr-publish jrButton jrSmall jrIconOnly" data-id="<?php echo $listing_id;?>" data-state="<?php echo $state;?>" data-states='<?php echo json_encode($publishStates);?>'>
+
+    					    <span class="<?php echo $publishStates[$state];?>"></span>
+
+    					</button>
+
+                    <?php endif;?>
+
+        		</div>
+
+        		<div class="jrCol1"><?php /** FEATURED **/?>
+
+					<button class="jr-feature jrButton jrSmall jrIconOnly" data-id="<?php echo $listing_id;?>" data-state="<?php echo $featured;?>" data-states='<?php echo $featureStates;?>' data-referrer="listings">
+
+					    <span class="<?php echo $featured ? 'jrIconFeatured' : 'jrIconNotFeatured';?>"></span>
+
+					</button>
+
+        		</div>
+
+                <div class="jrCol1"><?php /** CLAIM STATUS **/?>
+
+                    <?php $state = $claimStates[$listing['Claim']['approved']];?>
+
+                    <button class="jr-claim jrButton jrSmall jrIconOnly <?php echo $state;?>" data-id="<?php echo $listing_id;?>" data-user-id="<?php echo $user_id;?>" data-state="<?php echo (int)$listing['Claim']['approved'];?>" data-states='<?php echo json_encode($claimStates);?>'>
+
+                        <span class="jrIconClaim"></span>
+
+                    </button>
+
+                </div>
+
+        		<div class="jrCol2 jrCenter"><?php /* ACCESS */?>
+
+			    	<a href="javascript:void(0)" class="jr-access" data-id="<?php echo $listing_id;?>" data-lang='<?php echo json_encode($langAccess);?>' data-states='<?php echo json_encode($accessStates);?>'>
+
+			    		<span class="<?php echo $accessStates[$access];?>"><?php echo $langAccess[$access];?></span>
+
+			    	</a>
+
+				</div>
+
+		    	<?php $link = "index.php?option=com_jreviews&url=admin_reviews/browse&listing_id={$listing_id}&extension=com_content";?>
+
+        		<div class="jrCol1"><?php /** EDITOR REVIEWS **/?>
+
+                    <?php if($listing['Review']['editor_review_count'] > 0):?>
+
+                        <a class="jr-review-filter" data-listing-id="<?php echo $listing_id;?>" data-review-type="editor" data-extension="com_content"
+                                data-filter="6" data-referrer="listing"  href="<?php echo $link;?>"><?php echo (int) $listing['Review']['editor_review_count'];?></a>
+
+                    <?php else:?>0<?php endif;?>
+        		</div>
+
+        		<div class="jrCol1"><?php /** USER REVIEWS **/?>
+
+                    <?php if($listing['Review']['review_count'] > 0):?>
+
+						<a class="jr-review-filter" data-listing-id="<?php echo $listing_id;?>" data-review-type="user" data-extension="com_content"
+                                data-filter="6" data-referrer="listing" href="<?php echo $link;?>"><?php echo (int) $listing['Review']['review_count'];?></a>
+
+                    <?php else:?>0<?php endif;?>
+
+        		</div>
+
+        		<div class="jrCol1"><?php /* MEDIA COUNT */?>
+
+    				<?php if($media_count > 0):?>
+
+    					<a href="javascript:void(0)" class="jr-media-filter" data-listing-id="<?php echo $listing_id;?>" data-extension="com_content">
+
+    						<?php echo $media_count;?>
+
+    					</a>
+
+    				<?php else:?>0<?php endif;?>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+					<?php
+
+					$params = 'id:'.urlencode(base64_encode($listing_id.':'.Sanitize::getString($listing['Listing'],'extension','com_content'))).'/';
+
+					$link_media_upload = "index.php?option=com_jreviews&amp;url=admin_media_upload/create/{$params}";?>
+
+					<a class="jrButton jrSmall jrIconOnly" href="<?php echo $link_media_upload;?>" title="<?php __a("Add Media");?>">
+						<span class="jrIconAddMedia"></span><span class="jrHidden"><?php __a("Add Media");?></span>
+					</a>
+
+				</div>
+
+        		<div class="jrCol1">
+
+                    <?php if(isset($listing['PaidOrder'])):?>
+
+					<button class="jr-paid-txn jrButton jrSmall jrIconOnly" title="<?php __a("Transactions");?>" data-listing-id="<?php echo $listing_id;?>">
+
+						<span class="jrIconCart"></span>
+
+					</button>
+
+                    <?php else:?>&nbsp;<?php endif;?>
+
+        		</div>
+
+				<div class="jrCol1">
+
+					<?php if($listing['User']['email'] != ''):?>
+
+						<a class="jrButton jrSmall jrIconOnly" href="mailto:<?php echo $listing['User']['email'];?>" title="<?php __a("Email");?>">
+							<span class="jrIconMessage"></span>
+						</a>
+
+					<?php else:?>&nbsp;<?php endif;?>
+
+				</div>
+
+        		<div class="jrCol3"><?php /* USER INFO */?>
+
+        			<?php $author = $author_alias || $user_id == 0 ? $author_alias : $AdminRoutes->user($listing['User']['name'],$user_id,array('target'=>'_blank'));?>
+
+					<span class="jr-user" data-key="User.name"><?php echo $author;?></span> <br />
+
+					<span class="jrSizeS"><?php echo $Time->niceShort($created); ?>&nbsp;-&nbsp;<?php echo $Routes->whois(long2ip($ipaddress));?></span>
+
+        		</div>
+
+        		<div class="jrCol1 jrSizeS"><?php /** VIEWS **/?>
+
+					<?php echo (int) $hits;?>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+                    <button class="jr-delete jrButton jrSmall jrIconOnly" data-lang='<?php echo $langDel;?>'>
+
+                        <span class="jrIconDelete"></span><span class="jrHidden"><?php __a("Delete");?></span>
+
+                    </button>
+
+        		</div>
+
+	        </div>
+
+	    	<?php endforeach;?>
+
+    	</div>
+
+        <?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+        <input type="hidden" id="page_number" name="data[page]" value="<?php echo $this->page;?>" />
+
+        <input type="hidden" id="limit" name="data[limit]" value="<?php echo $this->limit;?>" />
+
+        <input type="hidden" id="controller" name="controller" value="admin/admin_listings" />
+
+        <input type="hidden" id="action" name="action" value="index" />
+
+    </form>
+
+</div>

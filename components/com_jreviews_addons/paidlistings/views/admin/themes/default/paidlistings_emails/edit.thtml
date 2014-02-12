@@ -1,0 +1,46 @@
+<?php extract($email['PaidEmail']);?>
+
+<div class="jrPaidEmailTags jrClearfix">
+
+    <ul>
+        <li>{user_name}</li>
+        <li>{listing_title}</li>
+        <li>{listing_url}</li>
+        <li>{plan_name}</li>
+        <li>{plan_description}</li>
+        <li>{order_id}</li>
+        <li>{order_expires}</li>
+        <li>{order_amount}</li>
+        <li>{site_url}</li>
+        <li>{txn_array}</li>
+    </ul>
+
+</div>
+
+<form id="jr-page-form" class="jrForm" action="index.php" method="post">
+
+    <fieldset>
+
+        <div class="jrFieldDiv">
+
+            <label><?php __a("Subject");?></label>
+
+            <?php echo $Form->text('data[PaidEmail][subject]',array('value'=>$subject,'style'=>'width:350px;'));?>
+
+        </div>
+
+        <div class="jrFieldDiv">
+
+            <label><?php __a("Body");?></label>
+            <?php echo $Form->textarea('data[PaidEmail][body]',array('value'=>$body));?>
+
+        </div>
+    </fieldset>
+
+    <?php echo $Form->hidden('data[PaidEmail][email_id]',array('value'=>$email_id));?>
+
+    <input type="hidden" name="data[controller]" value="admin/admin_paidlistings_emails" />
+
+    <input type="hidden" name="data[action]" value="_save" />
+
+</form>

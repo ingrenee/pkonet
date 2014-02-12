@@ -1,0 +1,1026 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$accessGroupsGuest = $accessGroups;
+
+$accessGroupsNoGuest = array_slice($accessGroups,1);
+
+$relatedListingsTabs = 4;
+
+$criteria_id = Sanitize::getInt($criteria['Criteria'],'criteria_id');
+
+?>
+
+<div class="jr-listing-types-edit">
+
+	<div class="jrPageHeading"><?php __a("Listing Type");?></div>
+
+    <form action="index.php" method="post" class="jrForm" data-object-type="listing_type">
+
+		<div class="jr-toolbar jrPageToolbar jrRoundedPanel">
+
+		    <span id="jr-status" class="jrStatus jrLeft jrHidden"></span>
+
+		    <button class="jr-save jrButton jrGreen" data-id="<?php echo $criteria_id;?>">
+
+		    	<span class="jrIconSave"></span><?php __a("Save");?>
+
+		    </button>
+
+		    <?php if(Sanitize::getInt($criteria['Criteria'],'criteria_id')):?>
+
+		    <button class="jr-apply jrButton" data-id="<?php echo $criteria_id;?>">
+
+		    	<span class="jrIconApply"></span><?php __a("Apply");?>
+
+		    </button>
+
+		    <?php endif;?>
+
+		    <button class="jr-cancel jrButton">
+
+		    	<span class="jrIconCancel"></span><?php __a("Cancel");?>
+
+		    </button>
+
+		</div>
+
+	    <div class="jr-validation jrError jrHidden" style="margin-bottom: 15px;"></div>
+
+		<fieldset class="jrFieldsetMargin">
+
+			<legend><?php __a("Main Settings");?></legend>
+
+			<div class="jrGrid">
+
+				<div class="jrCol6">
+
+					    <div class="jrFieldDiv">
+
+					        <label for="title">Title<span class="jrIconRequired"></span></label>
+
+					        <div>
+					            <?php echo $Form->text('data[Criteria][title]',array('class'=>'jrText','max_size'=>'30','value'=>$criteria['Criteria']['title']));?>
+					        </div>
+
+					    </div>
+
+				</div>
+
+				<div class="jrCol6">
+
+				    <div clas="jrFieldDiv">
+
+					<label><?php __a("Select all the field groups you want to associate to this listing type");?></label>
+
+						<?php
+						echo $Form->select(
+						    'data[Criteria][groupid]',
+						    $groups,
+						    explode(',',$criteria['Criteria']['group_id']),
+						    array('size'=>'20','multiple'=>'multiple','style'=>'width:350px;font-size:110%;line-height:1.5em;','class'=>'multiselectGroup')
+						);
+						?>
+				    </div>
+
+				</div>
+
+			</div>
+
+
+			<div class="jrGrid">
+
+				<div class="jrCol6">
+
+				    <div class="jrFieldDiv">
+
+				        <label for="criteria_state"><?php __a("Comments & Ratings");?><span class="jrIconRequired">&nbsp;</span></label>
+
+				        <div>
+
+				             <select id="criteria_state" name="data[Criteria][state]">
+
+				                <option value=1 <?php echo $criteria['Criteria']['state'] == 1 ? 'selected' : '';?>><?php __a("Allow comments and ratings");?></option>
+
+				                <option value=2 <?php echo $criteria['Criteria']['state'] == 2 ? 'selected' : '';?>><?php __a("Allow comments without ratings");?></option>
+
+				                <option value=0 <?php echo $criteria['Criteria']['state'] == 0 ? 'selected' : '';?>><?php __a("Disable comments and ratings");?></option>
+
+				            </select>
+
+				        </div>
+
+				    </div>
+
+				</div>
+
+				<div class="jrCol6">
+
+				    <div clas="jrFieldDiv">
+
+				    	<label><?php __a("Display in Advanced Search Page");?></label>
+
+						<?php echo $Form->radioYesNo( "data[Criteria][search]", "", Sanitize::getVar($criteria['Criteria'],'search',1)); ?>
+				    </div>
+
+				</div>
+
+			</div>
+
+		</fieldset>
+
+		<fieldset class="jrFieldsetMargin">
+
+		     <legend><?php __a("Rating Criteria");?></legend>
+
+	        <?php if($criteria['Criteria']['criteria_id']):?>
+
+	            <div class="jrWarning" style="margin-bottom:10px;">
+	                <?php __a("You can change the descriptions, but you cannot change the number of rating criteria if you already have reviews in the system.");?>
+	            </div>
+
+	        <?php else:?>
+
+	            <div class="jrWarning" style="margin-bottom:10px;">
+	                <?php __a("Think carefully before entering the rating criteria, because once you have the first review, you cannot add or remove rating criteria.");?>
+	            </div>
+
+	        <?php endif;?>
+
+	    	<div class="jr-ratings jrDataList">
+
+	    		<div class="jrGrid jrDataListHeader">
+
+	    			<div class="jrCol4"><?php __a("Rating Criterion");?></div>
+
+	    			<div class="jrCol1"><?php __a("Required");?></div>
+
+	    			<div class="jrCol1"><?php __a("Weight");?></div>
+
+	    			<div class="jrCol5"><?php __a("Tooltip");?></div>
+
+	    			<div class="jrCol1">&nbsp;</div>
+
+	    		</div>
+
+	            <?php foreach ( $criteriaDisplay['criteria'] as $k => $v ):?>
+
+	    		<div class="jr-layout jrGrid" data-id="<?php echo $k;?>">
+
+	    			<div class="jrCol4">
+
+						<input type="text" class="jrCriterion" name="data[Criteria][criteria][<?php echo $k;?>]" value="<?php echo $criteriaDisplay['criteria'][$k];?>" />
+
+	    			</div>
+
+	    			<div class="jrCol1">
+
+	                	<?php $checked = empty($criteriaDisplay['required'][$k]) && !empty($criteriaDisplay['criteria'][$k]) ? '' : 'checked="checked"';?>
+	                	<input type="hidden" name="data[Criteria][required][<?php echo $k;?>]" value="<?php echo $checked != '' ? 1 : 0;?>" />
+
+	                	<input type="checkbox" class="jr-rating-required" value="1" name="required" <?php echo $checked;?> />
+
+	    			</div>
+
+	    			<div class="jrCol1">
+
+	                	<input type="text" class="jr-weights jrCriteriaWeights jrCenter" size="3" name="data[Criteria][weights][<?php echo $k;?>]" value="<?php echo Sanitize::getString($criteriaDisplay['weights'],$k);?>" />
+
+	    			</div>
+
+	    			<div class="jrCol5">
+
+	                	<input type="text" class="jrCriteriaDesc" name="data[Criteria][tooltips][<?php echo $k;?>]" value="<?php echo Sanitize::getString($criteriaDisplay['tooltips'],$k);?>" />
+
+	    			</div>
+
+	    			<div class="jrCol1">
+
+	                	<?php if(empty($reviewsExist)):?>
+
+	                	<button class="jr-remove-rating jrButton jrIconOnly">
+
+	                		<span class="jrIconRemove"></span>
+
+	                	</button>
+
+	                	<?php endif;?>&nbsp;
+
+	    			</div>
+
+	    		</div>
+
+				<?php endforeach;?>
+
+	    	</div>
+
+			<div class="jrGrid" style="padding-top:5px;">
+
+				<div class="jrCol4">
+
+			    	<?php if(empty($reviewsExist)):?>
+
+			    	<button class="jr-add-rating jrButton jrBlue jrSmall"><span class="jrIconNew"></span><?php __a("Add New Criterion");?></button>
+
+			    	<?php endif;?>&nbsp;
+
+				</div>
+
+				<div class="jrCol1">&nbsp;</div>
+
+				<div class="jrCol1 jrCenter" style="padding-top:5px;">
+
+					<div class="jr-sum-weights"></div>
+
+				</div>
+
+				<div class="jrCol6">&nbsp;</div>
+
+			</div>
+
+		</fieldset>
+
+		<script id="jr-rating-template" type="text/x-jreviews">
+		<div class="jr-layout jrGrid jrHidden">
+			<div class="jrCol4">
+				<input class="jrCriterion" type="text" name="data[Criteria][criteria][]" />
+			</div>
+			<div class="jrCol1">
+	        	<input type="hidden" name="data[Criteria][required][]" value="1" />
+	        	<input class="jr-rating-required" type="checkbox" value="1" checked="checked" name="required" />
+			</div>
+			<div class="jrCol1">
+	        	<input type="text" class="jr-weights jrCriteriaWeights jrCenter" size="5" name="data[Criteria][weights][]" />
+			</div>
+			<div class="jrCol5">
+	        	<input type="text" class="jrCriteriaDesc" name="data[Criteria][tooltips][]" />
+			</div>
+			<div class="jrCol1">
+	        	<button class="jr-remove-rating jrButton jrIconOnly"><span class="jrIconRemove"></span></button>
+			</div>
+		</div>
+		</script>
+
+		<div class="jrClear"></div>
+
+	    <fieldset class="jrFieldsetMargin">
+
+	        <legend>Advanced Setup</legend>
+
+	        <table width="100%"border="0" cellpadding="0" cellspacing="0">
+	            <tr>
+
+	                <td valign="top" style="width:320px;padding: 0 0 0 5px;">
+
+	                    <div id="jr-tabs" class="jr-tabs jrTabs">
+
+	                        <ul>
+
+								<li><a href="#listing-type-config"><span><?php __a("Configuration Overrides");?></span></a></li>
+
+	                            <li><a href="#listing-type-access"><span><?php __a("Access Overrides");?></span></a></li>
+
+	                            <li><a href="#listing-type-media"><span><?php __a("Media Overrides");?></span></a></li>
+
+								<li><a href="#listing-type-seo"><span><?php __a("SEO Manager");?></span></a></li>
+
+	                            <li><a href="#detail-page-widgets"><span><?php __a("Detail Page Widgets");?></span></a></li>
+
+	                         </ul>
+
+							<!-- CONFIGURATION OVERRIDES -->
+							<?php
+
+								$configTab = array(
+									/*** NEW HEADER ***/
+									__a("Schema.org",true) => array(
+										 array(
+											'label'=>__a("Object Type",true),
+											'type'=>'text',
+											'name'=>'schema_org_type',
+											'default'=>'Article',
+											'attributes'=>array('style'=>'width:150px'),
+											'help'=>sprintf(__a("%sClick for valid object types%s",true),'<a target="_blank" href="http://schema.org/docs/full.html">','</a>') . ' ' . __a("The 'Article' type will by used by default",true),
+											'global'=>false
+										),
+										array(
+											'label'=>__a("Include user name in Schema.org markup",true),
+											'type'=>'radioYesNo',
+											'name'=>'schema_org_author',
+											'default'=>0,
+											'attributes'=>array('div'=>false),
+											'help'=>'',
+											'global'=>false
+										)
+									),									/*** NEW HEADER ***/
+									__a("Community Integration",true) => array(
+										 array(
+											'label'=>__a("Facebook Open Graph Object Type",true),
+											'type'=>'text',
+											'name'=>'facebook_opengraph_type',
+											'default'=>'',
+											'attributes'=>array('style'=>'width:150px'),
+											'help'=>sprintf(__a("%sClick for valid object types%s",true),'<a target="_blank" href="https://developers.facebook.com/docs/reference/opengraph/object-type">','</a>') .' '. __a("Open Graph must be enabled in Configuration, Community Settings.",true),
+											'global'=>false
+										),
+										array(
+											'label'=>__a("Social Sharing Buttons",true),
+											'type'=>'checkbox',
+											'name'=>'social_sharing_detail',
+											'options'=>array(
+													'fbsend'=>'FB Send',
+													'fblike'=>'FB Like',
+													'twitter'=>'Twitter',
+													'gplusone'=>'Google+1',
+													'linkedin'=>'LinkedIn',
+													'pinit'=>'Pinterest'
+												),
+											'attributes'=>array('div'=>false),
+											'global'=>true
+										),
+									)
+								);
+
+								if(in_array('geomaps',$JreviewsAddons))
+								{
+									$configTab[__a("GeoMaps Integration",true)] = array(
+											array(
+												'label'=>__a("Show map in detail pages",true),
+												'type'=>'radioYesNo',
+												'name'=>'geomaps.enable_map_detail',
+												'default'=>1,
+												'attributes'=>array('div'=>false),
+												'help'=>'',
+												'global'=>false
+											),
+											array(
+												'label'=>__a("Show map in list pages",true),
+												'type'=>'radioYesNo',
+												'name'=>'geomaps.enable_map_list',
+												'default'=>1,
+												'attributes'=>array('div'=>false),
+												'help'=>'',
+												'global'=>false
+											)
+										);
+								}
+
+								$configTab[__a("Category Pages",true)] = array(
+										array(
+											'label'=>__a("Simple search",true),
+											'type'=>'radioYesNo',
+											'name'=>'list_show_searchbox',
+											'default'=>Sanitize::getVar($this->Config,'list_show_searchbox',1),
+											'attributes'=>array('div'=>false),
+											'help'=>'',
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Listing Comparison",true),
+											'type'=>'radioYesNo',
+											'name'=>'list_compare',
+											'default'=>Sanitize::getVar($this->Config,'list_compare',0),
+											'attributes'=>array('div'=>false),
+											'help'=>'',
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Default list Ordering",true),
+											'type'=>'select',
+											'name'=>'list_order_default',
+											'options'=>$Jreviews->orderingList(null,null,true),
+											'default'=>Sanitize::getVar($this->Config,'list_order_default'),
+											'help'=>'',
+											'global'=>true
+										),
+										 array(
+											'label'=>__a("Order by field",true),
+											'type'=>'text',
+											'name'=>'list_order_field',
+											'default'=>'',
+											'help'=>__a("Overrides default ordering",true),
+											'attributes'=>array('style'=>'width:150px'),
+											'global'=>false
+										)
+									);
+
+								$configTab[__a("Detail Pages",true)] = array(
+										array(
+											'label'=>__a("Favorites",true),
+											'type'=>'radioYesNo',
+											'name'=>'favorites_enable',
+											'default'=>Sanitize::getVar($this->Config,'favorites_enable'),
+											'attributes'=>array('div'=>false),
+											'help'=>'',
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Listing Claims",true),
+											'type'=>'radioYesNo',
+											'name'=>'claims_enable',
+											'default'=>Sanitize::getVar($this->Config,'claims_enable'),
+											'attributes'=>array('div'=>false),
+											'help'=>'',
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Listing Inquiries",true),
+											'type'=>'radioYesNo',
+											'name'=>'inquiry_enable',
+											'default'=>Sanitize::getVar($this->Config,'inquiry_enable'),
+											'attributes'=>array('div'=>false),
+											'help'=>'',
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Limit the number of characters shown in the Summary/Description text",true),
+											'type'=>'text',
+											'name'=>'summary_desc_char_limit',
+											'default'=>Sanitize::getVar($this->Config,'summary_desc_char_limit'),
+											'attributes'=>array('style'=>'width:3em;'),
+											'help'=>"If you enter the number of characters higher than 0, visitors will need to click the 'show more' link to expand the full text. Limiting the number of characters will strip all html formatting.",
+											'global'=>true
+										)
+									);
+
+								$configTab[__a("Listing Information",true)] = array(
+										 array(
+											'label'=>__a("Date",true),
+											'type'=>'radioYesNo',
+											'name'=>'list_show_date',
+											'default'=>Sanitize::getVar($this->Config,'list_show_date'),
+											'attributes'=>array('div'=>false),
+											'help'=>'',
+											'global'=>true
+										),
+										 array(
+											'label'=>__a("Listing Author",true),
+											'type'=>'radioYesNo',
+											'name'=>'list_show_author',
+											'default'=>Sanitize::getVar($this->Config,'list_show_author'),
+											'attributes'=>array('div'=>false),
+											'help'=>'',
+											'global'=>true
+										),
+										 array(
+											'label'=>__a("Average User Rating",true),
+											'type'=>'radioYesNo',
+											'name'=>'list_show_user_rating',
+											'default'=>Sanitize::getVar($this->Config,'list_show_user_rating'),
+											'attributes'=>array('div'=>false),
+											'help'=>__a("List pages only",true),
+											'global'=>true
+										),
+										 array(
+											'label'=>__a("Views",true),
+											'type'=>'radioYesNo',
+											'name'=>'list_show_hits',
+											'default'=>Sanitize::getVar($this->Config,'list_show_hits'),
+											'attributes'=>array('div'=>false),
+											'help'=>'',
+											'global'=>true
+										)
+									);
+
+								$configTab[__a("Listing Summary & Status Labels",true)] = array(
+									 array(
+										'label'=>__a("Show summary",true),
+										'type'=>'radioYesNo',
+										'name'=>'list_show_abstract',
+										'default'=>Sanitize::getVar($this->Config,'list_show_abstract'),
+										'attributes'=>array('div'=>false),
+										'help'=>__a("List pages only",true),
+										'global'=>true
+									),
+									 array(
+										'label'=>__a("Trim summary (words)",true),
+										'type'=>'text',
+										'name'=>'list_abstract_trim',
+										'attributes'=>array('style'=>'width:3em;'),
+										'help'=>__a("If zero or blank it will display all the text. Limiting the number of words will strip all html formatting.",true),
+										'default'=>Sanitize::getVar($this->Config,'list_abstract_trim'),
+										'help'=>'',
+										'global'=>true
+									),
+									 array(
+										'label'=>__a("Show 'New' Label",true),
+										'type'=>'radioYesNo',
+										'name'=>'list_new',
+										'default'=>Sanitize::getVar($this->Config,'list_new'),
+										'attributes'=>array('div'=>false),
+										'help'=>'',
+										'global'=>true
+									),
+									 array(
+										'label'=>__a("'New' button days",true),
+										'type'=>'text',
+										'name'=>'list_new_days',
+										'attributes'=>array('style'=>'width:3em;'),
+										'default'=>Sanitize::getVar($this->Config,'list_new_days'),
+										'help'=>'',
+										'global'=>true
+									),
+									 array(
+										'label'=>__a("Show 'Hot' Label",true),
+										'type'=>'radioYesNo',
+										'name'=>'list_hot',
+										'default'=>Sanitize::getVar($this->Config,'list_hot'),
+										'attributes'=>array('div'=>false),
+										'help'=>'',
+										'global'=>true
+									),
+									 array(
+										'label'=>__a("'Hot' button days",true),
+										'type'=>'text',
+										'name'=>'list_hot_hits',
+										'attributes'=>array('style'=>'width:3em;'),
+										'default'=>Sanitize::getVar($this->Config,'list_hot_hits'),
+										'help'=>'',
+										'global'=>true
+									),
+									 array(
+										'label'=>__a("Show 'Featured' Label",true),
+										'type'=>'radioYesNo',
+										'name'=>'list_featured',
+										'default'=>Sanitize::getVar($this->Config,'list_featured'),
+										'attributes'=>array('div'=>false),
+										'help'=>'',
+										'global'=>true
+									)
+								);
+
+								$configTab[__a("Listing Form",true)] = array(
+										array(
+											'label'=>__a("Publication Date",true),
+											'type'=>'radioYesNo',
+											'name'=>'listing_publication_date',
+											'default'=>Sanitize::getVar($this->Config,'listing_publication_date',0),
+											'attributes'=>array('div'=>false),
+											'help'=>__a("The listing will remain unpublished until this date",true),
+											'global'=>false
+										),
+										array(
+											'label'=>__a("Expiration Date",true),
+											'type'=>'radioYesNo',
+											'name'=>'listing_expiration_date',
+											'default'=>Sanitize::getVar($this->Config,'listing_expiration_date',0),
+											'attributes'=>array('div'=>false),
+											'help'=>__a("The listing will no longer be published after this date",true),
+											'global'=>false
+										),
+										array(
+											'label'=>__a("Summary",true),
+											'type'=>'select',
+											'name'=>'content_summary',
+											'default'=>Sanitize::getVar($this->Config,'content_summary'),
+											'options'=>array(
+															'required'=>'Required',
+															'optional'=>'Optional',
+															'hidden'=>'Hidden'
+														),
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Description",true),
+											'type'=>'select',
+											'name'=>'content_description',
+											'default'=>Sanitize::getVar($this->Config,'content_description'),
+											'options'=>array(
+															'required'=>'Required',
+															'optional'=>'Optional',
+															'hidden'=>'Hidden'
+														),
+
+											'help'=>'',
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Review form access",true),
+											'type'=>'select',
+											'name'=>'content_show_reviewform',
+											'default'=>Sanitize::getVar($this->Config,'content_show_reviewform'),
+											'options'=>array(
+															'authors'=>'Editors',
+															'noteditors'=>'Everyone except editors',                                                                      'all'=>'Everyone',
+															'none'=>'Don\'t show'
+															),
+
+											'help'=>'',
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Make review optional",true),
+											'type'=>'radioYesNo',
+											'name'=>'reviewform_optional',
+											'default'=>Sanitize::getVar($this->Config,'reviewform_optional'),
+											'attributes'=>array('div'=>false),
+											'help'=>'',
+											'global'=>true
+										)
+									);
+
+								$configTab[__a("Reviews",true)] = array(
+										array(
+											'label'=>__a("Rating increment",true),
+											'type'=>'select',
+											'name'=>'rating_increment',
+											'default'=>Sanitize::getVar($this->Config,'rating_increment'),
+											'options'=>array('1'=>1,'0.5'=>0.5),
+
+											'help'=>'',
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Enable Editor Reviews",true),
+											'type'=>'select',
+											'name'=>'author_review',
+											'default'=>Sanitize::getVar($this->Config,'author_review'),
+											'options'=>array(
+														'0' => 'No editor reviews',
+														'1' => 'One editor review per listing',
+														'2' => 'Multiple editor reviews per listing'
+														),
+
+											'help'=>'',
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Comma list of JReviews Editors user IDs",true),
+											'type'=>'text',
+											'name'=>'authorids',
+											'attributes'=>array('class'=>'jrText'),
+											'help'=>'<a href="index.php?option=com_users&view=users&tmpl=component" class="jr-popup-window" target="_blank">'.__a("View list of users",true).'</a>',
+											'global'=>true
+										),
+										array(
+											'label'=>__a("User Review Order",true),
+											'type'=>'select',
+											'name'=>'user_review_order',
+											'default'=>Sanitize::getVar($this->Config,'user_review_order'),
+											'options'=>$Jreviews->orderingListReviews(null,array('return'=>true)),
+
+											'help'=>'',
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Limit the number of characters shown in the editor review comments",true),
+											'type'=>'text',
+											'name'=>'editor_review_char_limit',
+											'default'=>Sanitize::getVar($this->Config,'editor_review_char_limit'),
+											'attributes'=>array('style'=>'width:3em;'),
+											'help'=>__a("If you enter the number of characters higher than 0, visitors will need to click the 'show more' link to expand the full text. Limiting the number of characters will strip all html formatting.",true),
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Limit the number of characters shown in the user review comments",true),
+											'type'=>'text',
+											'name'=>'user_review_char_limit',
+											'default'=>Sanitize::getVar($this->Config,'user_review_char_limit'),
+											'attributes'=>array('style'=>'width:3em;'),
+											'help'=>__a("If you enter the number of characters higher than 0, visitors will need to click the 'show more' link to expand the full text. Limiting the number of characters will strip all html formatting.",true),
+											'global'=>true
+										)
+									);
+
+								$configTab[__a("Review Form",true)] = array(
+										array(
+											'label'=>__a("Title",true),
+											'type'=>'select',
+											'name'=>'reviewform_title',
+											'default'=>Sanitize::getVar($this->Config,'reviewform_title'),
+											'options'=>array(
+														'required'=>'Required',
+														'optional'=>'Optional',
+														'hidden'=>'Hidden'
+														),
+
+											'help'=>'',
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Comment",true),
+											'type'=>'select',
+											'name'=>'reviewform_comment',
+											'default'=>Sanitize::getVar($this->Config,'reviewform_comment'),
+											'options'=>array(
+														'required'=>'Required',
+														'optional'=>'Optional',
+														'hidden'=>'Hidden'
+														),
+
+											'help'=>'',
+											'global'=>true
+										)
+									);
+
+								$AdminSettings->displayTab('listing-type-config',$configTab,'[Criteria][config]',$criteria['ListingType']['config']);
+							?>
+
+							<!-- END CONFIGUGRATION OVERRIDES -->
+
+	                        <!-- ACCESS OVERRIDES -->
+							<?php $accessTab = array(
+								/*** NEW HEADER ***/
+									__a("Listings",true) => array(
+										array(
+											'label'=>__a("Submit new listing",true),
+											'type'=>'selectmultiple',
+											'name'=>'addnewaccess',
+											'default'=>Sanitize::getVar($this->Config,'addnewaccess'),
+											'options'=>$accessGroupsGuest,
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'help'=>'',
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Moderate new listing",true),
+											'type'=>'selectmultiple',
+											'name'=>'moderation_item',
+											'default'=>Sanitize::getVar($this->Config,'moderation_item'),
+											'options'=>$accessGroupsGuest,
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Moderate edited listing",true),
+											'type'=>'radioYesNo',
+											'name'=>'moderation_item_edit',
+											'default'=>Sanitize::getVar($this->Config,'moderation_item_edit'),
+											'attributes'=>array('div'=>false),
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Edit listing",true),
+											'type'=>'selectmultiple',
+											'name'=>'editaccess',
+											'options'=>$accessGroupsNoGuest,
+											'default'=>Sanitize::getVar($this->Config,'editaccess'),
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Publish/unpublish listing",true),
+											'type'=>'selectmultiple',
+											'name'=>'listing_publish_access',
+											'default'=>Sanitize::getVar($this->Config,'listing_publish_access'),
+											'options'=>$accessGroupsNoGuest,
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Delete listing",true),
+											'type'=>'selectmultiple',
+											'name'=>'listing_delete_access',
+											'default'=>Sanitize::getVar($this->Config,'listing_delete_access'),
+											'options'=>$accessGroupsNoGuest,
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'global'=>true
+										),
+										array(
+											'label'=>__a("WYSIWYG editor",true),
+											'type'=>'selectmultiple',
+											'name'=>'addnewwysiwyg',
+											'default'=>Sanitize::getVar($this->Config,'addnewwysiwyg'),
+											'options'=>$accessGroupsGuest,
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'global'=>true
+											),
+										array(
+											'label'=>__a("Meta data fields",true),
+											'type'=>'selectmultiple',
+											'name'=>'addnewmeta',
+											'default'=>Sanitize::getVar($this->Config,'addnewmeta'),
+											'options'=>$accessGroupsGuest,
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'global'=>true
+										)
+									),
+									__a("Reviews",true) => array(
+										array(
+											'label'=>__a("Submit new review",true),
+											'type'=>'selectmultiple',
+											'name'=>'addnewaccess_reviews',
+											'default'=>Sanitize::getVar($this->Config,'addnewaccess_reviews'),
+											'options'=>$accessGroupsGuest,
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Moderate new user reviews",true),
+											'type'=>'selectmultiple',
+											'name'=>'moderation_reviews',
+											'default'=>Sanitize::getVar($this->Config,'moderation_reviews'),
+											'options'=>$accessGroupsGuest,
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Moderate new editor reviews",true),
+											'type'=>'radioYesNo',
+											'name'=>'moderation_editor_reviews',
+											'default'=>Sanitize::getVar($this->Config,'moderation_editor_reviews'),
+											'attributes'=>array('div'=>false),
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Moderate edited user reviews",true),
+											'type'=>'radioYesNo',
+											'name'=>'moderation_review_edit',
+											'default'=>Sanitize::getVar($this->Config,'moderation_review_edit'),
+											'attributes'=>array('div'=>false),
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Moderate edited editor reviews",true),
+											'type'=>'radioYesNo',
+											'name'=>'moderation_editor_review_edit',
+											'default'=>Sanitize::getVar($this->Config,'moderation_editor_review_edit'),
+											'attributes'=>array('div'=>false),
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Enable voting",true),
+											'type'=>'selectmultiple',
+											'name'=>'user_vote_public',
+											'default'=>Sanitize::getVar($this->Config,'user_vote_public'),
+											'options'=>$accessGroupsGuest,
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'global'=>true
+										),
+										array(
+											'label'=>__a("Edit review",true),
+											'type'=>'selectmultiple',
+											'name'=>'editaccess_reviews',
+											'options'=>$accessGroupsNoGuest,
+											'default'=>Sanitize::getVar($this->Config,'user_vote_public'),
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'global'=>true
+										)
+									),
+									__a("Discussions",true) => array(
+										 array(
+											'label'=>__a("New Comment",true),
+											'type'=>'selectmultiple',
+											'name'=>'addnewaccess_posts',
+											'options'=>$accessGroupsGuest,
+											'default'=>Sanitize::getVar($this->Config,'addnewaccess_posts'),
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'global'=>true
+										),
+										 array(
+											'label'=>__a("Edit Comment",true),
+											'type'=>'selectmultiple',
+											'name'=>'post_edit_access',
+											'options'=>$accessGroupsNoGuest,
+											'default'=>Sanitize::getVar($this->Config,'post_edit_access'),
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'global'=>true,
+											'help'=>__a("Not available for Everywhere Add-on categories",true)
+										),
+										 array(
+											'label'=>__a("Delete Comment",true),
+											'type'=>'selectmultiple',
+											'name'=>'post_delete_access',
+											'options'=>$accessGroupsNoGuest,
+											'default'=>Sanitize::getVar($this->Config,'post_delete_access'),
+											'attributes'=>array('class'=>'jr-multiselect'),
+											'global'=>true,
+											'help'=>__a("Not available for Everywhere Add-on categories",true)
+										)
+									)
+								);
+
+								$AdminSettings->displayTab('listing-type-access',$accessTab,'[Criteria][config]',$criteria['ListingType']['config']);
+							?>
+
+	                        <!-- END ACCESS OVERRIDES -->
+
+
+							<!-- MEDIA OVERRRIDES -->
+
+							<div id="listing-type-media" class="jr-tabs jrTabs">
+
+								<?php echo $this->renderControllerView('listing_types','edit_media_tab');?>
+
+							</div>
+
+	                        <!-- SEO FOR LISTING TYPES -->
+
+							<div id="listing-type-seo">
+
+								<div class="jrInfo">
+
+									<span class="jrIconInfo"></span><?php echo sprintf(__a("The Listing Type SEO Manager lets you generate dynamic page titles, meta keywords and meta descriptions. Valid tags: %s and any custom field by using the syntax {jr_field}.",true),'{title},{directory},{category},{summary},{description},{metadesc},{metakey}');?>
+
+								</div>
+
+								<br />
+
+								<fieldset>
+
+									<div class="jrFieldDiv">
+
+										<label><?php __a("Page Title");?> <span class="jrIconWarning"></span> <a target="_blank" href="http://docs.reviewsforjoomla.com/?title=Custom_title_set_in_SEO_Manager_not_working"><?php __a("Download a patch to fix a bug in Joomla that prevents this from working");?></a></label>
+
+                                        <?php
+										$page_title = isset($criteria['ListingType']) ? Sanitize::getString($criteria['ListingType']['config'],'type_metatitle') : '';
+
+										echo $Form->textarea(
+                                                'data[Criteria][config][type_metatitle]',
+                                                array('style'=>'width:98%;height:5em','value'=>$page_title)
+                                            );
+                                        ?>
+
+										<?php __a("Apply to Listing Titles (List and detail pages)");?>&nbsp;
+
+										<?php echo $Form->radioYesNo( "data[Criteria][config][override_listing_title]", "", Sanitize::getVar($criteria['ListingType']['config'],'override_listing_title',0)); ?>
+
+									</div>
+
+								</fieldset>
+
+								<br />
+
+								<fieldset>
+
+									<div class="jrFieldDiv">
+
+										<label><?php __a("Meta Keywords");?></label>
+
+                                        <?php
+										$metakey = isset($criteria['ListingType']) ? Sanitize::getString($criteria['ListingType']['config'],'type_metakey') : '';
+										echo $Form->textarea(
+                                                'data[Criteria][config][type_metakey]',
+                                                array('style'=>'width:98%;height:10em;','value'=>$metakey)
+                                            );
+                                        ?>
+
+									</div>
+
+								</fieldset>
+
+								<br />
+
+								<fieldset>
+
+									<div class="jrFieldDiv">
+
+										<label><?php __a("Meta Description");?></label>
+
+                                        <?php
+										$metadesc = isset($criteria['ListingType']) ? Sanitize::getString($criteria['ListingType']['config'],'type_metadesc') : '';
+										echo $Form->textarea(
+                                                'data[Criteria][config][type_metadesc]',
+                                                array('style'=>'width:98%;height:10em;','value'=>$metadesc)
+                                            );
+                                        ?>
+
+									</div>
+
+								</fieldset>
+
+	                        </div>
+
+	                        <div id="detail-page-widgets">
+
+	                            <div id="detail-page-widgets-tabs" class="jr-tabs jrTabs">
+	                                <ul>
+	                                    <?php for($i=0;$i<$relatedListingsTabs;$i++):?>
+	                                    <li><a href="#listing-type-relatedlistings<?php echo $i;?>"><span><?php echo sprintf(__a("Related Listings %s",true),$i+1);?></span></a></li>
+	                                    <?php endfor;?>
+
+	                                    <li><a href="#listing-type-user-favorites"><span><?php __a("Favorite Users");?></span></a></li>
+
+	                                </ul>
+
+	                                <?php for($i=0;$i<$relatedListingsTabs;$i++):?>
+	                                    <?php echo $this->renderControllerView('listing_types','edit_relatedlistings_tab',array('i'=>$i));?>
+	                                <?php endfor;?>
+
+	                                <?php echo $this->renderControllerView('listing_types','edit_favorites_tab');?>
+	                            </div>
+	                        </div><!-- end detail page widgets -->
+	                     </div><!-- end tabs-->
+	                </td>
+	            </tr>
+	        </table>
+
+	    </fieldset>
+
+
+	    <input type="hidden" name="data[Criteria][id]" value="<?php echo $criteria['Criteria']['criteria_id']; ?>" />
+
+	    <input type="hidden" name="data[controller]" value="admin/listing_types" />
+
+	    <input type="hidden" name="data[action]" value="_save" />
+
+	 </form>
+
+</div>

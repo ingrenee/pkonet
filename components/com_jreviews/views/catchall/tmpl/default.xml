@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata>
+    <layout title="COM_JREVIEWS_CATCHALL_TITLE">
+        <message>
+            <![CDATA[COM_JREVIEWS_CATCHALL_TITLE]]>
+        </message>
+    </layout>
+
+    <fields name="params">
+
+        <fieldset name="basic" label="JReviews">
+
+            <field name="action" type="list" default="" label="Type of Menu" description="Choose a menu type">
+                <option value="">--Select Menu Type--</option>
+                <option value="101">Media</option>
+                <option value="102">Listing Edit</option>
+                <option value="103">Listing Comparison</option>
+                <option value="105">View All Reviews for Listing</option>
+            </field>
+
+            <field type="spacer" class="" label="Everywhere Add-on: you can create multiple 'View All Reviews for Listing' menus by modifying the 'Everywhere Extension' setting below. For JReviews listings always use 'com_content'" />
+
+            <field name="extension" size="50" type="text" default="" label="Everywhere Extension" description="" />
+
+        </fieldset>
+
+    </fields>
+
+
+</metadata>

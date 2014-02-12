@@ -1,0 +1,80 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$page_title = Sanitize::getString($page,'title');
+
+$show_title = $page_title && Sanitize::getBool($page,'show_title');
+
+echo $this->element('page_meta');
+?>
+
+<?php if($show_title):?>
+
+    <h1 class="contentheading"><?php echo $page_title;?></h1>
+
+<?php endif;?>
+
+<div class="jr-page jr-paid-plans jrPage jrPaidPlans">
+
+    <form id="jr-form-paid-plans" method="post" action="<?php echo cmsFramework::getCurrentUrl();?>">
+
+        <?php if($cat_id && empty($plans)):?>
+
+            <div class="jrError"><?php __t("The selected category doesn't have any plans.");?></div>
+
+        <?php elseif(empty($plans)):?>
+
+            <div class="jrInfo"><?php __t("Select a category to see the available plans.");?></div>
+
+            <div class="jr-paid-categories jrFormChooser">
+
+                <?php if($this->cmsVersion == CMS_JOOMLA15):?>
+
+                    <span class="jrSections">
+
+                    <?php echo $Form->select(
+                                'data[Listing][sectionid]',
+                                array_merge(array(array('value'=>null,'text'=>__t("Select Section",true))),$sections),
+                                $listing['Listing']['section_id'],
+                                array(
+                                    'id'=>'jr-section-select',
+                                    'class'=>'jr-section-select jrSelect',
+                                    'size'=>'1'
+                                )
+                            );
+                    ?>
+
+                    </span>&nbsp;&nbsp;
+
+                <?php else:?>
+
+                    <?php __t("Category");?>&nbsp;
+
+                <?php endif;?>
+
+                <span class="jr-form-categories jrCategories">
+
+                    <?php echo $this->element('category_list',array('cat_id'=>$cat));?>
+
+                </span>
+
+            </div>
+
+            <div class="jr-plans-layout jrHidden"></div>
+
+        <?php else:?>
+
+            <?php echo $this->renderControllerView('paid_plans','plans');?>
+
+        <?php endif;?>
+
+    </form>
+
+</div>

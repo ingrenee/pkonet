@@ -1,0 +1,290 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+extract($listing['Listing']);
+
+$langDel = json_encode(array(
+    'del_confirm'=>__a("This action will delete the listing(s) and associated media, reviews and review comments. Are you sure you want to continue?",true,true),
+    'del_error'=>__a('There was a problem deleting the listing.',true,true)
+    ));
+?>
+
+<div class="jr-layout-outer jrRoundedPanel" data-id="<?php echo $listing_id;?>">
+
+    <form id="jr-form-listing-<?php echo $listing_id;?>" action="index.php" method="post" data-object-type="listing">
+
+        <div class="jrGrid">
+
+            <div class="jrCol8">
+
+                <div class="jrButtonGroup jrRight">
+
+                    <button class="jr-preview jrButton jrSmall jrIconOnly" title="<?php __a("Preview");?>" data-id="<?php echo $listing_id;?>">
+
+                        <span class="jrIconPreview"></span>
+
+                    </button>
+
+                    <button class="jr-edit jrButton jrSmall jrIconOnly" data-id="<?php echo $listing_id;?>" data-referrer="moderation">
+
+                        <span class="jrIconEditListing"></span>
+
+                    </button>
+
+                    <?php if(isset($listing['PaidOrder'])):?>
+
+                    <button class="jr-paid-txn jrButton jrSmall jrIconOnly" title="<?php __a("Transactions");?>" data-id="<?php echo $listing_id;?>">
+
+                        <span class="jrIconCart"></span>
+
+                    </button>
+
+                    <?php endif;?>
+
+                    <button class="jr-delete-moderation jrButton jrSmall jrIconOnly" data-id="<?php echo $listing_id;?>" data-lang='<?php echo $langDel;?>'>
+
+                        <span class="jrIconDelete"></span>
+
+                    </button>
+
+                </div>
+
+                <span class="jrStatusLabel">#<?php echo $listing_id;?></span>
+
+                 &#149;
+
+                <?php if(isset($listing['PaidPlanCategory']) && $listing['PaidPlanCategory']['cat_id']):?>
+
+                    <span class="jrStatusLabel jrBlue"><?php __a("Paid Listing");?></span>
+
+                    &nbsp;
+
+                        <?php
+                        if(isset($listing['PaidOrder'])):
+
+                            $last_order = array_shift($listing['PaidOrder']);
+
+                            switch($last_order['order_status']) {
+                                case 'Complete':
+                                    $orderLabel = 'jrGreen';
+                                    break;
+                                default:
+                                    $orderLabel = 'jrOrange';
+                                    break;
+                            }
+                        ?>
+
+                        <span class="jrStatusLabel <?php echo $orderLabel;?>"><?php echo $last_order['order_status'];?></span>
+
+                    <?php else:?>
+
+                        <span class="jrStatusLabel jrLightGrey"><?php __a("Without Order");?></span>
+
+                    <?php endif;?>
+
+                <?php endif;?>
+
+                <span class="jr-title jrTitle" data-key="Listing.title"><?php echo $Html->link($listing['Listing']['title'],$listing['Listing']['url'],array('sef'=>false,'target'=>'_blank'));?></span> &#149; <span data-key="Category.title"><?php echo $listing['Category']['title'];?></span>
+
+                 &#149;
+
+                <?php echo sprintf(__a("Submitted %s by %s",true), $Time->timeAgoInWords($created), '<span data-key="User.name">'.$AdminRoutes->user($listing['User']['name'],$listing['User']['user_id'],array('target'=>"_blank")).'</span>');?>
+
+            </div>
+
+            <div class="jrCol4"><span class="jrIconNote"></span><?php __a("Admin Note");?></div>
+
+        </div>
+
+        <div class="jrGrid">
+
+            <div class="jrCol8">
+
+                <div class="jr-preview-html jrPreviewHtml">
+
+                    <?php if(isset($listing['PaidPlanCategory'])
+                        && !empty($listing['PaidPlanCategory']['cat_id'])
+                        && (
+                            !isset($listing['PaidOrder'])
+                            || $last_order['order_status'] != 'Complete'
+                        )
+                    ):?>
+
+                    <div style="font-style: italic; margin-bottom: 5px;">
+
+                        <?php __a("For incomplete orders or listings without orders you need to go to the edit screen to view current field values.");?></div>
+
+                    <?php else:?>
+
+                        <?php if(isset($listing['Field']['groups'])):?>
+                            <?php echo $this->element('custom_fields',array('entry'=>$listing,'page'=>'content'))?>
+                        <?php endif;?>
+
+                    <?php endif;?>
+
+                    <div class="jr_textBlock"><span data-key="Listing.summary"><?php echo $summary;?></span></div>
+
+                    <div class="jr_textBlock"><span data-key="Listing.description"><?php echo $description;?></span></div>
+
+                </div>
+
+            </div>
+
+            <div class="jrCol4">
+
+                <textarea name="data[JreviewsContent][listing_note]" class="reportAdminNote"  cols="150" rows="5"><?php echo $listing['Field']['listing_note'];?></textarea>
+
+            </div>
+
+        </div>
+
+        <div class="jrGrid">
+
+            <div class="jrCol8">
+
+                <div class="jrFieldDiv">
+
+                    <label for="jr-approve-<?php echo $listing_id;?>">
+
+                        <input class="jr-moderate-state" name="data[Listing][state]" id="jr-approve-<?php echo $listing_id;?>" checked="checked" type="radio" value="1">&nbsp;<?php __a("Accept");?>
+
+                    </label>
+
+                    &nbsp;
+
+                    <label for="jr-reject-<?php echo $listing_id;?>">
+
+                        <input class="jr-moderate-state" name="data[Listing][state]" id="jr-reject-<?php echo $listing_id;?>" type="radio" value="-2">&nbsp;<?php __a("Reject");?>
+
+                    </label>
+
+                    &nbsp;
+
+                    <label for="jr-hold-<?php echo $listing_id;?>">
+
+                        <input class="jr-moderate-state" name="data[Listing][state]" id="jr-hold-<?php echo $listing_id;?>" type="radio" value="0">&nbsp;<?php __a("Hold");?>
+
+                    </label>
+
+                    &nbsp;
+
+                    <?php if($listing['User']['email']!=''):?>
+
+                    <label class="jr-reply jrButton jrSmall" for="jr-reply-<?php echo $listing_id;?>">
+
+                        <span class="jrIconMessage"></span><?php __a("Choose Predefined Reply");?>
+
+                        <input id="jr-reply-<?php echo $listing_id;?>" name="data[Email][send]" type="checkbox" value="1">
+
+                    </label>
+
+                    <?php else:?>
+
+                    <button class="jrButton jrSmall" disabled="disabled">
+
+                        <span class="jrIconMessage"></span><?php __a("User e-mail not available.");?>
+
+                    </button>
+
+                    <?php endif;?>
+
+                    <button class="jr-submit jrButton jrGreen jrSmall">
+
+                        <span class="jrIconSubmit"></span><?php __a("Submit");?>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="jrCol4">
+
+                <div class="jrRight">
+
+                    <span class="jrIconWarning"></span><?php echo $Routes->whois(long2ip($listing['Listing']['ipaddress']));?>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="jr-form-reply jrGrid jrHidden">
+
+            <div clas="jrCol12">
+
+                <?php if($listing['User']['email']!=''):?>
+
+                    <div class="jrFieldDiv" style="margin:10px 0 10px 0;">
+
+                        <select name="predefined_reply" class="jr-select-reply">
+
+                            <option value=""><?php __a("--- Select a predefined reply ---");?></option>
+
+                            <?php foreach($predefined_replies AS $predefined_reply):extract($predefined_reply['PredefinedReply']);?>
+
+                                <?php if(trim($reply_subject)!=''):?>
+
+                                <option value="<?php echo $reply_id;?>"><?php echo $reply_subject;?></option>
+
+                                <?php endif;?>
+
+                            <?php endforeach;?>
+
+                        </select>
+
+                        (<span data-key="User.email"><?php echo $listing['User']['email'];?></span>)
+
+                        BCC: <input name="data[Email][bcc]" placeholder="BCC Email Address" size="30"></input>
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <textarea class="jr-reply-body" name="data[Email][body]" style="width:100%;height:8em;" cols="150" rows="5"></textarea>
+
+                    </div>
+
+                    <div>
+
+                        <br />
+
+                        <?php echo sprintf(__a("Valid tags: %s = user's name; %s = frontend url; %s = listing title",true),'{name}','{url}','{listing_title}');?>
+
+                    </div>
+
+                <?php endif;?>
+
+            </div>
+
+        </div>
+
+        <input type="hidden" data-key="User.email" name="data[Email][email]" value="<?php echo $listing['User']['email'];?>" />
+
+        <input type="hidden" data-key="User.name" name="data[Email][name]" value="<?php echo $listing['User']['name'];?>" />
+
+        <input type="hidden" name="data[Email][subject]" class="jr-reply-subject" value="" />
+
+        <input type="hidden" data-key="Listing.title" name="data[Email][listing_title]" value="<?php echo $listing['Listing']['title'];?>" />
+
+        <input type="hidden" name="data[Listing][id]" value="<?php echo $listing_id;?>" />
+
+        <input type="hidden" name="data[JreviewsContent][contentid]" value="<?php echo $listing_id;?>" />
+
+        <input type="hidden" name="data[moderation]" value="1" />
+
+        <input type="hidden" name="data[controller]" value="admin/admin_listings" />
+
+        <input type="hidden" name="data[action]" value="_saveModeration" />
+
+    </form>
+
+</div>

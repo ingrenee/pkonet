@@ -1,0 +1,98 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+if(empty($plans)) return;
+
+# Process submit link plan id param in url coming from the category plans page
+$submit_plan_id = Sanitize::getInt($this->data,'submit_plan_id');
+
+$Paid->setSubmitPlanId($submit_plan_id);
+
+$paymentTypeArray = array(
+    'PaymentType2'=>__t("Free & Trial Plans",true),
+    'PaymentType0'=>__t("Single Payment Plans",true),
+    'PaymentType1'=>__t("Subscription Plans",true),
+    );
+
+/**
+* Tracking code
+*/
+if($track = Sanitize::stripWhiteSpace(Sanitize::getVar($this->Config,'paid.track_listing_form'))) {
+    echo html_entity_decode($track,ENT_QUOTES,cmsFramework::getCharset());
+}
+?>
+
+<fieldset id="jr-paid-plan-list" <?php if(empty($plans['PlanType0'])):?>style="display:none;"<?php endif;?>>
+
+    <?php if(!empty($plans['PlanType0'])):?>
+
+    <h2><?php __t("Available plans in this category:");?></h2>
+
+    <?php endif;?>
+
+    <?php if(!empty($plans['PlanDefault'])): extract($plans['PlanDefault']);?>
+
+        <input class="jrHidden" name="data[PaidOrder][plan_id]" type="radio" value="<?php echo $plan_id;?>" />
+
+    <?php endif;?>
+
+    <?php foreach($paymentTypeArray AS $paymentType=>$label):?>
+
+        <?php if(!empty($plans['PlanType0'][$paymentType])):?>
+
+            <div class="jrDataList">
+
+                <div class="jrGrid jrDataListHeader"><?php echo $label;?></div>
+
+                    <?php foreach($plans['PlanType0'][$paymentType] AS $plan): extract($plan); ?>
+
+                        <div class="jr-paid-plan-row jrGrid">
+
+                            <div class="jrCol1">
+
+                                <input name="data[PaidOrder][plan_id]" type="radio" value="<?php echo $plan_id;?>" data-free="<?php echo (int) ($payment_type == 2);?>" />
+
+                            </div>
+
+                            <div class="jrCol3">
+
+                                <strong><?php echo $plan_name;?></strong>
+
+                            </div>
+
+                            <div class="jrCol7">
+
+                                <?php if($plan_array['description']!=''):?>
+
+                                <?php echo $plan_array['description'];?>
+
+                                <?php endif;?>&nbsp;
+
+                            </div>
+
+                            <div class="jrCol1">
+
+                                <span><?php echo $this->Config->{'paid.currency_symbol'};?><?php echo $plan_price;?></span>
+
+                            </div>
+
+                     </div>
+
+                <?php endforeach;?>
+
+                <br />
+
+            </div>
+
+        <?php endif;?>
+
+    <?php endforeach;?>
+
+</fieldset>

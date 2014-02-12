@@ -1,0 +1,311 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$thumbnailSize = Sanitize::getString($this->Config,'media_detail_gallery_thumbnail_size');
+
+$thumbnailMode = Sanitize::getString($this->Config,'media_detail_gallery_thumbnail_mode');
+
+$langDel = json_encode(array(
+    'del_confirm'=>__a("This report will be permanently deleted and cannot be recovered. Are you sure?",true,true),
+    'del_error'=>__a('There was a problem deleting the report.',true,true)
+    ));
+
+$langDelObjects = array(
+	'review'=>json_encode(array(
+		'del_confirm'=>__a("This action will delete the review(s) and associated media, votes and review comments. Are you sure you want to continue?",true,true),
+		'del_error'=>__a('There was a problem deleting the review.',true,true)
+	)),
+	'discussion'=>json_encode(array(
+		'del_confirm'=>__a("This action will delete the review comment(s). Are you sure you want to continue?",true,true),
+		'del_error'=>__a('There was a problem deleting the comment.',true,true)
+	)),
+	'media'=>json_encode(array(
+		'del_confirm'=>__a("This action will delete the media and associated votes. Are you sure you want to continue?",true,true),
+		'del_error'=>__a('There was a problem deleting the media.',true,true)
+	))
+
+);
+
+?>
+
+<?php if($this->offset == 0 && $processed == 0):?>
+
+<div class="jr-reports-moderate jr-moderation jrModeration" data-limit="<?php echo $this->limit;?>" data-pages="<?php echo ceil($total/$this->limit);?>">
+
+    <div class="jrPageHeading"><?php __a("Reports Moderation");?></div>
+
+<?php endif;?>
+
+    <?php foreach($reports AS $report): extract($report['Report']);?>
+
+	<?php
+
+	// Check for objects existance. Otherwise some of the features need to be disabled
+	$object_exists = false;
+	if(
+		($post_id > 0 && isset($report['Discussion']))
+		||
+		($review_id > 0 && isset($report['Review']))
+		||
+		($media_id > 0 && isset($report['Media']))
+	) {
+		$object_exists = true;
+	}
+	?>
+
+	<div class="jr-layout-outer jrRoundedPanel">
+
+	    <form id="jr-form-report-<?php echo $report_id;?>" action="index.php" method="post" data-object-type="report">
+
+	        <div class="jrGrid">
+
+	            <div class="jrCol8">
+
+	                <div class="jrButtonGroup jrRight">
+
+	                    <button class="jr-preview jrButton jrSmall jrIconOnly" title="<?php __a("Preview");?>" data-id="<?php echo $report_id;?>">
+
+	                        <span class="jrIconPreview"></span>
+
+	                    </button>
+
+	                    <?php $ids = json_encode(array('listing_id'=>$listing_id,'review_id'=>$review_id,'post_id'=>$post_id,'media_id'=>$media_id,'extension'=>$extension));?>
+
+	                    <button <?php if(!$object_exists):?>disabled="disabled"<?php endif;?> class="jr-site-url jrButton jrSmall jrIconOnly" title="<?php __a("Open reported url",true,true);?>" data-ids='<?php echo $ids;?>'>
+
+	                        <span class="jrIconArrowRight"></span>
+
+	                    </button>
+
+	                    <button class="jr-delete-moderation jrButton jrSmall jrIconOnly" data-id="<?php echo $report_id;?>" data-lang='<?php echo $langDel;?>'>
+
+	                        <span class="jrIconDelete"></span>
+
+	                    </button>
+
+	                </div>
+
+					<?php
+					# WHAT IS BEING REPORTED?
+					if($media_id > 0 && isset($report['Media'])) {
+						$whatIsIt = __a("Media",true);
+						$object_type = 'media';
+						$object_id = $media_id;
+					}
+					elseif($post_id > 0 && isset($report['Discussion'])) {
+						$whatIsIt = __a("Review Comment",true);
+						$object_type = 'discussion';
+						$object_id = $post_id;
+					}
+					elseif($review_id > 0 && isset($report['Review'])) {
+						$whatIsIt = __a("Review",true);
+						$object_type = 'review';
+						$object_id = $review_id;
+					}
+					?>
+
+                    <span class="jrStatusLabel">#<?php echo $report_id;?></span>
+
+                    &#149;
+
+					<span class="jrStatusLabel jrBlue"><?php echo $whatIsIt;?></span></span>
+
+                    <?php echo sprintf(__a("Reported %s by %s",true),
+                        $Time->timeAgoInWords($created),
+                        $AdminRoutes->user($name,$user_id,array('target'=>"_blank")));?>
+
+	            </div>
+
+				<div class="jrCol4"><span class="jrIconNote"></span><?php __a("Admin Note");?></div>
+
+			</div>
+
+	       	<div class="jrGrid">
+
+	            <div class="jrCol8">
+
+	                <div class="jr-preview-html jrPreviewHtml">
+
+						<div style="padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid #ccc;"><?php echo $report_text;?></div>
+
+						<div style="margin-left:20px">
+
+							<?php
+							/**
+							 * BELOW DIFFERENT CODE IS USED DEPENDING ON WHAT IS BEING REPORTED
+							 */
+							?>
+
+							<?php /* MEDIA */ ?>
+
+	                        <?php if($media_id > 0 && isset($report['Media'])):?>
+								<?php echo $Media->thumb($report['Media'],array('lazyload'=>true,'size'=>$thumbnailSize,'mode'=>$thumbnailMode),array('class'=>'jr-edit','data-object-type'=>'media','data-id'=>$media_id,'style'=>'max-height:70px;width:auto;'));?>
+
+							<?php /* REVIEW COMMENT */ ?>
+
+	                        <?php elseif($post_id > 0 && isset($report['Discussion'])):?>
+	                            <p id="post<?php echo $post_id;?>" style="font-style:italic;"><?php echo $report['Discussion']['text'];?></p>
+
+							<?php /* REVIEW */ ?>
+
+	                        <?php elseif($review_id > 0 && isset($report['Review'])):?>
+
+								<div class="jrOverallRatings">
+
+									<?php if($report['Review']['editor'] == 1):?>
+
+										<?php
+											$rating_stars = $Rating->drawStars($report['Rating']['average_rating'], $this->Config->rating_scale, 'editor');
+											$rating_value = $Rating->round($report['Rating']['average_rating'],$this->Config->rating_scale);
+										?>
+
+										<div class="jrOverallEditor" title="<?php  __t("Editor rating"); ?>">
+											<span class="jrIconEditor jrRatingLabel"></span>
+											<div class="jrRatingStars"><?php echo $rating_stars ?></div>
+											<span class="jrRatingValue"><?php echo $rating_value?></span>
+										</div>
+
+									<?php else:?>
+
+										<?php
+											$rating_stars = $Rating->drawStars($report['Rating']['average_rating'], $this->Config->rating_scale, 'user');
+											$rating_value = $Rating->round($report['Rating']['average_rating'],$this->Config->rating_scale);
+										?>
+
+										<div class="jrOverallUser" title="<?php  __t("User rating"); ?>">
+											<span class="jrIconUsers jrRatingLabel"></span>
+											<div class="jrRatingStars"><?php echo $rating_stars ?></div>
+											<span class="jrRatingValue"><?php echo $rating_value?></span>
+										</div>
+
+									<?php endif;?>
+								</div>
+
+	                            <div>
+	                                <?php if(isset($report['Field']['groups'])):?>
+	                                    <?php echo $this->element('custom_fields',array('entry'=>$report,'page'=>'content'))?>
+	                                <?php endif;?>
+	                                <?php echo $report['Review']['comments'];?>
+	                            </div>
+
+							<?php else:?>
+
+								<strong><?php echo sprintf(__a("The reported %s no longer exists.",true),$whatIsIt);?></strong>
+	                        <?php endif;?>
+
+                    	</div>
+
+	                </div>
+
+	            </div>
+
+	            <div class="jrCol4">
+
+	                    <textarea class="reportAdminNote" name="data[Report][report_note]" cols="150" rows="5"><?php echo $report_note;?></textarea>
+
+	            </div>
+
+			</div>
+
+	       	<div class="jrGrid">
+
+	            <div class="jrCol6">
+
+	                <div class="jrFieldDiv">
+
+	                    <label for="jr-approve-<?php echo $report_id;?>">
+
+	                        <input class="jr-moderate-state" name="data[Report][approved]" id="jr-approve-<?php echo $report_id;?>" checked="checked" type="radio" value="1">&nbsp;<?php __a("Accept");?>
+
+	                    </label>
+
+	                    &nbsp;
+
+	                    <label for="jr-reject-<?php echo $report_id;?>">
+
+	                        <input class="jr-moderate-state" name="data[Report][approved]" id="jr-reject-<?php echo $report_id;?>" type="radio" value="-2">&nbsp;<?php __a("Reject");?>
+
+	                    </label>
+
+	                    &nbsp;
+
+	                    <label for="jr-hold-<?php echo $report_id;?>">
+
+	                        <input class="jr-moderate-state" name="data[Report][approved]" id="jr-hold-<?php echo $report_id;?>" type="radio" value="0">&nbsp;<?php __a("Hold");?>
+
+	                    </label>
+
+	                    &nbsp;
+
+                    	<button class="jr-submit jrButton jrGreen jrSmall">
+
+	                        <span class="jrIconSubmit"></span><?php __a("Submit");?>
+
+	                    </button>
+
+	                </div>
+
+	       		</div>
+
+	            <div class="jrCol2">
+
+					<button class="jr-delete-moderation jrButton jrSmall jrRight" <?php if(!$object_exists):?>disabled="disabled"<?php endif;?> data-object-type="<?php echo $object_type;?>" data-lang='<?php echo $langDelObjects[$object_type];?>' data-id="<?php echo $object_id;?>" data-report-id="<?php echo $report_id;?>">
+
+						<span class="jrIconDelete"></span><?php __a("Delete");?> <?php echo $whatIsIt;?>
+
+					</button>
+
+	            </div>
+
+	            <div class="jrCol4">
+
+	                <div class="jrRight">
+
+	                    <span class="jrIconWarning"></span><?php echo $Routes->whois($ipaddress);?>
+
+	                </div>
+
+	            </div>
+
+	        </div>
+
+            <input name="data[Report][report_id]" type="hidden" value="<?php echo $report_id;?>" />
+
+            <input type="hidden" name="data[controller]" value="admin/admin_reports" />
+
+            <input type="hidden" name="data[action]" value="_save" />
+
+        </form>
+
+    </div>
+
+    <?php endforeach;?>
+
+
+<?php if($this->offset == 0 && $processed == 0):?>
+
+    <?php if($total>0 && $total > $this->limit):?>
+
+    <div class="jr-load-more jrRoundedPanel jrCenter" data-bind='["admin/admin_reports","moderation"]'>
+
+        <span class="jrIconDown"></span>
+
+        <a href="javascript:void(0)" style="font-weight:bold;font-size:16px;"><?php __a("Load more...");?></a>
+
+        <span class="jrIconDown"></span>
+
+    </div>
+
+    <?php endif;?>
+
+</div>
+
+<?php endif;?>

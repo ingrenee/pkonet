@@ -1,0 +1,137 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$langDel = json_encode(array(
+    'del_confirm'=>__a("Are you sure you want to remove this category from your setup? It will not be deleted from Joomla.",true,true),
+    'del_error'=>__a('There was a problem removing the category.',true,true)
+    ));
+
+# Initialize paginator helper
+$Paginator->paginate(array('current_page'=>$this->page,'items_per_page'=>$this->limit,'items_total'=>$pagination['total']));
+
+?>
+
+<div class="jr-categories-seo">
+
+	<div class="jrPageHeading"><?php __a("Category SEO Manager");?></div>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="category">
+
+		<div class="jrInfo">
+
+			<span class="jrIconInfo"></span><?php __a("The meta keywords and description displayed below are the same ones stored in the Joomla Category Manager. Here you can quickly view and edit them. You can also add a custom page title and override the page heading and page description for category pages. The following tags can also be used: {category} - current category title, {category1}, {category2}, etc. which represent the titles of parent categories of the current category. {category1} is the first level, {category2} the second level and so on.");?>
+
+		</div>
+
+	    <div class="jr-filters jrPageFilters jrRoundedPanelLt jrClearfix">
+
+			<?php __a("Category");?>:&nbsp;
+			<?php
+				echo $Form->select(
+					'cat_alias',
+					array_merge(array(array('value'=>null,'text'=>'All')),$categories),
+					$cat_alias
+				);
+			?>
+
+		</div>
+
+        <?php echo $this->element('pagination',array('position'=>'top'));?>
+
+	    <div class="jrDataList">
+
+	        <div class="jrGrid24 jrDataListHeader">
+
+                <div class="jrCol1">ID</div>
+
+                <div class="jrCol4"><?php __a("Category");?></div>
+
+                <div class="jrCol5"><?php __a("Page Title");?></div>
+
+                <div class="jrCol5"><?php __a("Meta Keywords");?></div>
+
+                <div class="jrCol9"><?php __a("Meta Description");?></div>
+
+            </div>
+
+			<?php $i = $this->page*$this->limit - ($this->limit - 1); foreach($rows AS $key=>$row):?>
+
+            <div class="jr-layout-outer jrGrid24" data-id="<?php echo $row->id;?>">
+
+                <div class="jrCol1">
+
+                	<?php echo $row->id;?>
+
+                	<input name="data[seo][<?php echo $row->id;?>][Category][id]" type="hidden" value="<?php echo $row->id;?>" />
+
+                	<input name="data[seo][<?php echo $row->id;?>][JreviewsCategory][id]" type="hidden" value="<?php echo $row->id;?>" />
+
+                </div>
+
+                <div class="jrCol4">
+
+					<?php echo $row->level > 1 ? str_repeat('|&mdash;',$row->level) : '';?>
+
+					<?php echo $row->text;?>
+
+                </div>
+
+                <div class="jrCol5">
+
+                	<div class="jrFieldDiv">
+
+	                    <?php __a("Override Page Heading");?>&nbsp;
+
+	                    <?php echo $Form->radioYesNo("data[seo][".$row->id."][JreviewsCategory][title_override]", "", $row->title_override);?>
+
+                	</div>
+
+					<textarea name="data[seo][<?php echo $row->id;?>][JreviewsCategory][page_title]" style="width:99%;height:5em;"><?php echo $row->page_title;?></textarea>
+
+                </div>
+
+                <div class="jrCol5">
+
+					<div class="jrFieldDiv">&nbsp;</div>
+
+					<textarea name="data[seo][<?php echo $row->id;?>][Category][metakey]" style="width:99%;height:5em;"><?php echo $row->metakey;?></textarea>
+
+                </div>
+
+                <div class="jrCol9">
+
+                	<div class="jrFieldDiv">
+
+	                    <?php __a("Override Page Description");?>&nbsp;
+
+	                    <?php echo $Form->radioYesNo("data[seo][".$row->id."][JreviewsCategory][desc_override]", "", $row->desc_override);?>
+
+	                </div>
+
+					<textarea name="data[seo][<?php echo $row->id;?>][Category][metadesc]" style="width:99%;height:5em;"><?php echo $row->metadesc;?></textarea>
+
+                </div>
+
+            </div>
+
+			<?php endforeach;?>
+
+		</div>
+
+        <?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+        <input type="hidden" name="data[controller]" value="admin/categories" />
+
+        <input type="hidden" name="data[action]" value="seo" />
+
+	</div>
+
+</form>

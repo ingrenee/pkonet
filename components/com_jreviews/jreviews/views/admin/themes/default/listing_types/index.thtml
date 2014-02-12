@@ -1,0 +1,49 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<div class="jr-listing-types-list">
+
+	<div class="jrPageHeading"><?php __a("Listing Type Manager");?></div>
+
+	<form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="listing_type">
+
+		<div class="jrPageToolbar jrRoundedPanel">
+
+			<button class="jr-edit jrButton jrGreen">
+
+				<span class="jrIconNew"></span><?php __a("New");?>
+
+			</button>&nbsp;
+
+			<?php if(!empty($rows)):?>
+            <button class="jr-copy jrButton">
+
+				<span class="jrIconCopy"></span><?php __a("Copy");?>
+
+            </button>&nbsp;
+            <?php endif;?>
+
+            <button class="jr-sync-ratings jrButton">
+
+				<span class="jrIconSync"></span><?php __a("Sync Ratings");?>
+
+            </button>
+
+		</div>
+
+		<br />
+
+		<div class="jr-types-table"><?php echo $table?></div>
+
+	</form>
+
+</div>

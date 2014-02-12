@@ -1,0 +1,153 @@
+<?php
+
+$isNew = !$discussion_id || $this->action == 'reply';
+
+$register_guests = isset($register_guests) ? $register_guests : false;
+
+// Set return url to be used in ajax loaded create_form
+
+if(!$this->ajaxRequest) {
+
+	$return_url = cmsFramework::getCurrentUrl();
+
+	cmsFramework::setSessionVar('return_url',$return_url,'jreviews');
+}
+
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<div class="jr-form-comment-outer jrHidden">
+
+	<?php if($isNew && $register_guests):?>
+
+		<?php echo $this->element('login',array('register_guests'=>true,'access_submit'=>true));?>
+
+	<?php endif;?>
+
+	<form id="jr-form-comment-<?php echo $discussion_id;?>" name="jr-form-comment-<?php echo $discussion_id;?>" class="jrForm" action="" data-discussion-id="<?php echo $discussion_id;?>">
+
+		<fieldset>
+
+			<?php if($this->Access->isGuest() && ($register_guests || in_array($this->Config->discussform_name,array('required','optional')))):?>
+
+				<div class="jrFieldDiv jrLeft">
+
+					<label class="jrLabel">
+
+						<?php __t("Name");?><?php if($this->Config->discussform_name == 'required'):?><span class="jrIconRequired"></span><?php endif;?>
+
+					</label>
+
+					<input type="text" class="jr-user-name jrName" name="data[Discussion][name]" maxlength="50" />
+
+				</div>
+
+			<?php endif;?>
+
+			<?php if($register_guests):?>
+
+			<div class="jrFieldDiv jrLeft">
+
+				<label class="jrLabel">
+
+					<?php __t("Username");?><span class="jrIconInfo jr-more-info"></span>
+
+					<div class="jrPopup jrHidden"><?php __t("Create an account to be able to manage all of your submissions. After you submit the form we'll email you an activation link with a temporary password.");?></div>
+
+				</label>
+
+				<input type="text" class="jr-user-username jrName" name="data[username]" maxlength="25" />
+
+			</div>
+
+			<?php endif;?>
+
+			<div class="jrClear"></div>
+
+			<?php if($this->Access->isGuest() && (in_array($this->Config->discussform_email,array('required','optional')))):?>
+
+			<div class="jrFieldDiv">
+
+				<label class="jrLabel">
+
+					<?php __t("Email");?><?php if($register_guests || $this->Config->discussform_email == 'required'):?><span class="jrIconRequired"></span><?php endif;?>
+
+				</label>
+
+				<input type="email" class="jr-user-email jrEmail" name="data[Discussion][email]" maxlength="100" />
+
+			</div>
+
+			<?php endif;?>
+
+			<div class="jrFieldDiv">
+
+				<label><?php __t("Comment");?><span class="jrIconRequired"></span></label>
+
+				<textarea name="data[Discussion][text]" rows="8" cols="200" class="jrTextArea"><?php echo Sanitize::getString($post['Discussion'],'text');?></textarea>
+
+			</div>
+
+			<?php if($isNew):?>
+
+				<div class="jr-validation jrError jrHidden"></div>
+
+				<?php if($this->Access->showCaptcha()):?>
+
+				<div class="jrWarning jrCaptcha">
+
+					<div class="jr-captcha jrCaptchaImg"></div>
+
+					<div>
+						<input type="text" class="jr-captcha-code jrCaptchaCode" name="data[Captcha][code]" size="5" maxlength="5" />
+						<span class="jrCaptchaText"><?php __t("Please enter the security code.");?></span>
+					</div>
+
+				</div>
+
+				<?php endif;?>
+
+				<?php if($this->action == 'review'):?>
+
+				<div class="jr-buttons jrButtons">
+
+					<button class="jr-comment-submit jrButton"><?php __t("Submit");?></button>
+
+					<button class="jr-comment-cancel jrButton"><?php __t("Cancel");?></button>
+
+				</div>
+
+				<?php endif;?>
+
+			<?php endif;?>
+
+		</fieldset>
+
+		<?php if(!$isNew):?>
+
+		<div class="jr-validation jrError jrHidden"></div>
+
+		<?php endif;?>
+
+		<input type="hidden" name="<?php echo $this->action == 'reply' ? 'data[Discussion][parent_post_id]' : 'data[Discussion][discussion_id]';?>" value="<?php echo $discussion_id;?>" />
+
+		<input type="hidden" name="data[Discussion][review_id]" value="<?php echo $review_id;?>" />
+
+		<input type="hidden" name="data[Discussion][type]" value="review" />
+
+		<input type="hidden" name="data[controller]" value="discussions" />
+
+		<input type="hidden" name="data[action]" value="_save" />
+
+		<input type="hidden" name="format" value="raw" />
+
+		<input type="hidden" name="Itemid" value="" />
+
+		<?php echo cmsFramework::getTokenInput();?>
+
+		<?php echo cmsFramework::formIntegrityToken(array('discussion_id'=>$discussion_id,'type'=>'review','review_id'=>$review_id),$formTokenKeys);?>
+
+	</form>
+
+</div>

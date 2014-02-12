@@ -1,0 +1,60 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<?php if($this->offset == 0 && $processed == 0):?>
+
+<div class="jr-reviews-moderate jr-moderation jrModeration" data-limit="<?php echo $this->limit;?>" data-pages="<?php echo ceil($total/$this->limit);?>">
+
+    <?php if(!empty($predefined_replies)):?>
+
+    <div class="jr-predefined-replies">
+
+        <?php foreach($predefined_replies AS $predefined_reply):extract($predefined_reply['PredefinedReply']);?>
+
+            <span id="jr-predefined-reply-<?php echo $reply_id;?>" class="jrHidden"><?php echo $reply_body;?></span>
+
+        <?php endforeach;?>
+
+    </div>
+
+    <?php endif;?>
+
+    <div class="jrPageHeading"><?php __a("Reviews Moderation");?></div>
+
+<?php endif;?>
+
+    <?php foreach($reviews AS $review):?>
+
+        <?php echo $this->renderControllerView('reviews','moderation_review',array('review'=>$review));?>
+
+    <?php endforeach;?>
+
+
+<?php if($this->offset == 0 && $processed == 0):?>
+
+    <?php if($total>0 && $total > $this->limit):?>
+
+    <div class="jr-load-more jrRoundedPanel jrCenter" data-bind='["admin/admin_reviews","moderation"]'>
+
+        <span class="jrIconDown"></span>
+
+        <a href="javascript:void(0)" style="font-weight:bold;font-size:16px;"><?php __a("Load more...");?></a>
+
+        <span class="jrIconDown"></span>
+
+    </div>
+
+    <?php endif;?>
+
+</div>
+
+<?php endif;?>

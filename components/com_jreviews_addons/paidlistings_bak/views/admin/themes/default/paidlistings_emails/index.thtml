@@ -1,0 +1,144 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+?>
+
+<div class="jr-paid-notifications">
+
+    <div class="jrPageHeading"><?php __a("Email Notifications");?></div>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="paidlistings_emails">
+
+        <div class="jrPageToolbar jrRoundedPanel">
+
+            <span id="jr-status" class="jrLeft jrStatus"></span>
+
+            <button class="jr-save-settings jrButton jrGreen" data-lang='{"success":"<?php __a("New settings saved successfully.");?>"}'>
+
+                <span class="jrIconSave"></span><?php __a("Save");?>
+
+            </button>
+
+        </div>
+
+        <div class="jrDataList">
+
+            <div class="jrGrid jrDataListHeader">
+
+                <div class="jrCol3"><?php __a("Admin Notifications");?></div>
+
+                <div class="jrCol2"><?php __a("State");?></div>
+
+                <div class="jrCol5"><?php __a("Emails - one per line");?></div>
+
+                <div class="jrCol2"><?php __a("Template");?></div>
+
+            </div>
+
+            <?php foreach($admins AS $admin):extract($admin['PaidEmail']);?>
+
+            <div class="jr-layout-outer jrGrid" data-id="<?php echo $email_id;?>">
+
+                <div class="jrCol3">
+
+                    <?php echo $name;?><br /><span style="font-style: italic;"><?php echo $description;?></span>
+
+                </div>
+
+                <div class="jrCol2">
+
+                    <?php echo $Form->radioYesNo("data[emails][{$email_id}][PaidEmail][state]", "", array('value'=>($state)));?>
+
+                </div>
+
+                <div class="jrCol5">
+
+                    <textarea name="data[emails][<?php echo $email_id;?>][PaidEmail][admin_emails]" style="width:98%;height:4em;"><?php echo $admin_emails;?></textarea>
+
+                </div>
+
+                <div class="jrCol2">
+
+                    <button class="jr-edit jrButton" data-id="<?php echo $email_id;?>" data-name="<?php echo $name;?>">
+
+                        <span class="jrIconEdit"></span>&nbsp;<?php echo __a("Edit");?>
+
+                    </button>
+
+                    <?php echo $Form->hidden("data[emails][{$email_id}][PaidEmail][email_id]",array('value'=>$email_id));?>
+
+                </div>
+
+            </div>
+
+            <?php endforeach;?>
+
+        </div>
+
+        <div class="jrDataList">
+
+            <div class="jrGrid jrDataListHeader">
+
+                <div class="jrCol3"><?php __a("User Notifications");?></div>
+
+                <div class="jrCol2"><?php __a("State");?></div>
+
+                <div class="jrCol5"><?php __a("Admin BCC emails - one per line");?></div>
+
+                <div class="jrCol2"><?php __a("Template");?></div>
+
+            </div>
+
+            <?php foreach($users AS $user):extract($user['PaidEmail']);?>
+
+            <div class="jr-layout-outer jrGrid" data-id="<?php echo $email_id;?>">
+
+                <div class="jrCol3">
+
+                    <?php echo $name;?><br /><span style="font-style: italic;"><?php echo $description;?></span>
+
+                </div>
+
+                <div class="jrCol2">
+
+                    <?php echo $Form->radioYesNo("data[emails][{$email_id}][PaidEmail][state]", "", array('value'=>($state)));?>
+
+                </div>
+
+                <div class="jrCol5">
+
+                    <textarea name="data[emails][<?php echo $email_id;?>][PaidEmail][admin_emails]" style="width:98%;height:4em;"><?php echo $admin_emails;?></textarea>
+
+                </div>
+
+                <div class="jrCol2">
+
+                    <button class="jr-edit jrButton" data-id="<?php echo $email_id;?>" data-name="<?php echo $name;?>">
+
+                        <span class="jrIconEdit"></span>&nbsp;<?php echo __a("Edit");?>
+
+                    </button>
+
+                    <?php echo $Form->hidden("data[emails][{$email_id}][PaidEmail][email_id]",array('value'=>$email_id));?>
+
+                </div>
+
+            </div>
+
+            <?php endforeach;?>
+
+        </div>
+
+        <input type="hidden" name="data[controller]" value="admin/admin_paidlistings_emails" />
+
+        <input type="hidden" name="data[action]" value="_save" />
+
+    </form>
+
+</div>
+

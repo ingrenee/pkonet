@@ -1,0 +1,318 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$extensionFilter = array_merge(
+	array(array('value'=>'','text'=>__a("- Select Component -",true)),
+	array('value'=>'com_content','text'=>'JReviews Listings')),$extensions
+);
+
+$langDel = json_encode(array(
+	'del_confirm'=>__a("This action will delete the review(s) and associated media, votes and review comments. Are you sure you want to continue?",true,true),
+	'del_error'=>__a('There was a problem deleting the review.',true,true)
+	));
+
+$langReviewType = json_encode(array(
+        1=>__a("Editor reviews are disabled or set to single editor reviews per listing. Please check your settings.",true,true),
+        2=>__a("There was a problem updating the rating averages for the listing.",true,true)
+        ));
+
+$stateFilter = array(0=>__a("Most recent",true),6=>__a("Published",true),1=>__a("Unpublished",true),2=>__a("User reviews",true),3=>__a("Editor reviews",true),4=>__a("With media",true),5=>__a("Rejected",true));
+
+$publishStates = array(0=>'jrIconUnpublished',1=>'jrIconPublished',-2=>'jrIconRejected');
+
+$ownerReplyStates = array(-1=>'jrRed',0=>'jrOrange',1=>'jrGreen');
+
+$reviewStates = json_encode(array(0=>'jrIconUsers',1=>'jrIconEditor'));
+
+# Initialize paginator helper
+$Paginator->paginate(array('current_page'=>$this->page,'items_per_page'=>$this->limit,'items_total'=>$pagination['total']));
+?>
+
+<div class="jr-reviews-list">
+
+    <div class="jrPageHeading"><?php __a("Browse Reviews");?></div>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post" data-object-type="review">
+
+    	<div class="jrPageToolbar jrRoundedPanel">
+
+    		<button class="jr-delete-all jrButton" data-lang='<?php echo $langDel;?>'>
+
+    			<span class="jrIconDelete"></span><span><?php __a("Delete");?></span>
+
+    		</button>
+
+    	</div>
+
+        <div class="jr-filters jrPageFilters jrRoundedPanelLt jrClearfix">
+
+            <input type="hidden" name="user_id" value="<?php echo Sanitize::getInt($this->params,'user_id');?>" />
+
+            <input type="hidden" name="listing_id" value="<?php echo Sanitize::getInt($this->params,'listing_id');?>" />
+
+            <div class="jrLeft"><?php echo $Form->select('extension',$extensionFilter,$extension);?></div>
+
+            <div class="jrLeft"><?php echo $Form->select('filter_order',$stateFilter,$filter_order);?></div>
+
+            <div class="jrLeft">
+
+                <input type="text" <?php if(!$extension):?>disabled="disabled"<?php endif;?> placeholder="<?php __a("Listing title");?>" name="entry_title" value="<?php echo $extension ? Sanitize::getString($this->params,'entry_title') : '';?>" />
+
+            </div>
+
+        </div>
+
+        <div class="jrMediaIconLegend">
+
+            <span class="jrIconPublished"></span> <?php __a("Published");?>
+
+            &nbsp;&nbsp;
+
+            <span class="jrIconUnpublished"></span> <?php __a("Unpublished");?>
+
+            &nbsp;&nbsp;
+
+            <span class="jrIconRejected"></span> <?php __a("Rejected");?>
+
+        </div>
+
+        <?php echo $this->element('pagination',array('position'=>'top'));?>
+
+        <div class="jrDataList">
+
+	        <div class="jrGrid24 jrDataListHeader">
+
+        		<div class="jrCol1"><input class="jr-cb-all" value="" type="checkbox"></div>
+
+        		<div class="jrCol1">#</div>
+
+        		<div class="jrCol1">ID</div>
+
+        		<div class="jrCol5"><?php __a("Title");?></div>
+
+        		<div class="jrCol4"><?php __a("Category");?></div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconPublished jr-more-info"></span>
+        			<div class="jrPopup"><?php __a("Published");?></div>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconComments jr-more-info"></span>
+        			<div class="jrPopup"><?php __a("Review Type");?></div>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconReviews jr-more-info"></span>
+        			<div class="jrPopup"><?php __a("Owner Reply");?></div>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconPhoto jr-more-info"></span>
+        			<div class="jrPopup"><?php __a("Media");?></div>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+        			<span class="jrIconAddMedia jr-more-info"></span>
+        			<div class="jrPopup"><?php __a("Add Media");?></div>
+
+        		</div>
+
+        		<div class="jrCol1"><span class="jrIconMessage"></span></div><?php /* EMAIL */?>
+
+        		<div class="jrCol1">
+
+                    <span class="jrIconUsers jr-more-info"></span>
+                    <div class="jrPopup jrHidden"><?php __a("Filter by users");?></div>
+
+                </div>
+
+        		<div class="jrCol4"><?php __a("Date & Reviewer");?></div>
+
+        		<div class="jrCol1">&nbsp;</div>
+
+        	</div>
+
+		    <?php $j = 1; foreach($reviews AS $review): extract($review['Review']);?>
+
+	        <div class="jr-layout-outer jrGrid24" data-id="<?php echo $review_id;?>">
+
+        		<div class="jrCol1"><input type="checkbox" class="jr-row-cb" name="cid[]" value="<?php echo $review_id;?>" /></div>
+
+        		<div class="jrCol1"><?php echo ($this->page-1)*$this->limit + $j++;?></div>
+
+	        	<div class="jrCol1" style="font-size:9px;"><?php echo $review_id;?></div>
+
+        		<div class="jrCol5"><?php /** TITLE **/?>
+
+				<?php echo Sanitize::getString($review['Listing'],'tag',__a("Listing",true));?>: <?php echo $review['Listing']['title']; ?>
+
+                                <br />
+
+				<a href="javascript:void(0)" class="jr-edit" data-id="<?php echo $review_id;?>" data-referrer="browse">
+
+                                        <span data-key="Review.title"><?php echo $title != '' ? $title : "*".__a("No title, click to edit",true)."*"; ?></span>
+
+                                </a>
+
+        		</div>
+
+        		<div class="jrCol4"><?php /* CATEGORY */?>
+
+					<?php echo isset($review['Category']) ? $review['Category']['title'] : '';?>
+
+					<div style="margin-top:4px;">
+					<span class="jrStatusLabel jrBlue" style="margin-top:3px;"><?php echo $review['Review']['extension'];?></span>
+					</div>
+
+        		</div>
+
+        		<div class="jrCol1"><?php /* PUBLISHED */?>
+
+                    <button class="jr-publish jrButton jrSmall jrIconOnly" data-id="<?php echo $review_id;?>" data-state="<?php echo $published;?>" data-states='<?php echo json_encode($publishStates);?>'>
+
+                        <span class="<?php echo $publishStates[$published];?>"></span>
+
+                    </button>
+
+        		</div>
+
+
+        		<div class="jrCol1"><?php /* REVIEW TYPE */?>
+
+        			<button class="jr-review-type jrButton jrSmall jrIconOnly" data-id="<?php echo $review_id;?>" data-state="<?php echo (int) $editor;?>" data-states='<?php echo $reviewStates;?>' data-lang='<?php echo $langReviewType;?>'>
+
+        			    <span class="<?php echo $editor ? 'jrIconEditor' : 'jrIconUsers';?>"></span>
+
+        			</button>
+
+        		</div>
+
+                        <div class="jrCol1"><?php /* OWNER REPLY */?>
+
+                        	<?php $state = $owner_reply_text != '' ? $ownerReplyStates[$owner_reply_approved] : '';?>
+                        	<button class="jr-owner-reply jrButton jrSmall jrIconOnly <?php echo $state;?>" title="<?php __a("Owner Reply");?>" data-id="<?php echo $review_id;?>" data-state="" data-states='<?php echo json_encode($ownerReplyStates);?>'>
+
+                        		<span class="<?php if($owner_reply_text !=''):?>jrIconReviews<?php else:?>jrIconAddReview<?php endif;?>"></span><span class="jrHidden"><?php __a("Owner Reply");?></span>
+
+                        	</button>
+
+                        </div>
+
+        		<div class="jrCol1"><?php /* MEDIA COUNT */?>
+
+                    <?php if($media_count > 0):?>
+
+                        <a href="javascript:void(0)" class="jr-media-filter" data-review-id="<?php echo $review_id;?>" data-extension="<?php echo $extension;?>">
+
+                            <?php echo $media_count;?>
+
+                        </a>
+
+                    <?php else:?>
+
+                        0
+
+                    <?php endif;?>
+
+        		</div>
+
+        		<div class="jrCol1">
+
+        			<?php
+        			$params = 'id:'	. urlencode(base64_encode($listing_id. ':'.$review_id. ':' . $extension)) .'/';
+
+        			$link_media_upload = "index.php?option=com_jreviews&amp;url=admin_media_upload/create/{$params}";?>
+
+        			<a class="jrButton jrSmall jrIconOnly" href="<?php echo $link_media_upload;?>" title="<?php __a("Add Media");?>">
+
+        				<span class="jrIconAddMedia"></span><span class="jrHidden"><?php __a("Add Media");?></span>
+
+        			</a>
+
+        		</div>
+
+        		<div class="jrCol1"><?php /* EMAIL */?>
+
+        			<?php if($review['User']['email'] != ''):?>
+
+        				<a class="jrButton jrSmall jrIconOnly" href="mailto:<?php echo $review['User']['email'];?>" title="<?php __a("Email");?>">
+        					<span class="jrIconMessage"></span>
+        				</a>
+
+        			<?php else:?>&nbsp;<?php endif;?>
+
+        		</div>
+
+        		<div class="jrCol1"><?php /* FILTER BY USER */?>
+
+				<?php if($review['User']['user_id']>0):?>
+
+                    <button class="jr-review-filter jrButton jrSmall jrIconOnly" data-user-id="<?php echo $review['User']['user_id'];?>" title="<?php __a("Filter by user");?>">
+
+                    	<span class="jrIconSearch"></span>
+                   	</a>
+
+			     <?php else:?>&nbsp;<?php endif;?>
+
+        		</div>
+
+        		<div class="jrCol4"><?php /* USER INFO */?>
+
+        			<span class="jr-user" data-key="User.name">
+
+        				<?php echo $review['User']['user_id'] > 0 ? $AdminRoutes->user($review['User']['name'],$review['User']['user_id'],array('target'=>'_blank')) : $review['User']['name'];?>
+
+        			</span>
+
+        			<br />
+
+                    <span class="jrSizeS"><?php echo $Time->niceShort($created); ?>&nbsp;-&nbsp;<?php echo $Routes->whois($review['User']['ipaddress']);?></span>
+
+        		</div>
+
+        		<div class="jrCol1"><?php /* DELETE */?>
+
+                        <button class="jr-delete jrButton jrSmall jrIconOnly" data-lang='<?php echo $langDel;?>'>
+
+                                <span class="jrIconDelete"></span><span class="jrHidden"><?php __a("Delete");?></span>
+
+                        </button>
+
+        		</div>
+
+        	</div>
+
+        	<?php endforeach;?>
+
+        </div>
+
+        <?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+        <input type="hidden" id="page_number" name="data[page]" value="<?php echo $this->page;?>" />
+
+        <input type="hidden" id="limit" name="data[limit]" value="<?php echo $this->limit;?>" />
+
+        <input type="hidden" name="controller" value="admin/admin_reviews" />
+
+        <input type="hidden" name="action" value="index" />
+
+    </form>
+
+</div>

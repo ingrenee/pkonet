@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata>
+    <layout title="COM_JREVIEWS_MEDIA_VIEW_DEFAULT_TITLE">
+        <message>
+            <![CDATA[COM_JREVIEWS_MEDIA_VIEW_DEFAULT_TITLE]]>
+        </message>
+    </layout>
+
+    <fields name="params">
+
+        <fieldset name="basic" label="JReviews">
+
+            <field name="action" type="list" default="" label="Type of Menu" description="Choose a menu type">
+                <option value="22">Media List</option>
+                <option value="23">My Media</option>
+            </field>
+
+            <field name="order" type="list" default="" label="Order" description="Default Order">
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="liked">Most liked</option>
+                <option value="popular">Most viewed</option>
+            </field>
+
+            <field name="show_order_list" type="radio" default="0" label="Show Order List" description="">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </field>
+
+			<field name="media_type" type="list" default="" label="Media Type" description="Default Filter">
+                <option value="">All</option>
+                <option value="photo">Photos</option>
+                <option value="video">Videos</option>
+                <option value="attachment">Attachments</option>
+                <option value="audio">Audio</option>
+            </field>
+
+            <field name="show_media_type_filter" type="radio" default="0" label="Show Media Type Filter" description="">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </field>
+
+            <field name="extension" type="text" size="30" default="" label="Extension" description="Filter results by component." />
+
+			<field name="description" filter="raw" type="textarea" default="" rows="5" cols="45" label="Description" description="different from the meta description available in the Metadata Options." />
+
+			<field name="show_description" type="radio" default="1" label="Show Description" description="Show/Hide description at the top of the page.">
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+            </field>
+
+            <field name="total_special" type="text" size="3" default="" label="Page total" description="Total number of entries shown." />
+
+			<field name="limit_special" type="text" size="3" default="" label="Limit per page" description="Number of entries per page." />
+
+            <field name="tmpl_suffix" type="text" size="20" default="" label="Theme suffix" description="Use a different theme for this menu by renaming the theme file using the suffix." />
+
+        </fieldset>
+
+    </fields>
+
+</metadata>

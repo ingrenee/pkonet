@@ -1,0 +1,224 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+# Initialize paginator helper
+$Paginator->paginate(
+    array(
+        'current_page'=>$this->page,
+        'items_per_page'=>$this->limit,
+        'items_total'=>$pagination['total']
+    )
+);
+?>
+
+<div class="jr-seo-list">
+
+    <div class="jrPageHeading"><?php __a("Field SEO Manager for Click2Search Pages");?></div>
+
+    <span id="jr-status" class="jrLeft jrStatus"></span>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post">
+
+        <div class="jrGrid">
+
+            <div class="jrCol12">
+
+                <span class="jr-status jrStatus"></span>
+
+            </div>
+
+        </div>
+
+        <div class="jrRoundedPanel">
+
+            <div class="jrGrid">
+
+                <div class="jrCol5">
+
+                        <?php __a("Show page title at the top of the list");?>:&nbsp;
+                        <?php echo $Form->radioYesNo( "seo_title", "", $this->Config->seo_title);?>
+                </div>
+
+                <div class="jrCol5">
+
+                        <?php __a("Show meta description at the top of the list");?>:&nbsp;
+                        <?php echo $Form->radioYesNo( "seo_description", "", $this->Config->seo_description);?>
+
+                </div>
+
+                <div class="jrCol2">
+
+                    <button class="jr-save-settings jrButton jrRight jrGreen" data-lang='{"success":"<?php __a("New settings saved successfully.");?>"}'>
+
+                        <span class="jrIconSave"></span><?php __a("Save");?>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <input type="hidden" name="data[controller]" value="admin/configuration" />
+
+        <input type="hidden" name="data[action]" value="_save" />
+
+    </form>
+
+    <br />
+
+    <form id="jr-page-form2" class="jrForm" action="index.php" method="post" data-object-type="seo">
+
+        <div class="jr-filters jrPageFilters jrRoundedPanelLt jrClearfix">
+
+            <div class="jrLeft">
+
+            <?php
+                echo $Form->select(
+                    'groupid',
+                    array_merge(array(array('value'=>0,'text'=>__a("Field Group",true))),$groups),
+                    $group_id
+                );
+            ?>
+
+            </div>
+
+            <div class="jrLeft">
+
+            <?php
+                $fieldTypes = array(
+                    'checkboxes'=>'Checkboxes',
+                    'code'=>'Code',
+                    'date'=>'Date',
+                    'decimal'=>'Decimal',
+                    'integer'=>'Integer',
+                    'radiobuttons'=>'Radiobuttons',
+                    'select'=>'Select',
+                    'selectmultiple'=>'Select Multiple',
+                    'text'=>'Text',
+                    'textarea'=>'Textarea',
+                );
+
+                echo $Form->select(
+                    'type',
+                    array_merge(array(array('value'=>'','text'=>__a("Field Type",true))),$fieldTypes),
+                    $type
+                );
+            ?>
+
+            </div>
+
+        </div>
+
+        <div class="jrInfo"><span class="jrIconInfo"></span><?php echo sprintf(__a("You can use the %s tags in the title, keywords and description fields if you want the value of the field to be shown in the text in the front end. The category tags will work only if you modify the click2search urls for each field to use the 'cat' parameter instead of 'criteria'.",true),'{fieldvalue}, {category} and {parent_category}');?></div>
+
+        <?php echo $this->element('pagination',array('position'=>'top'));?>
+
+        <div class="jrDataList">
+
+            <div class="jrGrid24 jrDataListHeader">
+
+                <div class="jrCol1">#</div>
+
+                <div class="jrCol5"><?php __a("Field");?></div>
+
+                <div class="jrCol6"><?php __a("Meta Title");?></div>
+
+                <div class="jrCol6"><?php __a("Meta Keywords");?></div>
+
+                <div class="jrCol6"><?php __a("Meta Description");?></div>
+
+            </div>
+
+            <?php $i = $this->page*$this->limit - ($this->limit - 1);foreach($rows AS $key=>$row):?>
+
+            <div class="jr-layout-outer jrGrid24" data-id="<?php echo $row->fieldid;?>">
+
+                <div class="jrCol1"><?php echo $i++;?></div>
+
+                <div class="jrCol5"><?php echo $row->title?></div>
+
+                <div class="jrCol6">
+
+                    <a href="javascript:void(0);" class="jr-edit-inplace" data-type="text" data-field-id="<?php echo $row->fieldid?>"
+                        data-column="metatitle" data-label="<?php echo addslashes($row->title);?>"
+                        data-state="<?php echo (int)!empty($row->metatitle);?>">
+
+                        <?php if(!empty($row->metatitle)):?>
+
+                            <?php echo $row->metatitle;?>
+
+                        <?php else:?>
+
+                            <span class="jrIconEdit"></span><?php __a("Edit");?>
+
+                        <?php endif;?>
+
+                     </a>
+
+                </div>
+
+                <div class="jrCol6">
+
+                    <a href="javascript:void(0);" class="jr-edit-inplace" data-type="textarea" data-field-id="<?php echo $row->fieldid?>"
+                        data-column="metakey" data-label="<?php echo addslashes($row->title);?>"
+                        data-state="<?php echo (int)!empty($row->metakey);?>">
+
+                        <?php if(!empty($row->metakey)):?>
+
+                            <?php echo $row->metakey;?>
+
+                        <?php else:?>
+
+                            <span class="jrIconEdit"></span><?php __a("Edit");?>
+
+                        <?php endif;?>
+
+                    </a>
+
+                </div>
+
+                <div class="jrCol6">
+
+                    <a href="javascript:void(0);" class="jr-edit-inplace" data-type="textarea" data-field-id="<?php echo $row->fieldid?>"
+                        data-column="metadesc" data-label="<?php echo addslashes($row->title);?>"
+                        data-state="<?php echo (int)!empty($row->metadesc);?>">
+
+                        <?php if(!empty($row->metadesc)):?>
+
+                            <?php echo $row->metadesc;?>
+
+                        <?php else:?>
+
+                            <span class="jrIconEdit"></span><?php __a("Edit");?>
+
+                        <?php endif;?>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <?php endforeach;?>
+
+        </div>
+
+        <?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+        <input type="hidden" name="data[controller]" value="admin/seo" />
+
+        <input type="hidden" name="data[action]" value="index" />
+
+    </form>
+
+</div>

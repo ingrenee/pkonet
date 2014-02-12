@@ -1,0 +1,708 @@
+/*************************************
+Pagination
+*************************************/
+.jrPagination {
+  line-height: 1.5em;
+}
+.jrPagination div:nth-child(2){
+  text-align: center;
+}
+.jrPagination select {
+  width: auto;
+}
+.jrPaginationTop {
+  margin-bottom: 10px;
+}
+.jrPaginationBottom {
+  margin-top: 10px;
+}
+.jrPagenavResults {
+  width: 20%;
+}
+.jrPagenavPages {
+  text-align: center;
+}
+.jrPagenavLimit {
+  width: 20%;
+  text-align: right;
+}
+.jrPagenavLimit select {
+  font-size: 10px !important;
+  width: auto !important;
+  background: #f8f8f8;
+  color: #444;
+  vertical-align: middle;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #aaa #ccc #ccc #aaa;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.jrPagenavLimit select:focus {
+  outline: none;
+  background: #fff;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #777 #aaa #aaa #777;
+}
+.jrPagenavLimit select option {
+  padding-right: 10px;
+}
+.jrPagination .jrPageCurrent {
+  color: #fff;
+  cursor: default;
+  background-image: none;
+  -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+  background-color: #cccccc;
+  color: rgba(0, 0, 0, 0.8);
+}
+/*************************************
+Listing Types
+*************************************/
+.jrCriteriaWeights {
+  width: 4em;
+}
+.jrCriterion,
+.jrCriteriaDesc {
+  width: 100%;
+}
+/*************************************
+Audio player
+*************************************/
+/* Main interface */
+.jrAudio .jp-audio {
+  width: 100%;
+  padding: 0;
+  margin: 10px 0 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #444;
+  position: relative;
+}
+.jrAudio .jp-audio .jp-interface {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  background-color: #dadada;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#cccccc), color-stop(50%, #dddddd), to(#cccccc));
+  background-image: -webkit-linear-gradient(#cccccc, #dddddd 50%, #cccccc);
+  background-image: -moz-linear-gradient(top, #cccccc, #dddddd 50%, #cccccc);
+  background-image: -ms-linear-gradient(#cccccc, #dddddd 50%, #cccccc);
+  background-image: -o-linear-gradient(#cccccc, #dddddd 50%, #cccccc);
+  background-image: linear-gradient(#cccccc, #dddddd 50%, #cccccc);
+  background-repeat: no-repeat;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#cccccc', GradientType=0);
+}
+.jrAudio .jp-interface ul.jp-controls {
+  list-style-type: none;
+  position: absolute;
+  top: 13px;
+  left: 13px;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+.jrAudio .jp-interface ul.jp-controls li {
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline;
+  float: left;
+}
+.jrAudio .jp-interface ul.jp-controls a {
+  display: block;
+  overflow: hidden;
+  text-indent: -9999px;
+  outline: none;
+}
+.jrAudio .jp-interface a.jp-play,
+.jrAudio .jp-interface a.jp-pause {
+  width: 16px;
+  height: 16px;
+}
+.jrAudio .jp-interface a.jp-play {
+  background: url("images/audio.png") 0 0 no-repeat;
+}
+.jrAudio .jp-interface a.jp-play:hover {
+  background: url("images/audio.png") 0 -16px no-repeat;
+}
+.jrAudio .jp-interface a.jp-pause {
+  background: url("images/audio.png") -16px 0 no-repeat;
+}
+.jrAudio .jp-interface a.jp-pause:hover {
+  background: url("images/audio.png") -16px -16px no-repeat;
+}
+/* Progress bar */
+.jrAudio .jp-progress-container {
+  margin: 0 185px 0 40px;
+  padding-top: 15px;
+}
+.jrAudio .jp-audio .jp-progress {
+  overflow: hidden;
+  background-color: #ddd;
+  width: 100%;
+  height: 12px;
+}
+.jrAudio .jp-seek-bar {
+  background: #888;
+  width: 0px;
+  height: 100%;
+  cursor: pointer;
+}
+.jrAudio .jp-play-bar {
+  background: #000;
+  width: 0px;
+  height: 100%;
+}
+.jrAudio .jp-seeking-bg {
+  background: url("images/audio-preloader.gif") repeat-x;
+}
+/* Volume bar */
+.jrAudio .jp-volume-bar {
+  top: 15px;
+  right: 13px;
+  position: absolute;
+  overflow: hidden;
+  background: #888;
+  width: 50px;
+  height: 12px;
+  cursor: pointer;
+}
+.jrAudio .jp-volume-bar-value {
+  background: #000;
+  width: 0px;
+  height: 12px;
+}
+/* Current time and duration */
+.jrAudio .jp-audio .jp-time-holder {
+  position: absolute;
+  top: 13px;
+  right: 105px;
+  width: 70px;
+  font-size: 11px !important;
+}
+.jrAudio .jp-current-time,
+.jrAudio .jp-duration {
+  display: inline;
+  font-style: oblique;
+}
+/* Mute / unmute */
+.jrAudio .jp-mute-unmute {
+  position: absolute;
+  top: 13px;
+  right: 75px;
+  width: 23px;
+}
+.jrAudio a.jp-mute,
+.jrAudio a.jp-unmute {
+  display: block;
+  position: absolute;
+  overflow: hidden;
+  text-indent: -9999px;
+  height: 16px;
+  outline: none;
+}
+.jrAudio a.jp-mute {
+  background: url("images/audio.png") -46px 0 no-repeat;
+  width: 25px;
+}
+.jrAudio a.jp-mute:hover {
+  background: url("images/audio.png") -46px -16px no-repeat;
+}
+.jrAudio a.jp-unmute {
+  background: url("images/audio.png") -28px 0 no-repeat;
+  width: 15px;
+  display: none;
+}
+.jrAudio a.jp-unmute:hover {
+  background: url("images/audio.png") -28px -16px no-repeat;
+}
+/* Playlist */
+.jrAudio .jp-playlist a {
+  outline: none;
+}
+.jrAudio .jp-playlist-current {
+  font-weight: bold;
+}
+/*************************************
+Admin pages
+*************************************/
+.jrAdmin {
+  min-width: 1150px;
+  font-size: 11px;
+  line-height: normal;
+}
+.jrAbout {
+  width: 70%;
+  float: left;
+}
+.jrAbout .jrDataList {
+  line-height: 1em;
+}
+.jrAbout .addons {
+  color: green;
+}
+.news {
+  width: 29%;
+  float: right;
+}
+.news .news-header {
+  padding: 0 5px;
+}
+.news .news-container {
+  padding: 0 !important;
+  border: 0 !important;
+  width: 100% !important;
+}
+.news .news-spinner {
+  text-align: center;
+  vertical-align: middle;
+}
+/*******************************
+News Feed
+********************************/
+.feed_item h3 {
+  font-size: 12px;
+  margin: 3px 0;
+}
+.feed_item .date {
+  font-size: 8px;
+  margin: 2px 0;
+  color: #000;
+}
+.feed_item,
+.feed_item .description a {
+  font-size: 12px;
+}
+/*******************************
+Menu Sidebar
+********************************/
+.jrMenu .jrHeader {
+  margin: 6px 0 4px 0;
+  font-weight:bold;
+  border-bottom: 1px solid #555;
+  padding: 3px;
+  text-indent: 0;
+  color: #000;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+.jrMenu ul,
+.jrMenu ol {
+  margin: 0 0 0 15px !important;
+  padding: 0;
+}
+.jrMenu li a {
+  font-size: 11px;
+  display: block;
+  cursor: pointer;
+  padding-top: 0;
+  min-height: 1.6em;
+}
+.jrMenu .jrStatusLabel {
+  padding: 0.5px 4px;
+}
+/*************************************
+Install checks
+*************************************/
+.jrInstallError {
+  color: #fff;
+  background-color: #bf0000 !important;
+}
+.jrInstallError a {
+  color: #fff;
+}
+.jrInstallWarning {
+  color: #000;
+  background-color: #ecc15e !important;
+}
+.jrInstallWarning a {
+  color: #000;
+}
+/*************************************
+Access Levels
+*************************************/
+.jrPublic {
+  color: green !important;
+}
+.jrRegistered{
+  color: orange !important;
+}
+.jrSpecial {
+  color: red !important;
+}
+/*************************************
+Helper Classes
+*************************************/
+.jrCenter {
+  text-align: center;
+}
+.jrAlignLeft {
+  text-align: left;
+}
+.jrAlignRight{
+  text-align: right;
+}
+.jrStatus {
+  display: none;
+  text-align: center;
+  height: 25px;
+  font-weight: bold;
+  font-size: 14px;
+  color: green;
+}
+/*************************************
+Page elements
+*************************************/
+.jrPageDescription {
+  padding: 5px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  line-height: 1.25em;
+  font-size: 110%;
+}
+.jrPageDescription li{
+  margin-left: 20px;
+}
+.jrPageHeading {
+  font-size: 16px;
+  font-weight: bold;
+  color: #0B55C4;
+  background-repeat: no-repeat;
+  margin-bottom: 5px;
+}
+.jrPageToolbar {
+  text-align: right;
+  margin-bottom: 20px;
+}
+.jrPageToolbar label {
+  display:inline;
+}
+.jrPageToolbar input {
+  margin: 0 5px;
+}
+.jrPageFilters {
+  text-align: left;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+.jrPageFilters .jrOption {
+    width: 20%;
+    float: left;
+}
+.jrForm .jrPageFilters input,
+.jrForm .jrPageFilters select {
+  width: 170px;
+}
+.jrForm .jrPageFilters select {
+  padding: 0;
+}
+.jrForm .jrPageFilters input[type="text"] {
+  padding: 3px;
+}
+.jrForm .jrPageFilters .jrLeft {
+  margin-left: 5px;
+}
+.jrForm .jrTabs select {
+  padding: 0;
+}
+.jrSortable {
+  min-height: 14px;
+}
+.jrSortable .jrIconSort {
+  cursor: move;
+  display: none;
+}
+.jrSortable:hover .jrIconSort {
+  display: inline-block;
+}
+.jrSizeS {
+  font-size: 9px;
+}
+.jrSizeM {
+  font-size: 12px;
+}
+.jrFieldDiv .jrIconNew:before {
+  color: #333;
+}
+/*******************************
+Colored Icons
+********************************/
+.jrMediaIconLegend {
+  line-height: 1em;
+  margin-bottom: 10px;
+}
+/*******************************
+Colored Icons
+********************************/
+.jrIconPlus:before,
+.jrIconInfo:before,
+.jrIconFeatured:before {
+  color: #3F7FD5;
+}
+.jrIconYes:before,
+.jrIconApply:before,
+.jrIconPublished:before,
+.jrIconApply:before {
+  color: green;
+}
+.jrIconSubmit:before,
+.jrIconSave:before,
+.jrIconNew:before,
+.jrIconMap:before {
+  color: #fff;
+}
+.jrIconExpired:before,
+.jrIconWarning:before,
+.jrIconNo:before,
+.jrIconMinus:before,
+.jrIconCancel:before,
+.jrIconUnpublished:before,
+.jrIconRejected:before {
+  color: #AD0909;
+}
+/*************************************
+Messages
+*************************************/
+.jrGrid .jrInfo,
+.jrGrid .jrWarning,
+.jrGrid .jrError {
+  margin-bottom: 0;
+}
+.jrDialog .jrInfo,
+.jrDialog .jrWarning,
+.jrDialog .jrError {
+  padding: 10px;
+  font-size: 12px;
+}
+.jrInfo,
+.jrWarning,
+.jrError {
+  font-size: 12px;
+}
+.jrInfo p,
+.jrWarning p,
+.jrError p {
+  margin: 0;
+}
+.jrInfo ul,
+.jrWarning ul,
+.jrError ul {
+  padding: 0;
+  margin: 0 0 0 15px !important;
+}
+/*************************************
+Fluid Grid System
+*************************************/
+.jrDataList > [class*="jrGrid"] {
+  width: 99%;
+  padding: 6px 0.5%;
+}
+.jrDataList [class^="jrIcon"] {
+  margin: 0;
+}
+.jrDataList .jrDataListHeader [class^="jrIcon"] {
+  width: 14px;
+}
+.jrDataList .jrDataListHeader [class^="jrIcon"]:before {
+  font-size: 14px;
+}
+.jrDataList .jrCol1,
+.jrDataList .jrCol2 {
+  text-align: center;
+}
+.jrGrid24 ul,
+.jrGrid24 ol,
+.jrGrid ul,
+.jrGrid ol {
+  padding: 0;
+  margin: 0;
+}
+.jrDataListHeader {
+  line-height: 1em;
+}
+/*************************************
+Rounded Panel
+*************************************/
+.jrModeration .jrRoundedPanel {
+  margin-bottom: 15px;
+}
+.jrModeration .jrTitle {
+  font-weight: bold;
+}
+.jrModeration .jrGrid:nth-child(2){
+  margin: 5px 0;
+}
+.jrModeration .jrPreviewHtml {
+  padding: 4px;
+  border: 1px solid silver;
+  height: 70px;
+  background-color: #fff;
+  overflow: auto;
+}
+.jrModeration label {
+  display: inline-block;
+}
+/*******************************
+* FORM
+********************************/
+.jrForm fieldset input,
+.jrForm fieldset label,
+.jrForm fieldset textarea,
+.jrForm fieldset select,
+.jrForm fieldset img,
+.jrForm fieldset button {
+  float: none;
+}
+.jrForm fieldset input[type=radio]{
+  margin: 5px 0px 0 5px;
+}
+/*
+.jrForm fieldset .jr-tabs .ui-multiselect,
+.jrForm fieldset .jr-tabs input[type=text],
+.jrForm fieldset .jr-tabs select {
+  margin: 0 0 0 10px;
+}*/
+.jrForm fieldset button.ui-multiselect.ui-widget {
+  font-size: 100% !important;
+  font-weight:normal !important;
+  margin: 0 10px 0 0 !important;
+}
+.jrForm label {
+  display: inline-block;
+}
+.jrForm .jrSideLabel .jrFieldDiv label {
+  float: left;
+  padding: 0;
+  margin: 0 10px 0 0;
+  text-align: right;
+  width: 130px;
+}
+.jrForm fieldset .jrInfo,
+.jrForm fieldset .jrWarning,
+.jrForm fieldset .jrError {
+  margin: 0;
+}
+.jrForm .jrFieldDiv {
+  padding: 2px 0;
+}
+.jrForm .jrSeparator {
+  color: #666;
+  font-weight: bold;
+}
+#listing-type-config label,
+#listing-type-access label,
+#listing-type-media label {
+  display: inline;
+}
+.jrPage input[type=radio],
+.jrPage input[type=checkbox] {
+  margin: 3px 0;
+  vertical-align: baseline;
+}
+.jrPage input[type=radio]:not(:first-child),
+.jrPage input[type=checkbox]:not(:first-child) {
+  margin-left: 10px;
+}
+.jrPage .jrCheckboxOption {
+  margin-right: 5px;
+}
+/********************************
+* Form classes
+*********************************/
+.jrForm .jrInlineLabel {
+  display: inline !important;
+}
+.jrForm .jrTabs .jrTabs {
+  margin: 0 !important;
+}
+.jrForm .jrTabs .ui-tabs-panel {
+  padding: 10px 5px !important;
+}
+.jrPage a {
+  font-size: 11px !important;
+}
+.reportAdminNote {
+  width: 95%;
+  height: 74px;
+}
+span.jr_title {
+  margin-left: 5px;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+/****************************
+Video.js overrides
+*****************************/
+.video-js-box .vjs-default-skin .vjs-big-play-button {
+  top: 50%;
+  left: 50%;
+  margin: -4em 0 0 -6em;
+}
+/********************************
+jQuery UI overrides
+*********************************/
+.ui-tabs .ui-tabs-panel {
+  padding: 10px 5px !important;
+}
+.ui-icon {
+  width: 14px !important;
+  height: 14px !important;
+}
+.ui-autocomplete-loading {
+  background: white url('images/loading_s.gif') right center no-repeat !important;
+}
+.ui-widget-content a {
+  color: #025A8D;
+}
+
+/* Tabs */
+.jrTabs.ui-tabs {
+  padding: 0;
+  border: 0;
+  font-size: 1em;
+}
+.jrTabs.ui-tabs .ui-tabs-nav {
+  margin: 0 !important;
+  padding: 0.2em 0.2em 0 0 !important;
+  border: 0;
+  background: none;
+}
+.jrTabs.ui-tabs .ui-tabs-nav li {
+  margin: 0 3px 1px 0 !important;
+  list-style: none !important;
+  top: 1px;
+}
+.jrTabs.ui-tabs .ui-tabs-nav li a {
+  padding: 6px 10px;
+}
+.jrTabs.ui-tabs .ui-tabs-nav li.ui-tabs-selected,
+.jrTabs.ui-tabs .ui-tabs-nav li.ui-tabs-active {
+  border: 1px solid #ccc;
+  border-bottom: 0 !important;
+  padding: 0;
+  top: 2px;
+}
+.jrTabs.ui-tabs .ui-tabs-nav li.ui-state-hover {
+  border: 1px solid #ccc;
+  border-bottom: 0 !important;
+}
+.jrTabs.ui-tabs .ui-tabs-panel {
+  border: 1px solid #ccc;
+  -moz-border-radius-topright: 4px;
+  -webkit-border-top-right-radius: 4px;
+  -khtml-border-top-right-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.jrTabs .ui-state-focus a {
+  outline: none;
+}
+/****************************
+Joomla 3 styles
+*****************************/
+
+.row-fluid .jrAdmin {
+  margin-top: 10px;
+}

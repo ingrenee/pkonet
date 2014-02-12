@@ -1,0 +1,450 @@
+/*************************************
+List page header
+*************************************/
+.jrCategoryList {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.jrCategoryTitle {
+  margin-top: 8px;
+}
+.jrCategoryList img {
+  max-width: 100% !important;
+}
+.jrAddListing.jrButton {
+  float: right;
+  margin: 0 0 10px;
+}
+/*************************************
+Common List page elements
+*************************************/
+/* Listing Titles */
+.jrListings .jrContentTitle,
+.jrListings .jrContentTitle a {
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 1.3;
+}
+.jrListings .jrContentTitle a {
+  margin: 0 10px 5px 0;
+}
+.jrListings .jrStatusIndicators span {
+  font-size: 9px;
+  line-height: 13px;
+}
+/* Listing Actions - div that contains the read more, read reviews, write review links */
+.jrResults .jrListingActions {
+  position: absolute;
+  bottom: 3px;
+  left: 0;
+}
+.jrResults .jrListingActionsBox {
+  display: none;
+  clear: both;
+  background: #eee;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid #ddd;
+  position: absolute;
+  bottom: 1px;
+  left: 0;
+  padding: 5px;
+}
+.jrResults .jrListItem:hover .jrListingActionsBox {
+  display: block;
+}
+.jrTableview .jrResults .jrListingActions {
+  position: static;
+  margin-top: 10px;
+}
+.jrTableview .jrResults tr:hover .jrListingActionsBox {
+  display: inline-block;
+}
+/*************************************
+TABLEVIEW:for list views of type "table"
+*************************************/
+.jrTableview .jrResults {
+  border-collapse: collapse;
+}
+.jrTableview .jrResults th {
+  padding: .2em 1em .2em 0;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+.jrTableview .jrResults th.jrTableColumnFirst {
+  padding: .3em 2em .3em 5px;
+}
+.jrTableview .jrResults th.jrTableColumnMain {
+  width: 100%;
+}
+.jrTableview .jrResults th.jrTableColumnLast {
+  padding: .3em 5px .3em 0;
+}
+.jrTableview .jrResults .row1 td {
+  background-color: #fff;
+}
+.jrTableview .jrResults .row2 td {
+  background-color: #f5f5f5;
+}
+.jrTableview .jrResults td,
+.jrTableview .jrResults td.jrTableColumnFirst,
+.jrTableview .jrResults td.jrTableColumnMain,
+.jrTableview .jrResults td.jrTableColumnField,
+.jrTableview .jrResults td.jrTableColumnLast {
+  padding: 15px 2em 15px 0;
+  vertical-align: top;
+  border-top: solid 1px #ccc;
+}
+.jrTableview .jrResults td.jrTableColumnFirst {
+  padding: 15px 2em 15px 5px;
+}
+.jrTableview .jrResults td.jrTableColumnFirst img {
+  max-width: none !important;
+}
+.jrTableview .jrResults td.jrTableColumnMain {
+  width: 100%;
+}
+.jrTableview .jrResults td.jrTableColumnLast {
+  padding: 15px 5px 15px 0;
+}
+.jrTableview .jrResults .jrListingInfo {
+  line-height: 22px;
+}
+.jrTableview .jrResults .jrListingStatus {
+  white-space: nowrap;
+}
+.jrTableview .jrResults .jrCustomFields {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+.jrTableview .jrResults .jrFieldGroupTitle {
+  /*hide the fieldgroup title in the list view */
+
+  display: none;
+}
+.jrTableview .jrResults .jrFieldGroup {
+  /*no spacing between field groups in list view: make it look like one table */
+
+  padding: 0;
+}
+.jrTableview .jrResults .jrOverallRatings {
+  float: none;
+  width: 145px;
+}
+.jrTableview .jrResults td.jrTableColumnLast table.jrRatingTable td {
+  padding: 0;
+}
+.jrTableview .jrResults td.jrTableColumnLast table.jrRatingTable td.jrRatingLabel {
+  padding: 3px 5px 2px 0;
+}
+.jrTableview .jrResults td.jrTableColumnLast table.jrRatingTable td.jrRatingValue {
+  padding: 4px 10px 2px 5px;
+}
+/*************************************
+BLOGVIEW - for list views of type "blog"
+*************************************/
+.jrBlogview .jrListingColumn {
+  min-height: 330px;
+}
+.jrBlogview .jrResults .jrListItem {
+  clear: both;
+  position: relative;
+  margin: 0 0 5px 0 !important;
+  padding: 0 0 1px 0;
+  *zoom: 1;
+}
+.jrBlogview .jrResults .jrListItem:before,
+.jrBlogview .jrResults .jrListItem:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.jrBlogview .jrResults .jrListItem:after {
+  clear: both;
+}
+.jrBlogview .jrResults .jrListItem.jrRoundedBox {
+  padding: 10px !important;
+  margin-bottom: 5px;
+  border: 1px solid #ddd;
+  background-color: #fdfdfd;
+  background-image: -moz-linear-gradient(top, #ffffff, #fbfbfb);
+  background-image: -ms-linear-gradient(top, #ffffff, #fbfbfb);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#fbfbfb));
+  background-image: -webkit-linear-gradient(top, #ffffff, #fbfbfb);
+  background-image: -o-linear-gradient(top, #ffffff, #fbfbfb);
+  background-image: linear-gradient(top, #ffffff, #fbfbfb);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#fbfbfb', GradientType=0);
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}
+.jrBlogview .jrResults .jrListItem.jrRoundedBox .jrListingActions {
+  bottom: 8px;
+  left: 10px;
+}
+.jrBlogview .jrResults .jrListItem.row2 {
+  background: #f5f5f5;
+}
+.jrBlogview .jrListingContent {
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+.jrBlogview .jrListingThumbnail {
+  float: right;
+  margin: 0 0 6px 6px;
+  border: solid 1px #ccc;
+  padding: 1px;
+}
+.jrBlogview .jrListingInfo,
+.jrBlogview .jrListingStatus {
+  margin: 0 0 5px 0;
+}
+.jrBlogview .jrOverallRatings {
+  clear: left;
+  float: none;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+.jrBlogview .jrOverallEditor {
+  float: left;
+  margin-right: 10px;
+}
+.jrBlogview .jrOverallUser {
+  float: left;
+}
+.jrBlogview .jrListingInfo {
+  line-height: 22px;
+}
+.jrBlogview .jrListingStatus {
+  white-space: nowrap;
+}
+.jrBlogview .jrListingSummary {
+  margin: 5px 0;
+  clear: left;
+}
+.jrBlogview .jrCustomFields h3.jrFieldGroupTitle {
+  /* hide the fieldGroup title when in list views! */
+
+  display: none;
+}
+.jrBlogview .jrCustomFields {
+  clear: left;
+  margin: 5px 0;
+}
+.jrBlogview .jrCustomFields .jrFieldGroup {
+  padding: 0;
+}
+.jrBlogview.jrCompact .jrContentTitle a {
+  display: inline;
+}
+.jrBlogview.jrCompact .jrContentTitle .jrIconInfo {
+  margin: 5px;
+}
+.jrBlogview.jrCompact .jrContentTitle .jrIconInfo:before {
+  color: #3F7FD5;
+}
+/**********************************************
+THUMBVIEW - for list views of type "thumbnail"
+***********************************************/
+.jrThumbview .jrResults {
+  padding-top: 15px;
+  text-align: center;
+}
+.jrThumbview .jrResults .jrListItem {
+  height: 260px;
+}
+.jrThumbview .jrResults .jrListingThumbnail {
+  margin: 8px 0;
+  width: auto;
+  height: 120px;
+  overflow: hidden;
+}
+.jrThumbview .jrResults .jrListingThumbnail img {
+  max-width: 100% !important;
+}
+.jrThumbview .jrResults .jrContentTitle {
+  height: 2.5em;
+  overflow: hidden;
+  margin: 0 3px;
+  font-size: 13px;
+  line-height: 1.2;
+}
+.jrThumbview .jrResults .jrContentTitle a {
+  font-size: 13px;
+  line-height: 1.2;
+  margin: 0;
+}
+.jrThumbview .jrResults .jrStatusIndicators {
+  display: none;
+}
+.jrThumbview .jrResults div.jrOverallRatings {
+  margin: 10px auto;
+  width: 148px;
+  float: none;
+  font-size: 0.9em;
+  line-height: 1.3;
+}
+/*************************************
+COMPAREVIEW - listing comparison page
+*************************************/
+.jrCompareview {
+  overflow: hidden;
+}
+.jrCompareview .jrCompareHeader {
+  float: left;
+  width: 22%;
+  text-align: left;
+}
+.jrCompareview .jrCompareSlider,
+.jrCompareview .jrCompareSliderSecondary {
+  float: left;
+  width: 78%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+.jrCompareview .jrCompareSlider.jrSliderDisabled,
+.jrCompareview .jrCompareSliderSecondary.jrSliderDisabled {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.jrCompareview .jrCompareSliderItems {
+  position: relative;
+}
+.jrCompareview .jrCompareSliderItem {
+  float: left;
+  text-align: center;
+  position: relative;
+}
+.jrCompareview .jrCompareField {
+  background: #fff;
+  min-height: 15px;
+  line-height: 15px;
+  padding: 8px;
+}
+.jrCompareview .jrCompareField.alt {
+  background: #f5f5f5;
+}
+.jrCompareview .jrCompareField img {
+  border: 0;
+}
+.jrCompareview .itemUserRating.jrCompareField,
+.jrCompareview .itemEditorRating.jrCompareField {
+  padding: 3px 5px;
+  height: 20px;
+}
+.jrCompareview .jrCompareHeader .jrCompareField {
+  background: #f8f8f8;
+  padding-left: 15px;
+  font-weight: 600;
+}
+.jrCompareview .jrCompareHeader .jrCompareField.alt {
+  background: #f0f0f0;
+  padding-left: 15px;
+  font-weight: 600;
+}
+.jrCompareview .jrFieldGroup.jrCompareField {
+  text-transform: uppercase;
+  font-size: 12px;
+  background: #eee;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding: 6px;
+  font-weight: normal;
+}
+.jrCompareview .itemTitle.jrCompareField {
+  background: #fff;
+  margin-top: 5px;
+}
+.jrCompareview .itemThumbnail.jrCompareField {
+  min-height: 100px;
+  background: #fff;
+  overflow: hidden;
+}
+.jrCompareview .itemSummary.jrCompareField {
+  background: #fff;
+}
+.jrCompareview .jrRatingStarsUser {
+  margin: 3px auto;
+}
+.jrCompareview .jrRatingStarsEditor {
+  margin: 3px auto;
+}
+.jrCompareview ul.jrFieldValueList li {
+  float: none;
+}
+.jrCompareview ul.jrFieldValueList li:after {
+  content: '';
+}
+.jrCompareview .jrScrollbarArea {
+  height: 22px;
+  padding: 0 0 10px 0;
+}
+img.removeListing {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin: 0 0 -3px 5px;
+}
+.jrCompareview ::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+.jrCompareview ::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.4);
+}
+/*************************************
+CMSBLOG - for core list views of type "frontpage","blogcategory","blogsection"
+
+NOTE: because of the way J! draws blog entries, jrPage must be wrapped around *each listItem*.  In addition, jrCMSBlog should be added to that div, such that <div class="jrPage jrCMSBlog"><div class="listItem">...</div></div>
+*************************************/
+.jrCMSBlog {
+  text-align: left;
+}
+.jrCMSBlog div.jrContentTitle,
+.jrCMSBlog div.jrContentTitle a {
+  font-size: 20px;
+  font-weight: normal;
+}
+.jrCMSBlog div.jrListingInfo {
+  padding: 0;
+  margin: 5px 0;
+}
+.jrCMSBlog div.jrOverallRatings {
+  float: none;
+}
+.jrCMSBlog .jrOverallEditor {
+  float: left;
+}
+.jrCMSBlog .jrOverallUser {
+  clear: right;
+}
+.jrCMSBlog table.jrRatingTable {
+  margin-bottom: 7px;
+}
+.jrCMSBlog td.jrRatingStars {
+  padding: 2px 5px 2px 0;
+}
+.jrCMSBlog td.jrRatingValue {
+  padding: 2px 20px 2px 2px;
+}
+.jrCMSBlog .jrCustomFields {
+  margin-top: 0;
+}
+.jrCMSBlog .jrCustomFields h3 {
+  /* hide the fieldGroup title when in list views! */
+
+  display: none;
+}
+.jrCMSBlog .jrListingSummary {
+  margin: 10px 0;
+}
+.jrCMSBlog .jrListingThumbnail {
+  float: right;
+  text-align: right;
+  margin: 0 0 20px 20px;
+  border: solid 1px #ccc;
+  padding: 1px;
+}

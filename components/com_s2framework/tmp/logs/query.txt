@@ -1,0 +1,80 @@
+July 4, 2013, 3:27 pm----------------------------------
+*********EverywhereComContentModel | Find<br />SELECT Listing.id AS `Listing.listing_id`,
+Listing.alias AS `Listing.slug`,
+Category.alias AS `Category.slug`,
+Listing.title AS `Listing.title`,
+Listing.introtext AS `Listing.summary`,
+Listing.fulltext AS `Listing.description`,
+Listing.images AS `Listing.images`,
+Listing.hits AS `Listing.hits`,
+Listing.catid AS `Listing.cat_id`,
+Listing.created_by AS `Listing.user_id`,
+Listing.created_by_alias AS `Listing.author_alias`,
+Listing.created AS `Listing.created`,
+Listing.modified AS `Listing.modified`,
+Listing.access AS `Listing.access`,
+Listing.state AS `Listing.state`,
+Listing.publish_up AS `Listing.publish_up`,
+Listing.publish_down AS `Listing.publish_down`,
+Listing.metakey AS `Listing.metakey`,
+Listing.metadesc AS `Listing.metadesc`,
+'com_content' AS `Listing.extension`,
+Category.id AS `Category.cat_id`,
+Category.title AS `Category.title`,
+Category.params AS `Category.params`,
+Directory.id AS `Directory.dir_id`,
+Directory.desc AS `Directory.title`,
+Directory.title AS `Directory.slug`,
+Criteria.id AS `Criteria.criteria_id`,
+Criteria.title AS `Criteria.title`,
+Criteria.criteria AS `Criteria.criteria`,
+Criteria.tooltips AS `Criteria.tooltips`,
+Criteria.weights AS `Criteria.weights`,
+Criteria.required AS `Criteria.required`,
+Criteria.state AS `Criteria.state`,
+Criteria.config AS `ListingType.config`,
+`Field`.featured AS `Listing.featured`,
+User.id AS `User.user_id`,
+User.name AS `User.name`,
+User.username AS `User.username`,
+User.email AS `User.email`,
+Claim.approved AS `Claim.approved`,
+Totals.user_rating AS `Review.user_rating`,
+Totals.user_rating_count AS `Review.user_rating_count`,
+Totals.user_criteria_rating AS `Review.user_criteria_rating`,
+Totals.user_criteria_rating_count AS `Review.user_criteria_rating_count`,
+Totals.user_comment_count AS `Review.review_count`,
+Totals.editor_rating AS `Review.editor_rating`,
+Totals.editor_rating_count AS `Review.editor_rating_count`,
+Totals.editor_criteria_rating AS `Review.editor_criteria_rating`,
+Totals.editor_criteria_rating_count AS `Review.editor_criteria_rating_count`,
+Totals.editor_comment_count AS `Review.editor_review_count`,
+Totals.media_count AS `Listing.media_count`,
+Totals.video_count AS `Listing.video_count`,
+Totals.photo_count AS `Listing.photo_count`,
+Totals.audio_count AS `Listing.audio_count`,
+Totals.attachment_count AS `Listing.attachment_count`,
+(Totals.media_count - Totals.media_count_user) AS `Listing.media_count_owner`,
+(Totals.video_count - Totals.video_count_user) AS `Listing.video_count_owner`,
+(Totals.photo_count - Totals.photo_count_user) AS `Listing.photo_count_owner`,
+(Totals.audio_count - Totals.audio_count_user) AS `Listing.audio_count_owner`,
+(Totals.attachment_count - Totals.attachment_count_user) AS `Listing.attachment_count_owner`,
+Totals.media_count_user AS `Listing.media_count_user`,
+Totals.video_count_user AS `Listing.video_count_user`,
+Totals.photo_count_user AS `Listing.photo_count_user`,
+Totals.audio_count_user AS `Listing.audio_count_user`,
+Totals.attachment_count_user AS `Listing.attachment_count_user`
+ FROM tkm7_content AS Listing
+INNER JOIN tkm7_jreviews_categories AS JreviewsCategory ON Listing.catid = JreviewsCategory.id AND JreviewsCategory.`option` = 'com_content'
+LEFT JOIN tkm7_categories AS Category ON JreviewsCategory.id = Category.id
+LEFT JOIN tkm7_categories AS ParentCategory ON Category.lft BETWEEN ParentCategory.lft AND ParentCategory.rgt
+LEFT JOIN tkm7_jreviews_listing_totals AS Totals ON Totals.listing_id = Listing.id AND Totals.extension = 'com_content'
+LEFT JOIN tkm7_jreviews_content AS Field ON Field.contentid = Listing.id
+LEFT JOIN tkm7_jreviews_directories AS Directory ON JreviewsCategory.dirid = Directory.id
+LEFT JOIN tkm7_jreviews_criteria AS Criteria ON JreviewsCategory.criteriaid = Criteria.id
+LEFT JOIN tkm7_users AS User ON User.id = Listing.created_by
+LEFT JOIN tkm7_jreviews_claims AS Claim ON Claim.listing_id = Listing.id AND Claim.user_id = Listing.created_by AND Claim.approved = 1
+ WHERE 1 = 1 AND ( 
+   (Totals.photo_count > 0 OR (Totals.user_rating + Totals.editor_rating) > 0)
+ )
+ ORDER BY Totals.user_comment_count DESC,Totals.editor_comment_count,Totals.photo_count DESC

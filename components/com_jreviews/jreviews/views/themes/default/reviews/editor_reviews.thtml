@@ -1,0 +1,139 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/
+
+$editorReviewSubmit = $this->Access->canAddReview() && $this->Access->isJreviewsEditor($User->id);
+
+$editorReviewSubmitMultiple = $editorReviewSubmit && $this->Config->author_review == 2;
+
+$editorReviewSubmitSingle = $editorReviewSubmit && $this->Config->author_review == 1 && Sanitize::getInt($listing['Review'],'editor_review_count') == 0;
+
+$editorReviewShow = $listing['Criteria']['state'] && ($this->Config->author_review == 2 || $this->Config->author_review == 1) && (!empty($editor_review) || $editorReviewSubmit);
+
+$editorReviewForm = $this->action != 'detail' && !$User->duplicate_review && ($editorReviewSubmitSingle || $editorReviewSubmitMultiple);
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<div id="jr_editor_reviews"></div><!-- required to display post save messages for editor reviews -->
+
+<?php if($editorReviewShow):?>
+
+<!-- EDITOR REVIEW HEADER -->
+	<?php if(Sanitize::getString($this->params,'reviewtype')=='editor' || $this->name == 'com_content'):?>
+		<h3 class="jrEditorReviewsTitle jrHeading">
+			<span class="jrIconEditor"></span>
+			<span class="jrHeadingText">
+				<?php
+					if (Sanitize::getInt($listing['Criteria'],'state')!=2) {
+						echo $this->Config->author_review == 2 ? __t("Editor reviews",true) : __t("Editor review",true);
+					} else {
+						echo $this->Config->author_review == 2 ? __t("Editor comments",true) : __t("Editor comment",true);
+					}
+				?>
+			</span>
+			<span class="jrHeadingButtons">
+				<?php if($this->action=='com_content_view' && $listing['Review']['editor_review_count'] > $this->Config->editor_limit):?>
+				<!-- view all reviews -->
+					<?php echo (Sanitize::getInt($listing['Criteria'],'state')!=2) ? $Routes->listing(__t("View all editor reviews",true),$listing,'editor',array('class'=>'jrButton jrSmall jrViewAllButton')) : $Routes->listing(__t("View all editor comments",true),$listing,'editor',array('class'=>'jrButton jrViewAllButton'));?>
+				<?php elseif(Sanitize::getString($this->params,'reviewtype')=='editor' && $this->name == 'listings'):?>
+				<!-- go back to listing -->
+					<?php echo $Html->sefLink(__t("Back to Listing",true),$listing['Listing']['url'],array('class'=>'jrButton jrSmall jrBackButton'));?>
+				<?php endif;?>
+			</span>
+		</h3>
+	<?php endif;?>
+
+<?php endif;?>
+
+<?php if($this->name != 'listings' && $editorReviewShow):?>
+
+	<div id="editorReviews">
+
+		<?php if($listing['Review']['editor_rating_count'] > 1 || ($editorReviewSubmitMultiple || $editorReviewSubmitSingle)):?>
+			 <!-- BEGIN EDITOR REVIEW SUMMARY -->
+			<div class="jrRoundedPanel jrEditorReviewsSummary">
+				<?php if($listing['Review']['editor_rating_count'] > 1): ?>
+				<h4 class="jrEditorReviewsSummaryTitle"><?php echo sprintf(__t("Average editor rating from: %s user(s)",true), $listing['Review']['editor_rating_count']);?></h4>
+				<?php endif;?>
+
+				<div class="jrReviewSummary">
+					<?php if($editorReviewSubmitSingle || $editorReviewSubmitMultiple):?>
+
+						<button class="jr-review-add jrLeft jrButton"
+							<?php echo $User->duplicate_review ? 'disabled="disabled" ' : '';?> >
+							<span class="jrIconAddReview"></span>
+							<?php
+								if (Sanitize::getInt($listing['Criteria'],'state')!=2) {
+										echo !$User->duplicate_review ? __t("Add new review",true).' ('. __t("Editor review",true).')' : __t("You already submitted a review.",true);
+								} else {
+										echo !$User->duplicate_review ? __t("Add new comment",true).' ('. __t("Editor comment",true).')' : __t("You already submitted a comment.",true);
+								}
+							?>
+						</button>
+
+					<?php endif;?>
+
+					<?php
+					if(
+							$listing['Criteria']['state'] == 1
+						&&	!empty($listing['Review']['editor_rating'])
+						&&	$this->Config->author_review + $listing['Review']['editor_rating_count'] > 2 # copied from earlier, display total rating either when in single-editor-review mode with more than one rating, or in multi-editor-review mode with at least one rating
+					): ?>
+					<!-- BEGIN DETAILED EDITOR RATINGS SUMMARY -->
+					<div class="jrReviewSummarySidebar">
+						<?php echo $Rating->detailedRatings($editor_ratings_summary,'editor');?>
+					</div>
+					<!-- END DETAILED EDITOR RATINGS SUMMARY -->
+					<?php endif;?>
+				</div>
+				<div class="jrClear"></div>
+			</div><br />
+		<!-- END EDITOR REVIEW SUMMARY -->
+		<?php endif;?>
+
+		<?php if($editorReviewForm):?>
+		<!-- BEGIN EDITOR REVIEW FORM -->
+		<?php echo $this->renderControllerView('reviews','create',array('criteria'=>$listing['Criteria']))?>
+		<!-- END EDITOR REVIEW FORM -->
+		<?php endif;?>
+
+		<?php if($listing['Review']['editor_review_count'] > 0 && !is_numeric(key($editor_review))):?>
+
+			<div class="jrEditorReviewsContainer">
+				<!-- SINGLE EDITOR REVIEW -->
+				<?php echo $this->renderControllerView('reviews','review_layout',array('listing'=>$listing,'review'=>$editor_review,'reviewType'=>'editor','review_class'=>'single'))?>
+			</div>
+
+		<?php elseif($listing['Review']['editor_review_count']>0):?>
+
+			<div class="jrEditorReviewsContainer">
+				<!-- MULTIPLE EDITOR REVIEWS -->
+				<?php echo $this->renderControllerView('reviews','reviews',array('listing'=>$listing,'reviews'=>$editor_review,'reviewType'=>'editor'))?>
+			</div>
+
+		<?php endif;?>
+
+		<div class="jrClear">&nbsp;</div>
+
+		<?php // View all editor reviews for a listing shown on details page
+		if(in_array($this->action,array('com_content_view')) && $listing['Review']['editor_review_count'] > $this->Config->editor_limit):?>
+			<?php echo (Sanitize::getInt($listing['Criteria'],'state')!=2) ? $Routes->listing(__t("View all editor reviews",true),$listing,'editor',array('class'=>'jrButton jrViewAllButton')) : $Routes->listing(__t("View all editor comments",true),$listing,'editor',array('class'=>'jrButton jrViewAllButton'));?>
+			<div class="jrClear">&nbsp;</div>
+		<?php endif;?>
+
+	</div>
+
+<?php endif;?>

@@ -1,0 +1,256 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+extract($medium['Media']);
+
+$thumbnailSize = Sanitize::getString($this->Config,'media_detail_gallery_thumbnail_size');
+
+$thumbnailMode = Sanitize::getString($this->Config,'media_detail_gallery_thumbnail_mode');
+
+$langDel = json_encode(array(
+    'del_confirm'=>__a("This action will delete the file and associated votes. Are you sure you want to continue?",true,true),
+    'del_error'=>__a('There was a problem deleting the file.',true,true)
+    ));
+?>
+
+<div class="jr-layout-outer jrRoundedPanel" data-id="<?php echo $media_id;?>">
+
+    <form id="jr-form-media-<?php echo $media_id;?>" action="index.php" method="post" data-object-type="media">
+
+        <div class="jrGrid">
+
+            <div class="jrCol12">
+
+                <div class="jrButtonGroup jrRight">
+
+                    <button class="jr-edit jrButton jrSmall jrIconOnly" data-id="<?php echo $media_id;?>" data-referrer="moderation">
+
+                        <span class="jrIconEditListing"></span>
+
+                    </button>
+
+                    <button class="jr-delete-moderation jrButton jrSmall jrIconOnly" data-id="<?php echo $media_id;?>" data-lang='<?php echo $langDel;?>'>
+
+                        <span class="jrIconDelete"></span>
+
+                    </button>
+
+                </div>
+
+                <span class="jrStatusLabel">#<?php echo $media_id;?></span>
+
+                 &#149;
+
+                <span class="ui-corner-all jrStatusLabel jrBlue"><?php echo strtoupper($media_type);?></span>
+
+                <?php echo sprintf(__a("Submitted %s by %s for %s",true),
+                        $Time->timeAgoInWords($created),
+                        '<span data-key="User.name">'.$AdminRoutes->user($medium['User']['name'],$medium['User']['user_id'],array('target'=>"_blank")).'</span>',
+                        '<span class="jrTitle">'.$Html->link($medium['Listing']['title'],$medium['Listing']['url'],array('sef'=>false,'target'=>'_blank')).'</span>'
+                );?>
+
+            </div>
+
+        </div>
+
+        <div class="jrGrid">
+
+            <div class="jrCol12">
+
+                <div class="jr-preview-html jrPreviewHtml">
+
+                        <div class="jrLeft">
+
+                            <div class="jr-edit" data-id="<?php echo $media_id;?>" data-referrer="moderation">
+
+                                <?php echo $Media->thumb($medium['Media'],array('lazyload'=>true,'size'=>$thumbnailSize,'mode'=>$thumbnailMode),array('style'=>'width:65px;height:auto;'));?>
+
+                            </div>
+
+                        </div>
+
+                        <div class="jrLeft">
+
+                            <span data-key="Media.title"><?php echo $title;?></span>
+
+                            <br />
+
+                            <?php if($medium['Media']['media_type'] == 'attachment'):?>
+
+                                <?php $Widgets->download($medium['Media']);?>
+
+                                <br />
+
+                            <?php endif;?>
+
+                            <div><span data-key="Media.description"><?php echo $description;?></span></div>
+
+                        </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="jrGrid">
+
+            <div class="jrCol8">
+
+                <div class="jrFieldDiv">
+
+                    <label for="jr-approve-<?php echo $media_id;?>">
+
+                        <input class="jr-moderate-state" name="data[Media][approved]" id="jr-approve-<?php echo $media_id;?>" checked="checked" type="radio" value="1">&nbsp;<?php __a("Accept");?>
+
+                    </label>
+
+                    &nbsp;
+
+                    <label for="jr-reject-<?php echo $media_id;?>">
+
+                        <input class="jr-moderate-state" name="data[Media][approved]" id="jr-reject-<?php echo $media_id;?>" type="radio" value="-2">&nbsp;<?php __a("Reject");?>
+
+                    </label>
+
+                    &nbsp;
+
+                    <label for="jr-hold-<?php echo $media_id;?>">
+
+                        <input class="jr-moderate-state" name="data[Media][approved]" id="jr-hold-<?php echo $media_id;?>" type="radio" value="0">&nbsp;<?php __a("Hold");?>
+
+                    </label>
+
+                    &nbsp;
+
+                    <?php if($medium['User']['email']!=''):?>
+
+                    <label class="jr-reply jrButton jrSmall" for="jr-reply-<?php echo $media_id;?>">
+
+                        <span class="jrIconMessage"></span><?php __a("Choose Predefined Reply");?>
+
+                        <input id="jr-reply-<?php echo $media_id;?>" name="data[Email][send]" type="checkbox" value="1">
+
+                    </label>
+
+                    <?php else:?>
+
+                    <button class="jrButton jrSmall" disabled="disabled">
+
+                        <span class="jrIconMessage"></span><?php __a("User e-mail not available.");?>
+
+                    </button>
+
+                    <?php endif;?>
+
+                    <button class="jr-submit jrButton jrGreen jrSmall">
+
+                        <span class="jrIconSubmit"></span><?php __a("Submit");?>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="jrCol4">
+
+                <div class="jrRight">
+
+                    <span class="jrIconWarning"></span><?php echo $Routes->whois($ipaddress);?>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="jr-form-reply jrGrid jrHidden">
+
+            <div clas="jrCol12">
+
+                <?php if($medium['User']['email']!=''):?>
+
+                    <div class="jrFieldDiv" style="margin:10px 0 10px 0;">
+
+                        <select name="predefined_reply" class="jr-select-reply">
+
+                            <option value=""><?php __a("--- Select a predefined reply ---");?></option>
+
+                            <?php foreach($predefined_replies AS $predefined_reply):extract($predefined_reply['PredefinedReply']);?>
+
+                                <?php if(trim($reply_subject)!=''):?>
+
+                                <option value="<?php echo $reply_id;?>"><?php echo $reply_subject;?></option>
+
+                                <?php endif;?>
+
+                            <?php endforeach;?>
+
+                        </select>
+
+                        (<span data-key="User.email"><?php echo $medium['User']['email'];?></span>)
+
+                        BCC: <input name="data[Email][bcc]" placeholder="BCC Email Address" size="30"></input>
+
+                    </div>
+
+                    <div class="jrFieldDiv">
+
+                        <textarea class="jr-reply-body" name="data[Email][body]" style="width:100%;height:8em;" cols="150" rows="5"></textarea>
+
+                    </div>
+
+                    <div>
+
+                        <br />
+
+                        <?php echo sprintf(__a("Valid tags: %s = user's name; %s = page link; %s = listing title, %s = review title",true),'{name}','{url}','{listing_title}','{review_title}');?>
+
+                    </div>
+
+                <?php endif;?>
+
+            </div>
+
+        </div>
+
+        <input type="hidden" name="data[Email][email]" value="<?php echo $medium['User']['email'];?>" />
+
+        <input type="hidden" name="data[Email][name]" value="<?php echo $medium['User']['name'];?>" />
+
+        <input type="hidden" name="data[Email][subject]" value="" />
+
+        <input type="hidden" name="data[Email][listing_title]" value="<?php echo $media[$media_id]['Listing']['title'];?>" />
+
+        <input type="hidden" name="data[Email][review_title]" value="<?php echo $media[$media_id]['Review']['title'];?>" />
+
+        <input type="hidden" name="data[Email][media_title]" value="<?php echo $title;?>" />
+
+        <input type="hidden" name="data[Media][media_id]" value="<?php echo $media_id;?>" />
+
+        <input type="hidden" name="data[Media][review_id]" value="<?php echo $review_id;?>" />
+
+        <input type="hidden" name="data[Media][extension]" value="<?php echo $extension;?>" />
+
+        <input type="hidden" name="data[Media][listing_id]" value="<?php echo $listing_id;?>" />
+
+        <input type="hidden" name="data[Media][media_type]" value="<?php echo $media_type;?>" />
+
+        <input type="hidden" name="data[moderation]" value="1" />
+
+        <input type="hidden" name="data[controller]" value="admin/admin_media" />
+
+        <input type="hidden" name="data[action]" value="_saveModeration" />
+
+    </form>
+
+</div>

@@ -1,0 +1,82 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/
+
+$module_id = Sanitize::getVar($this->params,'module_id','');
+
+extract($this->params['module']);
+
+$page_count = ceil($total/$limit);
+
+// calculations for item width
+$item_padding = number_format(1.428571429, 9, '.', '');
+$item_width = (100-($columns * $item_padding))/$columns;
+$item_width = number_format($item_width, 9, '.', '');
+
+$settings = json_encode(compact('module_id','columns','orientation','slideshow','slideshow_interval','nav_position','page_count'));
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<?php if($listing_title!='' && !Sanitize::getInt($this->params,'listingtype',false)):?>
+
+<div class="favoriteListingTitle"><?php echo sprintf(__t("Other users interested in %s",true),'<br  />'.$listing_title);?></div>
+
+<?php endif;?>
+
+<div class="jr-module-slider jrModuleSlider jrSliderSinglePage" data-options='<?php echo $settings;?>'>
+
+	<?php /* root element for the items */ ?>
+	<div class="jrModuleItems <?php echo $orientation;?>">
+
+		<?php /* new page starts here */
+			$pages = array_chunk($profiles,$limit);
+			$j=0;
+			foreach($pages AS $page):
+			?>
+
+		<div class="jr-results jrResults jrModuleContainer jrFavoritesModule">
+
+			<?php $i=0;
+				  while(!empty($page)):
+					$i++; $j++; $profile = array_shift($page); ?>
+
+				<?php $lastItem = ($i == $columns) ? ' jrLastItem' : ''; ?>
+
+				<div class="jrModuleItem<?php echo $lastItem; ?>" style="width: <?php echo $item_width; ?>% !important; padding-right: <?php echo $item_padding; ?>%;">
+
+					<div class="jrUserAvatar"><?php echo $Community->avatar($profile);?></div>
+					<div class="jrUserName"><?php echo $Community->screenName($profile);?></div>
+
+				</div>
+
+			   <?php  /*end of row , start new row*/
+
+					if(!empty($page) && ($i == $columns || $total == $j)):?>
+
+					<div class="jrDivider"></div>
+
+					<?php $i=0; endif;?>
+
+			<?php endwhile;?>
+
+		</div>
+
+		<?php endforeach; /* new page ends here */?>
+
+	</div><?php /* end items root element */?>
+
+</div><?php /* end scrollable root element */?>
+
+<div class="jrClear"></div>

@@ -1,0 +1,232 @@
+/* Layout */
+.position-0 .mod-inner,
+.position-15 .mod-inner {
+  float: left;
+}
+.social-icons-container {
+  left: 0;
+  right: auto;
+}
+/* Default horizonatl menu */
+.header-wrapper ul.menu,
+.footer-wrapper ul.menu {
+  float: right;
+}
+.header-wrapper ul.menu > li,
+.footer-wrapper ul.menu > li {
+  float: right;
+}
+.header-wrapper ul.menu > li > a,
+.footer-wrapper ul.menu > li > a {
+  float: right;
+  padding: 0 0 0 15px;
+}
+.header-wrapper ul.menu > li a img,
+.footer-wrapper ul.menu > li a img {
+  margin: 0 0 3px 5px;
+}
+/* Horizontal menus shared styles */
+ul[class^="menu-horiz-"] {
+  float: right;
+}
+[class^="menu-horiz-"] > li {
+  float: right;
+  margin: 0 0 3px 10px;
+}
+[class^="menu-horiz-"] > li:last-child {
+  margin-left: 0;
+}
+[class^="menu-horiz-"] li a {
+  text-align: right;
+}
+[class^="menu-horiz-"] li a img {
+  margin: 0 0 3px 5px;
+}
+[class^="menu-horiz-"] > li > a {
+  float: right;
+}
+[class^="menu-horiz-"] li ul {
+  left: auto;
+  right: -15px;
+}
+[class^="menu-horiz-"] li.menu-edge ul,
+[class^="menu-horiz-"] li.menu-edge .menu-module {
+  right: auto;
+  left: -15px;
+}
+[class^="menu-horiz-"] li > ul ul {
+  right: 90%;
+  left: auto;
+  padding: 8px 4px 15px 15px;
+}
+[class^="menu-horiz-"] li.menu-edge > ul ul {
+  left: 90%;
+  right: auto;
+  padding: 8px 15px 15px 4px;
+}
+[class^="menu-horiz-"] .menu-module {
+  right: -15px;
+  left: auto;
+}
+/* vertical menu inside horizontal menu module */
+[class^="menu-horiz-"] .menu-module.mod-count-2 .mod-container,
+[class^="menu-horiz-"] .menu-module.mod-count-3 .mod-container {
+  float: right;
+  margin: 0 0 0 15px;
+}
+/* Simple & buttons horizontal menus */
+[class^="menu-horiz-simple"] li > ul li.deeper > a,
+[class^="menu-horiz-buttons"] li > ul li.deeper > a {
+  background: url("img/arrow-left.png") no-repeat 3% center;
+  padding-left: 10%;
+  padding-right: 8px;
+}
+[class^="menu-horiz-simple"] li.menu-edge > ul li.deeper > a,
+[class^="menu-horiz-buttons"] li.menu-edge > ul li.deeper > a {
+  background: url("img/arrow.png") no-repeat 97% center;
+  padding-left: 0;
+  padding-right: 10%;
+}
+/* Horizontal bar and gradientbar menus */
+[class^="menu-horiz-bar"] li,
+[class^="menu-horiz-gradientbar"] li {
+  margin: 0;
+}
+[class^="menu-horiz-bar"] li > ul li.deeper > a,
+div.theme-bg [class^="menu-horiz-bar-dark"] li > ul li.deeper > a,
+[class^="menu-horiz-gradientbar"] li > ul li.deeper > a,
+div.theme-bg [class^="menu-horiz-gradientbar-dark"] li > ul li.deeper > a {
+  background: url("img/arrow-left-white.png") no-repeat 3% center;
+  padding-right: 15px;
+  padding-left: 10%;
+}
+[class^="menu-horiz-bar"] li.menu-edge > ul li.deeper > a,
+div.theme-bg [class^="menu-horiz-bar-dark"] li.menu-edge > ul li.deeper > a,
+[class^="menu-horiz-gradientbar"] li.menu-edge > ul li.deeper > a,
+div.theme-bg [class^="menu-horiz-gradientbar-dark"] li.menu-edge > ul li.deeper > a {
+  background: url("img/arrow-white.png") no-repeat 97% center;
+  padding-right: 10%;
+  padding-left: 15px;
+}
+.theme-bg [class^="menu-horiz-bar"] li > ul li.deeper > a,
+[class^="menu-horiz-bar-light"] li > ul li.deeper > a,
+.theme-bg [class^="menu-horiz-gradientbar"] li > ul li.deeper > a,
+[class^="menu-horiz-gradientbar-light"] li > ul li.deeper > a {
+  background: url("img/arrow-left.png") no-repeat 3% center;
+}
+.theme-bg [class^="menu-horiz-bar"] li.menu-edge > ul li.deeper > a,
+[class^="menu-horiz-bar-light"] li.menu-edge > ul li.deeper > a,
+.theme-bg [class^="menu-horiz-gradientbar"] li.menu-edge > ul li.deeper > a,
+[class^="menu-horiz-gradientbar-light"] li.menu-edge > ul li.deeper > a {
+  background: url("img/arrow.png") no-repeat 97% center;
+}
+/* 2 Row Horizontal menu */
+[class^="menu-horiz-tworow"] li {
+  margin: 0;
+}
+[class^="menu-horiz-tworow"] li ul {
+  left: auto;
+  right: 0;
+}
+[class^="menu-horiz-tworow"] li > ul {
+  float: right;
+}
+[class^="menu-horiz-tworow"] li > ul > li {
+  float: right;
+}
+/* Default vertical menu */
+.sidebar-primary ul.menu > li a img,
+.sidebar-secondary ul.menu > li a img {
+  margin: 0 0 3px 5px;
+}
+.sidebar-primary ul.menu li ul,
+.sidebar-secondary ul.menu li ul {
+  padding: 0 10px 0 0;
+}
+.sidebar-primary ul.menu > li > ul,
+.sidebar-secondary ul.menu > li > ul {
+  padding: 0 2px 0 0;
+}
+.sidebar-primary ul.menu li ul li a,
+.sidebar-secondary ul.menu li ul li a {
+  padding-right: 12px;
+  background: url("img/arrow-left-white.png") no-repeat right center;
+}
+.sidebar-primary [class$="-light"] ul.menu li ul li a,
+.sidebar-secondary [class$="-light"] ul.menu li ul li a {
+  background: url("img/arrow-left.png") no-repeat right center;
+}
+/* Vertical menu */
+.menu-vertical {
+  text-align: right;
+}
+.menu-vertical > li > a {
+  padding-right: 2px;
+}
+.menu-vertical > li a img {
+  margin: 0 0 3px 5px;
+}
+.menu-vertical li ul {
+  padding: 0 3px 0 0;
+}
+.menu-vertical li ul li a {
+  padding-right: 15px;
+  padding-left: 5px;
+  background: url("img/arrow-left.png") no-repeat right center;
+}
+.box .menu-vertical li ul li a,
+.box-rounded .menu-vertical li ul li a,
+.box-dark .menu-vertical li ul li a,
+.box-rounded-dark .menu-vertical li ul li a {
+  background: url("img/arrow-left-white.png") no-repeat right center;
+}
+.menu-vertical li ul li a:hover {
+  background: url("img/arrow-left.png") no-repeat right center #dddddd;
+}
+.box .menu-vertical li ul li a:hover,
+.box-dark .menu-vertical li ul li a:hover {
+  background: url("img/arrow-left-white.png") no-repeat right center #222222;
+}
+.box-dark .menu-vertical li ul li a:hover,
+.box-rounded-dark .menu-vertical li ul li a:hover {
+  background: url("img/arrow-left-white.png") no-repeat right center #222222;
+}
+/* Mobile menu */
+.mobile-menu-toggle {
+  text-align: left;
+}
+.mobile-menu-toggle .mobile-menu-icon {
+  padding-left: 30px;
+  margin-left: 5px;
+  background: url(img/nav-icon-white.png) center left no-repeat;
+}
+.mobile-menu-toggle.mobile-light .mobile-menu-icon {
+  background: url(img/nav-icon.png) center left no-repeat;
+}
+ul.mobile-menu {
+  text-align: right;
+}
+ul.mobile-menu li a {
+  padding-right: 2px;
+}
+ul.mobile-menu > li a img {
+  width: 16px;
+  height: 16px;
+  margin: 0 0 3px 5px;
+}
+ul.mobile-menu li ul {
+  padding: 0 3px 0 0;
+}
+ul.mobile-menu li ul li a {
+  padding-right: 15px;
+  background: url("img/arrow-left-white.png") no-repeat right center;
+}
+ul.mobile-menu.mobile-light li ul li a {
+  background: url("img/arrow-left.png") no-repeat right center;
+}
+ul.mobile-menu.mobile-light li ul li a:hover {
+  background: url("img/arrow-left.png") no-repeat right center #dddddd;
+}
+ul.mobile-menu.mobile-dark li ul li a:hover {
+  background: url("img/arrow-left-white.png") no-repeat right center #444444;
+}

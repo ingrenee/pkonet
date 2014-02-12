@@ -1,0 +1,90 @@
+<?php
+$audio = $media['Media'];
+
+$tracks = array();
+
+$tracks[] = array(
+	'title'=>$audio['title'] != '' ? $audio['title'] : $audio['filename'],
+	'oga'=>$audio['media_info']['audio']['oga']['url'],
+	'm4a'=>$audio['media_info']['audio']['m4a']['url']
+);
+
+?>
+
+<div class="jrMediaContainer jrAudio">
+
+	<div id="jr-audio-player" class="jr-audio-player jp-jplayer" data-tracks='<?php echo json_encode($tracks);?>' data-swpath="<?php echo dirname($this->locateScript('jplayer/jquery.jplayer.min'));?>"></div>
+
+	<div id="jr-audio-tracks" class="jr-audio-tracks jp-audio">
+
+		<div class="jp-type-playlist">
+
+			<div class="jp-gui jp-interface">
+
+				<ul class="jp-controls">
+
+					<li><a href="javascript:void(0)" class="jp-play" tabindex="1">play</a></li>
+
+					<li><a href="javascript:void(0)" class="jp-pause" tabindex="1">pause</a></li>
+
+				</ul>
+
+				<div class="jp-progress-container">
+
+					<div class="jp-progress">
+
+						<div class="jp-seek-bar">
+
+							<div class="jp-play-bar"></div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+				<div class="jp-time-holder">
+
+					<div class="jp-current-time"></div>&nbsp;/&nbsp;<div class="jp-duration"></div>
+
+				</div>
+
+				<div class="jp-mute-unmute">
+
+					<a href="javascript:void(0)" class="jp-mute" tabindex="1" title="mute">mute</a>
+
+					<a href="javascript:void(0)" class="jp-unmute" tabindex="1" title="unmute">unmute</a>
+
+				</div>
+
+				<div class="jp-volume-bar">
+
+					<div class="jp-volume-bar-value"></div>
+
+				</div>
+
+			</div>
+
+			<div class="jp-playlist">
+
+				<ul class="jrDataList">
+
+					<li></li>
+
+				</ul>
+
+			</div>
+
+			<div class="jp-no-solution jrError">
+
+				<span>Update Required</span>
+				To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>
+

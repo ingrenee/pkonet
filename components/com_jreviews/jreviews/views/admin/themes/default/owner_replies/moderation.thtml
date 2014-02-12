@@ -1,0 +1,316 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$langDel = json_encode(array(
+    'del_confirm'=>__a("Are you sure you want to delete this reply?",true,true),
+    'del_error'=>__a('There was a problem deleting the reply.',true,true)
+    ));
+?>
+
+<?php if($this->offset == 0 && $processed == 0):?>
+
+<div class="jr-owner-reply-moderate jr-moderation jrModeration" data-limit="<?php echo $this->limit;?>" data-pages="<?php echo ceil($total/$this->limit);?>">
+
+    <?php if(!empty($predefined_replies)):?>
+
+    <div class="jr-predefined-replies">
+
+        <?php foreach($predefined_replies AS $predefined_reply):extract($predefined_reply['PredefinedReply']);?>
+
+            <span id="jr-predefined-reply-<?php echo $reply_id;?>" class="jrHidden"><?php echo $reply_body;?></span>
+
+        <?php endforeach;?>
+
+    </div>
+
+    <?php endif;?>
+
+    <div class="jrPageHeading"><?php __a("Owner Replies to Reviews Moderation");?></div>
+
+<?php endif;?>
+
+
+    <?php foreach($owner_replies AS $owner_reply): extract($owner_reply['Review']);extract($owner_reply['OwnerReply'])?>
+
+        <div class="jr-layout-outer jrRoundedPanel">
+
+           <form id="jr-form-owner-reply-<?php echo $review_id;?>" action="index.php" method="post" data-object-type="reply">
+
+                <div class="jrGrid">
+
+                    <div class="jrCol8">
+
+                        <div class="jrButtonGroup jrRight">
+
+                            <button class="jr-preview jrButton jrSmall jrIconOnly" data-id="<?php echo $review_id;?>">
+
+                                <span class="jrIconPreview"></span>
+
+                            </button>
+
+                            <div class="jr-preview-html jrHidden">
+
+                                <div class="jrOverallRatings">
+
+                                        <?php if($owner_reply['Review']['editor'] == 1):?>
+
+                                            <?php
+                                                $rating_stars = $Rating->drawStars($owner_reply['Rating']['average_rating'], $this->Config->rating_scale, 'editor');
+
+                                                $rating_value = $Rating->round($owner_reply['Rating']['average_rating'],$this->Config->rating_scale);
+                                            ?>
+
+                                            <div class="jrOverallEditor" title="<?php  __t("Editor rating"); ?>">
+
+                                                <span class="jrIconEditor jrRatingLabel">></span>
+
+                                                <div class="jrRatingStars"><?php echo $rating_stars ?></div>
+
+                                                <span class="jrRatingValue"><?php echo $rating_value?></span>
+
+                                            </div>
+
+                                        <?php else:?>
+
+                                            <?php
+                                                $rating_stars = $Rating->drawStars($owner_reply['Rating']['average_rating'], $this->Config->rating_scale, 'user');
+
+                                                $rating_value = $Rating->round($owner_reply['Rating']['average_rating'],$this->Config->rating_scale);
+                                            ?>
+
+                                            <div class="jrOverallUser" title="<?php  __t("User rating"); ?>">
+
+                                                <span class="jrIconUsers jrRatingLabel"></span>
+
+                                                <div class="jrRatingStars"><?php echo $rating_stars ?></div>
+
+                                                <span class="jrRatingValue"><?php echo $rating_value?></span>
+                                            </div>
+
+                                        <?php endif;?>
+
+                                    </div>
+
+                                    <span class="jr_title"><?php echo $title;?></span>
+
+                                    <div class="jrClear"></div>
+
+                                    <!-- END RATINGS-->
+
+                                    <?php if(isset($owner_reply['Field']['groups'])):?>
+
+                                        <?php echo $this->element('custom_fields',array('entry'=>$owner_reply,'page'=>'content'))?>
+
+                                    <?php endif;?>
+
+                                    <?php echo $comments;?>
+
+                            </div>
+
+                            <button class="jr-delete-moderation jrButton jrSmall jrIconOnly" data-id="<?php echo $review_id;?>" data-lang='<?php echo $langDel;?>'>
+
+                                <span class="jrIconDelete"></span>
+
+                            </button>
+
+                        </div>
+
+                        <span class="jrStatusLabel">#<?php echo $review_id;?></span>
+
+                        &#149;
+
+                        <?php echo sprintf(__a("Submitted %s by %s for review %s in listing %s",true),
+                            $Time->timeAgoInWords($owner_reply_created),
+                            $AdminRoutes->user($owner_reply['Owner']['name'],$owner_reply['User']['user_id'],array('target'=>"_blank")),
+                            $Html->link($title != '' ? $title : '{no title}',$owner_reply['Review']['url'],array('sef'=>false,'target'=>'_blank')),
+                            $Html->link($owner_reply['Listing']['title'],$owner_reply['Listing']['url'],array('sef'=>false,'target'=>'_blank')));?>
+
+                    </div>
+
+                    <div class="jrCol4"><span class="jrIconNote"></span><?php __a("Admin Note");?></div>
+
+                </div>
+
+                <div class="jrGrid">
+
+                    <div class="jrCol8">
+
+                        <div class="jrPreviewHtml"><?php echo $owner_reply_text;?></div>
+
+                    </div>
+
+                    <div class="jrCol4">
+
+                        <textarea name="data[OwnerReply][owner_reply_note]" class="reportAdminNote" cols="150" rows="5"><?php echo $owner_reply_note;?></textarea>
+
+                    </div>
+
+                </div>
+
+               <div class="jrGrid">
+
+                    <div class="jrCol12">
+
+                        <div class="jrFieldDiv">
+
+                            <label for="jr-approve-<?php echo $review_id;?>">
+
+                                <input class="jr-moderate-state" name="data[OwnerReply][owner_reply_approved]" id="jr-approve-<?php echo $review_id;?>" checked="checked" type="radio" value="1">&nbsp;<?php __a("Accept");?>
+
+                            </label>
+
+                            &nbsp;
+
+                            <label for="jr-reject-<?php echo $review_id;?>">
+
+                                <input class="jr-moderate-state" name="data[OwnerReply][owner_reply_approved]" id="jr-reject-<?php echo $review_id;?>" type="radio" value="-2">&nbsp;<?php __a("Reject");?>
+
+                            </label>
+
+                            &nbsp;
+
+                            <label for="jr-hold-<?php echo $review_id;?>">
+
+                                <input class="jr-moderate-state" name="data[OwnerReply][owner_reply_approved]" id="jr-hold-<?php echo $review_id;?>" type="radio" value="0">&nbsp;<?php __a("Hold");?>
+
+                            </label>
+
+                            &nbsp;
+
+                            <?php if($owner_reply['Owner']['email']!=''):?>
+
+                            <label class="jr-reply jrButton jrSmall" for="jr-reply-<?php echo $review_id;?>">
+
+                                <span class="jrIconMessage"></span><?php __a("Choose Predefined Reply");?>
+
+                                <input id="jr-reply-<?php echo $review_id;?>" name="data[Email][send]" type="checkbox" value="1">
+
+                            </label>
+
+                            <?php else:?>
+
+                            <button class="jrButton jrSmall" disabled="disabled">
+
+                                <span class="jrIconMessage"></span><?php __a("User e-mail not available.");?>
+
+                            </button>
+
+                            <?php endif;?>
+
+                            <button class="jr-submit jrButton jrGreen jrSmall">
+
+                                <span class="jrIconSubmit"></span><?php __a("Submit");?>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="jr-form-reply jrGrid jrHidden">
+
+                    <div clas="jrCol12">
+
+                        <?php if($owner_reply['Owner']['email']!=''):?>
+
+                            <div class="jrFieldDiv" style="margin:10px 0 10px 0;">
+
+                                <select name="predefined_reply" class="jr-select-reply">
+
+                                    <option value=""><?php __a("--- Select a predefined reply ---");?></option>
+
+                                    <?php foreach($predefined_replies AS $predefined_reply):extract($predefined_reply['PredefinedReply']);?>
+
+                                        <?php if(trim($reply_subject)!=''):?>
+
+                                        <option value="<?php echo $reply_id;?>"><?php echo $reply_subject;?></option>
+
+                                        <?php endif;?>
+
+                                    <?php endforeach;?>
+
+                                </select>
+
+                                (<?php echo $owner_reply['Owner']['email'];?>)
+
+                                BCC: <input name="data[Email][bcc]" placeholder="BCC Email Address" size="30"></input>
+
+                            </div>
+
+                            <div class="jrFieldDiv">
+
+                                <textarea class="jr-reply-body" name="data[Email][body]" style="width:100%;height:8em;" cols="150" rows="5"></textarea>
+
+                            </div>
+
+                            <div>
+
+                                <br />
+
+                                <?php echo sprintf(__a("Valid tags: %s = user's name; %s = page link; %s = listing title, %s = review title",true),'{name}','{url}','{listing_title}','{review_title}');?>
+
+                            </div>
+
+                        <?php endif;?>
+
+                    </div>
+
+                </div>
+
+                <input type="hidden" name="data[Email][email]" value="<?php echo $owner_reply['Owner']['email'];?>" />
+
+                <input type="hidden" name="data[Email][name]" value="<?php echo $owner_reply['Owner']['name'];?>" />
+
+                <input type="hidden" name="data[Email][subject]" class="jr-reply-subject" value="" />
+
+                <input type="hidden" name="data[Email][entry_title]" value="<?php echo $title;?>">
+
+                <input type="hidden" name="data[Email][listing_title]" value="<?php echo $owner_reply['Listing']['title'];?>">
+
+                <input type="hidden" name="data[Email][review_title]" value="<?php echo $owner_reply['Review']['title'];?>">
+
+                <input type="hidden" name="data[OwnerReply][pid]" value="<?php echo $listing_id;?>" />
+
+                <input type="hidden" name="data[OwnerReply][id]" value="<?php echo $review_id;?>" />
+
+                <input type="hidden" name="data[controller]" value="admin/admin_owner_replies" />
+
+                <input type="hidden" name="data[action]" value="_save" />
+
+            </form>
+
+        </div>
+
+    <?php endforeach;?>
+
+
+<?php if($this->offset == 0 && $processed == 0):?>
+
+    <?php if($total>0 && $total > $this->limit):?>
+
+    <div class="jr-load-more jrRoundedPanel jrCenter" data-bind='["admin/admin_owner_replies","moderation"]'>
+
+        <span class="jrIconDown"></span>
+
+        <a href="javascript:void(0)" style="font-weight:bold;font-size:16px;"><?php __a("Load more...");?></a>
+
+        <span class="jrIconDown"></span>
+
+    </div>
+
+    <?php endif;?>
+
+</div>
+
+<?php endif;?>

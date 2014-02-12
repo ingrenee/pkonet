@@ -1,0 +1,27 @@
+<?php if($this->Config->dir_show_breadcrumb && in_array($this->action,array('category','alphaindex'))):?>
+
+<div class="jrPathway">
+
+	<?php if(!empty($directory) && $this->Config->breadcrumb_detail_directory):?>
+
+		<?php echo $Routes->directory($directory);?>
+
+	<?php endif;?>
+
+	<?php if($this->action=='category'):?>
+
+		<?php while($cat = array_shift($parent_categories)):?>
+
+			<?php echo !empty($parent_categories) ? ($this->Config->breadcrumb_detail_category ? $Routes->category($cat) : '') : $cat['Category']['title'];?>
+
+		<?php endwhile;?>
+
+	<?php elseif($this->action=='alphaindex'):?>
+
+		<?php echo $index == '0' ? '0-9' : $index;?>
+
+	<?php endif;?>
+
+</div>
+
+<?php endif;?>

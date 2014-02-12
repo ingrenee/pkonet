@@ -1,0 +1,192 @@
+<?php
+/**
+ * PaidListings Addon for JReviews
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ *                                 PAGINATION HELPER
+ **********************************************************************************/
+
+$total = Sanitize::getInt($pagination,'total');
+
+$total and $Paginator->paginate(array('current_page'=>$this->page,'items_per_page'=>$this->limit,'items_total'=>$total));
+
+if($this->ajaxRequest && $total == 0) return;
+?>
+
+<div id="jr-orders-list<?php if(!isset($pagination['total'])) echo rand(1,100);?>" class="jr-page-inner jrMyAccountOrders">
+
+    <?php if(isset($pagination['total'])):?><form id="jr-orders-form" name="jr-orders-form" type="post" action="index.php"><?php endif;?>
+
+        <div class="jrDataList">
+
+            <div class="jrGrid jrDataListHeader">
+
+                <div class="jrCol1">&nbsp;</div>
+
+                <div class="jrCol2"><?php __t("Order");?></div>
+
+                <div class="jrCol4"><?php __t("Listing & Plan Information");?></div>
+
+                <div class="jrCol2">&nbsp;</div>
+
+                <div class="jrCol2">
+
+                    <?php if(isset($pagination['total'])): // Show only in order widgets?><?php __t("Payment");?><?php endif;?>&nbsp;
+
+                </div>
+
+                <div class="jrCol1">&nbsp;</div>
+
+            </div>
+
+            <?php foreach($orders AS $order): extract($order['PaidOrder']);?>
+
+            <div class="jrGrid">
+
+                <div class="jrCol1">
+
+                    <span class="<?php if($order_active):?>jrIconYes<?php else:?>jrIconNo<?php endif;?>"></span>
+
+                </div>
+
+                <div class="jrCol2"><?php echo str_pad($order_id, 7, "0", STR_PAD_LEFT);?></div>
+
+                <div class="jrCol4">
+
+                    <ul class="jrNoStyle">
+
+                        <li>
+                            <?php if($listing_info['listing_title'] == ''):?>
+
+                                <?php __t("The listing is no longer available");?>
+
+                            <?php else:?>
+
+                                <a href="<?php echo isset($order['Listing']['url']) ? $order['Listing']['url'] : $listing_info['listing_url'];?>"><?php echo $listing_info['listing_title'];?></a>
+
+                            <?php endif;?>
+                        </li>
+
+                        <li>
+                            <?php echo $plan_info['plan_name'];?>&nbsp;
+
+                        </li>
+
+                        <li>
+                            <?php __t("Created");?>: <?php echo $Time->niceShort($order_created);?>
+
+                            &nbsp;-&nbsp;
+
+                            <?php __t("Expires");?>: <?php echo $order_never_expires ? __t("Never",true) : $Time->niceShort($order_expires);?>
+                        </li>
+                    </ul>
+
+                </div>
+
+                <div class="jrCol2">
+
+                    <?php if($order_active && !$order_never_expires && in_array($payment_type,array(0,2)) && ($daysToExpiration <= $this->Config->{'paid.notify_expiration1_days'})):?>
+
+                    <span class="jrStatusLabel jrRed"><?php __t("Expiring Soon!");?></span>
+
+                    <?php elseif(!$order_active && !$order_never_expires && $daysToExpiration <= 0):?>
+
+                    <span class="jrStatusLabel jrDark"><?php __t("Expired");?></span>
+
+                    <?php endif;?>
+
+                    <?php if($payment_type==1):?>
+
+                    <span class="jrStatusLabel jrBlue"><?php __t("Subscription");?></span>
+
+                    <?php endif;?>&nbsp;
+
+                </div>
+
+                <div class="jrCol2">
+
+                    <?php if(isset($pagination['total'])): // Show only in order widgets ?>
+
+                        <?php echo $Paid->getOrderStatus($order_status);?>
+
+                    <?php else:?>
+
+                        <?php if($order_active && !$order_never_expires && in_array($payment_type,array(0,2)) && ($this->Config->{'paid.notify_expiration1_days'} - $daysToExpiration)>=0): // One time payments ?>
+
+                            <?php echo $PaidRoutes->newLink(
+                                array(
+                                    'Listing'=>array(
+                                        'listing_id'=>$listing_id,
+                                        'title'=>$listing_info['listing_title']
+                                    )),
+                                array(
+                                    'link_text'=>__t("Renew Order",true),
+                                    'renewal'=>1,
+                                    'order_id'=>$order_id,
+                                    'plan_type'=>$plan_type,
+                                    'plan_id'=>$plan_id
+                                )
+                            );?>
+
+                        <?php elseif($order_status == 'Incomplete'): // Incomplete payments ?>
+
+                           <?php echo $PaidRoutes->newLink(
+                                                    array(
+                                                        'Listing'=>array(
+                                                            'listing_id'=>$listing_id,
+                                                            'title'=>$listing_info['listing_title']
+                                                        )),
+                                                    array(
+                                                        'plan_type'=>$plan_info['plan_type'],
+                                                        'plan_id'=>$plan_id
+                                                    )
+                                );
+                            ?>
+
+                        <?php endif;?>
+
+                    <?php endif;?>&nbsp;
+
+                </div>
+
+                <div class="jrCol1 jrRightAlign">
+
+                    <?php if($order_status == 'Incomplete'): // Incomplete payments ?>
+
+                        <div class="jr-invoice jrInvoice jrButton jrSmall jrPointer jrIconOnly" data-url='<?php echo $PaidRoutes->unpaidInvoice($order_id);?>'>
+
+                            <span class="jrIconPrint"></span>
+
+                        </div>
+
+                    <?php endif;?>&nbsp;
+
+                </div>
+
+            </div>
+
+            <?php endforeach;?>
+
+        </div>
+
+        <?php /* PAGINATION */ ?>
+
+        <?php if($this->ajaxRequest) echo $this->element('pagination',array('position'=>'bottom','ajax'=>1));?>
+
+        <input type="hidden" name="data[page]" value="<?php echo $this->page;?>" />
+
+        <input type="hidden" name="data[limit]" value="<?php echo $this->limit;?>" />
+
+        <input type="hidden" name="data[controller]" value="paidlistings_orders" />
+
+        <input type="hidden" name="data[action]" value="index" />
+
+     </form>
+
+</div>

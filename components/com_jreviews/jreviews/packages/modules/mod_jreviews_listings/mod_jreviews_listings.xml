@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" version="2.5" method="upgrade">
+	<name>JReviews Listings Module</name>
+	<author>ClickFWD LLC</author>
+	<creationDate>March 2013</creationDate>
+	<copyright>Copyright (C) 2010-2013 ClickFWD LLC. All rights reserved.</copyright>
+	<license>Commercial</license>
+	<authorEmail>sales@reviewsforjoomla.com</authorEmail>
+	<authorUrl>www.reviewsforjoomla.org</authorUrl>
+	<version>2.4</version>
+	<description>MODULE_HEADER</description>
+	<files>
+		<filename module="mod_jreviews_listings">mod_jreviews_listings.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">en-GB.mod_jreviews_listings.ini</language>
+		<language tag="en-GB">en-GB.mod_jreviews_listings.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<!-- main setup -->
+				<field type="spacer" class="dataListHeader" label="MAIN SETUP" />
+				<field name="listing_order" type="list" default="latest" label="Listings Ordering" description="As shown for each mode, some of them only work for com_content, while others work for all the Everywhere extensions including com_content.">
+					<option value="rdate">Latest Listings (everywhere)</option>
+					<option value="rating">Top User Rated (everywhere)</option>
+					<option value="rrating">Worst User Rated (everywhere)</option>
+					<option value="topratededitor">Top Editor Rated (com_content)</option>
+					<option value="reviews">Most Reviewed (everywhere)</option>
+					<option value="random">Random (everywhere)</option>
+					<option value="featuredrandom">Featured Random (com_content)</option>
+					<option value="rhits">Popular (com_content)</option>
+					<option value="proximity">Proximity (com_content) requires GeoMaps Add-on</option>
+				</field>
+				<field name="radius" type="text" default="" label="Radius for Proximity Ordering" description="Used if Proximity is selected in Listing Ordering parameter." />
+				<field name="distance" type="radio" default="1" label="Show Distance for Proximity Ordering" description="">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field type="spacer" class="dataListDescription" label="Proximity ordering and radius only work in listing detail pages." />
+				<field name="summary" type="radio" default="0" label="Show Summary" description="">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="summary_words" type="text" default="10" label="Summary Words" description="" />
+				<field name="show_category" type="radio" default="1" label="Show Listing Category" description="">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="fields" type="textarea" default="" rows="3" cols="28" label="Comma separated list of custom fields to show (i.e. jr_state,jr_city)" description="" />
+				<field name="editor_rating" type="radio" default="1" label="Show Editor Rating" description="">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="user_rating" type="radio" default="1" label="Show User Rating" description="">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="tmpl_suffix" type="text" default="" label="JReviews Theme Suffix" description="This suffix will be applied to the module view file and is useful to create multiple instances of the module that have different outputs." />
+				<!-- thumbnails -->
+				<field type="spacer" class="dataListHeader" label="THUMBNAIL SETTINGS" />
+				<field name="tn_show" type="radio" default="1" label="Show Thumbnail" description="">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="tn_position" type="list" default="left" label="Thumbnail Position" description="Choose the position of the thumbnail.">
+					<option value="left">Left</option>
+					<option value="right">Right</option>
+					<option value="top">Top</option>
+					<option value="bottom">Bottom</option>
+				</field>
+				<field name="tn_mode" type="radio" default="crop" label="Thumbnail Type" description="Scale creates thumbnail with specified width and height is scaled proportionately. Crop takes a square from the center of the image and scales to the specified width.">
+					<option value="crop">Crop</option>
+					<option value="scale">Scale</option>
+				</field>
+				<field name="tn_size" type="text" default="100x100" label="Size (WIDTHxHEIGHT)" description="In pixels" />
+				<!-- basic filters -->
+				<field type="spacer" class="dataListHeader" label="BASIC FILTERS" />
+				<field name="extension" type="text" default="com_content" label="Everywhere Extension" description="If you want to limit results to a specific extension, then enter it here (i.e. com_content, com_virtuemart, com_sobi2, etc.). Only ONE extension at a time!" />
+				<field name="cat_auto" type="radio" default="0" label="Category Autodetect" description="Filters results for current category.">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="dir" type="text" default="" label="Directory IDs (com_content)" description="Comma separated list, no spaces." />
+				<field name="category" type="text" default="" label="Category IDs (everywhere)" description="Comma separated list, no spaces." />
+				<field name="listing" type="text" default="" label="Listing IDs (everywhere)" description="Comma separated list, no spaces." />
+				<!-- advanced filters -->
+				<field type="spacer" class="dataListHeader" label="ADVANCED FILTERS" />
+				<field name="custom_where" filter="raw" type="textarea" default="" rows="5" cols="28" label="Custom WHERE" description="Custom WHERE for query. (i.e. Field.jr_brand LIKE '%Agfa%' OR Field.jr_brand LIKE '%Canon%'" />
+				<field name="custom_order" filter="raw" type="textarea" default="" rows="2" cols="28" label="Custom ORDER BY" description="Overrides Listing Ordering. (i.e. Field.jr_brand DESC)" />
+				<!-- pagination and slideshow -->
+				<field type="spacer" class="dataListHeader" label="PAGINATION &amp; SLIDESHOW" />
+				<field name="nav_position" type="radio" default="bottom" label="Positioning of Pagination" description="">
+					<option value="bottom">Bottom</option>
+					<option value="side">Sides</option>
+				</field>
+				<field name="orientation" type="list" default="horizontal" label="Page Transition" description="">
+					<option value="horizontal">Horizonal sliding</option>
+					<option value="vertical">Vertical sliding</option>
+					<option value="fade">Fade effect</option>
+				</field>
+				<field name="slideshow" type="radio" default="0" label="Enable Slideshow" description="The module will automatically advance pages">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="slideshow_interval" type="text" default="6" label="Slideshow Interval (sec.)" description="Time between pages in seconds" />
+				<field name="module_total" type="text" default="10" label="Max. number of results" description="" />
+				<field name="module_limit" type="text" default="5" label="Results per page" description="" />
+				<field name="columns" type="text" default="1" label="Columns" description="Number of columns or items per row to show." />
+				<field name="show_numbers" type="radio" default="0" label="Show numbers" description="Adds numbers before each review.">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<!-- other filters -->
+				<field type="spacer" class="dataListHeader" label="OTHER FILTERS" />
+				<field name="filter_listing_period" type="text" default="" label="Submitted in past x days" description="With this setting you can filter the results to use listings submitted in the past x days. The setting works for: all modes." />
+				<field name="filter_review_period" type="text" default="" label="With reviews submitted in past x days" description="With this setting you can filter the results to use reviews submitted in the past x days. The setting works for: [top editor rated], [top/worst user rated] and [custom] modes." />
+				<field name="filter_review_count" type="text" default="" label="Review count higher than" description="With this setting you can filter the results to listings with having at least the defined number of reviews. The setting works for: [top/worst user rated] and [custom] modes." />
+				<field name="filter_avg_rating" type="text" default="" label="Avg rating higher than" description="The setting works for: [top user rated] and [custom] modes." />
+				<!-- comparison -->
+				<field type="spacer" class="dataListHeader" label="COMPARISON" />
+				<field name="compare" type="radio" default="0" label="Enable Compare Button" description="">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+			</fieldset>
+			<fieldset name="advanced">
+				<field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
+				<field name="moduleclass_sfx" type="text" label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL" description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+				<field name="cache" type="list" default="0" label="COM_MODULES_FIELD_CACHING_LABEL" description="COM_MODULES_FIELD_CACHING_DESC">
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+				<field name="cache_time" type="text" default="900" label="COM_MODULES_FIELD_CACHE_TIME_LABEL" description="COM_MODULES_FIELD_CACHE_TIME_DESC" />
+				<field name="cachemode" type="hidden" default="static">
+					<option value="static"></option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

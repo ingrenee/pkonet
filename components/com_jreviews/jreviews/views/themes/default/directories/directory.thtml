@@ -1,0 +1,134 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ *                                 CONFIGURATION OPTIONS
+ **********************************************************************************/
+$format = $this->Config->dir_cat_format; // "0" comma separated | "1" bullet list
+$thumbPosition = $this->Config->dir_cat_images; // Left|Above|None - Uses category images
+$dir_id = Sanitize::getInt($this->params,'dir') > 0 ? Sanitize::getInt($this->params,'dir') : '';
+
+/**********************************************************************************
+ *                                 META DATA
+ **********************************************************************************/
+echo $this->element('page_meta');
+
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<?php if(empty($directories)):?>
+
+	<?php __t("The directory is empty.");?>
+
+<?php else:?>
+
+	<div class="jr-page jrPage jrDirectory">
+
+		<?php if(isset($page['title']) && $page['show_title']):?>
+
+		<div class="jrPageHeader">
+
+			<?php if (isset($page['title']) && $page['show_title']):?>
+
+				<h1 class="contentheading"><?php echo $page['title'];?></h1>
+
+			<?php endif;?>
+
+			<div class="jrClear">&nbsp;</div>
+
+		</div>
+
+		<?php endif;?>
+
+		<?php if($this->Config->dir_show_alphaindex || $this->Config->list_show_searchbox):?>
+
+		<div class="jrListScope jrRoundedPanel">
+
+			<?php if($this->Config->dir_show_alphaindex) echo $this->element('alphaindex');?>
+
+			<?php if($this->Config->list_show_searchbox):?>
+
+			<div class="jrListSearch">
+
+				<form id="jr-form-directory-search" name="jr-form-directory-search" action="<?php echo WWW_ROOT;?>index.php?option=com_jreviews<?php echo isset($this->params['lang'])? "&amp;lang=".$this->params['lang'] : '';?>" method="post">
+
+					<?php if($this->Config->list_show_searchbox):?>
+
+					<input class="jrText" type="text" name="data[keywords]" placeholder="<?php __t("Search")?>" />
+
+					<button type="submit" class="jrButton"><span class="jrIconSearch"></span><span><?php __t("Search");?></span></button>
+
+					&nbsp;<?php echo $Routes->search(__t("Advanced search",true));?>
+
+					<?php endif;?>
+
+					<input type="hidden" name="data[simple_search]" id="simple_search" value="1" />
+
+					<input type="hidden" name="data[dir]" id="dir" value="<?php echo $dir_id;?>" />
+
+					<input type="hidden" name="data[controller]" value="search" />
+
+					<input type="hidden" name="data[action]" value="_process" />
+
+					<input type="hidden" name="data[menu_id]" value="<?php echo $search_itemid;?>" />
+
+				</form>
+
+			</div>
+
+			<?php endif;?>
+
+		</div>
+		<?php endif;?>
+
+		<div class="jrDirview jrDirviewThumb<?php echo $thumbPosition; if($format == 0) echo ' jrFormatComma'; ?>">
+
+		<!-- BEGIN DIRECTORY -->
+
+		<?php foreach ($directories AS $directory):?>
+
+			<?php $dir = current($directory); ?>
+
+			<div class="jrDirectory <?php echo $dir['Directory']['slug']; ?>">
+
+				<?php if($this->Config->rss_enable):?>
+
+				<div class="jrRSS">
+
+					<ul class="jrFeeds">
+
+						<li><?php echo $Routes->listingsFeedDirectory(current($directory));?></li>
+
+						<li><?php echo $Routes->rssDirectory(current($directory));?></li>
+
+					</ul>
+
+				</div>
+
+				<?php endif;?>
+
+				<h3 class="contentheading"><?php echo $Tree->getDirTitle($directory);?></h3>
+
+				<?php echo $Tree->renderDirectory($directory); ?>
+
+				<div class="jrClear"></div>
+
+			</div>
+
+		<?php endforeach;?>
+
+		</div>
+
+	</div>
+
+	<div class="jrClear"></div>
+
+<?php endif;?>

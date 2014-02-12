@@ -1,0 +1,105 @@
+/*************************************
+Activities
+*************************************/
+.jrActivityPhoto {
+  float: left;
+  margin-right: 10px;
+}
+
+.jrActivity .cStream-Video:not(:first-child) {
+  margin-top: 15px;
+}
+
+/*************************************
+Rating Stars
+*************************************/
+.jrRatingStarsUser,
+.jrRatingStarsEditor,
+.jrRatingStarsUser div,
+.jrRatingStarsEditor div {
+  background: url(images/rating_stars.png) 0 0 repeat-x;
+  height: 16px;
+  font-size: 1px;
+}
+.jrRatingStarsUser,
+.jrRatingStarsEditor {
+  width: 80px;
+  margin: 3px 5px 0 0;
+  text-align: left;
+}
+.jrRatingStarsUser div {
+  background-position: 0 -16px;
+}
+.jrRatingStarsEditor div {
+  background-position: 0 -32px;
+}
+
+/*************************************
+Icons
+*************************************/
+@font-face {
+  font-family: 'jrIcons';
+  src: url('fonts/jrIcons.eot');
+  src: url('fonts/jrIcons.eot?#iefix') format('embedded-opentype'), url('fonts/jrIcons.svg#jrIcons') format('svg'), url('fonts/jrIcons.woff') format('woff'), url('fonts/jrIcons.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Use the following CSS code if you want to have a class per icon */
+[class*="com-icon-jreviews"] {
+  display: inline-block;
+  *display: inline;
+  width: 14px;
+  height: 14px;
+  margin-right: 5px;
+  background-image: none !important;
+  margin: 1px 0 0 0 !important;
+}
+
+[class*="com-icon-jreviews"]:before {
+  vertical-align: text-top;
+  font-family: 'jrIcons';
+  font-size: 14px;
+  line-height: 1;
+  color: #333;
+  font-style: normal;
+  speak: none;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+}
+
+#community-wrap .com-icon-jreviews-listing:before {
+  content: "\e000";
+}
+
+#community-wrap .com-icon-jreviews-review:before {
+  content: "\e008";
+}
+
+#community-wrap .com-icon-jreviews-discussion:before {
+  content: "\e00a";
+}
+
+#community-wrap .com-icon-jreviews-photo:before {
+  content: "\e010";
+}
+
+#community-wrap .com-icon-jreviews-video:before {
+  content: "\e011";
+}
+
+#community-wrap .com-icon-jreviews-audio:before {
+  content: "\e012";
+}
+
+#community-wrap .com-icon-jreviews-attachment:before {
+  content: "\e013";
+}
+
+#community-wrap .com-icon-jreviews-media:before {
+  content: "\e014";
+}
+
+#community-wrap .com-icon-jreviews-favorite:before {
+  content: "\e023";
+}

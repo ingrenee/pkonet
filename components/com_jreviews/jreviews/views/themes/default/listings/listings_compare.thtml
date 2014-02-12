@@ -1,0 +1,295 @@
+<?php
+/**
+ * jReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$comparisonFields = $CustomFields->getFieldsForComparison($listings, $fieldGroups);
+
+$firstListing = reset($listings);
+
+$tn_size = Sanitize::getString($this->Config,'media_list_thumbnail_size','120x120');
+
+$tn_mode = Sanitize::getString($this->Config,'media_list_thumbnail_mode','crop');
+
+$alwaysShowFieldGroupTitles = true;
+
+// summary and thubnail rows will be hidden unless they are found in at least one listing
+$showSummary = false;
+
+$showThumbnail = false;
+
+$introThumb = array();
+
+foreach($listings as $listing) {
+
+	$listing['Listing']['summary'] != '' and $showSummary = true;
+
+	$introThumb[$listing['Listing']['listing_id']] = $Media->thumb(Sanitize::getVar($listing,'MainMedia'),array('listing'=> &$listing,'size'=>$tn_size,'mode'=>$tn_mode,'css_size'=>true));
+
+	$introThumb[$listing['Listing']['listing_id']] != '' and $showThumbnail = true;
+}
+
+echo $this->element('page_meta');
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+ <div class="jr-page jrPage jr-compareview jrCompareview<?php echo (Sanitize::getString($this->params,'view') == 'comparison') ? ' jrCompareViewMenu' : ''; ?>">
+
+	<div class="jrPageHeader">
+
+		<?php if (isset($page['title']) && $page['title'] != '' && $page['show_title']):?>
+
+			<h1 class="contentheading"><?php echo $page['title'];?></h1>
+
+		<?php endif;?>
+
+		<?php if(isset($page['top_description']) && $page['top_description'] != ''):?>
+
+			<div class="jrPageDescription">
+
+				<?php echo $page['top_description'];?>
+
+			</div>
+
+		<?php endif;?>
+
+	</div>
+
+	<div class="listingType<?php echo $listingType['criteria_id'];?>">
+
+		<?php if(!$isMenu):?>
+
+		<a href="javascript: history.go(-1)" class="jrButton" style="float: right; margin: 20px 0" >
+
+			<span class="jrIconPrev"></span><?php echo __t('Go back to previous page',true) ?>
+
+		</a>
+
+		<div class="jrClear"></div>
+
+		<?php endif;?>
+
+		<div class="jrCompareHeader">
+
+			<div class="jrScrollbarArea jrHidden">&nbsp;</div>
+
+			<div class="itemTitle jrCompareField"></div>
+
+			<?php if($showThumbnail):?><div class="itemThumbnail jrCompareField"></div><?php endif;?>
+
+			<?php if($listingType['state'] && ($this->Config->user_reviews || $this->Config->author_review)):?>
+
+				<?php if($this->Config->author_review):?>
+
+				<div class="jrFieldGroup jrCompareField"><?php echo __t("Editor Ratings",true) ?></div>
+
+				<?php endif;?>
+
+				<?php if($this->Config->author_review && $this->Config->list_compare_editor_ratings):?>
+
+					<?php echo $Rating->compareRatingsHeader($firstListing,'editor');?>
+
+				<?php elseif($this->Config->author_review):?>
+
+					<div class="itemEditorRating jrCompareField"><?php echo __t("Overall rating",true) ?></div>
+
+				<?php endif;?>
+
+				<?php if($this->Config->user_reviews):?>
+
+				<div class="jrFieldGroup jrCompareField"><?php echo __t("User Ratings",true) ?></div>
+
+				<?php endif;?>
+
+				<?php if($this->Config->user_reviews && $this->Config->list_compare_user_ratings):?>
+
+					<?php echo $Rating->compareRatingsHeader($firstListing,'user');?>
+
+				<?php elseif($this->Config->user_reviews):?>
+
+					<div class="itemUserRating jrCompareField alt"><?php echo __t("Overall rating",true) ?></div>
+
+				<?php endif;?>
+
+			<?php endif;?>
+
+			<?php /** ADD THE FIELD GROUP AND FIELD TITLES */?>
+
+			<?php foreach($comparisonFields as $groups): ?>
+
+				<?php if($alwaysShowFieldGroupTitles): ?>
+
+					<div class="<?php echo $groups{'group'}['name'];?> jrFieldGroup jrCompareField"><?php echo $groups['group']['title'];?></div>
+
+				<?php elseif($groups{'group'}['group_show_title']): ?>
+
+					<div class="<?php echo $groups{'group'}['name'];?> jrFieldGroup jrCompareField"><?php echo $groups['group']['title'];?></div>
+
+				<?php endif;?>
+
+				<?php $i = 0; foreach($groups['fields'] as $field): ?>
+
+					<div class="<?php echo $field['name'];?> jrCompareField<?php echo fmod($i, 2) ? ' alt' : '' ?>"><?php echo $field['title'];?></div>
+
+				<?php $i++; endforeach;?>
+
+			<?php endforeach;?>
+
+			<?php if($showSummary):?>
+
+			<div class="jrFieldGroup jrCompareField"><?php echo __t("Summary",true) ?></div>
+
+			<div class="itemSummary jrCompareField"></div>
+
+			<?php endif;?>
+
+			<?php if($showThumbnail):?>
+
+			<div class="itemThumbnail jrCompareField"></div>
+
+			<?php endif;?>
+
+			<div class="itemTitle jrCompareField"></div>
+
+		</div>
+
+		<div class="jrCompareSliderSecondary jr-compare-slider-secondary jrScrollbarArea jrHidden jrSliderDisabled"><div class="jr-compare-slider-items2">&nbsp;</div></div>
+
+		<div class="jrCompareSlider jr-compare-slider jrClearfix jrSliderDisabled">
+
+			<div class="jr-compare-slider-items jrCompareSliderItems jrClearfix">
+
+				<?php foreach($listings AS $listing):?>
+
+				<div class="jr-compare-slider-item jrCompareSliderItem" data-listingid="<?php echo $listing['Listing']['listing_id'];?>">
+					<div class="itemTitle jrCompareField">
+
+						<?php echo $Routes->content($listing['Listing']['title'],$listing); ?>
+
+						<span class="removeComparedListing jrHidden"><?php echo $Html->image($this->viewImages.'remove.png',array('width'=>15,'height'=>15,'id'=>'jr_removeItem'.$listing['Listing']['listing_id'],'alt'=>__t("Remove item",true),'class'=>'removeListing'));?></span>
+
+					</div>
+
+					<?php if($showThumbnail):?>
+
+					<div class="itemThumbnail jrCompareField">
+
+						<?php if($this->Config->media_list_thumbnail && $introThumb[$listing['Listing']['listing_id']] != ''):?>
+
+						<?php echo $Routes->content($introThumb[$listing['Listing']['listing_id']],$listing)?>
+
+						<?php endif;?>
+
+					</div>
+
+					<?php endif;?>
+
+					<?php if($listingType['state'] && ($this->Config->user_reviews || $this->Config->author_review)):?>
+
+						<?php if($this->Config->author_review):?>
+
+						<div class="jrFieldGroup jrCompareField"></div>
+
+						<?php endif;?>
+
+						<?php if($this->Config->author_review && $this->Config->list_compare_editor_ratings):?>
+
+							<?php echo $Rating->compareRatings($listing,'editor');?>
+						<?php elseif($this->Config->author_review):?>
+
+							<div class="itemEditorRating jrCompareField"><?php echo $Rating->drawStars($listing['Review']['editor_rating'], $this->Config->rating_scale, 'editor');?></div>
+
+						<?php endif;?>
+
+						<?php if($this->Config->user_reviews):?>
+
+						<div class="jrFieldGroup jrCompareField"></div>
+
+						<?php endif;?>
+
+						<?php if($this->Config->user_reviews && $this->Config->list_compare_user_ratings):?>
+
+							<?php echo $Rating->compareRatings($listing,'user');?>
+
+						<?php elseif($this->Config->user_reviews):?>
+
+							<div class="itemUserRating jrCompareField alt"><?php echo $Rating->drawStars($listing['Review']['user_rating'], $this->Config->rating_scale, 'user'); ?></div>
+
+						<?php endif;?>
+
+					<?php endif;?>
+
+					<?php foreach($comparisonFields as $groups): ?>
+
+						<?php if($alwaysShowFieldGroupTitles): ?>
+
+							<div class="<?php echo $groups{'group'}['name'];?> jrFieldGroup jrCompareField"></div>
+
+						<?php elseif ($groups{'group'}['group_show_title']): ?>
+
+							<div class="<?php echo $groups{'group'}['name'];?> jrFieldGroup jrCompareField"></div>
+
+						<?php endif;?>
+
+						<?php $i = 0; foreach($groups['fields'] as $field): ?>
+
+							<div class="<?php echo $field['name'];?> jrCompareField<?php echo fmod($i, 2) ? ' alt' : '' ?>"><?php echo $CustomFields->field($field['name'],$listing); ?></div>
+
+						<?php $i++; endforeach;?>
+
+					<?php endforeach;?>
+
+					<?php if($showSummary):?>
+
+					<div class="jrFieldGroup jrCompareField"></div>
+
+					<div class="itemSummary jrCompareField">
+
+						<?php echo $Text->truncateWords($listing['Listing']['summary'],$this->Config->list_abstract_trim);?>
+
+					</div>
+
+					<?php endif;?>
+
+					<?php if($showThumbnail):?>
+
+					<div class="itemThumbnail jrCompareField">
+
+						<?php if($this->Config->media_list_thumbnail && $introThumb[$listing['Listing']['listing_id']] != ''):?>
+
+						<?php echo $Routes->content($introThumb[$listing['Listing']['listing_id']],$listing)?>
+
+						<?php endif;?>
+
+					</div>
+
+					<?php endif;?>
+
+					<div class="itemTitle jrCompareField">
+
+						<?php echo $Routes->content($listing['Listing']['title'],$listing); ?>
+
+						<span class="removeComparedListing jrHidden"><?php echo $Html->image($this->viewImages.'remove.png',array('width'=>15,'height'=>15,'id'=>'jr_removeItem'.$listing['Listing']['listing_id'],'alt'=>__t("Remove item",true),'class'=>'removeListing'));?></span>
+
+					</div>
+
+				</div>
+
+				<?php endforeach;?>
+
+			</div>
+
+		</div>
+
+		<div class="jrClear"></div>
+
+	</div>
+
+</div>

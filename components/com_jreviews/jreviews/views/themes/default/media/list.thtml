@@ -1,0 +1,163 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/
+
+$mediaThumbnailSize = Sanitize::getString($this->Config,'media_media_thumbnail_size');
+
+$mediaThumbnailMode = Sanitize::getString($this->Config,'media_media_thumbnail_mode');
+
+$mediaListLayout = Sanitize::getString($this->Config,'media_list_layout');
+
+$thumbnailWidth = explode('x',$mediaThumbnailSize);
+
+/**********************************************************************************
+ * 								PAGINATION HELPER
+ **********************************************************************************/
+
+$Paginator->paginate(
+	array(
+		'current_page'=>$this->page,
+		'items_per_page'=>$this->limit,
+		'items_total'=>$pagination['total']
+	)
+);
+
+// Add page meta tags - must go after Paginator helper
+echo $this->element('page_meta');
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<div class="jr-page jrPage <?php echo ($mediaListLayout == 'masonry') ? 'jrMasonry '  : ''; ?><?php echo $page['pageclass_sfx']; /*This one is set in the menu settings*/?>">
+
+	<div class="jrPageHeader">
+
+		<?php if (isset($page['title']) && $page['title'] != '' && $page['show_title']):?>
+			<h1 class="contentheading "><?php echo $page['title'];?></h1>
+		<?php endif;?>
+
+	</div>
+
+	<?php if($this->action == 'listing'):?>
+
+	<div style="margin-bottom: 10px;">
+
+		<?php echo $Html->sefLink('<span class="jrIconPrev"></span>'.$listing['Listing']['title'],$listing['Listing']['url'], array('class'=>'jrButton'));?>
+
+	</div>
+
+	<?php endif;?>
+
+	<?php if($page['description'] != '' && $page['show_description']):?>
+
+		<div class="jrPageDescription">
+
+			<?php echo $page['description'];?>
+
+		</div>
+
+	<?php endif;?>
+
+ 	<?php /* PAGINATION */ ?>
+
+	<?php echo $this->element('pagination',array('position'=>'top'));?>
+
+	<?php if(empty($media)):?>
+
+		<?php __t("No entries were found");?>
+
+		</div> <?php /* outer div closing */?>
+
+	<?php return; endif;?>
+
+	<div class="<?php echo ($mediaListLayout == 'masonry') ? 'jr-masonry-results '  : ''; ?>jrResults jrListColumn jrMediaList">
+
+		<?php foreach($media AS $m): extract($m['Media']);?>
+
+		<div id="media<?php echo $media_id;?>" data-thumbwidth="<?php echo $thumbnailWidth[0]; ?>" class="jrListItem<?php echo ($mediaListLayout == 'masonry') ? ' jrShadowBox'  : ' jrCompactBox'; ?>">
+
+			<?php
+			$canSetMainMedia = isset($listing) && $this->Access->canEditListing($listing['User']['user_id']) && in_array($media_type,array('video','photo'));
+
+			$formToken = cmsFramework::formIntegrityToken($m['Media'],$formTokenKeysEdit,false);
+
+			$thumb = $Media->thumb($m,array('size'=>$mediaThumbnailSize,'mode'=>$mediaThumbnailMode,'css_size'=>$mediaListLayout == 'masonry'));
+
+			$duration = $m['Media']['duration'];
+
+			$description = $m['Media']['description'];
+			?>
+
+			<div class="jr-layout-outer jrMediaItem jrMediaType<?php echo ucfirst($media_type); ?>">
+
+				<div class="jrMediaThumb jr-more-info" <?php if ($duration != 0): ?> data-duration="<?php echo $Time->sToHMS($duration); ?>"<?php endif;?>>
+
+					<?php echo $Routes->mediaDetail($thumb, array('media'=>$m, 'listing'=>$m));?>
+
+				</div>
+
+				<div class="jrPopup jrPopupMedium">
+
+					<?php if($title != ''): ?>
+
+						<h3 class="jrMediaTitle">
+
+							<?php echo $Routes->mediaDetail($title, array('media'=>$m, 'listing'=>$m));?>
+
+						</h3>
+
+					<?php endif; ?>
+
+					<?php if($description != ''): ?>
+
+						<div class="jrMediaDescription"><?php echo $Text->truncateWords($description, 50);?></div><br>
+
+					<?php endif; ?>
+
+					<div class="jrMediaListingTitle"><?php echo sprintf(__t("Listing: %s",true),$Html->sefLink($m['Listing']['title'],$m['Listing']['url']));?></div>
+
+				</div>
+
+				<div class="jrMediaInfo">
+
+					<div class="jrMediaFrom"><?php __t("Submitted by:");?> <?php echo $Community->screenName($m);?><br /> <?php echo $Time->timeAgoInWords($created);?></div>
+
+					<span class="jrMediaViews"><span class="jrIconGraph"></span><?php echo sprintf(__t("%s views",true),$m['Media']['views']);?></span>
+
+					<?php /* MEDIA MANAGER */ ?>
+
+					<?php if($canSetMainMedia || $this->Access->canManageMedia($media_type, $user_id)):?>
+
+						<?php $Widgets->mediaManager($m, $m);?>
+
+					<?php endif;?>
+
+				</div>
+
+			</div>
+
+		</div>
+
+		<?php endforeach; ?>
+
+	</div>
+
+	<div class="jrClear"></div>
+
+ 	<?php /* PAGINATION */ ?>
+
+	<?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+</div>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" version="2.5" method="upgrade">
+	<name>JReviews Favorite Users Module</name>
+	<author>ClickFWD LLC</author>
+	<creationDate>March 2013</creationDate>
+	<copyright>Copyright (C) 2010-2013 ClickFWD LLC. All rights reserved.</copyright>
+	<license>Commercial</license>
+	<authorEmail>sales@reviewsforjoomla.com</authorEmail>
+	<authorUrl>www.reviewsforjoomla.org</authorUrl>
+	<version>2.4</version>
+	<description>MODULE_HEADER</description>
+	<files>
+		<filename module="mod_jreviews_favorite_users">mod_jreviews_favorite_users.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">en-GB.mod_jreviews_favorite_users.ini</language>
+		<language tag="en-GB">en-GB.mod_jreviews_favorite_users.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				 <!-- main setup -->
+				<field type="spacer" class="dataListHeader" label="MAIN SETUP" />
+				<field name="tmpl_suffix" type="text" default="" label="JReviews Theme Suffix" description="Suffix to be applied to module theme so you can use a different theme for each module instance." />
+				<!-- basic filters -->
+				<field type="spacer" class="dataListHeader" label="BASIC FILTERS" />
+				<field name="avatar" type="radio" default="1" label="Only users with avatars" description="Only users who have uploaded avatars will be shown.">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<!-- pagination and slideshow -->
+				<field type="spacer" class="dataListHeader" label="PAGINATION &amp; SLIDESHOW" />
+				<field name="nav_position" type="radio" default="bottom" label="Positioning of Pagination" description="">
+					<option value="bottom">Bottom</option>
+					<option value="side">Sides</option>
+				</field>
+				<field name="orientation" type="list" default="horizontal" label="Page Transition" description="">
+					<option value="horizontal">Horizonal sliding</option>
+					<option value="vertical">Vertical sliding</option>
+					<option value="fade">Fade effect</option>
+				</field>
+				<field name="slideshow" type="radio" default="0" label="Enable Slideshow" description="The module will automatically advance pages">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="slideshow_interval" type="text" default="6" label="Slideshow Interval (sec.)" description="Time between pages in seconds" />
+				<field name="module_total" type="text" default="10" label="Max. number of results" description="" />
+				<field name="module_limit" type="text" default="5" label="Results per page" description="Sets the number of results shown in the module" />
+				<field name="columns" type="text" default="1" label="Number of columns" description="Enter the number of columns to use to display the list." />
+			</fieldset>
+			<fieldset name="advanced">
+				<field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
+				<field name="moduleclass_sfx" type="text" label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL" description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+				<field name="cache" type="list" default="0" label="COM_MODULES_FIELD_CACHING_LABEL" description="COM_MODULES_FIELD_CACHING_DESC">
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+				<field name="cache_time" type="text" default="900" label="COM_MODULES_FIELD_CACHE_TIME_LABEL" description="COM_MODULES_FIELD_CACHE_TIME_DESC" />
+				<field name="cachemode" type="hidden" default="static">
+					<option value="static"></option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

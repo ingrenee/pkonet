@@ -1,0 +1,241 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+$langDel = json_encode(array(
+        'del_confirm'=>__a("This action will delete the review comment(s). Are you sure you want to continue?",true,true),
+        'del_error'=>__a('There was a problem deleting the comment.',true,true)
+    ));
+
+?>
+
+<?php if($this->offset == 0 && $processed == 0):?>
+
+<div class="jr-discussions-moderate jr-moderation jrModeration" data-limit="<?php echo $this->limit;?>" data-pages="<?php echo ceil($total/$this->limit);?>">
+
+    <?php if(!empty($predefined_replies)):?>
+
+    <div class="jr-predefined-replies">
+
+        <?php foreach($predefined_replies AS $predefined_reply):extract($predefined_reply['PredefinedReply']);?>
+
+            <span id="jr-predefined-reply-<?php echo $reply_id;?>" class="jrHidden"><?php echo $reply_body;?></span>
+
+        <?php endforeach;?>
+
+    </div>
+
+    <?php endif;?>
+
+    <div class="jrPageHeading"><?php __a("Review Discussion Moderation");?></div>
+
+<?php endif;?>
+
+    <?php foreach($posts AS $post): extract($post['Discussion']);?>
+
+        <div class="jr-layout-outer jrRoundedPanel">
+
+            <form id="jr-form-discussion-<?php echo $discussion_id;?>" action="index.php" method="post" data-object-type="discussion">
+
+                <div class="jrGrid">
+
+                    <div class="jrCol12">
+
+                        <span class="jrStatusLabel">#<?php echo $discussion_id;?></span>
+
+                        &#149;
+
+                        <?php echo sprintf(__a("Posted %s by %s for review %s &#149; %s",true),
+                            $Time->timeAgoInWords($created),
+                            $AdminRoutes->user($name,$user_id,array('target'=>"_blank")),
+                            $Routes->reviewDiscuss($post['Review']['title'] != '' ? $post['Review']['title'] : '{no title}',$post,array('listing'=>$post,'target'=>'_blank')),
+                            Sanitize::getString($post['Listing'],'title'));?>
+
+                    </div>
+
+                </div>
+
+                <div class="jrGrid">
+
+                    <div class="jrCol12">
+
+                        <textarea name="data[Discussion][text]" style="width:95%;height:7em;" cols="150" rows="5"><?php echo $text;?></textarea>
+
+                    </div>
+
+                </div>
+
+               <div class="jrGrid">
+
+                    <div class="jrCol10">
+
+                        <div class="jrFieldDiv">
+
+                            <label for="jr-approve-<?php echo $discussion_id;?>">
+
+                                <input class="jr-moderate-state" name="data[Discussion][approved]" id="jr-approve-<?php echo $discussion_id;?>" checked="checked" type="radio" value="1">&nbsp;<?php __a("Accept");?>
+
+                            </label>
+
+                            &nbsp;
+
+                            <label for="jr-reject-<?php echo $discussion_id;?>">
+
+                                <input class="jr-moderate-state" name="data[Discussion][approved]" id="jr-reject-<?php echo $discussion_id;?>" type="radio" value="-2">&nbsp;<?php __a("Reject");?>
+
+                            </label>
+
+                            &nbsp;
+
+                            <label for="jr-hold-<?php echo $discussion_id;?>">
+
+                                <input class="jr-moderate-state" name="data[Discussion][approved]" id="jr-hold-<?php echo $discussion_id;?>" type="radio" value="0">&nbsp;<?php __a("Hold");?>
+
+                            </label>
+
+                            &nbsp;
+
+                            <?php if($post['User']['email']!=''):?>
+
+                            <label class="jr-reply jrButton jrSmall" for="jr-reply-<?php echo $discussion_id;?>">
+
+                                <span class="jrIconMessage"></span><?php __a("Choose Predefined Reply");?>
+
+                                <input id="jr-reply-<?php echo $discussion_id;?>" name="data[Email][send]" type="checkbox" value="1">
+
+                            </label>
+
+                            <?php else:?>
+
+                            <button class="jrButton jrSmall" disabled="disabled">
+
+                                <span class="jrIconMessage"></span><?php __a("User e-mail not available.");?>
+
+                            </button>
+
+                            <?php endif;?>
+
+                            <button class="jr-submit jrButton jrGreen jrSmall">
+
+                                <span class="jrIconSubmit"></span><?php __a("Submit");?>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="jrCol2">
+
+                        <div class="jrRight">
+
+                            <span class="jrIconWarning"></span><?php echo $Routes->whois($post['Discussion']['ipaddress']);?>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="jr-form-reply jrGrid jrHidden">
+
+                    <div clas="jrCol12">
+
+                        <?php if($post['User']['email'] != ''):?>
+
+                            <div class="jrFieldDiv" style="margin:10px 0 10px 0;">
+
+                                <select name="predefined_reply" class="jr-select-reply">
+
+                                    <option value=""><?php __a("--- Select a predefined reply ---");?></option>
+
+                                    <?php foreach($predefined_replies AS $predefined_reply):extract($predefined_reply['PredefinedReply']);?>
+
+                                        <?php if(trim($reply_subject)!=''):?>
+
+                                        <option value="<?php echo $reply_id;?>"><?php echo $reply_subject;?></option>
+
+                                        <?php endif;?>
+
+                                    <?php endforeach;?>
+
+                                </select>
+
+                                (<?php echo $post['User']['email'];?>)
+
+                                BCC: <input name="data[Email][bcc]" placeholder="BCC Email Address" size="30"></input>
+
+                            </div>
+
+                            <div class="jrFieldDiv">
+
+                                <textarea class="jr-reply-body" name="data[Email][body]" style="width:100%;height:8em;" cols="150" rows="5"></textarea>
+
+                            </div>
+
+                            <div>
+
+                                <br />
+
+                                <?php echo sprintf(__a("Valid tags: %s = user's name; %s = page link; %s = review_title",true),'{name}','{url}','{review_title}');?>
+
+                            </div>
+
+                        <?php endif;?>
+
+                    </div>
+
+                </div>
+
+                <input type="hidden" name="data[Email][email]" value="<?php echo $post['User']['email'];?>" />
+
+                <input type="hidden" name="data[Email][name]" value="<?php echo $post['User']['name'];?>" />
+
+                <input type="hidden" name="data[Email][subject]" class="jr-reply-subject" value="" />
+
+                <input type="hidden" name="data[Email][review_title]" value="<?php echo $post['Review']['title'];?>" />
+
+                <input type="hidden" name="data[Discussion][review_id]" value="<?php echo $review_id;?>" />
+
+                <input type="hidden" name="data[Discussion][discussion_id]" value="<?php echo $discussion_id;?>" />
+
+                <input type="hidden" name="data[Discussion][type]" value="<?php echo $type;?>" />
+
+                <input type="hidden" name="data[moderation]" value="1" />
+
+                <input type="hidden" name="data[controller]" value="admin/admin_discussions" />
+
+                <input type="hidden" name="data[action]" value="_save" />
+
+            </form>
+
+        </div>
+
+    <?php endforeach;?>
+
+<?php if($this->offset == 0 && $processed == 0):?>
+
+    <?php if($total>0 && $total > $this->limit):?>
+
+    <div class="jr-load-more jrRoundedPanel jrCenter" data-bind='["admin/admin_discussions","moderation"]'>
+
+        <span class="jrIconDown"></span>
+
+        <a href="javascript:void(0)" style="font-weight:bold;font-size:16px;"><?php __a("Load more...");?></a>
+
+        <span class="jrIconDown"></span>
+
+    </div>
+
+    <?php endif;?>
+
+</div>
+
+<?php endif;?>

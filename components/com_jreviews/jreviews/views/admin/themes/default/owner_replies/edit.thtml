@@ -1,0 +1,61 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+extract($owner_reply['OwnerReply']);
+?>
+
+<form id="jr-form-owner-reply" class="jrForm" action="index.php" method="" data-id="<?php echo $review_id;?>" data-referrer="browse">
+
+    <div class="jrFieldDiv">
+
+        <label for="reply_text"><?php __a("Owner Reply");?></label>
+
+        <textarea name="data[OwnerReply][owner_reply_text]" style="width:98%; height:10em;"><?php echo $owner_reply_text;?></textarea>
+
+    </div>
+
+    <div class="jrFieldDiv">
+
+        <label for="reply_text"><span class="jrIconNote"></span><?php __a("Admin Note");?></label>
+
+        <textarea name="data[OwnerReply][owner_reply_note]" style="width:98%; height:8em;"><?php echo $owner_reply_note;?></textarea>
+
+    </div>
+
+    <div class="jrFieldDiv">
+
+        <label><?php __a("Action");?></label>
+
+        <?php echo $Form->select(
+                'data[OwnerReply][owner_reply_approved]',
+                array('1'=>__a("Approve",true),'0'=>__a("Hold",true),'-1'=>__a('Reject',true)),
+                $owner_reply_approved
+            );
+        ?>
+    </div>
+
+    <div class="jrInfo">
+
+        <span class="jrIconInfo"></span><?php __a("To send a moderation e-mail set the reply status to HOLD and then go to Owner Reply moderation.");?>
+
+    </div>
+
+    <input type="hidden" name="data[OwnerReply][owner_reply_created]" value="<?php echo $owner_reply_created;?>" />
+
+    <input type="hidden" name="data[OwnerReply][id]" value="<?php echo $review_id;?>" />
+
+    <input type="hidden" name="data[referrer]" value="<?php echo $referrer;?>" />
+
+    <input type="hidden" name="data[controller]" value="admin/admin_owner_replies" />
+
+    <input type="hidden" name="data[action]" value="_save" />
+
+</form>

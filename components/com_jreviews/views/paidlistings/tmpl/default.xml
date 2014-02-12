@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata>
+    <layout title="COM_JREVIEWS_PAIDLISTINGS_VIEW_DEFAULT_TITLE">
+            <![CDATA[COM_JREVIEWS_PAIDLISTINGS_VIEW_DEFAULT_TITLE]]>
+    </layout>
+
+    <fields name="params">
+
+        <fieldset name="basic" label="JReviews">
+
+            <field name="action" type="list" default="" label="Type of Menu" description="Choose a menu type">
+                <option value="19">My account (PaidListings Add-on)</option>
+                <option value="20">Category Plans (PaidListings Add-on)</option>
+            </field>
+
+            <field name="catid" type="jreviewscategory" label="Category"
+                description="Use to limit results to the specified category."
+                addfieldpath="/components/com_jreviews/views" />
+
+            <field name="tmpl_suffix" type="text" size="20" default="" label="Theme suffix" description="Use a different theme for this menu by renaming the theme file using the suffix." />
+
+        </fieldset>
+
+    </fields>
+
+</metadata>

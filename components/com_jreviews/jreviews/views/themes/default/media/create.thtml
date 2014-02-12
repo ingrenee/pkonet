@@ -1,0 +1,20 @@
+
+<h1><?php echo sprintf(__t("Add Media: %s",true),$listing['Listing']['title']);?></h1>
+
+<?php if(!empty($review)):?>
+
+	<h2><?php echo sprintf(__t("Review: %s",true),$review['Review']['title']);?></h2>
+
+<?php endif;?>
+
+<div class="jrClear"></div>
+
+<?php if($this->name == 'media_upload'): /* Don't show in listing submit flow */ ?>
+
+	<?php echo $Html->sefLink('<span class="jrIconPrev"></span>'.$listing['Listing']['title'],$listing['Listing']['url'], array('class'=>'jrButton'));?>
+
+<?php endif;?>
+
+<?php echo $this->renderControllerView('media','create_form');?>
+
+

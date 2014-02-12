@@ -1,0 +1,362 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+// Listing detail page: used in core articles and in "view all reviews" page for a listing
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/
+$video_upload_types = Sanitize::getString($this->Config,'media_video_upload_methods');
+
+$video_link_sites = Sanitize::getVar($this->Config,'media_video_link_sites');
+
+$video_link_sites_array = array('youtube'=>'Youtube','vimeo'=>'Vimeo','dailymotion'=>'Dailymotion');
+
+$uploads_allowed = 0;
+
+$media_type_validation = $limits = array();
+
+$media_types = array(
+	'video'=>'<span class="jrIconVideo"></span>',
+	'photo'=>'<span class="jrIconPhoto"></span>',
+	'attachment'=>'<span class="jrIconAttachment"></span>',
+	'audio'=>'<span class="jrIconAudio"></span>'
+);
+
+// Skip types for which the user doesn't have submit access
+$media_types = array_intersect_key($media_types, array_flip($allowed_types));
+
+foreach($media_types AS $media_type=>$label)
+{
+	$media_type_validation[$media_type]['max'] = Sanitize::getString($this->Config, 'media_'.$media_type.'_max_uploads_' . $upload_object);
+
+	$media_type_validation[$media_type]['count'] = isset($user_media_counts[$media_type]) ? $user_media_counts[$media_type]['count']: 0;
+
+	$uploads_allowed += (int) ($media_type_validation[$media_type]['max'] > 0 || $media_type_validation[$media_type]['max'] === '');
+
+	if($media_type_validation[$media_type]['max'] !== '0')
+	{
+		$limits[$media_type] = $media_types[$media_type]
+					. ' '
+					. (int) $media_type_validation[$media_type]['count']
+					. '/'
+					. ($media_type_validation[$media_type]['max'] === '' ? '&infin;' : $media_type_validation[$media_type]['max'])
+					. ' &#149; ';
+
+		if($media_type == 'video' && $video_upload_types == 'link') {
+
+			$limits[$media_type] .= __t("Only linking allowed",true);
+		}
+		else {
+
+			$limits[$media_type] .= Sanitize::getString($this->Config,"media_{$media_type}_max_size") . 'MB';
+		}
+
+		$limits[$media_type] .= '';
+	}
+
+	$allowedExtensions = explode(',',Sanitize::getString($this->Config,'media_'.$media_type.'_extensions'));
+
+	$sizeLimit = Sanitize::getString($this->Config, 'media_'.$media_type.'_max_size');
+
+	$ext = array();
+
+	foreach($allowedExtensions AS $allowedExtension) {
+		$ext[] = $allowedExtension;
+	}
+
+	$fileValidation[] = array(
+			'allowedExtensions'=>$ext,
+			'sizeLimit'=>$sizeLimit*1024*1024
+		);
+
+}
+
+$only_video_uploads_allowed = count($limits) == 1 && isset($limits['video']);
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+?>
+
+<?php if(!$uploads_allowed):?>
+
+<div><?php __a("You are not allowed to upload or have reached your upload limit.");?></div>
+
+<?php return; endif;?>
+
+<div class="jr-media-upload jrForm jrMediaForm">
+
+	<fieldset class="jrMediaLimits">
+
+		<legend><?php __a("Upload Limits");?></legend>
+
+		<ul><li><?php echo implode('</li>&nbsp;&nbsp;<li>',$limits);?></li></ul>
+
+	</fieldset>
+
+	<ul class="jr-media-message jrMediaMessage jrError jrHidden"></ul>
+
+	<div class="jr-tabs jrTabs">
+
+		<ul>
+
+			<?php if(!$only_video_uploads_allowed || ($only_video_uploads_allowed && $video_upload_types != 'link')):?>
+
+			<li><a href="#jr-upload-tab"><?php __a("Upload Media");?></a></li>
+
+			<?php endif;?>
+
+			<?php if($this->Access->canAddMediaFromUrl($upload_object) && !($only_video_uploads_allowed && $video_upload_types == 'link')):?>
+
+			<li><a href="#jr-upload-url-tab"><?php __t("Upload from URL");?></a></li>
+
+			<?php endif;?>
+
+			<?php if(in_array($video_upload_types,array('all','link'))):?>
+
+			<li><a href="#jr-embed-tab"><?php __a("Link Video");?></a></li>
+
+			<?php endif;?>
+
+		</ul>
+
+		<?php if(!$only_video_uploads_allowed || ($only_video_uploads_allowed && $video_upload_types != 'link')):?>
+
+		<div id="jr-upload-tab">
+
+			<form id="jr-form-media-upload" class="jrForm" action="index.php" method="post" onsubmit="return false;" data-file-validation='<?php echo json_encode($fileValidation);?>'>
+
+				<div id="mediaUploader">
+
+					<label><?php __a("Select or Drag & Drop your files to automatically start the upload process");?></label>
+
+					<div class="jrFieldDiv">
+
+						<div id="jr-media-uploader">
+							<noscript>
+								<p>Please enable JavaScript to use file uploader.</p>
+								<!-- or put a simple form for upload here -->
+							</noscript>
+						</div>
+					</div>
+
+					<div class="jrClear"></div>
+
+				</div>
+
+				<input type="hidden" name="data[controller]" value="admin/admin_media_upload" />
+
+				<input type="hidden" name="data[action]" value="_save" />
+
+				<input type="hidden" name="data[Media][listing_id]" value="<?php echo $listing_id;?>" />
+
+				<input type="hidden" name="data[Media][review_id]" value="<?php echo $review_id;?>" />
+
+				<input type="hidden" name="data[Media][extension]" value="<?php echo $extension;?>" />
+
+				<?php echo cmsFramework::getTokenInput();?>
+
+				<?php echo cmsFramework::formIntegrityToken(array('listing_id'=>$listing_id,'review_id'=>$review_id,'extension'=>$extension),$formTokenKeys);?>
+
+			</form>
+
+			<fieldset class="media-file-list jrHidden">
+
+				<legend><?php __a("Uploaded Media");?></legend>
+
+			</fieldset>
+
+		</div>
+
+		<?php endif;?>
+
+		<?php if($this->Access->canAddMediaFromUrl($upload_object) && !($only_video_uploads_allowed && $video_upload_types == 'link')):?>
+
+		<div id="jr-upload-url-tab">
+
+			<form id="jr-form-media-upload-url" class="jrForm" action="index.php" method="post" onsubmit="return false;">
+
+				<label><?php __t("URL to media file");?></label>
+
+				<div style="margin-top:10px;">
+
+					<div class="jrFieldDiv">
+
+						<?php echo $Form->text('data[upload_url]',array(
+								'id'=>'jr-upload-url',
+								'value'=>'',//$media['Media']['caption'],
+								'style'=>'min-width:60%;'
+						));?>
+
+						<button id="jr-upload-url-submit" class="jrButton jrBlue"><?php __t("Submit");?></button>
+
+					</div>
+
+				</div>
+
+				<input type="hidden" name="data[Media][listing_id]" value="<?php echo $listing_id;?>" />
+
+				<input type="hidden" name="data[Media][review_id]" value="<?php echo $review_id;?>" />
+
+				<input type="hidden" name="data[Media][extension]" value="<?php echo $extension;?>" />
+
+				<?php echo cmsFramework::getTokenInput();?>
+
+				<?php echo cmsFramework::formIntegrityToken(array('listing_id'=>$listing_id,'review_id'=>$review_id,'extension'=>$extension),$formTokenKeys);?>
+
+			</form>
+
+			<fieldset class="media-file-list-url jrHidden">
+
+				<legend><?php __t("Uploaded Media");?></legend>
+
+			</fieldset>
+
+		</div>
+
+		<?php endif;?>
+
+		<?php if(in_array($video_upload_types,array('all','link'))):?>
+
+		<div id="jr-embed-tab">
+
+			<form id="jr-form-media-embed" class="jrForm" action="index.php" method="post" onsubmit="return false;">
+
+				<label><?php __t("URL to video page");?> (<?php echo implode(', ',array_values(array_intersect_key($video_link_sites_array,array_flip($video_link_sites))));?>)</label>
+
+				<div style="margin-top:10px;">
+
+					<div class="jrFieldDiv">
+
+						<?php echo $Form->text('data[embed_url]',array(
+								'id'=>'jr-embed-url',
+								'value'=>'',//$media['Media']['caption'],
+								'style'=>'min-width:60%;'
+						));?>
+
+						<button id="jr-embed-submit" class="jrButton jrBlue"><?php __t("Submit");?></button>
+
+					</div>
+
+				</div>
+
+				<input type="hidden" name="data[Media][listing_id]" value="<?php echo $listing_id;?>" />
+
+				<input type="hidden" name="data[Media][review_id]" value="<?php echo $review_id;?>" />
+
+				<input type="hidden" name="data[Media][extension]" value="<?php echo $extension;?>" />
+
+				<?php echo cmsFramework::getTokenInput();?>
+
+				<?php echo cmsFramework::formIntegrityToken(array('listing_id'=>$listing_id,'review_id'=>$review_id,'extension'=>$extension,'session_id'=>$session_id),$formTokenKeys);?>
+
+			</form>
+
+			<div class="jrClear"></div>
+
+			<fieldset class="media-linked-videos jrHidden">
+
+				<legend><?php __a("Linked Videos");?></legend>
+
+			</fieldset>
+
+		</div>
+
+		<?php endif;?>
+
+	</div>
+
+</div>
+
+<script id="jr-uploader-template" type="text/x-file-uploader">
+<div class="jr-uploader">
+
+	<div class="jrGrid">
+		<div class="jrCol12 jrClearfix" style="margin-top: 10px;">
+			<div class="jr-upload-button jrBlue jrButton jrLeft" style="margin-right:10px;">
+				<span class="jrIconArrowUp"></span><?php echo $is_mobile_OS ? __t("Upload",true) : __t("Select Files",true);?>
+			</div>
+			<?php if(!$is_IE && !$is_mobile_OS): /* IE doesn't support file drag and drop */ ?>
+			<div class="jrLeft"><?php __t("Select or Drag & Drop your files to automatically start the upload process");?></div>
+			<?php endif;?>
+			<?php if($is_iOS):?>
+			<div class="jrLeft">
+				<select class="jr-upload-mobile-options">
+					<option value=""><?php __t("Select");?></option>
+					<option value="camera" data-icon="jrIconCamera"><?php __t("Use Camera");?></option>
+					<option value="multiple" data-icon="jrIconAddMedia"><?php __t("Choose Existing");?></option>
+				</select>
+			</div>
+			<?php endif;?>
+		</div>
+	</div>
+	<div class="jrGrid">
+		<div class="jrCol12">
+			<div class="jr-upload-drop-area jrDropArea jrShadowBox"><span><?php __t("Drop files here");?></span></div>
+		</div>
+	</div>
+	<div id="mediaGallery" class="jr-file-list"></div>
+</div>
+</script>
+
+<script id="jr-progress-template" type="text/x-file-uploader">
+<div class="jrMediaDiv">
+	<div class="jrGrid">
+		<div class="jrCol3"><span class="jr-upload-file">&nbsp;</span></div>
+		<div class="jrCol5"><div style="height:15px;" class="jr-upload-progress"></div></div>
+		<div class="jrCol2"><span class="jr-upload-size"></span>&nbsp;</div>
+		<div class="jrCol2">
+			<span class="jr-upload-cancel jrButton jrHidden" style="padding:0 4px;"><span class="jrIconCancel"></span><?php __t("Cancel");?></span>
+			<span class="jrHidden jr-upload-failed-text"><?php __t("Failed");?></span>
+			<span class="jrHidden"><span class="jr-upload-spinner"></span></span>
+			&nbsp;
+		</div>
+	</div>
+</div>
+</script>
+
+<script id="jr-media-template" type="text/x-file-uploader">
+<form class="jrForm">
+	<div class="jrGrid">
+			<div class="jrCol2 jr-media-thumb jrMediaThumb">
+				<span class="jr-encoding-progress jrHidden jrLoadingMedium"></span><span>&nbsp;</span>
+			</div>
+			<div class="jrCol7 jrMediaDetails">
+				<div class="jrFieldDiv">
+					<label><?php __t("Title");?></label>
+					<input class="jr-media-input-title jrTitleMedium" type="text" name="data[Media][title]" value="" />
+				</div>
+				<div class="jrFieldDiv">
+					<label><?php __t("Description");?></label>
+					<textarea rows="3" cols="40" class="jr-media-input-description" name="data[Media][description]"></textarea>
+				</div>
+				<div class="jrFieldDiv">
+					<button class="jr-media-update jrButton"><?php __t("Update Information");?></button>
+					<span class="jr-media-spinner jrLoadingSmall jrHidden"></span>
+				</div>
+			</div>
+			<div class="jrCol3 jrMediaInfo">
+				<div class="jr-media-filename"></div>
+				<span class="jr-media-approved jrStatusLabel jrGreen jrHidden"><?php __t("Approved");?></span>
+				<span class="jr-media-pending jrStatusLabel jrOrange jrHidden"><?php __t("Pending Moderation");?></span>
+				<span class="jr-media-encoding-failed jrStatusLabel jrRed jrHidden"><?php __t("Processing Failed");?></span>
+				<span class="jr-media-encoding-cancelled jrStatusLabel jrRed jrHidden"><?php __t("Processing Cancelled");?></span>
+				<div class="jr-encoding-info jrWarning jrHidden" style="margin-top:5px;padding:5px;text-align:center;">
+					<?php __t("We are processing the file and this can take several minutes. You can wait or we will send you a notification when it is done");?>
+				</div>
+			</div>
+	</div>
+	<button class="jr-media-delete-upload jrMediaDelete jrButton"><span class="jrIconDelete"></span><?php __t("Delete");?></button>
+	<input class="jr-media-media-id" type="hidden" name="data[Media][media_id]" value="" />
+	<input class="jr-media-token" type="hidden" name="token" value="1" />
+	<?php echo cmsFramework::getTokenInput();?>
+	<input type="hidden" name="data[referrer]" value="create" />
+</form>
+</script>

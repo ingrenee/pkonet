@@ -1,0 +1,71 @@
+<?php
+/**
+* For exact matching to Google Base you will need to customize this theme file to add your custom fields to the Google namespace
+* http://base.google.com/support/bin/answer.py?answer=59451&hl=en
+* Right now the custom fields are added to the custom namespace using <c:fieldtitle><c:value>fieldValue</c:value></c:fieldtitle>
+*/
+?>
+<?php
+$title = '';
+$description = '';
+if(isset($page['title'])) $rss['title'] = $page['title'];
+if(isset($page['description'])) $rss['description'] = $page['description'];
+$encoding = strtoupper($encoding);
+$tn_size = Sanitize::getString($this->Config,'media_list_thumbnail_size','120x120');
+$tn_mode = Sanitize::getString($this->Config,'media_list_thumbnail_mode','crop');
+$tn_align = Sanitize::getString($this->Config,'rss_item_image_align','right');
+?>
+<?php header("Content-Type: text/xml; charset={$encoding}");?>
+<?php echo '<?xml version="1.0" encoding="'.$encoding.'"?>'?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0" xmlns:c="http://base.google.com/cns/1.0">
+	<channel>
+		<title><![CDATA[<?php echo $rss['title'];?>]]></title>
+		<description><![CDATA[<?php echo $rss['description'];?>]]></description>
+		<link><?php echo WWW_ROOT;?></link>
+		<?php if (isset($this->Config->rss_image) && $this->Config->rss_image != ''):?>
+		<image>
+			<title><![CDATA[<?php echo $rss['title'];?>]]></title>
+			<url><?php echo $rss['image_url'];?></url>
+			<link><?php echo $rss['image_link'];?></link>
+		</image>
+		<?php endif;?>
+		<?php if(!empty($listings)):?>
+			<?php foreach($listings AS $listing):?>
+			<item>
+				<?php $link = cmsFramework::makeAbsUrl($listing['Listing']['url'],array('sef'=>true,'ampreplace'=>false));?>
+				<guid><?php echo $link;?></guid>
+				<title><![CDATA[<?php echo $listing['Listing']['title'];?>]]></title>
+				<link><?php echo $link;?></link>
+				<description><![CDATA[
+				<?php if($this->Config->rss_item_images && $mainMediaThumb = $Media->thumb(Sanitize::getVar($listing,'MainMedia'),array('listing'=> &$listing,'size'=>$tn_size,'mode'=>$tn_mode),array('align'=>$tn_align))):?>
+					<?php echo $mainMediaThumb;?>
+				<?php endif;?>
+				<?php echo $Text->truncateWords($listing['Listing']['summary'],$this->Config->getOverride('list_abstract_trim',$listing['ListingType']['config']));?>
+				]]></description>
+				<category><![CDATA[<?php echo $listing['Category']['title'];?>]]></category>
+				<pubDate><?php echo date("r", strtotime($listing['Listing']['created']));?></pubDate>
+				<g:id><?php echo $listing['Listing']['listing_id'];?></g:id>
+				<g:publish_date><?php echo substr($listing['Listing']['created'],0,10);?></g:publish_date>
+				<?php if($listing['Review']['user_rating']>0):?><g:rating><?php echo round($listing['Review']['user_rating'],0);?></g:rating><?php endif;?>
+				<?php // Editor rating
+				if($listing['Review']['editor_rating']>0):?>
+				<c:editor_rating><?php echo $Rating->round($listing['Review']['editor_rating'],$this->Config->rating_scale);?></c:editor_rating>
+				<?php endif;?>
+				<?php // custom fields
+				if(isset($listing['Field'])) {
+					foreach($listing['Field']['pairs'] AS $name=>$field):
+						$name = str_replace('jr_','',$field['name']);
+						if(in_array(0, explode(',',$field['properties']['access_view']))): // Show only public fields in feed?>
+						<?php echo '<c:'.$name.'>';?>
+							<?php foreach($field['text'] AS $text):?>
+								<c:value><![CDATA[<?php echo $text;?>]]></c:value>
+							<?php endforeach;?>
+						<?php echo '</c:'.$name.'>';?>
+					<?php endif;
+					 endforeach;
+				}?>
+			</item>
+			<?php endforeach;?>
+		<?php endif;?>
+	</channel>
+</rss>

@@ -1,0 +1,297 @@
+ <?php
+/**
+ * GeoMaps Addon for JReviews
+ * Copyright (C) 2010-2012 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+$address_fields = array();
+
+$google_url = Sanitize::getString($this->Config,'geomaps.google_url','http://maps.google.com');
+
+$google_api_key = trim(Sanitize::getString($this->Config,'geomaps.google_key'));
+
+$google_api_url = $google_url."/maps/api/js?v=3&async=2&key={$google_api_key}&sensor=false";
+
+if(isset($pagination)) {
+
+    $Paginator->paginate(array('current_page'=>$this->page,'items_per_page'=>$this->limit,'items_total'=>$pagination['total']));
+}
+
+if((
+        isset($this->Config->{'geomaps.address1'})
+        ||
+        isset($this->Config->{'geomaps.address2'})
+        ||
+        isset($this->Config->{'geomaps.city'})
+        ||
+        isset($this->Config->{'geomaps.state'})
+        ||
+        isset($this->Config->{'geomaps.postal_code'})
+        ||
+        isset($this->Config->{'geomaps.country'}
+        )
+    )
+    && isset($this->Config->{'geomaps.latitude'}) && isset($this->Config->{'geomaps.longitude'})):
+
+    $address_fields = array
+    (
+        Sanitize::getString($this->Config,'geomaps.address1')=>Sanitize::getString($this->Config,'geomaps.address1'),
+        Sanitize::getString($this->Config,'geomaps.address2')=>Sanitize::getString($this->Config,'geomaps.address2'),
+        Sanitize::getString($this->Config,'geomaps.city')=>Sanitize::getString($this->Config,'geomaps.city'),
+        Sanitize::getString($this->Config,'geomaps.state')=>Sanitize::getString($this->Config,'geomaps.state'),
+        Sanitize::getString($this->Config,'geomaps.postal_code')=>Sanitize::getString($this->Config,'geomaps.postal_code'),
+        Sanitize::getString($this->Config,'geomaps.country')=>Sanitize::getString($this->Config,'geomaps.country')
+    );
+
+else:?>
+
+    <div class="jrInfo"><?php __a("You need to setup the Address Fields in the configuration before you can geocode addresses.");?></div>
+
+<?php endif;?>
+
+
+<div id="jr-page-inner" class="jr-geocode-list">
+
+    <div class="jrPageHeading"><?php __a("Geocode Addresses");?></div>
+
+    <form id="jr-page-form" action="index.php" method="post" data-object-type="geomaps">
+
+        <div class="jrPageToolbar jrRoundedPanel">
+
+            <span id="jr-status" class="jrLeft jrStatus"></span>
+
+            <button class="jr-save-settings jrButton jrGreen" data-lang='{"success":"<?php __a("New filters applied.");?>"}'>
+
+                <span class="jrIconSave"></span><?php __a("Apply Filtering");?>
+
+            </button>
+
+        </div>
+
+        <div class="jrPageFilters">
+
+            <label><?php __a("Listing Types");?></label>
+
+            <div class="jrRoundedPanelLt jrClearfix">
+
+                <?php echo $Form->checkbox(
+                    'data[Config][geomaps.listing_types]',
+                    $listing_types,
+                    array(
+                        'id'=>'listingTypes',
+                        'value'=>isset($this->Config->{'geomaps.listing_types'}) ? $this->Config->{'geomaps.listing_types'} : '',
+                        'option_class'=>'jrOption'
+                    )
+                );?>
+            </div>
+
+            <label><?php __a("Fields");?></label>
+
+            <div style="margin:5px 0;font-style:italic;"><?php __a("Limits results to listings that have non-empty values in the selected address fields. Useful to prevent geocoding of addresses that are incomplete.");?></div>
+
+            <div class="jrRoundedPanelLt jrClearfix">
+
+                <?php echo $Form->checkbox(
+                    'data[Config][geomaps.fields_filter]',
+                    array_filter($address_fields),
+                    array(
+                        'id'=>'fieldsFilter',
+                        'value'=>isset($this->Config->{'geomaps.fields_filter'}) ? $this->Config->{'geomaps.fields_filter'} : '',
+                        'option_class'=>'jrOption'
+                    )
+                );?>
+            </div>
+
+            <label><?php __a("Geocoding Status");?></label>
+
+            <div class="jrRoundedPanelLt jrClearfix">
+
+                <?php echo $Form->radio(
+                    'data[Config][geomaps.geo_status]',
+                    array('0'=>'Non-geocoded Listings','1'=>'Geocoded Listings','2'=>'All Listings'),
+                    array(
+                        'id'=>'geoStatus',
+                        'value'=>isset($this->Config->{'geomaps.geo_status'}) ? $this->Config->{'geomaps.geo_status'} : 0,
+                        'option_class'=>'jrOption'
+                    )
+                );?>
+            </div>
+
+        </div>
+
+        <input type="hidden" name="data[controller]" value="admin/admin_geomaps" />
+
+        <input type="hidden" name="data[action]" value="_saveConfig" />
+
+        <input type="hidden" name="data[task]" value="filters" />
+
+    </form>
+
+
+    <?php if($error_fields):?>
+
+    <div class="jrWarning">
+
+        <?php __a("You need to define the address and coordinate fields in the GeoMaps configuration.");?>
+
+    </div>
+
+    <?php elseif($error_listing_types):?>
+
+    <div class="jrWarning">
+
+        <?php __a("You need to select at least one listing type for geocoding of addresses in the configuration settings.");?>
+
+    </div>
+
+    <?php else:?>
+
+    <form id="jr-page-form2" action="index.php" method="post" data-object-type="geomaps">
+
+        <div class="jrInfo">
+
+            <?php echo sprintf(__a("Based on your filters, there are %s listings with addresses. %s listings have been geocoded and %s listings remain to be geocoded.",true),"<strong>".$total_addresses."</strong>","<strong>".$total_geocoded."</strong>","<strong>".($total_addresses - $total_geocoded)."</strong>");?>
+
+        </div>
+
+        <div class="jrPageToolbar jrRoundedPanel">
+
+            <span id="jr-status" class="jrLeft jrStatus"></span>
+
+            <button id="jr-geocode-all" class="jrButton jrDark">
+
+                <span class="jrIconMap"></span><?php __a("Geocode Addresses");?>
+
+            </button>
+
+        </div>
+
+        <div id="jr-geocode-debug" class="jrHidden">
+
+            <button id="jr-geocode-debug-hide" class="jrButton"><?php __a("Hide debug info");?></button>
+
+            <br /><br />
+
+            <div class="jrDataList">
+
+                <div class="jrGrid jrDataListHeader">
+
+                    <div class="jrCol1">ID</div>
+
+                    <div class="jrCol4"><?php __a("Title");?></div>
+
+                    <div class="jrCol4"><?php __a("Address");?></div>
+
+                    <div class="jrCol3"><?php __a("Response");?></div>
+
+                </div>
+
+                <div class="jr-geocode-debug-results jrHidden"></div>
+
+            </div>
+
+            <br />
+
+        </div>
+
+        <?php echo $this->element('pagination',array('position'=>'top'));?>
+
+        <div class="jrDataList">
+
+            <div class="jrGrid24 jrDataListHeader">
+
+                <div class="jrCol1">ID</div>
+
+                <div class="jrCol5"><?php __a("Title");?></div>
+
+                <div class="jrCol5"><?php __a("Category");?></div>
+
+                <div class="jrCol6"><?php __a("Address");?></div>
+
+                <div class="jrCol3"><?php __a("Latitude");?></div>
+
+                <div class="jrCol3"><?php __a("Longitude");?></div>
+
+                <div class="jrCol1">&nbsp;</div>
+
+            </div>
+
+            <?php $i = $this->page*$this->limit - ($this->limit - 1); foreach($listings AS $listing):?>
+
+            <?php
+                $address = '';
+
+                $listing_id = $listing['Listing']['listing_id'];
+
+                foreach($address_fields AS $address_field)
+                {
+                    if($address_field != '' && !empty($listing['Field']['pairs']))
+                    {
+                        $address .= isset($listing['Field']['pairs'][$address_field]) ?  $listing['Field']['pairs'][$address_field]['text'][0] . ' ' : '';
+                    }
+
+                    if(in_array($address_field,array('parent_category','category')))
+                    {
+                        $address .= $listing[Inflector::camelize($address_field)]['title'] . ' ';
+                    }
+                }
+
+                $address = str_replace(array('.',','),'',$address);
+
+                $lat = isset($listing['Field']['pairs'][$this->Config->{'geomaps.latitude'}]) ? $listing['Field']['pairs'][$this->Config->{'geomaps.latitude'}]['value']['0'] : '';
+
+                $lon = isset($listing['Field']['pairs'][$this->Config->{'geomaps.longitude'}]) ? $listing['Field']['pairs'][$this->Config->{'geomaps.longitude'}]['value']['0'] : '';
+
+                $parent_category = !empty($listing['ParentCategory']['title']) ? $listing['ParentCategory']['title'] : '';
+            ?>
+
+            <div class="jrGrid24">
+
+                <div class="jrCol1"><?php echo $listing_id;?></div>
+
+                <div class="jrCol5"><?php echo $listing['Listing']['title'];?></div>
+
+                <div class="jrCol5">
+
+                    <?php echo $parent_category;?> - <?php echo $listing['Category']['title'];?>
+
+                </div>
+
+                <div class="jrCol6"><?php echo $address;?>&nbsp;</div>
+
+                <div class="jrCol3"><?php echo $lat;?>&nbsp;</div>
+
+                <div class="jrCol3"><?php echo $lon;?>&nbsp;</div>
+
+                <div class="jrCol1">
+
+                    <button class="jr-geocode-pin jrButton jrSmall jrIconOnly"
+                            data-id="<?php echo $listing_id;?>" data-title="<?php echo addslashes($listing['Listing']['title']);?>"
+                            data-lat="<?php echo $lat != '' ? $lat : 0;?>" data-lon="<?php echo $lon != '' ? $lon : 0;?>">
+
+                        <span class="jrIconPin"></span>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <?php endforeach;?>
+
+        </div>
+
+        <?php echo $this->element('pagination',array('position'=>'bottom'));?>
+
+        <input type="hidden" name="data[controller]" value="admin/admin_geomaps" />
+
+        <input type="hidden" name="data[action]" value="geocode" />
+
+    </form>
+
+<?php endif;?>
+
+</div>

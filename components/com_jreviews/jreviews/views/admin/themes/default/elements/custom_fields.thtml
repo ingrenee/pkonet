@@ -1,0 +1,72 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+?>
+
+<?php
+
+/**
+ * Check if there are any fields to be shown on the current view: contentview or listview
+ * @$page: Passed from the action view file (i.e. detail, listings_blogview, listings_tableview, listings_thumbview)
+ * and determines whether the field is set to show in the current view.
+ */
+$groups = array();
+$showFieldsInView = 0;
+
+// Pre-processor to hide groups with no visible fields
+if(isset($entry['Field']['pairs']) && !empty($entry['Field']['pairs']))
+{
+    foreach($entry['Field']['pairs'] AS $field) {
+        $showFieldsInView++;
+        $showGroup[$field['group_id']] = 1;
+    }
+}
+
+// Check if group name was passed to element to output only the specified group
+if(isset($group_name) && $group_name != '') {
+    if(isset($entry['Field']['groups'][$group_name])) {
+        $groups = array($group_name=>$entry['Field']['groups'][$group_name]);
+    }
+} elseif($showFieldsInView) {
+    $groups = $entry['Field']['groups'];
+}
+?>
+
+<?php
+/**********************************************************************************
+ *                                 EDIT HTML BELOW THIS LINE
+ **********************************************************************************/
+?>
+
+<?php if(empty($groups)) return;?>
+
+<div class="jrCustomFields" <?php echo isset($divWidth) ? $divWidth : '';?>>
+    <?php foreach($groups AS $group_title=>$group):?>
+        <?php if(isset($showGroup[$group['Group']['group_id']]) || isset($group_name)):?>
+        <div class="jrFieldGroup">
+            <?php if($group['Group']['show_title']):?>
+                <h3 class="jrFieldGroupTitle"><?php echo $group['Group']['title']?></h3>
+            <?php endif;?>
+            <table border="0" cellpadding="0" cellspacing="0" class="jrFieldGroupTable">
+                <?php foreach($group['Fields'] AS $field):?>
+                     <tr>
+                        <?php if($field['properties']['show_title']):?><td class="jrFieldLabel"><?php echo $field['title']?></td><?php endif;?>
+                        <?php
+                            $fieldText = implode(' &#8226; ',$CustomFields->display($field['name'], $entry, false, true));
+                            if(in_array($field['type'],array('code','banner'))) $fieldText = htmlentities($fieldText,ENT_QUOTES,'utf-8');
+                        ?>
+                        <td <?php if(!$field['properties']['show_title']):?>colspan="2"<?php endif;?> class="jrFieldValue"><?php echo $fieldText;?></td>
+                     </tr>
+                <?php endforeach;?>
+            </table>
+        </div>
+        <?php endif;?>
+    <?php endforeach;?>
+</div>

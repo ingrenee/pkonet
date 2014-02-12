@@ -1,0 +1,306 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+
+/**********************************************************************************
+ * 								CONFIGURATION AND SETUP
+ **********************************************************************************/
+$review_id = Sanitize::getInt($review['Review'],'review_id');
+
+$separate_owner_media = Sanitize::getBool($this->Config,'media_detail_separate_media');
+
+$photo_layout = Sanitize::getString($this->Config,'media_detail_photo_layout');
+
+$video_layout = Sanitize::getString($this->Config,'media_detail_photo_layout');
+
+// Thumbanail settings
+
+$galleryThumbnailSize = Sanitize::getString($this->Config,'media_review_gallery_thumbnail_size');
+
+$galleryThumbnailMode = Sanitize::getString($this->Config,'media_review_gallery_thumbnail_mode');
+
+if (!isset($reviewType) || $reviewType == '') {
+	$reviewType = ($review['Review']['editor'] > 0) ? 'editor' : 'user';
+}
+
+// Review comments characters limit
+if (!isset($reviewType) || $reviewType == 'editor') {
+	$char_limit = Sanitize::getInt($this->Config,'editor_review_char_limit');
+} else {
+	$char_limit = Sanitize::getInt($this->Config,'user_review_char_limit');
+}
+
+// roundPanel class depending on the page and type of review
+$roundPanelClass = isset($review_class) && $review_class == 'single' ? 'jrRoundedPanel' : 'jrRoundedPanelLt';
+
+$overrides = Sanitize::getVar($listing['ListingType'],'config');
+
+/**********************************************************************************
+ * 								EDIT HTML BELOW THIS LINE
+ **********************************************************************************/?>
+
+<?php if($this->action!='_edit'): // Don't add the outer div if updating review on screen after edit?>
+
+<div class="jr-layout-outer <?php echo $roundPanelClass;?>">
+
+	<!-- BEGIN REVIEW INNER -->
+	<div class="jr-layout-inner jrReviewContainer">
+
+<?php endif;?>
+
+	<?php if(in_array($this->name,array('com_content','listings','discussions','everywhere'))):?>
+
+		<span class="jrHidden" itemprop="review" itemscope itemtype="http://schema.org/Review">
+
+			<meta itemprop="itemReviewed" content="<?php echo $listing['Listing']['title'];?>">
+
+			<meta itemprop="name" content="<?php echo $review['Review']['title'];?>">
+
+			<?php if(Sanitize::getBool($this->Config, 'schema_org_author', false)): ?>
+			<meta itemprop="author" content="<?php echo $Community->screenName($review,false);?>">
+			<?php endif; ?>
+
+			<meta itemprop="datePublished" content="<?php echo $review['Review']['created'];?>">
+
+			<span itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+				<meta itemprop="ratingValue" content="<?php echo round($review['Rating']['average_rating'],2)?>">
+				<meta itemprop="bestRating" content="<?php echo $this->Config->rating_scale; ?>">
+			</span>
+
+			<span itemprop="reviewBody"><?php echo nl2br($review['Review']['comments']);?></span>
+
+		</span>
+
+	<?php endif;?>
+
+	<?php if($review['Criteria']['state'] == 1 && $review['Rating']['average_rating'] != 'na'): ?>
+
+		<div class="jrRatingInfo"><?php echo $Rating->detailedRatings($review,$reviewType); /* DETAILED USER RATINGS */?></div>
+
+	<?php endif;?>
+
+	<div class="jrUserInfo">
+
+		<?php echo $Community->avatar($review);?>
+
+		<?php (Sanitize::getInt($review['Criteria'],'state')!=2) ? __t("Reviewed by") : __t("Commented by");?>
+
+		<?php echo $Community->screenName($review);?>
+
+		<?php if($this->Access->isAdmin()):?>
+
+			<!-- BEGIN EXTRA INFO FOR ADMINS -->
+			<?php echo $review['User']['ipaddress'];?>&nbsp; - &nbsp;
+			<?php echo $review['User']['email'];?><br />
+			<!-- END EXTRA INFO FOR ADMINS -->
+
+		<?php endif;?>
+
+		<?php echo $Time->nice($review['Review']['created']);?>
+
+		<?php if($review['Review']['modified'] != '' && NULL_DATE != $review['Review']['modified']):?><br />
+			<?php __t("Last updated");?>: <?php echo $Time->nice($review['Review']['modified']);?>
+		<?php endif;?>
+
+		<br />
+
+		<?php if($this->Config->user_rank_link && $review['User']['user_id']>0 && $review['User']['review_rank'] > 0):?>
+			<?php echo $Routes->reviewers($review['User']['review_rank'],$review['User']['user_id'])?>&nbsp; - &nbsp;
+		<?php endif;?>
+
+		<?php if($this->Config->user_myreviews_link && $this->action!='myreviews' && $review['User']['user_id'] > 0):?>
+
+			<!-- BEGIN VIEW MY REVIEWS -->
+			<?php echo $Routes->myReviews(sprintf(__t("View all my reviews (%s)",true),Sanitize::getInt($review['User'],'review_count',1)), $review['User']);?><br />
+
+		<?php endif;?>
+
+	</div>
+
+	<div class="jrReviewContent">
+
+		<?php if($review['Review']['title']!=''):?>
+
+			<h4 class="jrReviewTitle"><?php echo $review['Review']['title'];?></h4>
+
+		<?php endif;?>
+
+		<?php if($review['Review']['comments']!=''):?>
+
+			<div class="description jrReviewComment"><p <?php echo $char_limit > 0 ? 'class="jr-show-more" data-characters="'. $char_limit .'"' : ''; ?>><?php echo nl2br($review['Review']['comments']);?></p></div>
+
+		<?php endif;?>
+
+		<!-- CUSTOM FIELDS -->
+		<?php echo $CustomFields->displayAll($review,'content');?>
+
+		<?php if($review['Review']['media_count'] > 0): ?>
+
+			<div class="jrMediaContainer jrCompactGallery jrClearfix">
+
+			<?php if(isset($review['Media']['photo'])):?>
+
+				<?php foreach($review['Media']['photo'] AS $media):?>
+
+					<div class="jrMediaThumb">
+
+					<?php
+
+					$thumb = $Media->thumb($media,array('lightbox'=>(!in_array($photo_layout, array('contact_linked','film_linked'))),'rel'=>'reviewGallery'.$review['Review']['review_id'],'size'=>$galleryThumbnailSize,'mode'=>$galleryThumbnailMode));
+
+					echo !in_array($photo_layout, array('contact_linked','film_linked')) ? $thumb : $Routes->mediaDetail($thumb, array('media_by'=>$separate_owner_media ? 'reviewer' : '','media'=>$media,'listing'=>isset($listing) ? $listing : $review));
+					?>
+
+					</div>
+
+				<?php endforeach;?>
+
+			<?php endif;?>
+
+			<?php if(isset($review['Media']['video'])):?>
+
+				<?php foreach($review['Media']['video'] AS $media):?>
+
+					<?php $duration = $media['duration']; ?>
+
+					<div class="jrMediaThumb jrVideo" <?php if ($duration != 0): ?> data-duration="<?php echo $Time->sToHMS($duration); ?>"<?php endif;?>>
+
+					<?php
+					$thumb = $Media->thumb($media,array('size'=>$galleryThumbnailSize,'mode'=>$galleryThumbnailMode));
+
+					echo $Routes->mediaDetail($thumb, array('media_by'=>$separate_owner_media ? 'reviewer' : '','media'=>$media,'listing'=>isset($listing) ? $listing : $review), array('class'=>(in_array($video_layout, array('contact_lightbox','film_lightbox'))) ? 'fancyvideo' : ''));
+					?>
+
+					</div>
+
+				<?php endforeach;?>
+
+			<?php endif;?>
+
+			</div>
+
+			<?php if($review['Review']['attachment_count']):?>
+
+				<?php echo $this->renderControllerView('media','attachment',array('listing'=>$review)); ?>
+
+			<?php endif;?>
+
+			<?php if($review['Review']['audio_count']):?>
+
+				<?php echo $this->renderControllerView('media','audio',array('id'=>'review'.$review['Review']['review_id'],'listing'=>$review)); ?>
+
+			<?php endif;?>
+
+		<?php endif;?>
+
+		<?php if($this->Config->owner_replies && $review['Review']['owner_reply_approved']==1 && $review['Review']['owner_reply_text']!=''):?>
+
+			<div class="jr-owner-reply-outer jrOwnerReply">
+
+				<div class="jrOwnerReplyTitle"><?php __t("Owner's reply");?></div>
+
+				<p><?php echo nl2br($review['Review']['owner_reply_text']);?></p>
+
+				<?php $Widgets->ownerReplyDelete($listing, $review);?>
+
+			</div>
+
+
+		<?php endif;?>
+
+	</div>
+	<div class="jrReviewActions">
+
+		<div class="jrReviewComments">
+
+			<?php if($this->Config->review_discussions == 1 && $this->action != 'review' && Sanitize::getInt($review['Criteria'],'state')!=2):?>
+
+			<!-- REVIEW DISCUSSION  -->
+
+				<?php echo $Routes->reviewDiscuss('<span class="jrIconComments"></span>' . sprintf(__t("Comments (%s)",true),$review['Review']['posts']), $review['Review'], array('listing'=>$listing,'class'=>'jrButton jrSmall'));?>
+
+			<?php endif;?>
+
+			<?php if(!$this->ajaxRequest && $this->Access->canAddOwnerReply($listing,$review)):?>
+
+				<?php $Widgets->ownerReply($review); /* OWNER REPLY  */?>
+
+			<?php endif;?>
+
+		</div>
+
+		<?php if($this->Access->canAddAnyReviewMedia($review['User']['user_id'], $overrides, $review['Review']['review_id'])):?>
+
+			<?php echo $Routes->mediaCreate('<span class="jrIconAddMedia"></span>' . __t("Add Media", true),$review,array('cat_menu_id'=>Sanitize::getString($listing['Category'],'menu_id'),'class'=>'jrButton jrSmall jrAddMedia'));?>
+
+		<?php endif;?>
+
+		<?php if($review['Review']['photo_count'] > 0 || $review['Review']['video_count'] > 0):?>
+
+			<?php
+
+			$photos_button = in_array($photo_layout, array('contact_linked','film_linked')) && $review['Review']['photo_count'] > 0 && isset($review['Media']['photo']);
+
+			$videos_button = in_array($video_layout, array('contact_linked','film_linked')) && $review['Review']['video_count'] > 0 && isset($review['Media']['video']);
+			?>
+
+			<?php if($photos_button || $videos_button):?>
+
+				<?php if($photos_button):?>
+
+					<?php echo $Routes->mediaDetail('<span class="jrIconPhoto"></span>'.sprintf(__t("Photos (%s)",true),$review['Review']['photo_count']),array('media_by'=>$separate_owner_media ? 'reviewer' : '','media_type'=>'photo','media'=>$review['Media']['photo'][0],'listing'=>isset($listing) ? $listing : $review),array('class'=>'jrButton jrSmall'));?>
+
+				<?php endif;?>
+
+				<?php if($videos_button):?>
+
+					<?php echo $Routes->mediaDetail('<span class="jrIconVideo"></span>'.sprintf(__t("Videos (%s)",true),$review['Review']['video_count']),array('media_by'=>$separate_owner_media ? 'reviewer' : '','media_type'=>'video','media'=>$review['Media']['video'][0],'listing'=>isset($listing) ? $listing : $review),array('class'=>'jrButton jrSmall'));?>
+
+				<?php endif;?>
+
+			<?php endif;?>
+
+		<?php endif;?>
+
+		<?php if($this->Access->canEditReview($review['User']['user_id'],$overrides) && $this->action != 'review'): ?>
+
+			<?php $Widgets->reviewEdit($review); /* REVIEW EDIT */?>
+
+		<?php endif;?>
+
+		<div class="jrReviewVoting">
+
+			<?php if(($reviewType == 'user' && $this->Config->user_vote) || ($reviewType == 'editor' && $this->Config->author_vote) && Sanitize::getInt($review['Criteria'],'state')!=2):?>
+
+				<?php $Widgets->reviewVoting($review); /* VOTING WIDGET */?>
+
+			<?php endif;?>
+
+			<?php if(($reviewType == 'user' && $this->Config->user_report) || ($reviewType == 'editor' && $this->Config->author_report) && !$this->ajaxRequest):?>
+
+				<?php $Widgets->report(array('review'=>$review));?>
+
+			<?php endif;?>
+
+		</div>
+
+
+		<div class="jrClear"></div>
+
+	</div>
+
+<?php if($this->action!='_edit'):?>
+
+	</div>
+
+	<!-- END REVIEW INNER -->
+
+</div>
+
+<?php endif;?>

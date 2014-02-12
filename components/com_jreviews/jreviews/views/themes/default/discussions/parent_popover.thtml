@@ -1,0 +1,13 @@
+<?php if(is_array($post)):?>
+
+	<p><?php echo $Time->nice($post['Discussion']['created']);?></p>
+
+	<p style="margin:10px 5px 10px 30px;"><?php echo $post['Discussion']['text'];?></p>
+
+	<p><?php echo $Community->screenName($post,false);?></p>
+
+<?php else:?>
+
+	<p><?php __t("Comment not found");?>
+
+<?php endif;?>

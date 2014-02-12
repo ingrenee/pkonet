@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata>
+    <layout title="COM_JREVIEWS_REVIEWS_VIEW_DEFAULT_TITLE">
+            <![CDATA[COM_JREVIEWS_REVIEWS_VIEW_DEFAULT_TITLE]]>
+    </layout>
+
+    <fields name="params">
+
+        <fieldset name="basic" label="JReviews">
+
+            <field name="action" type="list" default="" label="Type of Menu" description="Choose a menu type">
+                <option value="10">My reviews</option>
+                <option value="14">Reviews - Latest reviews (all)</option>
+                <option value="15">Reviews - Latest user reviews</option>
+                <option value="16">Reviews - Latest editor reviews</option>
+                <option value="24">Reviews - Custom List</option>
+            </field>
+
+            <field name="catid" type="jreviewscategory" label="Category"
+                description="Category filter. Must specify the extension below."
+                addfieldpath="/components/com_jreviews/views" />
+
+            <field name="extension" type="text" size="30" default="" label="Extension" description="Use to filter by component when selecting the latest user reviews menu and can be combined with the cat id filter (i.e. com_content, com_virtuemart, com_sobi2)." />
+
+            <field name="total_special" type="text" size="3" default="" label="Page total" description="Total number of entries shown." />
+
+            <field name="limit_special" type="text" size="3" default="" label="Limit per page" description="Number of entries per page." />
+
+            <field name="tmpl_suffix" type="text" size="20" default="" label="Theme suffix" description="Use a different theme for this menu by renaming the theme file using the suffix." />
+
+            <field name="custom_where" filter="raw" type="textarea" default="" rows="5" cols="45" label="Custom WHERE for Custom List only" description="Custom WHERE for query. For listing custom fields, set the extension to 'com_content' and use the Field.jr_brand LIKE '%*agfa*%' syntax. For review custom fields use the ReviewField.jr_name syntax. " />
+
+            <field name="custom_order" filter="raw" type="textarea" default="" rows="2" cols="45" label="Custom ORDER BY for Custom List only" description="" />
+
+            <field name="custom_description" filter="raw" type="textarea" default="" rows="10" cols="45" label="Page Description" description="This custom description will appear at the top of the page" />
+
+        </fieldset>
+
+    </fields>
+
+</metadata>

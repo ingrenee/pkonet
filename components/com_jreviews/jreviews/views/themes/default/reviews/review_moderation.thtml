@@ -1,0 +1,13 @@
+<div class="jrSuccess">
+
+	<p><?php __t("Thank you for your submission. It will be published once it is verified.");?></p>
+
+	<?php if($this->Access->canAddAnyReviewMedia($review['User']['user_id'], array(), $review['Review']['review_id'])):?>
+
+		<?php $add_media_button = $Routes->mediaCreate('<span class="jrIconAddMedia"></span>' . __t("Add Media",true),$review,array('cat_menu_id'=>Sanitize::getString($review['Category'],'menu_id'),'class'=>'jrButton jrSmall jrAddMedia'));?>
+
+		<p><?php echo sprintf(__t("Do you have media to share? %s",true), $add_media_button);?></p>
+
+	<?php endif;?>
+
+</div>

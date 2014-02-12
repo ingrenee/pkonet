@@ -1,0 +1,408 @@
+<?php
+/**
+ * JReviews - Reviews Extension
+ * Copyright (C) 2010-2013 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+$pass = "status_on.png";
+$fail = "status_off.png";
+?>
+
+<div class="jrAbout">
+
+    <div class="jrDataList">
+
+        <div class="jrGrid jrDataListHeader">
+
+            <div class="jrCol12"><?php __a("Active Add-ons");?></div>
+
+        </div>
+
+        <div class="jrGrid">
+
+            <div class="jrCol12"><span class="addons"><?php echo $stats['license_addons']?></span></div>
+
+        </div>
+
+    </div>
+
+    <br />
+
+    <div class="jrDataList">
+
+        <div class="jrGrid jrDataListHeader">
+
+            <div class="jrCol12"><?php __a("General Statistics");?></div>
+
+        </div>
+
+        <div class="jrGrid">
+
+            <div class="jrCol3"><?php __a("Listing categories");?></div>
+
+            <div class="jrCol1"><span class="jr-stats-categories jrStatusLabel jrHidden">0</span>&nbsp;</div>
+
+            <div class="jrCol3"><?php __a("Published user reviews");?></div>
+
+            <div class="jrCol1"><span class="jr-stats-user-reviews jrStatusLabel jrHidden">0</span>&nbsp;</div>
+
+            <div class="jrCol3"><?php __a("Custom field groups");?></div>
+
+            <div class="jrCol1"><span class="jr-stats-groups jrStatusLabel jrHidden">0</span>&nbsp;</div>
+
+        </div>
+
+        <div class="jrGrid">
+
+            <div class="jrCol3"><?php __a("Published listings");?></div>
+
+            <div class="jrCol1"><span class="jr-stats-listings jrStatusLabel jrHidden">0</span>&nbsp;</div>
+
+            <div class="jrCol3"><?php __a("Published editor reviews");?></div>
+
+            <div class="jrCol1"><span class="jr-stats-editor-reviews jrStatusLabel jrHidden">0</span>&nbsp;</div>
+
+            <div class="jrCol3"><?php __a("Custom fields");?></div>
+
+            <div class="jrCol1"><span class="jr-stats-fields jrStatusLabel jrHidden">0</span>&nbsp;</div>
+
+        </div>
+
+
+        <div class="jrGrid">
+
+            <div class="jrCol3"><?php __a("Photos");?></div>
+
+            <div class="jrCol1"><span class="jr-stats-photo jrStatusLabel jrHidden">0</span>&nbsp;</div>
+
+            <div class="jrCol3"><?php __a("Videos");?></div>
+
+            <div class="jrCol1"><span class="jr-stats-video jrStatusLabel jrHidden">0</span>&nbsp;</div>
+
+            <div class="jrCol3"><?php __a("Attachments");?></div>
+
+            <div class="jrCol1"><span class="jr-stats-attachment jrStatusLabel jrHidden">0</span>&nbsp;</div>
+
+        </div>
+
+        <div class="jrGrid">
+
+            <div class="jrCol3"><?php __a("Audio");?></div>
+
+            <div class="jrCol1"><span class="jr-stats-audio jrStatusLabel jrHidden">0</span>&nbsp;</div>
+
+            <div class="jrCol8"></div>
+
+        </div>
+
+    </div>
+
+    <br />
+
+    <form id="installCheck" class="jrForm" method="post" action="index.php">
+
+        <div class="jrDataList">
+
+            <div class="jrGrid jrDataListHeader">
+
+                <div class="jrCol3"><?php __a("Installation Check");?></div>
+
+                <div class="jrCol1"><?php __a("Status");?></div>
+
+                <div class="jrCol6"><?php __a("Addtional information");?></div>
+
+                <div class="jrCol2">&nbsp;</div>
+
+            </div>
+
+            <div class="jrGrid <?php echo !$installCheck['jreviews.plugin']['status'] ? 'jrInstallError' : '';?>">
+
+                <div class="jrCol3">
+
+                    <a href="index.php?option=com_<?php echo _PLUGIN_DIR_NAME;?>&filter_type=content&filter_search=jreviews"><?php __a("JReviews Content Plugin");?></a>
+
+                </div>
+
+                <div class="jrCol1">
+
+                    <?php if($installCheck['jreviews.plugin']['status']):?>
+
+                        <span class="jrIconYes"></span>
+
+                    <?php else:?>
+
+                        <span class="jrIconNo"></span>
+
+                    <?php endif;?>
+
+                </div>
+
+                <div class="jrCol8">
+
+                    <?php echo !$installCheck['jreviews.plugin']['published'] ? __a("Unpublished.",true).' ' : '';?>
+
+                    <?php echo !$installCheck['jreviews.plugin']['db'] ? __a("Not in plugins list",true).' ' : '';?>
+
+                    <?php echo !$installCheck['jreviews.plugin']['files'] ? __a("Files not found.",true).' ' : '';?>
+
+                    <?php echo $installCheck['jreviews.plugin']['status'] ? __a("Plugin is installed and published.",true).' ' : '';?>
+
+                </div>
+
+            </div>
+
+            <div class="jrGrid <?php echo !$installCheck['jreviews.sefplugin']['status'] ? 'jrInstallWarning' : '';?>">
+
+                <div class="jrCol3">
+
+                    <a href="index.php?option=com_<?php echo _PLUGIN_DIR_NAME;?>&filter_type=system&filter_search=jreviews"><?php __a("JReviews SEF System Plugin");?></a>
+
+                </div>
+
+                <div class="jrCol1">
+
+                    <?php if($installCheck['jreviews.sefplugin']['status']):?>
+
+                        <span class="jrIconYes"></span>
+
+                    <?php else:?>
+
+                        <span class="jrIconNo"></span>
+
+                    <?php endif;?>
+
+                </div>
+
+                <div class="jrCol8">
+
+                    <?php if(!$installCheck['jreviews.sefplugin']['published']):?>
+
+                    <?php __a("Unpublished. The plugin is optional and not compatible with other 3rd party SEF extensions. It renders Joomla category pages as JReviews category pages allowing you to simplify the menu and SEF URL structure. It can remove ids from listing URLs and has some built-in 301 redirect capabilities.");?>
+
+                    <a target="_blank" class="jrButton jrSmall" href="http://docs.reviewsforjoomla.com/?title=JReviews:Menus_%26_SEF"><span class="jrIconPreview"></span>&nbsp;<?php __a("Read more");?></a>
+
+                    <?php endif;?>
+
+                    <?php echo !$installCheck['jreviews.sefplugin']['db'] ? __a("Not in plugins list",true).' ' : '';?>
+
+                    <?php echo !$installCheck['jreviews.sefplugin']['files'] ? __a("Files not found.",true).' ' : '';?>
+
+                    <?php echo $installCheck['jreviews.sefplugin']['status'] ? __a("Plugin is installed and published.",true).' ' : '';?>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <br />
+
+        <div class="jrDataList">
+
+            <div class="jrGrid jrDataListHeader">
+
+                <div class="jrCol3"><?php __a("Database Check");?></div>
+
+                <div class="jrCol1"><?php __a("Status");?></div>
+
+                <div class="jrCol6"><?php __a("Addtional information");?></div>
+
+                <div class="jrCol2">&nbsp;</div>
+
+            </div>
+
+            <div class="jrGrid <?php echo !$installCheck['listing.fields']['status'] ? 'jrInstallError' : '';?>">
+
+                <div class="jrCol3">
+
+                    <?php __a("Listing Custom Fields");?>
+
+                </div>
+
+                <div class="jrCol1">
+
+                    <?php if($installCheck['listing.fields']['status']):?>
+
+                        <span class="jrIconYes"></span>
+
+                    <?php else:?>
+
+                        <span class="jrIconNo"></span>
+
+                    <?php endif;?>
+
+                </div>
+
+                <div class="jrCol6">
+
+                    <?php echo !$installCheck['listing.fields']['status'] ? __a("One or more field columns are missing from the listings fields table.",true).' ' : '';?>
+
+                    <?php echo $installCheck['listing.fields']['status'] ? __a("The listings fields table is OK.",true).' ' : '';?>
+
+                </div>
+
+                <div class="jrCol2">
+
+                    <?php if(!$installCheck['listing.fields']['status']):?>
+
+                    <button class="jr-fixit jrButton" data-task="fix_content_fields"><?php __a("Fix it");?></button>
+
+                    <?php endif;?>&nbsp;
+
+                </div>
+
+            </div>
+
+            <div class="jrGrid <?php echo !$installCheck['review.fields']['status'] ? 'jrInstallError' : '';?>">
+
+                <div class="jrCol3">
+
+                    <?php __a("Review Custom Fields");?>
+
+                </div>
+
+                <div class="jrCol1">
+
+                    <?php if($installCheck['review.fields']['status']):?>
+
+                        <span class="jrIconYes"></span>
+
+                    <?php else:?>
+
+                        <span class="jrIconNo"></span>
+
+                    <?php endif;?>
+
+                </div>
+
+                <div class="jrCol6">
+
+                    <?php echo !$installCheck['review.fields']['status'] ? __a("One or more field columns are missing from the reviews fields table.",true) : '';?>
+
+                    <?php echo $installCheck['review.fields']['status'] ? __a("The reviews fields table is OK.",true) : '';?>
+
+                </div>
+
+                <div class="jrCol2">
+
+                    <?php if(!$installCheck['review.fields']['status']):?>
+
+                    <button class="jr-fixit jrButton" data-task="fix_review_fields"><?php __a("Fix it");?></button>
+
+                    <?php endif;?>&nbsp;
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <br />
+
+        <div class="jrDataList">
+
+            <div class="jrGrid jrDataListHeader">
+
+                <div class="jrCol3"><?php __a("Setup Check");?></div>
+
+                <div class="jrCol1"><?php __a("Status");?></div>
+
+                <div class="jrCol8"><?php __a("Addtional information");?></div>
+
+            </div>
+
+            <div class="jrGrid">
+
+                <div class="jrCol3"><?php __a("Custom fields (optional)");?></div>
+
+                <div class="jrCol1"><span class="<?php echo $msg['fields'] ? 'jrIconYes' : 'jrIconNo';?>"></span></div>
+
+                <div class="jrCol8">
+
+                    <?php __a("To setup fields, first create a field group and then create the fields for that group using the fields manager.");?>
+
+                </div>
+
+            </div>
+
+            <div class="jrGrid">
+
+                <div class="jrCol3"><?php __a("Listing Types (required)");?></div>
+
+                <div class="jrCol1"><span class="<?php echo $msg['criteria'] ? 'jrIconYes' : 'jrIconNo';?>"></span></div>
+
+                <div class="jrCol8">
+
+                    <?php __a("Create at least one listing type using Listing Types Manager.");?>
+
+                </div>
+
+            </div>
+
+            <div class="jrGrid">
+
+                <div class="jrCol3"><?php __a("Directories (required)");?></div>
+
+                <div class="jrCol1"><span class="<?php echo $msg['dir'] ? 'jrIconYes' : 'jrIconNo';?>"></span></div>
+
+                <div class="jrCol8"><?php __a("Create at least one directory using the directories manager.");?></div>
+
+            </div>
+
+            <div class="jrGrid">
+
+                <div class="jrCol3"><?php __a("Categories (required)");?></div>
+
+                <div class="jrCol1"><span class="<?php echo $msg['cat'] ? 'jrIconYes' : 'jrIconNo';?>"></span></div>
+
+                <div class="jrCol8"><?php __a("Setup at least one category in the Category Manager. These must first be created in the Joomla Category Manager.");?></div>
+
+            </div>
+
+        </div>
+
+        <input name="option" type="hidden" value="com_jreviews" />
+
+        <input name="data[controller]" type="hidden" value="admin/install" />
+
+        <input name="data[action]" type="hidden" value="_installfix" />
+
+        <input id="jr-task" name="data[task]" type="hidden" value="" />
+
+    </form>
+
+</div>
+
+<div id="jr-news-feed" class="news">
+
+    <div class="jrDataList">
+
+        <div class="jrGrid jrDataListHeader">
+
+            <div class="jrCol12"><span class="news-header"><?php __a("News &amp; Announcements");?></span></div>
+
+        </div>
+
+        <div class="jrGrid news-container">
+
+            <div class="jrCol12">
+
+                <div id="news-spinner" class="news-spinner">
+
+                    <img alt="loading" src="<?php echo $this->viewImages;?>loading.gif" />
+
+                </div>
+
+                <div id="news-content" class="jrDataList"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

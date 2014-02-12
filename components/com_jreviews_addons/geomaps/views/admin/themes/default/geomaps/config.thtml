@@ -1,0 +1,691 @@
+<?php
+/**
+ * jReviews - Reviews Extension
+ * Copyright (C) 2010-2012 ClickFWD LLC
+ * This is not free software, do not distribute it.
+ * For licencing information visit http://www.reviewsforjoomla.com
+ * or contact sales@reviewsforjoomla.com
+**/
+
+defined( 'MVC_FRAMEWORK') or die( 'Direct Access to this location is not allowed.' );
+?>
+
+<div class="jr-geomaps-config">
+
+    <div class="jrPageHeading"><?php __a("Configuration");?></div>
+
+    <form id="jr-page-form" class="jrForm" action="index.php" method="post">
+
+        <div class="jrPageToolbar jrRoundedPanel">
+
+            <span id="jr-status" class="jrLeft jrStatus"></span>
+
+            <button class="jr-save-settings jrButton jrGreen" data-lang='{"success":"<?php __a("New settings saved successfully.");?>"}'>
+
+                <span class="jrIconSave"></span><?php __a("Save");?>
+
+            </button>
+
+        </div>
+
+        <div class="jrWarning">
+
+            <div class="jrGrid24">
+
+                <div class="jrCol1"><span class="jrIconWarning"></span></div>
+
+                <div class="jrCol23" style="font-size: 13px;">
+
+                    <?php __a("Before you begin make sure you already created the required custom fields in the JReviews Fields Manager. Please refer to the documentation and video tutorials for more information");?>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="jr-tabs">
+
+            <ul>
+                <li><a href="#basic-setup"><span><?php __a("Basic Setup");?></span></a></li>
+
+                <li><a href="#markers"><span><?php __a("Markers & Infowindow");?></span></a></li>
+
+                <li><a href="#maps"><span><?php __a("Maps");?></span></a></li>
+            </ul>
+
+            <!-- BEGIN BASIC TAB -->
+            <?php
+            $basic = array(
+                __a("Google Maps",true) => array(
+                     array(
+                        'label'=>__a("Google Maps API url",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.google_url',
+                        'default'=>'http://maps.google.com',
+                        'help'=>__a("To add a country bias to geocoding requests you can use the Google url for that country. For example: http://maps.google.es, http://maps.google.it, http://maps.google.de.",true),
+                        'attributes'=>array('class'=>'jrText')
+                    ),
+                     array(
+                        'label'=>__a("Google Maps API Key",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.google_key',
+                        'help'=>__a("The key is optional, but it is useful for tracking usage of the API requests.",true) .' <a href="http://code.google.com/apis/maps/documentation/javascript/tutorial.html#api_key" target="_blank">'.__a("Get a key here",true).'</a>',
+                        'attributes'=>array('class'=>'jrText')
+                    )
+                ),
+                __a("Address Fields",true) => array(
+                    array(
+                        'label'=>'<div class="jrInfo">'
+
+                            .__a("If you have only one address field, you can fill in the Address 1 field below and leave the rest empty. GeoMaps concatenates all the fields together to form the address.",true) . '&nbsp;'
+                            .__a("Also use the category and parent category titles as part of the address by writing \"category\" or \"parent_category\" as the field name.",true)
+                            .'</div>',
+                        'type'=>'placeholder'
+                    ),
+                    array(
+                        'label'=>__a("Address 1 field",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.address1',
+                        'help'=>__a("For example: jr_addressone",true),
+                        'attributes'=>array('class'=>'jr-field-suggest jrAutoSuggest')
+                    ),
+                    array(
+                        'label'=>__a("Address 2 field",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.address2',
+                        'attributes'=>array('class'=>'jr-field-suggest jrAutoSuggest')
+                    ),
+                    array(
+                        'label'=>__a("City field",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.city',
+                        'help'=>__a("For example: jr_city",true),
+                        'attributes'=>array('class'=>'jr-field-suggest jrAutoSuggest')
+                    ),
+                    array(
+                        'label'=>__a("State field",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.state',
+                        'help'=>__a("For example: jr_state",true),
+                        'attributes'=>array('class'=>'jr-field-suggest jrAutoSuggest')
+                    ),
+                    array(
+                        'label'=>__a("Postal code field",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.postal_code',
+                        'help'=>__a("For example: jr_zipcode",true),
+                        'attributes'=>array('class'=>'jr-field-suggest jrAutoSuggest')
+                    ),
+                    array(
+                        'label'=>__a("Country field",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.country',
+                        'help'=>__a("For example: jr_country",true),
+                        'attributes'=>array('class'=>'jr-field-suggest jrAutoSuggest')
+                    ),
+                    array(
+                        'label'=>__a("Default country",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.default_country',
+                        'help'=>__a("Used for geocoding if the country field above is not specified or if the address field value is left empty for a listing.",true),
+                        'attributes'=>array('class'=>'jrText')
+                    )
+                ),
+                __a("Geo Location fields",true) => array(
+                    array(
+                        'label'=>__a("Latitude field",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.latitude',
+                        'help'=>__a("Must be a decimal field. For example: jr_latitude",true),
+                        'attributes'=>array('class'=>'jr-field-suggest jrAutoSuggest')
+                    ),
+                    array(
+                        'label'=>__a("Longitude field",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.longitude',
+                        'help'=>__a("Must be a decimal field. For example: jr_longitude",true),
+                        'attributes'=>array('class'=>'jr-field-suggest jrAutoSuggest')
+                    ),
+                    array(
+                        'label'=>__a("Map it field",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.mapit_field',
+                        'help'=>__a("A button will be appended to this field in listing forms. Clicking this button will automatically geocode the address and popup a map so the user can adjust the marker location.",true),
+                        'attributes'=>array('class'=>'jr-field-suggest jrAutoSuggest')
+                    ),
+                     array(
+                        'label'=>__a("Automatic geocoding on new submissions",true),
+                        'type'=>'radioYesNo',
+                        'name'=>'geomaps.autogeocode_new',
+                        'default'=>0,
+                        'help'=>__a("Listing addresses will be automatically geocoded on new submissions if the coordinates are not already set.",true)
+                    ),
+                     array(
+                        'label'=>__a("Proximity search",true),
+                        'type'=>'radio',
+                        'options'=>array('disabled'=>__a("No",true),'address'=>__a("Yes",true)),
+                        'name'=>'geomaps.search_method',
+                        'default'=>1,
+                        'help'=>__a("Disabling this defaults to regular text searches on the address field.",true)
+                    ),
+                    array(
+                        'label'=>__a("Advanced search address field",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.advsearch_input',
+                        'help'=>__a("For proximity search you need to manually add the field in the advanced search module (i.e. {jr_address}).",true),
+                        'attributes'=>array('class'=>'jr-field-suggest jrAutoSuggest')
+                    ),
+                     array(
+                        'label'=>__a("Address autocomplete",true),
+                        'type'=>'radioYesNo',
+                        'name'=>'geomaps.search_autocomplete',
+                        'default'=>1,
+                        'help'=>__a("Powered by the Google Places API and returns address suggestions that are NOT related to the addresses in your database.",true)
+                    ),
+                    array(
+                        'label'=>__a("Autocomplete Country Restriction",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.autocomplete_country',
+                        'default'=>'',
+                        'after'=>__a("Only one country code is permitted",true),
+                        'help'=>sprintf(__a("Limits suggestions to the specified country only. Fill out the two letter code based on the %sISO 3166-1 alpha-2%s definition.",true),'<a target="_blank" href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Current_codes">','</a>')
+                    ),
+                    array(
+                        'label'=>__a("Default radius",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.radius',
+                        'default'=>10
+                    ),
+                    array(
+                        'label'=>__a("Maximum radius",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.max_radius',
+                        'default'=>100,
+                        'help'=>__a("Puts a cap on the allowed radius search.",true)
+                    ),
+                     array(
+                        'label'=>__a("Radius metric",true),
+                        'type'=>'radio',
+                        'options'=>array('mi'=>__a("Miles",true),'km'=>__a("Kilometers",true)),
+                        'name'=>'geomaps.radius_metric',
+                        'default'=>'mi'
+                    ),
+                    array(
+                        'label'=>__a("Publish distance on search results",true),
+                        'type'=>'radioYesNo',
+                        'name'=>'geomaps.publish_distance',
+                        'default'=>1,
+                        'help'=>__a("If you want to customize the distance output, set this setting to No, and use this code in the theme file to output the distance: <br /> &lt;?php echo \$CustomFields->field('jr_gm_distance',\$listing);?&gt;",true)
+                    )
+                ),
+                __a("Search Theme",true) => array(
+                     array(
+                        'label'=>__a("Enable map on proximity searches",true),
+                        'type'=>'radioYesNo',
+                        'name'=>'geomaps.enable_map_search',
+                        'default'=>1
+                    ),
+                    array(
+                        'label'=>__a("Proximity search results theme suffix",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.search_suffix'
+                    )
+                )
+            );
+            ?>
+
+            <?php $AdminSettings->displayTab('basic-setup',$basic,'[Config]',$this->Config);?>
+
+           <!-- BEGIN BASIC TAB -->
+            <?php
+            $markers = array(
+                __a("Markers & Infowindow",true) => array(
+                     array(
+                        'label'=>__a("Marker icon path",true),
+                        'type'=>'text',
+                        'name'=>'geomaps.marker_path',
+                        'default'=>'components/com_jreviews_addons/geomaps/icons',
+                        'help'=>__a("Default: components/com_jreviews_addons/geomaps/icons",true),
+                        'attributes'=>array('style'=>'width:90%;','class'=>'jrText')
+                    ),
+                    array(
+                        'label'=>__a("Marker infowindow",true),
+                        'type'=>'select',
+                        'name'=>'geomaps.infowindow',
+                        'options'=>array(
+                                    'google'=>'Google default',
+                                    'callout'=>'Callout',
+                                    'custom'=>'Custom'
+                                ),
+                        'default'=>'_google',
+                        'help'=>__a("Choose the marker infowindow you want to use.",true),
+                    ),
+                     array(
+                        'label'=>__a("Infowindow fields",true),
+                        'type'=>'textarea',
+                        'name'=>'geomaps.infowindow_fields',
+                        'default'=>0,
+                        'help'=>__a("Custom Fields comma list, without spaces (jr_fieldone,jr_fieldtwo,etc.) that will be made available for inclusion via tags in the infowindow theme file. Only add fields that exist in JReviews.",true),
+                        'attributes'=>array('style'=>'width:95%;height:40px;')
+                    )
+                ),
+            );
+
+            ?>
+
+            <?php $AdminSettings->displayTab('markers',$markers,'[Config]',$this->Config);?>
+
+            <div id="maps">
+
+                <div class="jrDataList">
+
+                    <div class="jrGrid24 jrDataListHeader">
+
+                        <div class="jrCol5"><?php __a("Map Settings");?></div>
+
+                        <div class="jrCol5"><?php __a("List Pages");?></div>
+
+                        <div class="jrCol5"><?php __a("Detail Page");?></div>
+
+                        <div class="jrCol5"><?php __a("Module");?><br /><span style="font-weight:normal;font-size:90%;"><?php __a("Override in module settings");?></span></div>
+
+                        <div class="jrCol4">&nbsp;</div>
+
+                    </div>
+
+                    <?php $options = array('buttons'=>'Buttons','menu'=>'Menu','none'=>'None');?>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5"><?php __a("Show map types");?></div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->select('data[Config][geomaps.ui.maptype_list]',
+                                        $options,
+                                        Sanitize::getString($this->Config,'geomaps.ui.maptype_list','buttons'),
+                                        array('id'=>'geomaps.ui.maptype_list')
+                                    );
+                            ?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->select(
+                                        'data[Config][geomaps.ui.maptype_detail]',
+                                        $options,
+                                        Sanitize::getString($this->Config,'geomaps.ui.maptype_detail','buttons'),
+                                        array('id'=>'geomaps.ui.maptype_detail')
+                                    );
+                            ?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->select(
+                                        'data[Config][geomaps.ui.maptype_module]',$options,
+                                        Sanitize::getString($this->Config,'geomaps.ui.maptype_module','buttons'),
+                                        array('id'=>'geomaps.ui.maptype_module')
+                                );
+                            ?>
+
+                        </div>
+
+                        <div class="jrCol4">&nbsp;</div>
+
+                    </div>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5">&nbsp;&nbsp;&nbsp;<?php __a("Map");?></div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.map_list]','',Sanitize::getString($this->Config,'geomaps.ui.map_list',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.map_detail]','',Sanitize::getString($this->Config,'geomaps.ui.map_detail',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.map_module]','',Sanitize::getString($this->Config,'geomaps.ui.map_module',1));?>
+
+                        </div>
+
+                        <div class="jrCol4">&nbsp;</div>
+
+                    </div>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5">&nbsp;&nbsp;&nbsp;<?php __a("Hybrid");?></div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.hybrid_list]','',Sanitize::getString($this->Config,'geomaps.ui.hybrid_list',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.hybrid_detail]','',Sanitize::getString($this->Config,'geomaps.ui.hybrid_detail',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.hybrid_module]','',Sanitize::getString($this->Config,'geomaps.ui.hybrid_module',1));?>
+
+                        </div>
+
+                        <div class="jrCol4">&nbsp;</div>
+
+                    </div>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5">&nbsp;&nbsp;&nbsp;<?php __a("Satellite");?></div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.satellite_list]','',Sanitize::getString($this->Config,'geomaps.ui.satellite_list',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.satellite_detail]','',Sanitize::getString($this->Config,'geomaps.ui.satellite_detail',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.satellite_module]','',Sanitize::getString($this->Config,'geomaps.ui.satellite_module',1));?>
+
+                        </div>
+
+                        <div class="jrCol4">&nbsp;</div>
+
+                    </div>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5">&nbsp;&nbsp;&nbsp;<?php __a("Terrain");?></div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.terrain_list]','',Sanitize::getString($this->Config,'geomaps.ui.terrain_list',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.terrain_detail]','',Sanitize::getString($this->Config,'geomaps.ui.terrain_detail',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.terrain_module]','',Sanitize::getString($this->Config,'geomaps.ui.terrain_module',1));?>
+
+                        </div>
+
+                        <div class="jrCol4">&nbsp;</div>
+
+                    </div>
+
+                    <?php $options = array('G_NORMAL_MAP'=>__a("Map",true),'G_SATELLITE_MAP'=>__a("Satellite",true),'G_HYBRID_MAP'=>__a("Hybrid",true),'G_PHYSICAL_MAP'=>__a("Terrain",true));?>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5"><?php __a("Default map type");?></div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->select(
+                                    'data[Config][geomaps.ui.maptype_def_list]',
+                                    $options,
+                                    Sanitize::getString($this->Config,'geomaps.ui.maptype_def_list','G_NORMAL_MAP'),
+                                    array('id'=>'geomaps.ui.maptype_def_list')
+                                );
+                            ?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->select(
+                                    'data[Config][geomaps.ui.maptype_def_detail]',
+                                    $options,
+                                    Sanitize::getString($this->Config,'geomaps.ui.maptype_def_detail','G_NORMAL_MAP'),
+                                    array('id'=>'geomaps.ui.maptype_def_detail')
+                                );
+                            ?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->select(
+                                    'data[Config][geomaps.ui.maptype_def_module]',
+                                    $options,
+                                    Sanitize::getString($this->Config,'geomaps.ui.maptype_def_module','G_NORMAL_MAP'),
+                                    array('id'=>'geomaps.ui.maptype_def_module')
+                                );
+                            ?>
+
+                        </div>
+
+                        <div class="jrCol4">&nbsp;</div>
+
+                    </div>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5"><?php __a("Show Pan & Zoom Controls");?></div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.panzoom_list]','',Sanitize::getString($this->Config,'geomaps.ui.panzoom_list',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.panzoom_detail]','',Sanitize::getString($this->Config,'geomaps.ui.panzoom_detail',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.panzoom_module]','',Sanitize::getString($this->Config,'geomaps.ui.panzoom_module',1));?>
+
+                        </div>
+
+                        <div class="jrCol4">&nbsp;</div>
+
+                    </div>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5"><?php __a("Show Scale");?></div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.scale_list]','',Sanitize::getString($this->Config,'geomaps.ui.scale_list',0));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.scale_detail]','',Sanitize::getString($this->Config,'geomaps.ui.scale_detail',0));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.scale_module]','',Sanitize::getString($this->Config,'geomaps.ui.scale_module',0));?>
+
+                        </div>
+
+                        <div class="jrCol4">&nbsp;</div>
+
+                    </div>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5"><?php __a("Enable Scrollwheel Zoom");?></div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.scrollwheel_list]','',Sanitize::getString($this->Config,'geomaps.ui.scrollwheel_list',0));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.scrollwheel_detail]','',Sanitize::getString($this->Config,'geomaps.ui.scrollwheel_detail',0));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.scrollwheel_module]','',Sanitize::getString($this->Config,'geomaps.ui.scrollwheel_module',0));?>
+
+                        </div>
+
+                        <div class="jrCol4">&nbsp;</div>
+
+                    </div>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5"><?php __a("Enable Doubleclick Zoom");?></div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.doubleclick_list]','',Sanitize::getString($this->Config,'geomaps.ui.doubleclick_list',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.doubleclick_detail]','',Sanitize::getString($this->Config,'geomaps.ui.doubleclick_detail',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.doubleclick_module]','',Sanitize::getString($this->Config,'geomaps.ui.doubleclick_module',1));?>
+
+                        </div>
+
+                        <div class="jrCol4">&nbsp;</div>
+
+                    </div>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5"><?php __a("Initial Zoom Level");?></div>
+
+                        <div class="jrCol5"><?php __a("Auto, based on markers");?></div>
+
+                        <div class="jrCol5"><?php echo $Form->text('data[Config][geomaps.ui.zoom_detail]',array('value'=>Sanitize::getString($this->Config,'geomaps.ui.zoom_detail',''),'class'=>'','style'=>'width:3em;'));?></div>
+
+                        <div class="jrCol5"><?php __a("Settings in module");?></div>
+
+                        <div class="jrCol4"><?php __a("0-20+, leave blank for auto zoom");?></div>
+
+                    </div>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5"><?php __a("Trucante title in infowindow");?></div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.trimtitle_list]','',Sanitize::getString($this->Config,'geomaps.ui.trimtitle_list',0));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.trimtitle_detail]','',Sanitize::getString($this->Config,'geomaps.ui.trimtitle_detail',0));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.ui.trimtitle_module]','',Sanitize::getString($this->Config,'geomaps.ui.trimtitle_module',0));?>
+
+                        </div>
+
+                        <div class="jrCol4">
+
+                            <?php echo $Form->text('data[Config][geomaps.ui.trimtitle_chars]',array('value'=>Sanitize::getString($this->Config,'geomaps.ui.trimtitle_chars','30'),'class'=>'','style'=>'width:3em;'));?>&nbsp;<?php __a("chars");?>
+
+                        </div>
+
+                    </div>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5"><?php __a("Streetview");?></div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.streetview_list]','',Sanitize::getString($this->Config,'geomaps.streetview_list',0));?>
+
+                        </div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.streetview_detail]','',Sanitize::getString($this->Config,'geomaps.streetview_detail',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">N/A</div>
+
+                        <div class="jrCol4">&nbsp;</div>
+
+                    </div>
+
+                    <div class="jrGrid24">
+
+                        <div class="jrCol5"><?php __a("Get Directions");?></div>
+
+                        <div class="jrCol5">N/A</div>
+
+                        <div class="jrCol5">
+
+                            <?php echo $Form->radioYesNo('data[Config][geomaps.directions_detail]','',Sanitize::getString($this->Config,'geomaps.directions_detail',1));?>
+
+                        </div>
+
+                        <div class="jrCol5">N/A</div>
+
+                        <div class="jrCol4">&nbsp;</div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <input type="hidden" name="data[controller]" value="admin/admin_geomaps" />
+
+        <input type="hidden" name="data[action]" value="_saveConfig" />
+
+    </form>
+
+</div>

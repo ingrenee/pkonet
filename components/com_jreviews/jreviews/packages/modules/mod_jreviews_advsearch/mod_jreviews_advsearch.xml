@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" version="2.5" method="upgrade">
+	<name>JReviews Advanced Search Module</name>
+	<author>ClickFWD LLC</author>
+	<creationDate>March 2013</creationDate>
+	<copyright>Copyright (C) 2010-2013 ClickFWD LLC. All rights reserved.</copyright>
+	<license>Commercial</license>
+	<authorEmail>sales@reviewsforjoomla.com</authorEmail>
+	<authorUrl>www.reviewsforjoomla.org</authorUrl>
+	<version>2.4</version>
+	<description>MODULE_HEADER</description>
+	<files>
+		<filename module="mod_jreviews_advsearch">mod_jreviews_advsearch.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">en-GB.mod_jreviews_advsearch.ini</language>
+		<language tag="en-GB">en-GB.mod_jreviews_advsearch.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<!-- main setup -->
+				<field type="spacer" class="dataListHeader" label="MAIN SETUP" />
+				<field name="tmpl_suffix" type="text" default="" label="JReviews Theme Suffix" description="" />
+				<!-- URL Modifiers -->
+				<field type="spacer" class="dataListHeader" label="SEARCH RESULTS URL MODIFIERS" />
+				<field name="search_itemid" type="text" size="5" default="" label="Specify Itemid of JReviews menu for result url" description="Overrides global configuration setting for Itemid." />
+				<field name="results_suffix" type="text" size="15" default="" label="Theme Suffix for search results page" description="Apply custom theme suffixes to search result pages." />
+				<!-- basic filters -->
+				<field type="spacer" class="dataListHeader" label="BASIC FILTERS" />
+				<field name="cat_auto" type="radio" default="0" label="Category Auto-detect" description="Enabling this setting overrides all ID filters below. If you have a large number of sections and categories it is recommended you use this setting. In pages where a category or section cannot be detected only the sections will be shown on the list filtered by IDs used below.">
+					<option value="0">No</option>
+					<option value="1">Yes</option>
+				</field>
+				<field name="dir_id" type="text" default="" label="Directory IDs (comma list)" description="Limits options show in category list." />
+				<field name="criteria_id" type="text" default="" label="Listing Type IDs (comma list)" description="Limits options show in category list." />
+				<field name="cat_id" type="text" default="" label="Category IDs (comma list)" description="Limits options show in category list." />
+			</fieldset>
+			<fieldset name="advanced">
+				<field name="layout" type="modulelayout" label="JFIELD_ALT_LAYOUT_LABEL" description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
+				<field name="moduleclass_sfx" type="text" label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL" description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+				<field name="cache" type="list" default="0" label="COM_MODULES_FIELD_CACHING_LABEL" description="COM_MODULES_FIELD_CACHING_DESC">
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+				<field name="cache_time" type="text" default="900" label="COM_MODULES_FIELD_CACHE_TIME_LABEL" description="COM_MODULES_FIELD_CACHE_TIME_DESC" />
+				<field name="cachemode" type="hidden" default="static">
+					<option value="static"></option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>
