@@ -271,6 +271,7 @@ h1, h2, h3, h4, h5, h6 {
 	    <?php if ($this->countModules('position-home-1')): ?>
         <div class="row">
           <div class="position-6 col6 <?php echo $mainContentColumnClass; ?>">
+
             <jdoc:include type="modules" name="position-home-1" style="block" />
           </div>
 		  
