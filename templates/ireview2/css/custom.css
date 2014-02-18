@@ -322,34 +322,55 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#66a0e1', end
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	border: 1px solid #375c93;
-	margin:10% 10%;
+	margin: 30% 10%;
 }
-.home-buscador .jrRoundedPanel , .home-buscador .mod-title{
+.home-buscador .jrRoundedPanel, .home-buscador .mod-title {
 	background: none;
 	border: none;
 	font-size: 0px;
-	padding:5px 30px !important;
+	padding: 5px 30px !important;
 }
-
-.home-buscador .mod-title
-{
+.home-buscador .mod-title {
 	font-size: 20.68px;
 	color: #FFF;
 	font-family: Sintony;
-	padding-bottom:0px;
-	margin-bottom:0px;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
 }
-
 .home-buscador .jrRoundedPanel select {
 	display: none;
 }
+.home-buscador .jrRoundedPanel .mod-content {
+}
 
-.home-buscador .jrRoundedPanel .mod-content
+.home-buscador button span, 
+.home-buscador button [class^="jrIcon"]:before
 {
-	}
-	
-	.home-buscador input
-	{
+	color:#fff !important;	font-size: 16px;}
+.home-buscador button, .home-buscador button:hover
+{
+	background-image: url(../images/bg-button-amarillo.png);
+	background-repeat: repeat-x;
+	background-position: left bottom;
+	padding-right: 17px;
+	padding-left: 17px;
+	font-size: 16px;
+	line-height: 30px;
+	color: #FFF;
+	text-transform: uppercase;
+	font-weight: bold;
+	box-shadow: none;
+	border: none;
+	text-shadow: none;
+	margin-top: 5px !important;
+	background-color: #e7c05f;
+}
+
+ .home-buscador button:hover
+{
+	background-image:none;
+	background-color:#e1b23a;}
+.home-buscador input {
 	width: 93% !important;
 	display: inline-block;
 	margin-top: 0px;
@@ -360,4 +381,196 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#66a0e1', end
 	padding-right: 10px;
 	padding-bottom: 8px;
 	padding-left: 10px;
+	line-height:30px !important;
+}
+.login-home {
+	width: 90%;
+	
+	margin:auto;margin-top:50px;
+	display:block;
+}
+.login-home .mod-inner {
+	position: relative;
+}
+.login-home   input[type="text"],
+.login-home   input[type="password"]
+ {
+	background-color: #ededf0;
+	border: 1px solid #595959;
+}
+
+.login-home   input[type="submit"]
+{
+	background-image: url(../images/b-black-bg.jpg);
+	background-repeat: repeat-x;
+	background-position: left center;
+	border: 1px solid #333;
+	color: #FFF;
+	text-decoration: none;
+	text-shadow:none;
+	padding:5px 25px;
+	
+}
+
+.login-home .login-links
+{
+	padding-bottom:10px !important;} 
+.login-home .login-links a
+{
+	color:#353536;
+	font-size:12px;}
+.login-home .mod-inner .mod-content {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid #999999;
+	background-color: #FFF;
+	padding-top: 35px;
+	
+	position: relative;
+
+}
+.login-home .mod-inner .mod-title {
+	display: block;
+	position: absolute;
+	width: 105%;
+	font-size: 21px;
+	color: #FFF;
+	background-color: #4f8bce;
+	margin-top: 10px;
+	margin-left: -2.5%;
+	text-indent: 10%;
+	z-index: 99;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.login-home .mod-inner .mod-title:before {
+}
+.login-home .mod-inner .mod-content form {
+	width: 90%;
+	margin: auto;
+	position: inherit;
+}
+.corner-2 {
+	position: absolute;
+	/*background-image: url(../images/corner-2.png);*/
+	height: 20px;
+	display: block;
+	width: 16px;
+	background-repeat: no-repeat;
+	top: -14px;
+}
+.ca {
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+.cb {
+	background-position: right top;
+}
+.deco-01 {
+	position: absolute;
+	background-image: url(../images/user-ko.png);
+	display: block;
+	height: 355px;
+	width: 210px;
+	bottom:0px;
+	right: -10px;
+	z-index: 100;
+}
+
+.ultimas-empresas
+{
+	margin-top:5px;}
+.ultimas-empresas h3
+{
+	font-size: 28px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #000;
+	
+	padding-left: 35px;
+	background-image: url(../images/ultimas-empresas.png);
+	background-position: left center;
+	background-repeat: no-repeat;
+	margin-bottom:40px !important;
+}
+
+
+.ultimas-empresas 
+.jrModuleItems .jrModuleItemThumbnail ,
+
+.ultimas-empresas 
+.jrModuleItems 
+.jrModuleItemContent
+
+{
+	display:block;
+	width:100%;
+	clear:both;
+}
+.ultimas-empresas 
+.jrModuleItems .jrModuleItemThumbnail img
+{
+	margin: auto;
+	-webkit-border-radius: 60px;
+	-moz-border-radius: 60px;
+	border-radius: 60px;
+	border: 5px solid #4368a0;
+}
+.ultimas-empresas 
+.jrModuleItems .jrModuleItemThumbnail a
+{
+	background-image: url(../images/corner-enlace.png);
+	background-position: center bottom;
+	padding-bottom: 13px;
+	background-repeat: no-repeat;
+	text-align: center;
+}
+.ultimas-empresas 
+.jrModuleItems .jrModuleItemThumbnail a:hover
+{
+	background-image: url(../images/corner-enlace-hover.png);
+}
+.ultimas-empresas 
+.jrModuleItems .jrModuleItemThumbnail a:hover img
+{
+	border-color:#e1b23a;}
+	
+	.ultimas-empresas 
+.jrModuleItems .jrModuleItemNumber
+	{
+		display:none;}
+		
+		
+		.ultimas-empresas 
+.jrModuleItems .jrModuleItem:hover a
+		{
+			color:#e1b23a !important;}
+	.ultimas-empresas 
+.jrModuleItems 
+.jrModuleItemContent .jrModuleItemTitle a
+	{
+	text-align: center;
+	display: block;
+}
+
+.ultimas-empresas  .jrSliderSideArrows .bx-wrapper .bx-controls-direction a
+{
+	height:38px;
+	width: 25px;}
+	.ultimas-empresas  .jrSliderSideArrows .bx-wrapper .bx-controls-direction a:hover
+	{
+		opacity:0.7;}
+ .ultimas-empresas .bx-wrapper .bx-prev
+{
+	background-image: url(../images/flechas.png);
+	background-repeat: no-repeat;
+	background-position: left;
+}
+ .ultimas-empresas .bx-wrapper .bx-next
+{
+	background-image: url(../images/flechas.png);
+	background-repeat: no-repeat;
+	background-position:right;
 }
