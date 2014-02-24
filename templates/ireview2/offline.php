@@ -16,7 +16,6 @@ require dirname(__FILE__).'/parameters.php';
 <!DOCTYPE html>
 <html lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">
 <head>
-<!-- R  OFFLINE -->
 	<jdoc:include type="head" />
 
 	<?php if ($responsiveLayout): ?>
