@@ -19,6 +19,20 @@ $csspage='';
 if ($menu->getActive() == $menu->getDefault()) {
       $csspage='home-page';
 }
+
+$clase='';
+$active = $menu->getActive();
+$top = $active ? $menu->getItem($active->tree[0]) : '' ;
+if($top)
+{
+	$clase=$top->alias;
+	
+	}
+
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">
@@ -86,7 +100,7 @@ h1, h2, h3, h4, h5, h6 {
 <?php endif;?>
 </head>
 
-<body class="<?php echo $pageclass ? htmlspecialchars($pageclass) : 'default'; ?><?php echo $this->direction == 'rtl' ? ' rtl' : ''?> <?PHP echo $csspage;?>">
+<body class="<?php echo $pageclass ? htmlspecialchars($pageclass) : 'default'; ?> <?PHP echo $clase;?> <?php echo $this->direction == 'rtl' ? ' rtl' : ''?> <?PHP echo $csspage;?>">
 <div class="header-wrapper <?php echo $headerBg . '-bg'; ?>">
 		<header class="container"> 
 				<!-- header top -->
@@ -262,12 +276,19 @@ h1, h2, h3, h4, h5, h6 {
 										<!--  home -center -->
 										<?php if ($this->countModules('position-home-1')): ?>
 										<div class="row">
+                                        <!-- position home 1 -->
 												<div class="position-6 col6 <?php echo $mainContentColumnClass; ?>">
 														<jdoc:include type="modules" name="position-home-1" style="block" />
 												</div>
+                                                
+                                       <!-- Fin position home 1 -->  
+                                       
+                                      <!-- position home 2 -->
 												<div class="position-6  col6 <?php echo $mainContentColumnClass; ?>">
 														<jdoc:include type="modules" name="position-home-2" style="block" />
 												</div>
+                                                
+                                        <!-- Fin position home 2 -->                                                
 										</div>
 										<?php endif; ?>
 										<!--  fin  home -center --> 
